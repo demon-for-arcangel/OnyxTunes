@@ -1,9 +1,13 @@
 # OnyxTunes
  
 # Documentación de la API
-HeartConnect cuenta con una documentación detallada de su API REST y GraphQL para facilitar la integración y el desarrollo de aplicaciones que interactúan con la plataforma.
+HeartConnect cuenta con una documentación detallada de su API REST para facilitar la integración y el desarrollo de aplicaciones que interactúan con la plataforma.
 
 - **API REST**: La documentación de la API REST de HeartConnect incluye detalles sobre los endpoints disponibles, métodos HTTP, URLs, descripciones de las operaciones, y ejemplos de solicitudes y respuestas. [endpoints.md](./documentation/endpoints.md).
+
+También cuenta con una documentación para el usuario.
+
+- **Documentación del Usuario**: la documentación del usuario es un manual para entender el funcionamiento de la plataforma desde la vista de un usuario, las acciones que se pueden hacer.
 
 # Instalación y requisitos
 ## Requisitos
