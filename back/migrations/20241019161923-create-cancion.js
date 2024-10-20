@@ -9,29 +9,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_album: {
-        type: Sequelize.INTEGER
-      },
-      id_artista: {
-        type: Sequelize.INTEGER
-      },
       titulo: {
         type: Sequelize.STRING
       },
       duracion: {
-        type: Sequelize.TIME
-      },
-      archivo_audio: {
-        type: Sequelize.STRING
-      },
-      reproducciones: {
         type: Sequelize.INTEGER
       },
-      fecha_subida: {
-        type: Sequelize.DATE
+      albumId: {
+        type: Sequelize.INTEGER
       },
-      genero: {
-        type: Sequelize.STRING
+      generoId: {
+        type: Sequelize.INTEGER
+      },
+      artistaId: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

@@ -14,14 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Cancion.init({
-    id_album: DataTypes.INTEGER,
-    id_artista: DataTypes.INTEGER,
     titulo: DataTypes.STRING,
-    duracion: DataTypes.TIME,
-    archivo_audio: DataTypes.STRING,
-    reproducciones: DataTypes.INTEGER,
-    fecha_subida: DataTypes.DATE,
-    genero: DataTypes.STRING
+    duracion: DataTypes.INTEGER,
+    album_id: DataTypes.INTEGER,
+    artistaId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Cancion',

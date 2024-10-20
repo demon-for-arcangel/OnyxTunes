@@ -2,21 +2,18 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('SeguirArtista', {
+    await queryInterface.createTable('Seguidors', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_usuario: {
+      id_seguidor: {
         type: Sequelize.INTEGER
       },
-      id_artista: {
+      id_seguido: {
         type: Sequelize.INTEGER
-      },
-      fecha_seguimiento: {
-        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +26,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('SeguirArtista');
+    await queryInterface.dropTable('Seguidors');
   }
 };

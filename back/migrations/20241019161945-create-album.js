@@ -9,20 +9,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_artista: {
-        type: Sequelize.INTEGER
-      },
       titulo: {
         type: Sequelize.STRING
       },
+      artistaId: {
+        type: Sequelize.INTEGER
+      },
       fecha_lanzamiento: {
         type: Sequelize.DATE
-      },
-      imagen: {
-        type: Sequelize.STRING
-      },
-      genero: {
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

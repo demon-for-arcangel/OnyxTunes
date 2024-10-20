@@ -2,24 +2,18 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Reaccions', {
+    await queryInterface.createTable('usuario_cancions', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_usuario: {
+      usuario_id: {
         type: Sequelize.INTEGER
       },
-      id_cancion: {
+      cancion_id: {
         type: Sequelize.INTEGER
-      },
-      tipo_reaccion: {
-        type: Sequelize.STRING
-      },
-      fecha_reaccion: {
-        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -32,6 +26,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Reaccions');
+    await queryInterface.dropTable('usuario_cancions');
   }
 };

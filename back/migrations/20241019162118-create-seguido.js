@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Historials', {
+    await queryInterface.createTable('Seguidos', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,11 +12,8 @@ module.exports = {
       id_usuario: {
         type: Sequelize.INTEGER
       },
-      id_cancion: {
+      id_seguido: {
         type: Sequelize.INTEGER
-      },
-      fecha_reproduccion: {
-        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +26,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Historials');
+    await queryInterface.dropTable('Seguidos');
   }
 };
