@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Usuario, {
+        foreignKey: 'usuario_id'
+      });
+    
+      this.belongsToMany(models.Cancion, {
+        through: 'playlist_cancion',
+        foreignKey: 'playlist_id'
+      });
     }
   }
   Playlist.init({
@@ -20,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Playlist',
+    tableName: process.env.TABLA_PLAYLIST
   });
   return Playlist;
 };

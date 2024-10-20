@@ -11,6 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Usuario, {
+        foreignKey: 'usuario_id'
+      });
+
+      this.belongsTo(models.Cancion, {
+        foreignKey: 'cancion_id'
+      });
     }
   }
   ReaccionComentario.init({
@@ -21,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'ReaccionComentario',
+    tableName: process.env.TABLA_COMENTARIO_REACCION
   });
   return ReaccionComentario;
 };

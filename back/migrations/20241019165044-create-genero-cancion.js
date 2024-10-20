@@ -10,10 +10,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       cancion_id: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
       },
       genero_id: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

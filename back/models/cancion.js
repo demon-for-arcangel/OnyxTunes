@@ -11,6 +11,27 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsToMany(models.Genero, {
+        through: models.genero_cancion,
+        foreignKey: 'cancion_id'
+      });
+    
+      this.belongsToMany(models.Usuario, {
+        through: models.usuario_cancion,
+        foreignKey: 'cancion_id'
+      });
+    
+      this.belongsToMany(models.Playlist, {
+        foreignKey: 'cancion_id'
+      });
+    
+      this.hasMany(models.Reaccion, {
+        foreignKey: 'cancion_id'
+      });
+    
+      this.belongsTo(models.Album, {
+        foreignKey: 'album_id'
+      });
     }
   }
   Cancion.init({
@@ -21,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Cancion',
+    tableName: process.env.TABLA_CANCION
   });
   return Cancion;
 };

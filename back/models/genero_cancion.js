@@ -11,14 +11,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Cancion, {
+        foreignKey: 'cancion_id'
+      });
+
+      this.belongsTo(models.Genero, {
+        foreignKey: 'genero_id'
+      });
     }
   }
   genero_cancion.init({
-    cancion_id: DataTypes.NUMBER,
-    genero_id: DataTypes.NUMBER
+    cancion_id: DataTypes.INTEGER,
+    genero_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'genero_cancion',
+    tableName: process.env.TABLA_GENERO_CANCION
   });
   return genero_cancion;
 };

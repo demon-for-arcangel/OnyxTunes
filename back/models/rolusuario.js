@@ -11,6 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Usuario, {
+        foreignKey: 'usuario_id'
+      });
+
+      this.belongsTo(models.Rol, {
+        foreignKey: 'rol_id'
+      })
     }
   }
   RolUsuario.init({
@@ -19,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'RolUsuario',
+    tableName: process.env.TABLA_ROL_USUARIO
   });
   return RolUsuario;
 };

@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Historial',
+    tableName: process.env.TABLA_HISTORIAL
   });
   return Historial;
 };
