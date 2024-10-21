@@ -1,5 +1,5 @@
 const {Router } = require('express');
-const controlador = require('../../controllers/users/userController');
+const controlador = require('../controllers/user/userController');
 const { check } = require('express-validator');
 const { validateFilds, checkDiferenceAsign } = require('../../middlewares/validators.js');
 const { statusUser, tokenCanAdmin, tokenCanUserAuth,/*  checkToken, */ tokenCanSocio } = require('../../middlewares/abilities');

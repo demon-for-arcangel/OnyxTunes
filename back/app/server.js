@@ -1,12 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 require('dotenv').config()
-const { socketController } = require("../controllers/services/socketController");
-const fileUpload = require('express-fileupload');
-const { ApolloServer } = require('@apollo/server');
-const { expressMiddleware } = require('@apollo/server/express4')
+/* const { socketController } = require("../controllers/services/socketController");
+ *//* const fileUpload = require('express-fileupload'); */
+/* const { ApolloServer } = require('@apollo/server');
+ *//* const { expressMiddleware } = require('@apollo/server/express4')
 const typeDefs = require('../typeDefs/typeDefs.js');
-const resolvers = require('../resolvers/resolvers.js');
+const resolvers = require('../resolvers/resolvers.js'); */
 
 class Server {
   constructor() {
@@ -15,13 +15,13 @@ class Server {
 
     this.middlewares();
     
-    this.serverGraphQL = new ApolloServer({
+    /* this.serverGraphQL = new ApolloServer({
       typeDefs,
       resolvers,
       formatError: (error) => {
         return { message: error.message };
       }
-    });
+    }); */
 
     this.RoutePath = "/api";
     this.apiFiles = "/api/file";
@@ -36,14 +36,14 @@ class Server {
     this.apiRecommendUsers = "/api/recommendations"
   
     this.serverExpress = require('http').createServer(this.app);
-    this.serverWebSocket = require('http').createServer(this.app);
+    /* this.serverWebSocket = require('http').createServer(this.app);
     this.io = require("socket.io")(this.serverWebSocket, {
       cors: {
         origin: "*",
         methods: ["GET", "POST"],
         credentials: true
       }
-    });
+    }); */
   
     this.routes();
     this.sockets();
@@ -62,11 +62,11 @@ class Server {
     }));
     this.app.use(express.json());
 
-    this.app.use( fileUpload({
+    /* this.app.use( fileUpload({
       useTempFiles : true,
       tempFileDir : '/tmp/',
       createParentPath: true
-  }));
+  })); */
   }
 
   applyGraphQLMiddleware() {
@@ -74,8 +74,8 @@ class Server {
   }
 
   routes() {
-    this.app.use(this.RoutePath, require("../routes/users/userRoutes"));
-    this.app.use(this.apiMail, require('../routes/services/mailRoutes'));
+    this.app.use(this.RoutePath, require("../routes/userRoutes"));
+/*     this.app.use(this.apiMail, require('../routes/services/mailRoutes'));
     this.app.use(this.apiRols, require('../routes/rols/rolRoutes'));
     this.app.use(this.apiEvents, require('../routes/events/eventsRoutes'));
     this.app.use(this.apiPreferences, require('../routes/preferences/preferencesRoutes'));
@@ -84,7 +84,7 @@ class Server {
     this.app.use(this.apiAssets, require("../routes/assets/assetsRoutes.js"));
     this.app.use(this.apiUserEvents, require('../routes/events/userEventsRoutes.js'));
     this.app.use(this.apiRecommendUsers, require("../routes/users/userRecommendRoutes.js"));
-  }
+ */  }
 
   listen() {      
     this.app.listen(process.env.PORT, () => {

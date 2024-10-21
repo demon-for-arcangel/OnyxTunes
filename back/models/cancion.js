@@ -22,11 +22,13 @@ module.exports = (sequelize, DataTypes) => {
       });
     
       this.belongsToMany(models.playlist, {
+        through: models.cancion_playlist,
         foreignKey: 'cancion_id'
       });
     
-      this.hasMany(models.reaccion, {
-        foreignKey: 'cancion_id'
+      this.hasMany(models.reaccion_comentario, {
+        foreignKey: 'cancion_id',
+        as: 'reacciones'
       });
     
       this.belongsTo(models.album, {
