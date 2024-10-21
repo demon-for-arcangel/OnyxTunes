@@ -25,16 +25,6 @@ module.exports = {
           key: 'id'
         }
       },
-      genero_id: {
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: process.env.TABLA_GENERO
-          },
-          key: 'id'
-        }
-      },
       artista_id: {
         primaryKey: true,
         type: Sequelize.INTEGER,
