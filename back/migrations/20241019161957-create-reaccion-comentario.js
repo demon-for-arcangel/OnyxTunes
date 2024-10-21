@@ -2,18 +2,32 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ReaccionComentarios', {
+    await queryInterface.createTable(process.env.TABLA_COMENTARIO_REACCION, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      usuarioId: {
-        type: Sequelize.INTEGER
+      usuario_id: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_USUARIO
+          },
+          key: 'id'
+        }
       },
-      cancionId: {
-        type: Sequelize.INTEGER
+      cancion_id: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_CANCION
+          },
+          key: 'id'
+        }
       },
       comentario: {
         type: Sequelize.STRING
@@ -32,6 +46,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ReaccionComentarios');
+    await queryInterface.dropTable(process.env.TABLA_COMENTARIO_REACCION);
   }
 };

@@ -2,18 +2,32 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Seguidos', {
+    await queryInterface.createTable(process.env.TABLA_SEGUIDOS, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_usuario: {
-        type: Sequelize.INTEGER
+      usuario_id: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_USUARIO
+          },
+          key: 'id'
+        }
       },
-      id_seguido: {
-        type: Sequelize.INTEGER
+      seguido_id: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_USUARIO
+          },
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,

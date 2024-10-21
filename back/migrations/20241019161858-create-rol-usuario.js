@@ -2,18 +2,32 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('RolUsuarios', {
+    await queryInterface.createTable(process.env.TABLA_ROL_USUARIO, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      usuarioId: {
-        type: Sequelize.INTEGER
+      usuario_id: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_USUARIO
+          },
+          key: 'id'
+        }
       },
-      rolId: {
-        type: Sequelize.INTEGER
+      rol_id: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_ROL
+          },
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,
@@ -26,6 +40,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('RolUsuarios');
+    await queryInterface.dropTable(process.env.TABLA_ROL_USUARIO);
   }
 };

@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Usuario extends Model {
+  class usuario extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,43 +11,43 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.Rol, {
-        through: models.Rol_Usuario,
+      this.belongsToMany(models.rol, {
+        through: models.rol_usuario,
         foreignKey: 'usuario_id'
       });
 
-      this.belongsToMany(models.Cancion, {
-        through: models.Usuario_Cancion,
+      this.belongsToMany(models.cancion, {
+        through: models.usuario_cancion,
         foreignKey: 'usuario_id'
       });
 
-      this.belongsToMany(models.Album, {
-        through: models.Usuario_Album,
+      this.belongsToMany(models.album, {
+        through: models.usuario_album,
         foreignKey: 'usuario_id'
       });
 
-      this.belongsToMany(models.Usuario, {
-        as: 'Seguidores',
+      this.belongsToMany(models.usuario, {
+        as: 'seguidores',
         through: 'seguidores',
         foreignKey: 'usuario_id'
       });
 
-      this.belongsToMany(models.Usuario, {
-        as: 'Seguidos',
+      this.belongsToMany(models.usuario, {
+        as: 'seguidos',
         through: 'seguidores',
         foreignKey: 'seguido_id'
       });
 
-      this.hasMany(models.Playlist, {
+      this.hasMany(models.playlist, {
         foreignKey: 'usuario_id'
       });
 
-      this.hasMany(models.Reaccion, {
+      this.hasMany(models.reaccion_comentario, {
         foreignKey: 'usuario_id'
       })
     }
   }
-  Usuario.init({
+  usuario.init({
     nombre: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
@@ -57,8 +57,8 @@ module.exports = (sequelize, DataTypes) => {
     telefono: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'Usuario',
-    tableName: process.env.TABLA_USUARIOS
+    modelName: 'usuario',
+    tableName: process.env.TABLA_USUARIO
   });
-  return Usuario;
+  return usuario;
 };

@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Albums', {
+    await queryInterface.createTable(process.env.TABLA_ALBUM, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,8 +12,15 @@ module.exports = {
       titulo: {
         type: Sequelize.STRING
       },
-      artistaId: {
-        type: Sequelize.INTEGER
+      artista_id: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_USUARIO
+          },
+          key: 'id'
+        }
       },
       fecha_lanzamiento: {
         type: Sequelize.DATE
@@ -29,6 +36,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Albums');
+    await queryInterface.dropTable(process.env.TABLA_ALBUM);
   }
 };

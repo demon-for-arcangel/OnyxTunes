@@ -2,17 +2,24 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Historials', {
+    await queryInterface.createTable(process.env.TABLA_HISTORIAL, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      usuarioId: {
-        type: Sequelize.INTEGER
+      usuario_id: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_USUARIO
+          },
+          key: 'id'
+        }
       },
-      cancionId: {
+      cancion_id: {
         type: Sequelize.INTEGER
       },
       fecha_reproduccion: {
@@ -29,6 +36,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Historials');
+    await queryInterface.dropTable(process.env.TABLA_HISTORIAL);
   }
 };

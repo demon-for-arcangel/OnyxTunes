@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('usuario_albums', {
+    await queryInterface.createTable(process.env.TABLA_USUARIO_ALBUM, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,10 +10,24 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       usuario_id: {
-        type: Sequelize.INTEGER
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_USUARIO
+          },
+          key: 'id'
+        }
       },
       album_id: {
-        type: Sequelize.INTEGER
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_ALBUM
+          },
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,
@@ -26,6 +40,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('usuario_albums');
+    await queryInterface.dropTable(process.env.TABLA_USUARIO_ALBUM);
   }
 };
