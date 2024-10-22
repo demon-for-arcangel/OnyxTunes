@@ -26,17 +26,20 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'usuario_id'
       });
 
+      // Relación de seguidores (usuarios que siguen a este usuario)
       this.belongsToMany(models.usuario, {
-        as: 'seguidores',
-        through: 'seguidores',
-        foreignKey: 'usuario_id'
+        as: 'seguidores',             // Alias para los seguidores
+        through: 'seguidores_relaciones',  // Nombre único para la tabla intermedia
+        foreignKey: 'seguido_id'      // Clave foránea de quien es seguido
       });
 
+      // Relación de seguidos (usuarios que este usuario sigue)
       this.belongsToMany(models.usuario, {
-        as: 'seguidos',
-        through: 'seguidores',
-        foreignKey: 'seguido_id'
+        as: 'siguiendo',              // Alias para los usuarios que este usuario sigue
+        through: 'seguidores_relaciones',  // Nombre único para la tabla intermedia
+        foreignKey: 'seguidor_id'     // Clave foránea del usuario que sigue
       });
+           
 
       this.hasMany(models.playlist, {
         foreignKey: 'usuario_id'

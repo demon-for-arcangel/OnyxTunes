@@ -1,10 +1,10 @@
 const { response, request } = require("express");
 const Conexion = require("../../database/user/UserConnection");
 const bcrypt = require("bcrypt");
-const { generateRandPass } = require("../../helpers/generatePass");
-const models = require('../../models');
-const nodemailer = require('nodemailer');
-const jwt = require('jsonwebtoken');
+/* const { generateRandPass } = require("../../helpers/generatePass");
+ */const models = require('../../models');
+/* const nodemailer = require('nodemailer');
+ *//* const jwt = require('jsonwebtoken'); */
 
 const conx = new Conexion();
 
@@ -27,7 +27,6 @@ const getUserByToken = async (req, res) => {}
 const searchUsers = async (req, res) => {}
 
 module.exports = {
-    index, getUserById, getUserByEmail, sendMail, 
-    registerUserByAdmin, updateUser, deleteUsers, 
+    index, getUserById, getUserByEmail, sendMail, registerUserByAdmin, updateUser, deleteUsers, 
     getUserByToken, searchUsers
 }

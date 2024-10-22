@@ -11,17 +11,8 @@ const resolvers = require('../resolvers/resolvers.js'); */
 class Server {
   constructor() {
     this.app = express();
-    this.graphQLPath = '/graphql';
 
     this.middlewares();
-    
-    /* this.serverGraphQL = new ApolloServer({
-      typeDefs,
-      resolvers,
-      formatError: (error) => {
-        return { message: error.message };
-      }
-    }); */
 
     this.RoutePath = "/api";
     this.apiFiles = "/api/file";
@@ -35,23 +26,12 @@ class Server {
     this.apiUserEvents = "/api/userEvents"
     this.apiRecommendUsers = "/api/recommendations"
   
-    this.serverExpress = require('http').createServer(this.app);
-    /* this.serverWebSocket = require('http').createServer(this.app);
-    this.io = require("socket.io")(this.serverWebSocket, {
-      cors: {
-        origin: "*",
-        methods: ["GET", "POST"],
-        credentials: true
-      }
-    }); */
-  
+/*     this.serverExpress = require('http').createServer(this.app);
+ */  
     this.routes();
-    this.sockets();
   }
   
   async start() {
-    await this.serverGraphQL.start();
-    this.applyGraphQLMiddleware();
     this.listen();
   }
   
@@ -61,16 +41,6 @@ class Server {
       credentials: true,
     }));
     this.app.use(express.json());
-
-    /* this.app.use( fileUpload({
-      useTempFiles : true,
-      tempFileDir : '/tmp/',
-      createParentPath: true
-  })); */
-  }
-
-  applyGraphQLMiddleware() {
-    this.app.use(this.graphQLPath , express.json(), expressMiddleware(this.serverGraphQL));
   }
 
   routes() {
@@ -90,14 +60,6 @@ class Server {
     this.app.listen(process.env.PORT, () => {
       console.log(`Servidor escuchando en: ${process.env.URL}:${process.env.PORT}${this.graphQLPath}`);
     });
-    this.applyGraphQLMiddleware()
-    this.serverWebSocket.listen(process.env.WEBSOCKETPORT, () => {
-      console.log(`Servidor de WebSockets escuchando en: ${process.env.WEBSOCKETPORT}`);
-    }); 
-  }
-
-  sockets() {
-    this.io.on("connection", socketController);
   }
 }
   

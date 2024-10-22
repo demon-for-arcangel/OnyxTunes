@@ -1,23 +1,24 @@
 'use strict';
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable(process.env.TABLA_SEGUIDOS, {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable('seguidores_relaciones', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      usuario_id: {
+      seguidor_id: {
         primaryKey: true,
         type: Sequelize.INTEGER,
         references: {
           model: {
             tableName: process.env.TABLA_USUARIO
-          },
+          }, 
           key: 'id'
-        }
+        },
       },
       seguido_id: {
         primaryKey: true,
@@ -25,9 +26,9 @@ module.exports = {
         references: {
           model: {
             tableName: process.env.TABLA_USUARIO
-          },
+          }, 
           key: 'id'
-        }
+        },
       },
       createdAt: {
         allowNull: false,
@@ -39,7 +40,8 @@ module.exports = {
       }
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Seguidos');
+
+  async down (queryInterface, Sequelize) {
+    await queryInterface.dropTable('seguidores_relaciones');
   }
 };
