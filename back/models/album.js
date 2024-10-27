@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'album',
-    tableName: process.env.TABLA_ALBUMES
+    tableName: process.env.TABLA_ALBUM
   });
   return album;
 };

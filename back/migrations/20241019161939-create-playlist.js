@@ -9,16 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      usuario_id: {
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: process.env.TABLA_USUARIO
-          },
-          key: 'id'
-        }
-      },
       nombre: {
         type: Sequelize.STRING
       },
