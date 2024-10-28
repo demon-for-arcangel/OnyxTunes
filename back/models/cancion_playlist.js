@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'cancion_playlist',
+    tableName: process.env.TABLA_CANCION_PLAYLIST
   });
   return cancion_playlist;
 };

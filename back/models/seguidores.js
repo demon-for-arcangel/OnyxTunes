@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'seguidores',
+    tableName: process.env.TABLA_SEGUIDORES
   });
   return seguidores;
 };
