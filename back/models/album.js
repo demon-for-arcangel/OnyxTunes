@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'album_id'
       });
     
-      this.belongsToMany(models.usuario, {
+      this.belongsToMany(models.Usuario, {
         through: models.usuario_album,
         foreignKey: 'album_id'
       });

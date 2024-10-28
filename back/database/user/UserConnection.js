@@ -10,7 +10,7 @@ class UserModel {
 
     async indexUser() {
         try {
-            const users = await models.User.findAll();
+            const users = await models.Usuario.findAll();
             return users;
         }catch (error) {
             console.error('Error al mostrar la lista de usuarios: ', error);
@@ -20,7 +20,7 @@ class UserModel {
 
     async getUserById(id) {
         try {
-            const user = await models.User.findByPk(id);
+            const user = await models.Usuario.findByPk(id);
             if (!user) {
                 throw new Error('Usuario no encontrado')
             }
@@ -31,28 +31,34 @@ class UserModel {
         }
     }
 
-    async getUserByEmail(email, userData) {
+    async getUserByEmail(email) {
         try {
-           let user = await models.User.findOne({
-             where: {
-               email: email
-             }
-           });
-           
-           return user;
+            console.log('Buscando usuario con email:', email);
+            let user = await models.Usuario.findOne({
+                where: {
+                    email: email
+                }
+            });
+            
+            if (!user) {
+                console.log('Usuario no encontrado');
+                return null;
+            }
+            
+            return user;
         } catch (error) {
-           console.error('Error al obtener o crear usuario por email:', error);
-           throw error;
+            console.error('Error al obtener usuario por email:', error);
+            throw error;
         }
     }
-
+  
     async registerUser(userData) {
         try {
             if (!userData || typeof userData !== 'object') {
                 throw new Error('Datos de usuario inválidos');
             }
         
-            const newUser = await models.User.create(userData);
+            const newUser = await models.Usuario.create(userData);
         
             if (!newUser) {
                 throw new Error('No se pudo crear el usuario');
@@ -68,35 +74,35 @@ class UserModel {
     createUserRols = async (userId, arrRolesName) => {
         let newRoles = [];
         try {
-           conexion.conectar();
-           for (let roleId of arrRolesName) {
+            for (const roleName of arrRolesName) { 
+                console.log(roleName);
                 const role = await models.Rol.findOne({
-                where: {
-                    id: roleId
+                    where: {
+                        nombre: roleName 
+                    }
+                });
+    
+                if (!role) {
+                    throw new Error(`El rol con nombre ${roleName} no se encontró.`);
                 }
-            });
-            if (!role) {
-                console.error(`El rol con id ${roleId} no se encontró.`);
+    
+                let newRole = await models.RolUsuario.create({
+                    usuario_id: userId,
+                    rol_id: role.id 
+                });
+                newRoles.push(newRole);
             }
-            let newRole = await models.UserRols.create({
-                id_user: userId,
-                id_rol: role.id, 
-                id_rol: role.id, 
-            });
-            newRoles.push(newRole);
-           }
         } catch (error) {
-           console.error('Error al crear roles de usuario:', error);
-           throw error;
-        } finally {
-           conexion.desconectar();
+            console.error('Error al crear roles de usuario:', error);
+            throw error; 
         }
         return newRoles;
     };
+    
 
     updateUser = async (userId, newData) => {
         try {
-            const user = await models.User.findByPk(userId);
+            const user = await models.Usuario.findByPk(userId);
             if (!user) {
                 throw new Error('Usuario no encontrado.');
             }
@@ -115,7 +121,7 @@ class UserModel {
                 throw new Error('No se proporcionaron IDs de usuario para eliminar.');
             }
         
-            const result = await models.User.destroy({
+            const result = await models.Usuario.destroy({
                 where: {
                     id: userIds
                 }

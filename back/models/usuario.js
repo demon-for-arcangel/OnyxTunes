@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class usuario extends Model {
+  class Usuario extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.rol, {
-        through: models.rol_usuario,
+      this.belongsToMany(models.Rol, {
+        through: models.RolUsuario,
         foreignKey: 'usuario_id'
       });
 
@@ -27,14 +27,14 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       // Relación de seguidores (usuarios que siguen a este usuario)
-      this.belongsToMany(models.usuario, {
+      this.belongsToMany(models.Usuario, {
         as: 'seguidores',             // Alias para los seguidores
         through: 'seguidores_relaciones',  // Nombre único para la tabla intermedia
         foreignKey: 'seguido_id'      // Clave foránea de quien es seguido
       });
 
       // Relación de seguidos (usuarios que este usuario sigue)
-      this.belongsToMany(models.usuario, {
+      this.belongsToMany(models.Usuario, {
         as: 'siguiendo',              // Alias para los usuarios que este usuario sigue
         through: 'seguidores_relaciones',  // Nombre único para la tabla intermedia
         foreignKey: 'seguidor_id'     // Clave foránea del usuario que sigue
@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
   }
-  usuario.init({
+  Usuario.init({
     nombre: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
@@ -60,8 +60,8 @@ module.exports = (sequelize, DataTypes) => {
     telefono: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'usuario',
+    modelName: 'Usuario',
     tableName: process.env.TABLA_USUARIO
   });
-  return usuario;
+  return Usuario;
 };

@@ -1,5 +1,5 @@
 const { response, request } = require("express");
-const Conexion = require("../../database/users/UserConnection");
+const Conexion = require("../../database/user/UserConnection");
 const bcrypt = require("bcrypt");
 const { generarJWT } = require("../../helpers/jwt");
 const nodemailer = require('nodemailer');
@@ -7,48 +7,61 @@ const nodemailer = require('nodemailer');
 const conx = new Conexion();
 
 const register = async (req, res) => {
-  let body = req.body;
-  let roles = req.body.roles; 
-  try {
-        let existingUser = await conx.getUserByEmail(body.email, body);
+    const body = req.body;
+    console.log('cuerpo', body);
+
+    let roles = body.roles || ['Usuario'];
+    console.log('roles', roles);
+
+    try {
+        const existingUser = await conx.getUserByEmail(body.email);
         if (existingUser) {
             return res.status(400).json({ msg: "El usuario ya existe" });
         }
 
-        let hashedPassword = await bcrypt.hash(body.password, 10); 
-
+        const hashedPassword = await bcrypt.hash(body.password, 10);
         body.password = hashedPassword;
         body.active = false;
 
-        let newUser = await conx.registerUser(body);
+        const newUser = await conx.registerUser({
+            nombre: body.nombre,
+            email: body.email,
+            password: body.password,
+            fecha_nacimiento: body.fecha_nacimiento,
+            direccion: body.direccion,
+            telefono: body.telefono
+        });
 
-        if (roles && roles.length > 0) {
-            await conx.assignRolesToUser(newUser.id, roles);
+        if (!roles || roles.length === 0) {
+            roles = ['Usuario'];
         }
 
-        let token = await generarJWT(newUser.id, roles);
+        if (roles.length > 0) {
+            console.log("Asignando roles:", roles);
+            await conx.createUserRols(newUser.id, roles); 
+        }
 
-        res.status(201).json({ 
-            firstName: body.firstName, 
-            lastName: body.lastName, 
-            email: body.email, 
-            password: body.password, 
-            photo_profile: body.photo_profile, 
-            born_date: body.born_date, 
-            domicile: body.domicile, 
-            phone_number: body.phone_number, 
-            token 
+        const token = await generarJWT(newUser.id, roles);
+
+        res.status(201).json({
+            nombre: newUser.nombre,
+            email: newUser.email,
+            fecha_nacimiento: newUser.fecha_nacimiento,
+            direccion: newUser.direccion,
+            telefono: newUser.telefono,
+            token
         });
-  } catch (err) {
+
+    } catch (err) {
+        console.error("Error al registrar el usuario:", err);
         res.status(500).json({ msg: "Error al registrar el usuario" });
-  }
+    }
 };
 
 const login = async (req, res) => {
     let email = req.body.email;
     let storedHash = "";
-    try{
-        
+    try {
         let searchUser = await conx.getUserByEmail(email);
         storedHash = searchUser.password;
         let isPasswordValid = await bcrypt.compare(req.body.password, storedHash);
@@ -59,11 +72,11 @@ const login = async (req, res) => {
 
         let token = await generarJWT(searchUser.id);
         res.status(200).json({ token });
-    }catch(err){
-        res.status(400).json({msg: "Credenciales invalidas"});
+    } catch (err) {
+        res.status(400).json({ msg: "Credenciales inválidas" });
     }
 };
 
 module.exports = {
   register, login
-}
+};
