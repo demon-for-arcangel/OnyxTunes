@@ -12,36 +12,37 @@ header {
 .header-content .logo {
     height: 50px; 
     margin-right: 25%; 
+    margin-left: 20px;
 }
 
 header button {
-    padding: 15px;     /* Espaciado interno en los botones */
-    margin-left: 10px;     /* Espacio entre los botones */
-    background-color: rgb(52, 47, 47); /* Fondo rojo para los botones */
-    color: white;          /* Texto blanco en los botones */
-    border: none;          /* Sin borde */
-    border-radius: 50px;   /* Bordes redondeados */
-    cursor: pointer;       /* Cambia el cursor al pasar por encima */
-    transition: background-color 0.3s; /* Transición suave para el color de fondo */
+    padding: 15px;     
+    margin-left: 10px;     
+    background-color: #1f1f1f;
+    color: white;          
+    border: none;      
+    border-radius: 50px;   
+    cursor: pointer;       
+    transition: background-color 0.3s; 
 }
 
 header button:hover {
-    background-color: darkred; /* Color más oscuro al pasar el ratón */
+    background-color: darkred; 
 }
 
 header h1 {
-    flex-grow: 1;          /* Permite que el título ocupe el espacio restante */
-    text-align: center;    /* Centrar el título */
+    flex-grow: 1;          
+    text-align: center;    
 }
 
 header input {
     padding: 15px;          
     padding-right: 250px;
-    margin-left: 10px;     /* Espacio entre el botón de inicio y la barra */
-    margin-right: 10px;    /* Espacio entre la barra y los botones */
-    border-radius: 40px;   /* Bordes redondeados */
-    border: 1px solid #ccc; /* Bordes de color gris claro */
-    outline: none;         /* Sin contorno al enfocar */
+    margin-left: 10px;     
+    margin-right: 10px;    
+    border-radius: 40px;   
+    border: 1px solid #ccc; 
+    outline: none;         
 }
 
 header input:focus {
@@ -49,13 +50,62 @@ header input:focus {
 }
 
 main {
-    background-color: #333;
     margin: 10px;
-    border-radius: 10px;
+    color: white;
+    display: flex;  
+    justify-content: space-between; 
+    padding: 20px; 
+    height: 70vh;
 }
 
 .logo {
-    height: 50px; /* Ajusta según tus necesidades */
-    width: auto;  /* Mantiene la relación de aspecto */
-    border-radius: 8px; /* Opcional: borde redondeado */
+    height: 50px; 
+    width: auto;  
+    border-radius: 8px; 
+}
+
+.btn-auth {
+    margin-left: 20%;
+}
+
+.section-left {
+    background-color: #1f1f1f;
+    width: 25%;  
+    padding-left: 20px; 
+    border-radius: 20px;
+}
+
+.section-right {
+    background-color: #1f1f1f;
+    width: 70%;  
+    padding-left: 20px; 
+    border-radius: 20px; 
+}
+
+/* Footer Styles */
+footer {
+    background: linear-gradient(to right, #780000, #f36f6f);  
+    color: white; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 20px; 
+    border-radius: 10px;
+}
+
+footer p {
+    margin: 0; 
+}
+
+footer button {
+    background-color: rgb(255, 255, 255); 
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 50px; 
+    cursor: pointer; 
+    transition: background-color 0.3s;
+}
+
+footer button:hover {
+    background-color: #ff3333;
 }

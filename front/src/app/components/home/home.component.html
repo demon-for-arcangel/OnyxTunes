@@ -10,17 +10,40 @@
             [(ngModel)]="searchTerm"
             (input)="searchArtists()"
         />
-        <button (click)="goToLogin()">Iniciar Sesión</button>
-        <button (click)="goToRegister()">Registrar</button>
+        <div class="btn-auth">
+            <button (click)="goToLogin()">Iniciar Sesión</button>
+            <button (click)="goToRegister()">Registrarte</button>    
+        </div>
     </div>
 </header>
   
-
 <main>
-    <h2>Artistas:</h2>
-    <ul>
-        @for(artist of artists; track artist){
-            <li>{{ artist }}</li>
-        }
-    </ul>
+    <div class="section-left">
+        <h2>Artistas:</h2>
+        <ul>
+            @for(artist of artists; track artist){
+                <li>{{ artist }}</li>
+            }
+        </ul>
+    </div>
+    <div class="section-right">
+        <h2>Álbumes populares</h2>
+        <ul>
+            @for(album of albumes; track album){
+                <li>{{ album }}</li>
+            }
+        </ul>
+        <h2>Listas populares</h2>
+        <ul>
+            @for(lista of listas; track lista){
+                <li>{{ lista }}</li>
+            }
+        </ul>
+    </div>
 </main>
+
+
+<footer>
+    <p>Regístrate para disfrutar de todas las características que ofrece la plataforma</p>
+    <button (click)="goToRegister()">Registrarse</button>
+</footer>

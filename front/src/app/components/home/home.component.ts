@@ -13,6 +13,9 @@ import { BrowserModule } from '@angular/platform-browser';
 export class HomeComponent {
   searchTerm: string = '';
   artists: string[] = ['Artista 1', 'Artista 2', 'Artista 3', 'Artista 4'];
+  albumes: string[] = ['album1', 'album 2', 'album 3', 'album 4'];
+  listas: string[] = ['lista 1', 'lista 2', 'lista 3', 'lista 4'];
+  
   goToHome() {
     console.log('Redirigiendo a inicio...'); // Implementa la lógica de redirección
   }
