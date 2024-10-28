@@ -1,0 +1,61 @@
+header {
+    color: white; 
+    padding: 5px;  
+}
+
+.header-content {
+    margin-top: 10px;
+    display: flex; 
+    align-items: center;   
+}
+
+.header-content .logo {
+    height: 50px; 
+    margin-right: 25%; 
+}
+
+header button {
+    padding: 15px;     /* Espaciado interno en los botones */
+    margin-left: 10px;     /* Espacio entre los botones */
+    background-color: rgb(52, 47, 47); /* Fondo rojo para los botones */
+    color: white;          /* Texto blanco en los botones */
+    border: none;          /* Sin borde */
+    border-radius: 50px;   /* Bordes redondeados */
+    cursor: pointer;       /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s; /* Transición suave para el color de fondo */
+}
+
+header button:hover {
+    background-color: darkred; /* Color más oscuro al pasar el ratón */
+}
+
+header h1 {
+    flex-grow: 1;          /* Permite que el título ocupe el espacio restante */
+    text-align: center;    /* Centrar el título */
+}
+
+header input {
+    padding: 15px;          
+    padding-right: 250px;
+    margin-left: 10px;     /* Espacio entre el botón de inicio y la barra */
+    margin-right: 10px;    /* Espacio entre la barra y los botones */
+    border-radius: 40px;   /* Bordes redondeados */
+    border: 1px solid #ccc; /* Bordes de color gris claro */
+    outline: none;         /* Sin contorno al enfocar */
+}
+
+header input:focus {
+    border-color: red;
+}
+
+main {
+    background-color: #333;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.logo {
+    height: 50px; /* Ajusta según tus necesidades */
+    width: auto;  /* Mantiene la relación de aspecto */
+    border-radius: 8px; /* Opcional: borde redondeado */
+}

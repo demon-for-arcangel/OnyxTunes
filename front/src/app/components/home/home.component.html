@@ -1,0 +1,26 @@
+<header>
+    <div class="header-content">
+        <img src="assets/images/onyxtunes.jpeg" alt="OnyxTunes Logo" class="logo" />
+        <button (click)="goToHome()">
+            <i class="pi pi-home" style="font-size: 1.5rem"></i>
+        </button> 
+        <input
+            type="text"
+            placeholder="Desea reproducir algo..."
+            [(ngModel)]="searchTerm"
+            (input)="searchArtists()"
+        />
+        <button (click)="goToLogin()">Iniciar Sesión</button>
+        <button (click)="goToRegister()">Registrar</button>
+    </div>
+</header>
+  
+
+<main>
+    <h2>Artistas:</h2>
+    <ul>
+        @for(artist of artists; track artist){
+            <li>{{ artist }}</li>
+        }
+    </ul>
+</main>
