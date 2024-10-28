@@ -58,7 +58,7 @@ class Server {
 
   listen() {      
     this.app.listen(process.env.PORT, () => {
-      console.log(`Servidor escuchando en: ${process.env.URL}:${process.env.PORT}${this.graphQLPath}`);
+      console.log(`Servidor escuchando en: ${process.env.URL}:${process.env.PORT}`);
     });
   }
 }

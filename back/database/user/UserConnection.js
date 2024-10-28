@@ -31,6 +31,21 @@ class UserModel {
         }
     }
 
+    async getUserByEmail(email, userData) {
+        try {
+           let user = await models.User.findOne({
+             where: {
+               email: email
+             }
+           });
+           
+           return user;
+        } catch (error) {
+           console.error('Error al obtener o crear usuario por email:', error);
+           throw error;
+        }
+    }
+
     async registerUser(userData) {
         try {
             if (!userData || typeof userData !== 'object') {
