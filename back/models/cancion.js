@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class cancion extends Model {
+  class Cancion extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,43 +11,43 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.genero, {
-        through: models.genero_cancion,
+      this.belongsToMany(models.Genero, {
+        through: models.GeneroCancion,
         foreignKey: 'cancion_id',
         as: 'generos'
       });
     
       this.belongsToMany(models.Usuario, {
-        through: models.usuario_cancion,
+        through: models.UsuarioCancion,
         foreignKey: 'cancion_id',
         as: 'usuario'
       });
     
-      this.belongsToMany(models.playlist, {
-        through: models.cancion_playlist,
+      this.belongsToMany(models.Playlist, {
+        through: models.CancionPlaylist,
         foreignKey: 'cancion_id',
         as: 'playlist'
       });
     
-      this.hasMany(models.reaccion_comentario, {
+      this.hasMany(models.ReaccionComentario, {
         foreignKey: 'cancion_id',
         as: 'reacciones_comentarios'
       });
     
-      this.belongsTo(models.album, {
+      this.belongsTo(models.Album, {
         foreignKey: 'album_id'
       });
     }
   }
-  cancion.init({
+  Cancion.init({
     titulo: DataTypes.STRING,
     duracion: DataTypes.TIME,
     album_id: DataTypes.INTEGER,
     artista_id: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'cancion',
+    modelName: 'Cancion',
     tableName: process.env.TABLA_CANCION
   });
-  return cancion;
+  return Cancion;
 };

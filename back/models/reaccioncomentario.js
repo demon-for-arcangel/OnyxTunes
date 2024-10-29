@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class reaccion_comentario extends Model {
+  class ReaccionComentario extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -15,20 +15,20 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'usuario_id'
       });
 
-      this.belongsTo(models.cancion, {
+      this.belongsTo(models.Cancion, {
         foreignKey: 'cancion_id'
       });
     }
   }
-  reaccion_comentario.init({
+  ReaccionComentario.init({
     usuario_id: DataTypes.INTEGER,
     cancion_id: DataTypes.INTEGER,
     comentario: DataTypes.STRING,
     reaccion: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'reaccion_comentario',
+    modelName: 'ReaccionComentario',
     tableName: process.env.TABLA_COMENTARIO_REACCION
   });
-  return reaccion_comentario;
+  return ReaccionComentario;
 };
