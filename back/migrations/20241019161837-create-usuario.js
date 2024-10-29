@@ -30,6 +30,10 @@ module.exports = {
       telefono: {
         type: Sequelize.STRING
       },
+      genero: {
+        type: Sequelize.ENUM('Femenino', 'Masculino', 'Otro'),
+        allowNull: false 
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

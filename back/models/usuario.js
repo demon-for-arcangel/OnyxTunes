@@ -57,7 +57,8 @@ module.exports = (sequelize, DataTypes) => {
     fecha_nacimiento: DataTypes.DATE,
     foto_perfil: DataTypes.STRING,
     direccion: DataTypes.STRING,
-    telefono: DataTypes.STRING
+    telefono: DataTypes.STRING,
+    genero: DataTypes.ENUM('Femenino', 'Masculino', 'Otro'),
   }, {
     sequelize,
     modelName: 'Usuario',
