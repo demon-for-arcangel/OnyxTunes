@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -16,8 +17,10 @@ export class HomeComponent {
   albumes: string[] = ['album1', 'album 2', 'album 3', 'album 4'];
   listas: string[] = ['lista 1', 'lista 2', 'lista 3', 'lista 4'];
   
+  constructor(private router: Router){}
+
   goToHome() {
-    console.log('Redirigiendo a inicio...'); // Implementa la lógica de redirección
+    console.log('Redirigiendo a inicio...');
   }
   // Método para buscar artistas (puedes expandirlo para usarlo con un servicio)
   searchArtists() {
@@ -31,7 +34,6 @@ export class HomeComponent {
   }
 
   goToRegister() {
-    // Implementar redirección a la página de registro
-    console.log('Redirigiendo a registro...');
+    this.router.navigate(['/register']);
   }
 }

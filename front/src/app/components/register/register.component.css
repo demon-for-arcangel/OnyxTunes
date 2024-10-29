@@ -1,0 +1,73 @@
+.registro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    background-color: #1f1f1f; 
+}
+
+.registro {
+    width: 100%;
+    max-width: 400px; 
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #333; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    color: white;
+}
+
+.logo {
+    height: 80px; 
+    width: auto;  
+    border-radius: 15px; 
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input {
+    padding: 10px;
+    border-radius: 3px;
+    background-color: #333; /* Mismo color de fondo que el contenedor */
+    border: 1px solid white; /* Borde blanco */
+    color: white; /* Texto blanco */
+    outline: none; /* Quita el contorno al hacer clic */
+}
+
+input::placeholder {
+    color: #bbb; /* Color claro para el texto del placeholder */
+}
+
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    background-color: #d32f2f;
+    color: white;
+}
+
+
+.header-step {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    margin-bottom: 20px; 
+}
+
+.header-step button {
+    padding: 8px;
+    background-color: #d32f2f;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+.header-step h2 {
+    margin: 0;
+    color: white;
+}
