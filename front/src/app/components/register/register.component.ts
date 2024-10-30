@@ -32,7 +32,7 @@ export class RegisterComponent {
     genero: ''
   };
 
-  validateNombre() {
+  validateNombre() { //falta validar que el nombre no este en blanco
     if (this.registerData.nombre.trim().length < 3) {
       this.errors.nombre = 'El nombre debe tener al menos 3 caracteres.';
       return false;
@@ -41,7 +41,7 @@ export class RegisterComponent {
     return true;
   }
 
-  validateEmail() {
+  validateEmail() {//falta validar que el email no este en blanco
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(this.registerData.email)) {
       this.errors.email = 'El correo electrónico no es válido.';
