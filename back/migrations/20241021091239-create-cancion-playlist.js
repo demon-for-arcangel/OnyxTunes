@@ -10,10 +10,22 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       cancion_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_CANCION
+          },
+          key: 'id'
+        }
       },
       playlist_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_PLAYLIST
+          },
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,

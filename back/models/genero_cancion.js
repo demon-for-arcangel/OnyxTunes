@@ -11,13 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Cancion, {
-        foreignKey: 'cancion_id'
-      });
-
-      this.belongsTo(models.Genero, {
-        foreignKey: 'genero_id'
-      });
+      
     }
   }
   GeneroCancion.init({
