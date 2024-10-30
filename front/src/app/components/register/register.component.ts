@@ -46,7 +46,7 @@ export class RegisterComponent {
     if (!emailPattern.test(this.registerData.email)) {
       this.errors.email = 'El correo electrónico no es válido.';
       return false;
-    }
+    } 
     this.errors.email = '';
     return true;
   }
