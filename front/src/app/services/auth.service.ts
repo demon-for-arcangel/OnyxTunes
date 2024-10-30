@@ -12,6 +12,6 @@ export class AuthService {
   url = environment.baseUrl
 
   register(userData: any): Observable<any>{
-    return this.http.post(`${this.url}/register`, userData)
+    return this.http.post(`${this.url}/registro`, userData)
   }
 }

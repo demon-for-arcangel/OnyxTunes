@@ -31,14 +31,14 @@ form {
 input {
     padding: 10px;
     border-radius: 3px;
-    background-color: #333; /* Mismo color de fondo que el contenedor */
-    border: 1px solid white; /* Borde blanco */
-    color: white; /* Texto blanco */
-    outline: none; /* Quita el contorno al hacer clic */
+    background-color: #333; 
+    border: 1px solid white; 
+    color: white; 
+    outline: none;
 }
 
 input::placeholder {
-    color: #bbb; /* Color claro para el texto del placeholder */
+    color: #bbb; 
 }
 
 button {
@@ -70,4 +70,10 @@ button {
 .header-step h2 {
     margin: 0;
     color: white;
+}
+
+.error-message {
+    color: #ff6b6b; 
+    font-size: 0.875em;
+    margin-top: 5px;
 }

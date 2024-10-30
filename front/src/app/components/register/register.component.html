@@ -1,55 +1,111 @@
 <div class="registro-container">
     <div class="registro">
-        <img src="assets/images/onyxtunes.jpeg" alt="OnyxTunes Logo" class="logo" />
-        @if(step === 1){
-            <h2>Regístrate para empezar a escuchar contenido</h2>
-            <form (ngSubmit)="nextStep()">
+        <img src="assets/images/onyxtunes.jpeg" class="logo">
+        <h2>Registro - Paso {{ step }}</h2>
+
+        <form (ngSubmit)="submitForm()">
+            @if(step === 1){
+                <div class="header-step">
+                    <h3>Introduzca su Nombre y su Correo Electronico</h3>
+                </div>
                 <label for="nombre">Nombre</label>
-                <input type="text" id="nombre" [(ngModel)]="registerData.nombre" name="nombre" required>
-        
+                <input
+                    type="text"
+                    id="nombre"
+                    [(ngModel)]="registerData.nombre"
+                    name="nombre"
+                    (blur)="validateNombre()"
+                    required
+                />
+                @if(errors.nombre){
+                    <div class="error-message">
+                        {{ errors.nombre }}
+                    </div>
+                }
                 <label for="email">Correo Electrónico</label>
-                <input type="email" id="email" [(ngModel)]="registerData.email" name="email" required>
-        
+                <input
+                    type="email"
+                    id="email"
+                    [(ngModel)]="registerData.email"
+                    name="email"
+                    (blur)="validateEmail()"
+                    required
+                />
+                @if(errors.email){
+                    <div class="error-message">
+                        {{ errors.email }}
+                    </div>
+                }
+
                 <button type="button" (click)="nextStep()">Siguiente</button>
-            </form>
-        }
-        
-        @if(step === 2){
-            <div class="header-step">
-                <button type="button" (click)="previousStep()">
-                    <i class="pi pi-angle-left"></i>
-                </button>
-                <h3>Paso 2 de 3</h3>
-                <h2>Crear una contraseña</h2>
-            </div>
-            <form (ngSubmit)="nextStep()">
+            }
+            
+            @if(step === 2){
+                <div class="header-step">
+                    <button type="button" (click)="previousStep()">
+                        <i class="pi pi-home"></i>
+                    </button>
+                    <h3>Cree su contraseña.</h3>    
+                </div>
                 <label for="password">Contraseña</label>
-                <input type="password" id="password" [(ngModel)]="registerData.password" name="password" required>
+                <input
+                    type="password"
+                    id="password"
+                    [(ngModel)]="registerData.password"
+                    name="password"
+                    (blur)="validatePassword()"
+                    required
+                />
+                @if(errors.password){
+                    <div class="error-message">
+                        {{ errors.password }}
+                    </div>
+                }
+        
                 <button type="button" (click)="nextStep()">Siguiente</button>
-            </form>
-        }
+            }
         
-        @if(step === 3){
-            <div class="header-step">
-                <button type="button" (click)="previousStep()">
-                    <i class="pi pi-angle-left"></i>
-                </button>
-                <h3>Paso 3 de 3</h3>
-                <h2>Relleno de Datos Personales</h2>
-            </div>
-            <form (ngSubmit)="submitForm()">
+            @if(step === 3){
+                <div class="header-step">
+                    <button type="button" (click)="previousStep()">
+                        <i class="pi pi-home"></i>
+                    </button>
+                    <h3>Datos Personales</h3>
+                </div>
                 <label for="fecha_nacimiento">Fecha de Nacimiento</label>
-                <input type="date" id="fecha_nacimiento" [(ngModel)]="registerData.fecha_nacimiento" name="fecha_nacimiento" required>
-        
+                <input
+                    type="date"
+                    id="fecha_nacimiento"
+                    [(ngModel)]="registerData.fecha_nacimiento"
+                    name="fecha_nacimiento"
+                    (blur)="validateFechaNacimiento()"
+                    required
+                />
+                @if(errors.fecha_nacimiento){
+                    <div class="error-message">
+                        {{ errors.fecha_nacimiento }}
+                    </div>
+                }
                 <label for="genero">Género</label>
-                <select id="genero" [(ngModel)]="registerData.genero" name="genero">
+                <select
+                    id="genero"
+                    [(ngModel)]="registerData.genero"
+                    name="genero"
+                    (change)="validateGenero()"
+                    required
+                >
+                    <option value="" disabled selected>Selecciona una opción</option>
                     <option value="masculino">Masculino</option>
                     <option value="femenino">Femenino</option>
                     <option value="otro">Otro</option>
                 </select>
-                
+                @if(errors.genero){
+                    <div class="error-message">
+                        {{ errors.genero }}
+                    </div>
+                }
                 <button type="submit">Registrarse</button>
-            </form>
-        }
-    </div>    
+            }
+        </form>
+    </div>
 </div>
