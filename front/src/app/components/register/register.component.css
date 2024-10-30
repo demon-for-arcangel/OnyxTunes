@@ -28,8 +28,8 @@ form {
     gap: 10px;
 }
 
-input {
-    padding: 10px;
+input, .custom-select {
+    padding: 15px;
     border-radius: 3px;
     background-color: #333; 
     border: 1px solid white; 
@@ -39,6 +39,10 @@ input {
 
 input::placeholder {
     color: #bbb; 
+}
+
+.custom-select::placeholder {
+    color: #bbb;
 }
 
 button {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -11,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  constructor (private authService: AuthService, private http: HttpClient,){}
+  constructor (private authService: AuthService, private http: HttpClient, private router: Router){}
 
   step: number = 1;
 
@@ -99,6 +100,7 @@ export class RegisterComponent {
       this.authService.register(this.registerData).subscribe({
         next: (response) => {
           console.log('Registro exitoso', response);
+          this.router.navigate(['/home']);
         },
         error: (error) => {
           console.error('Error en el registro', error);

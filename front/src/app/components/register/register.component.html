@@ -43,7 +43,7 @@
             @if(step === 2){
                 <div class="header-step">
                     <button type="button" (click)="previousStep()">
-                        <i class="pi pi-home"></i>
+                        <i class="pi pi-angle-left"></i>
                     </button>
                     <h3>Cree su contraseña.</h3>    
                 </div>
@@ -68,7 +68,7 @@
             @if(step === 3){
                 <div class="header-step">
                     <button type="button" (click)="previousStep()">
-                        <i class="pi pi-home"></i>
+                        <i class="pi pi-angle-left"></i>
                     </button>
                     <h3>Datos Personales</h3>
                 </div>
@@ -87,13 +87,7 @@
                     </div>
                 }
                 <label for="genero">Género</label>
-                <select
-                    id="genero"
-                    [(ngModel)]="registerData.genero"
-                    name="genero"
-                    (change)="validateGenero()"
-                    required
-                >
+                <select id="genero" [(ngModel)]="registerData.genero" name="genero" (change)="validateGenero()" required class="custom-select">
                     <option value="" disabled selected>Selecciona una opción</option>
                     <option value="masculino">Masculino</option>
                     <option value="femenino">Femenino</option>
