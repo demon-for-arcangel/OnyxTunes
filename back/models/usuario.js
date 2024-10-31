@@ -13,7 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsToMany(models.Rol, {
         through: models.RolUsuario,
-        foreignKey: 'usuario_id'
+        foreignKey: 'usuario_id',
+        otherKey: "rol_id",
+        as: "roles",
+        onDelete: "CASCADE"
       });
 
       this.belongsToMany(models.Cancion, {
