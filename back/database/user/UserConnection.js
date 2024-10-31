@@ -18,6 +18,8 @@ class UserModel {
         }
     }
 
+    async indexArtist() {}
+
     async getUserById(id) {
         try {
             const user = await models.Usuario.findByPk(id);

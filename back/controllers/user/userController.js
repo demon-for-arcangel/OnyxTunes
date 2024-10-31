@@ -8,7 +8,15 @@ const bcrypt = require("bcrypt");
 
 const conx = new Conexion();
 
-const index = async (req, res) => {}
+const index = async (req, res) => {
+    try{
+        const users = await conx.indexUser();
+        res.status(200).json(users);
+      }catch (error){
+        console.error('Error al obtener usuarios', error);
+        res.status(500).json({ msg: "Error"});
+      }
+}
 
 const getUserById = async (req, res) => {}
 
