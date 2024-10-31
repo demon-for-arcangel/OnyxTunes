@@ -6,7 +6,7 @@
         <form (ngSubmit)="submitForm()">
             @if(step === 1){
                 <div class="header-step">
-                    <h3>Introduzca su Nombre y su Correo Electronico</h3>
+                    <h3>Introduzca su Nombre y su Correo Electrónico</h3>
                 </div>
                 <label for="nombre">Nombre</label>
                 <input
@@ -17,9 +17,9 @@
                     (blur)="validateNombre()"
                     required
                 />
-                @if(errors.nombre){
+                @if(errors?.nombre){
                     <div class="error-message">
-                        {{ errors.nombre }}
+                        {{ errors?.nombre }}
                     </div>
                 }
                 <label for="email">Correo Electrónico</label>
@@ -31,9 +31,9 @@
                     (blur)="validateEmail()"
                     required
                 />
-                @if(errors.email){
+                @if(errors?.email){
                     <div class="error-message">
-                        {{ errors.email }}
+                        {{ errors?.email }}
                     </div>
                 }
 
@@ -56,9 +56,9 @@
                     (blur)="validatePassword()"
                     required
                 />
-                @if(errors.password){
+                @if(errors?.password){
                     <div class="error-message">
-                        {{ errors.password }}
+                        {{ errors?.password }}
                     </div>
                 }
         
@@ -81,9 +81,9 @@
                     (blur)="validateFechaNacimiento()"
                     required
                 />
-                @if(errors.fecha_nacimiento){
+                @if(errors?.fecha_nacimiento){
                     <div class="error-message">
-                        {{ errors.fecha_nacimiento }}
+                        {{ errors?.fecha_nacimiento }}
                     </div>
                 }
                 <label for="genero">Género</label>
@@ -93,9 +93,9 @@
                     <option value="femenino">Femenino</option>
                     <option value="otro">Otro</option>
                 </select>
-                @if(errors.genero){
+                @if(errors?.genero){
                     <div class="error-message">
-                        {{ errors.genero }}
+                        {{ errors?.genero }}
                     </div>
                 }
                 <button type="submit">Registrarse</button>

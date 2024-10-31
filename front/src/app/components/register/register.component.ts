@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Usuario } from '../../interfaces/usuario';
 
 @Component({
   selector: 'app-register',
@@ -12,72 +13,72 @@ import { Router } from '@angular/router';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  constructor (private authService: AuthService, private http: HttpClient, private router: Router){}
-
   step: number = 1;
+  registerData: Usuario = {}; 
+  errors?: Usuario = {}; 
 
-  registerData = {
-    nombre: '',
-    email: '',
-    password: '',
-    fecha_nacimiento: '',
-    genero: ''
-  };
+  constructor(private authService: AuthService, private http: HttpClient, private router: Router) {}
 
-  errors = {
-    nombre: '',
-    email: '',
-    password: '',
-    fecha_nacimiento: '',
-    genero: ''
-  };
-
-  validateNombre() { //falta validar que el nombre no este en blanco
-    if (this.registerData.nombre.trim().length < 3) {
-      this.errors.nombre = 'El nombre debe tener al menos 3 caracteres.';
+  validateNombre() {
+    if (!this.registerData?.nombre?.trim()) { 
+      this.errors!.nombre = 'El nombre es obligatorio.';
       return false;
     }
-    this.errors.nombre = '';
+    if (this.registerData.nombre.trim().length < 3) {
+      this.errors!.nombre = 'El nombre debe tener al menos 3 caracteres.';
+      return false;
+    }
+    this.errors!.nombre = '';
     return true;
   }
 
-  validateEmail() {//falta validar que el email no este en blanco
+  validateEmail() {
+    if (!this.registerData?.email?.trim()) {
+      this.errors!.email = 'El correo electrónico es obligatorio.';
+      return false;
+    }
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(this.registerData.email)) {
-      this.errors.email = 'El correo electrónico no es válido.';
+      this.errors!.email = 'El correo electrónico no es válido.';
       return false;
     } 
-    this.errors.email = '';
+    this.errors!.email = '';
     return true;
-  }
+  }  
 
   validatePassword() {
-    if (this.registerData.password.length < 6) {
-      this.errors.password = 'La contraseña debe tener al menos 6 caracteres.';
+    if (!this.registerData.password || this.registerData.password.length < 6) {
+      this.errors!.password = 'La contraseña debe tener al menos 6 caracteres.';
       return false;
     }
-    this.errors.password = '';
+    this.errors!.password = '';
     return true;
   }
 
   validateFechaNacimiento() {
+    if (!this.registerData?.fecha_nacimiento?.trim()) {
+      this.errors!.fecha_nacimiento = 'La fecha de nacimiento es obligatoria.';
+      return false;
+    }
+
     const today = new Date();
     const birthDate = new Date(this.registerData.fecha_nacimiento);
     const age = today.getFullYear() - birthDate.getFullYear();
     if (isNaN(birthDate.getTime()) || age < 13) {
-      this.errors.fecha_nacimiento = 'Debes tener al menos 13 años.';
+      this.errors!.fecha_nacimiento = 'Debes tener al menos 13 años.';
       return false;
     }
-    this.errors.fecha_nacimiento = '';
+
+    this.errors!.fecha_nacimiento = '';
     return true;
   }
 
   validateGenero() {
-    if (!this.registerData.genero) {
-      this.errors.genero = 'Por favor, selecciona un género.';
+    if (!this.registerData?.genero) {
+      this.errors!.genero = 'Por favor, selecciona un género.';
       return false;
     }
-    this.errors.genero = '';
+    this.errors!.genero = '';
     return true;
   }
 
@@ -100,7 +101,7 @@ export class RegisterComponent {
       this.authService.register(this.registerData).subscribe({
         next: (response) => {
           console.log('Registro exitoso', response);
-          this.router.navigate(['/home']);
+          this.router.navigate(['/gustosMusicales']);
         },
         error: (error) => {
           console.error('Error en el registro', error);
