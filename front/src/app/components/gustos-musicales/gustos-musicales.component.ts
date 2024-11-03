@@ -10,9 +10,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class GustosMusicalesComponent {
   artistasPopulares = [
-    { nombre: 'Artista 1', imagen: 'ruta-a-imagen1.jpg' },
-    { nombre: 'Artista 2', imagen: 'ruta-a-imagen2.jpg' },
-    { nombre: 'Artista 3', imagen: 'ruta-a-imagen3.jpg' },
+    { nombre: 'Artista 1', imagen: 'assets/images/blank-profile.png' },
+    { nombre: 'Artista 2', imagen: 'assets/images/blank-profile.png' },
+    { nombre: 'Artista 3', imagen: 'assets/images/blank-profile.png' },
   ];
 
   artistasSeleccionados: string[] = [];
