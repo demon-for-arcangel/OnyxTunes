@@ -22,7 +22,7 @@ export class LandingComponent {
   goToHome() {
     console.log('Redirigiendo a inicio...');
   }
-  // Método para buscar artistas (puedes expandirlo para usarlo con un servicio)
+  // Método para buscar artistas
   searchArtists() {
     // Implementar lógica para buscar artistas
     console.log('Buscando:', this.searchTerm);

@@ -22,18 +22,15 @@ export class HomeComponent {
   goToHome() {
     console.log('Redirigiendo a inicio...');
   }
-  // Método para buscar artistas (puedes expandirlo para usarlo con un servicio)
   searchArtists() {
-    // Implementar lógica para buscar artistas
     console.log('Buscando:', this.searchTerm);
   }
 
-  goToLogin() {
-    // Implementar redirección a la página de login
-    console.log('Redirigiendo a login...');
-  }
+  goToLogin() { 
+    this.router.navigate(['/login']);
+ }
 
-  goToRegister() {
-    this.router.navigate(['/register']);
+  goToRegister() { 
+    this.router.navigate(['/register']); 
   }
 }

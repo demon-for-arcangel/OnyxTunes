@@ -9,20 +9,20 @@ export const environment = {
     // usuarios
     login: '/login',
     register: '/register',
-    sendMail: '/mail/request-reset',
-    resetPassword: '/mail/reset',
-    myProfile: '/userToken',
-    showUser: '/user',
-    activeUsers: '/users/active',
-    inactiveUsers: '/users/inactive',
-    deleteUsers: '/users/delete',
-    activateUsers: '/users/activate',
-    desactivateUsers: '/users/desactivate',
-    createUser: '/user/new-user',
-    updateUser: '/user',
-    showFriendship: '/friendship',
-    searchUser: '/users/search',
-    googleSignIn: '/google',
+    sendMail: '/mail/request-reset', //por hacer
+    resetPassword: '/mail/reset', //por hacer
+    myProfile: '/userToken', //por hacer
+    showUser: '/user', //por hacer
+    activeUsers: '/users/active', //mirar si es necesario o no
+    inactiveUsers: '/users/inactive', //mirar si es necesario o no
+    deleteUsers: '/users/delete', //por hacer
+    activateUsers: '/users/activate', //mirar si es necesario o no
+    desactivateUsers: '/users/desactivate', //mirar si es necesario o no
+    createUser: '/user/new-user', //por hacer
+    updateUser: '/user', //por hacer
+    showFriendship: '/friendship', //por hacer
+    searchUser: '/users/search', //por hacer
+    googleSignIn: '/google', //por hacer
 
     // preferencias
     preferences: '/userPreferences',
