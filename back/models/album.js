@@ -11,17 +11,24 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.Cancion, {
+        foreignKey: 'album_id'
+      });
+    
+      this.belongsToMany(models.Usuario, {
+        through: models.UsuarioAlbum,
+        foreignKey: 'album_id'
+      });
     }
   }
   Album.init({
-    id_artista: DataTypes.INTEGER,
     titulo: DataTypes.STRING,
-    fecha_lanzamiento: DataTypes.DATE,
-    imagen: DataTypes.STRING,
-    genero: DataTypes.STRING
+    artista_id: DataTypes.INTEGER,
+    fecha_lanzamiento: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Album',
+    tableName: process.env.TABLA_ALBUM
   });
   return Album;
 };

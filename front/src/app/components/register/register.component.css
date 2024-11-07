@@ -1,0 +1,83 @@
+.registro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    background-color: #1f1f1f; 
+}
+
+.registro {
+    width: 100%;
+    max-width: 400px; 
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #333; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    color: white;
+}
+
+.logo {
+    height: 80px; 
+    width: auto;  
+    border-radius: 15px; 
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input, .custom-select {
+    padding: 15px;
+    border-radius: 3px;
+    background-color: #333; 
+    border: 1px solid white; 
+    color: white; 
+    outline: none;
+}
+
+input::placeholder {
+    color: #bbb; 
+}
+
+.custom-select::placeholder {
+    color: #bbb;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    background-color: #d32f2f;
+    color: white;
+}
+
+
+.header-step {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    margin-bottom: 20px; 
+}
+
+.header-step button {
+    padding: 8px;
+    background-color: #d32f2f;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+.header-step h2 {
+    margin: 0;
+    color: white;
+}
+
+.error-message {
+    color: #ff6b6b; 
+    font-size: 0.875em;
+    margin-top: 5px;
+}
