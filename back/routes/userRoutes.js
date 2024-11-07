@@ -14,7 +14,7 @@ router.post('/registro',
         check('email', 'No es un email válido').isEmail(), validateFilds
     ], register);
 
-router.post('/login/', login);
+router.post('/login/', statusUser, login);
 
 router.get('/users', /* [checkToken, tokenCanAdmin], */ controlador.index);
 router.get('/users/artists', /* [checkToken, tokenCanAdmin], */ controlador.indexArtist);

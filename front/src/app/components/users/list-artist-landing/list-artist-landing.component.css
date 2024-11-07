@@ -16,12 +16,11 @@
     margin: 0;
 }
 
-
- .artista-card:hover {
+.artista-card:hover {
     transform: scale(1.05);
 }
 
- .artista-imagen {
+.artista-imagen {
     width: 60px;
     height: 60px;
     border-radius: 50%; 

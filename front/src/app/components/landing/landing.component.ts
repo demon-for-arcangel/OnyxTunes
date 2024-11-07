@@ -26,13 +26,11 @@ export class LandingComponent {
   }
   // Método para buscar artistas
   searchArtists() {
-    // Implementar lógica para buscar artistas
-    console.log('Buscando:', this.searchTerm);
+    this.router.navigate(['/search']);
   }
 
   goToLogin() {
-    // Implementar redirección a la página de login
-    console.log('Redirigiendo a login...');
+    this.router.navigate(['/login']);
   }
 
   goToRegister() {

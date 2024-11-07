@@ -11,7 +11,7 @@ module.exports = {
       {
         nombre: 'admin',
         email: 'admin@onyxtunes.com',
-        password: '1234',
+        password: await bcrypt.hash('1234', 10),
         fecha_nacimiento: null,
         foto_perfil: '',
         direccion: '',
@@ -23,7 +23,7 @@ module.exports = {
       {
         nombre: 'artista',
         email: 'artista@onyxtunes.com',
-        password: '1234',
+        password: await bcrypt.hash('1234', 10),
         fecha_nacimiento: '1990-01-01',
         foto_perfil: '',
         direccion: '',
@@ -35,7 +35,7 @@ module.exports = {
       {
         nombre: 'usuario',
         email: 'usuario@onyxtunes.com',
-        password: '1234',
+        password: await bcrypt.hash('1234', 10),
         fecha_nacimiento: null,
         foto_perfil: '',
         direccion: '',
