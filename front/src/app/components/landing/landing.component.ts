@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ListArtistComponent } from "../users/list-artist/list-artist.component";
+import { ListArtistLandingComponent } from "../users/list-artist-landing/list-artist-landing.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule, ListArtistComponent],
+  imports: [FormsModule, ListArtistComponent, ListArtistLandingComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css'
 })
