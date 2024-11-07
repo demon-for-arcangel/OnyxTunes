@@ -22,4 +22,8 @@ export class HomeComponent {
   navigateTo(route: string) {
     this.router.navigate([`/${route}`]);
   }
+  
+  searchArtists() {
+    console.log('Buscando:', this.searchTerm);
+  }
 }
