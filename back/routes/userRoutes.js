@@ -18,6 +18,7 @@ router.post('/login/', statusUser, login);
 
 router.get('/users', /* [checkToken, tokenCanAdmin], */ controlador.index);
 router.get('/users/artists', /* [checkToken, tokenCanAdmin], */ controlador.indexArtist);
+router.get('/userToken', checkToken, controlador.getUserByToken);
 
 /* router.post('/register/', [check('firstName', 'El nombre es obligatorio').notEmpty(), check('lastName', 'Los apellido son obligatorios').notEmpty(),
 check('email', 'El email es obligatorio').notEmpty(),
@@ -28,7 +29,6 @@ router.get('/users/inactive', [checkToken, tokenCanAdmin], controlador.getInacti
 
 router.get('/user/:id', checkToken, controlador.getUserById);
 router.post('/user', checkToken, controlador.getUserByEmail);
-router.get('/userToken', checkToken, controlador.getUserByToken);
 
 router.post('/user/new-user', [
     checkToken,

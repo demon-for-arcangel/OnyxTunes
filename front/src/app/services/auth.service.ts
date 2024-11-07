@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
+import { Usuario } from '../interfaces/usuario';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,30 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.url}/login`, { email, password });
+    return this.http.post(`${this.url}/login`, { email, password }).pipe(
+      catchError(error => {
+        if (error.status === 401) {
+          throw new Error('Email o contraseña incorrectos');
+        }
+        throw new Error('Error desconocido');
+      })
+    );
   }
+
+  getUserByToken(tokenObject: string | null): Observable<Usuario | undefined> {
+    if (!tokenObject) {
+      return of(undefined);
+    }
+  
+    const headers = new HttpHeaders({
+      'x-token': tokenObject
+    });
+  
+    return this.http.get<Usuario>(`${this.url}/userToken`, { headers }).pipe(
+      catchError((error: any) => {
+        console.error('Error al obtener el usuario:', error);
+        return of(undefined);
+      })
+    );
+  }  
 }
