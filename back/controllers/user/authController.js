@@ -73,7 +73,7 @@ const login = async (req, res) => {
         let token = await generarJWT(searchUser.id);
         res.status(200).json({ token });
     } catch (err) {
-        res.status(400).json({ msg: "Credenciales inválidas" });
+        res.status(401).json({ msg: "Credenciales inválidas" });
     }
 };
 

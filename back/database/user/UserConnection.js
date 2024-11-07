@@ -39,16 +39,27 @@ class UserModel {
 
     async getUserById(id) {
         try {
-            const user = await models.Usuario.findByPk(id);
+            const user = await models.Usuario.findByPk(id, {
+                include: [
+                    {
+                        model: models.Rol,
+                        as: 'roles',
+                        attributes: ['nombre']
+                    }
+                ]
+            });
+    
             if (!user) {
-                throw new Error('Usuario no encontrado')
+                throw new Error('Usuario no encontrado');
             }
+    
             return user;
-        }catch (error) {
+        } catch (error) {
             console.error('Error al mostrar el usuario: ', error);
             throw error;
         }
     }
+    
 
     async getUserByEmail(email) {
         try {
