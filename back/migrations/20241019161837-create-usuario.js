@@ -24,15 +24,17 @@ module.exports = {
       foto_perfil: {
         type: Sequelize.STRING
       },
-      direccion: {
-        type: Sequelize.STRING
-      },
       telefono: {
         type: Sequelize.STRING
       },
       genero: {
         type: Sequelize.ENUM('Femenino', 'Masculino', 'Otro'),
         allowNull: false 
+      },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull:false,
+        defaultValue: 1,
       },
       createdAt: {
         allowNull: false,
