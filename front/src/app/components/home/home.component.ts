@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,18 +17,11 @@ export class HomeComponent {
   
   constructor(private router: Router){}
 
-  goToHome() {
-    console.log('Redirigiendo a inicio...');
+  navigateTo(route: string) {
+    this.router.navigate([`/${route}`]);
   }
+  
   searchArtists() {
     console.log('Buscando:', this.searchTerm);
-  }
-
-  goToLogin() { 
-    this.router.navigate(['/login']);
- }
-
-  goToRegister() { 
-    this.router.navigate(['/register']); 
   }
 }

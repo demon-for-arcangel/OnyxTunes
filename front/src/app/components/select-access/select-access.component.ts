@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-select-access',
@@ -8,5 +9,9 @@ import { Component } from '@angular/core';
   styleUrl: './select-access.component.css'
 })
 export class SelectAccessComponent {
+  constructor(private router: Router) {}
 
+  navigateTo(route: string) {
+    this.router.navigate([`/${route}`]);
+  }
 }
