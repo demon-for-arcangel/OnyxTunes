@@ -34,6 +34,11 @@ module.exports = {
         type: Sequelize.ENUM('Femenino', 'Masculino', 'Otro'),
         allowNull: false 
       },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull:false,
+        defaultValue: 1,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
