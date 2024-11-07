@@ -43,17 +43,20 @@ Sigue estos pasos para configurar el entorno de desarrollo de **OnyxTunes** en t
    DB_NAME=onyxtunes
    ```
 
-5. Ejecuta el backend:
-   ```bash
-   cd back
-   npm run dev
-   ```
+5. Montar la base de datos
+Para montar la base de datos tendremos que utilizar el siguiente comando: `npm run deploy-db`
 
-6. Ejecuta el frontend:
-   ```bash
-   cd ../front
-   ng serve
-   ```
+En caso de que tengamos ya la base de datos montada y necesitemos refrescarla usaremos: `npm run refresh`
+
+7. Instalación
+Para instalar el proyecto seguiremos los siguientes pasos:
+- Añadiremos el archivo `.env` en el directorio `back`. El .env será una copia del .env.example en el que solo tendremos que añadir los datos que nos requieran.
+
+- Necesitaremos crear una base de datos llama `heartconnect`
+
+- Con una terminal nos iremos al directorio back: `cd back`, ejecutaremos el comando `npm update` esto lo que hara es instalar todas las dependencias necesarias del proyecto. Seguidamente podremos ejecutar el comando `npm run deploy-db` para ejecutar las migrations y los seeders. Para arrancar el servidor del back ejecutaremos `nodemon`.
+
+- Con otra terminal iremos al directorio front: `cd front`, ejecutaremos de nuevo el comando `npm update` para las dependencias y seguidamente podremos lanzar el servidor del front con el comando `ng serve`.
 
 #### **Librerías y dependencias**
 A continuación, se enumeran las principales librerías y dependencias utilizadas en el proyecto:
