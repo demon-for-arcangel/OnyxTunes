@@ -20,11 +20,7 @@
 <main>
     <div class="section-left">
         <h2>Artistas:</h2>
-        <ul>
-            @for(artist of artists; track artist){
-                <li>{{ artist }}</li>
-            }
-        </ul>
+        <app-list-artist></app-list-artist>
     </div>
     <div class="section-right">
         <h2>Álbumes populares</h2>

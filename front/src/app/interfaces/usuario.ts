@@ -4,4 +4,5 @@ export interface Usuario {
     password?: string;
     fecha_nacimiento?: string;
     genero?: string;
+    foto_perfil?: string;
 }

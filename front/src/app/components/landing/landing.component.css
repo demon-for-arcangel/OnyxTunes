@@ -109,3 +109,24 @@ footer button {
 footer button:hover {
     background-color: #ff3333;
 }
+
+app-list-artist .artista-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    padding: 10px;
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+app-list-artist .artista-card:hover {
+    transform: scale(1.05);
+}
+
+app-list-artist .artista-card p {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+    margin: 0;
+}

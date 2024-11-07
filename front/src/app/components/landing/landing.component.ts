@@ -3,11 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { ListArtistComponent } from "../users/list-artist/list-artist.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ListArtistComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css'
 })
