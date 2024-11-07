@@ -1,0 +1,49 @@
+<header>
+    <div class="header-content">
+        <img src="assets/images/onyxtunes.jpeg" alt="OnyxTunes Logo" class="logo" />
+        <button (click)="navigateTo('home')">
+            <i class="pi pi-home" style="font-size: 1.5rem"></i>
+        </button> 
+        <input
+            type="text"
+            placeholder="Desea reproducir algo..."
+            [(ngModel)]="searchTerm"
+            (input)="searchArtists()"
+        />
+        <div class="btn-auth">
+            <button (click)="navigateTo('login')">Iniciar Sesión</button>
+            <button (click)="navigateTo('register')">Registrarte</button>    
+        </div>
+    </div>
+</header>
+  
+<main>
+    <div class="section-left">
+        <h2>Artistas:</h2>
+        <ul>
+            @for(artist of artists; track artist){
+                <li>{{ artist }}</li>
+            }
+        </ul>
+    </div>
+    <div class="section-right">
+        <h2>Álbumes populares</h2>
+        <ul>
+            @for(album of albumes; track album){
+                <li>{{ album }}</li>
+            }
+        </ul>
+        <h2>Listas populares</h2>
+        <ul>
+            @for(lista of listas; track lista){
+                <li>{{ lista }}</li>
+            }
+        </ul>
+    </div>
+</main>
+
+
+<footer>
+    <p>Regístrate para disfrutar de todas las características que ofrece la plataforma</p>
+    <button (click)="navigateTo('register')">Registrarse</button>
+</footer>

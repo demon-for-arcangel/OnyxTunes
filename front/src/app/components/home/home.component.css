@@ -1,0 +1,111 @@
+header {
+    color: white; 
+    padding: 5px;  
+}
+
+.header-content {
+    margin-top: 10px;
+    display: flex; 
+    align-items: center;   
+}
+
+.header-content .logo {
+    height: 50px; 
+    margin-right: 25%; 
+    margin-left: 20px;
+}
+
+header button {
+    padding: 15px;     
+    margin-left: 10px;     
+    background-color: #1f1f1f;
+    color: white;          
+    border: none;      
+    border-radius: 50px;   
+    cursor: pointer;       
+    transition: background-color 0.3s; 
+}
+
+header button:hover {
+    background-color: darkred; 
+}
+
+header h1 {
+    flex-grow: 1;          
+    text-align: center;    
+}
+
+header input {
+    padding: 15px;          
+    padding-right: 250px;
+    margin-left: 10px;     
+    margin-right: 10px;    
+    border-radius: 40px;   
+    border: 1px solid #ccc; 
+    outline: none;         
+}
+
+header input:focus {
+    border-color: red;
+}
+
+main {
+    margin: 10px;
+    color: white;
+    display: flex;  
+    justify-content: space-between; 
+    padding: 20px; 
+    height: 70vh;
+}
+
+.logo {
+    height: 50px; 
+    width: auto;  
+    border-radius: 8px; 
+}
+
+.btn-auth {
+    margin-left: 20%;
+}
+
+.section-left {
+    background-color: #1f1f1f;
+    width: 25%;  
+    padding-left: 20px; 
+    border-radius: 20px;
+}
+
+.section-right {
+    background-color: #1f1f1f;
+    width: 70%;  
+    padding-left: 20px; 
+    border-radius: 20px; 
+}
+
+/* Footer Styles */
+footer {
+    background: linear-gradient(to right, #780000, #f36f6f);  
+    color: white; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 20px; 
+    border-radius: 10px;
+}
+
+footer p {
+    margin: 0; 
+}
+
+footer button {
+    background-color: rgb(255, 255, 255); 
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 50px; 
+    cursor: pointer; 
+    transition: background-color 0.3s;
+}
+
+footer button:hover {
+    background-color: #ff3333;
+}

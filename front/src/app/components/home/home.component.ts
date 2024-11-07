@@ -1,0 +1,27 @@
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-home',
+  standalone: true,
+  imports: [FormsModule],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css'
+})
+export class HomeComponent {
+  searchTerm: string = '';
+  artists: string[] = ['Artista 1', 'Artista 2', 'Artista 3', 'Artista 4'];
+  albumes: string[] = ['album1', 'album 2', 'album 3', 'album 4'];
+  listas: string[] = ['lista 1', 'lista 2', 'lista 3', 'lista 4'];
+  
+  constructor(private router: Router){}
+
+  navigateTo(route: string) {
+    this.router.navigate([`/${route}`]);
+  }
+  
+  searchArtists() {
+    console.log('Buscando:', this.searchTerm);
+  }
+}

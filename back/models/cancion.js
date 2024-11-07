@@ -11,20 +11,42 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsToMany(models.Genero, {
+        through: models.GeneroCancion,
+        foreignKey: 'cancion_id',
+        as: 'generos'
+      });
+    
+      this.belongsToMany(models.Usuario, {
+        through: models.UsuarioCancion,
+        foreignKey: 'cancion_id',
+        as: 'usuario'
+      });
+    
+      this.belongsToMany(models.Playlist, {
+        through: models.CancionPlaylist,
+        foreignKey: 'cancion_id',
+      });
+
+      this.hasMany(models.ReaccionComentario, {
+        foreignKey: 'cancion_id',
+        as: 'reacciones_comentarios'
+      });
+    
+      this.belongsTo(models.Album, {
+        foreignKey: 'album_id'
+      });
     }
   }
   Cancion.init({
-    id_album: DataTypes.INTEGER,
-    id_artista: DataTypes.INTEGER,
     titulo: DataTypes.STRING,
     duracion: DataTypes.TIME,
-    archivo_audio: DataTypes.STRING,
-    reproducciones: DataTypes.INTEGER,
-    fecha_subida: DataTypes.DATE,
-    genero: DataTypes.STRING
+    album_id: DataTypes.INTEGER,
+    artista_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Cancion',
+    tableName: process.env.TABLA_CANCION
   });
   return Cancion;
 };
