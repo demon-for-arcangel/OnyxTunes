@@ -1,0 +1,6 @@
+@for(artista of artistas; track artista){
+    <div class="artista-card">
+        <img [src]="artista.foto_perfil" alt="{{ artista.nombre }}" class="artista-imagen">
+        <p>{{ artista.nombre }}</p>
+    </div>
+}

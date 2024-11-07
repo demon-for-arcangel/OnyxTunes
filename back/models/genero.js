@@ -11,14 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsToMany(models.Cancion, {
+        through: models.GeneroCancion,
+        foreignKey: 'genero_id'
+      });
     }
   }
   Genero.init({
-    nombre: DataTypes.STRING,
-    descripcion: DataTypes.TEXT
+    nombre: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Genero',
+    tableName: process.env.TABLA_GENERO
   });
   return Genero;
 };

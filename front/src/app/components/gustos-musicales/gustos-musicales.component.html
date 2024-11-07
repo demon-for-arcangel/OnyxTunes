@@ -1,0 +1,26 @@
+<div class="gustos-musicales-container">
+    <h2>Selecciona tus artistas favoritos</h2>
+
+    <input 
+    type="text" 
+    placeholder="Buscar artista..." 
+    [(ngModel)]="busqueda" 
+    class="busqueda-input"
+    />
+
+    <div class="artistas-grid">
+        @for(artista of artistasFiltrados; track artista){
+            <div class="artista-item" (click)="seleccionarArtista(artista.nombre)" [class.seleccionado]="esArtistaSeleccionado(artista.nombre)">
+                <img [src]="artista.imagen" alt="{{ artista.nombre }}" class="artista-imagen" />
+                <p>{{ artista.nombre }}</p>
+            </div>
+        }
+    </div>
+
+    <button 
+    type="button" 
+    [disabled]="artistasSeleccionados.length < 3"
+    >
+    Confirmar Selección
+    </button>
+</div>

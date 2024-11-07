@@ -14,12 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Historial.init({
-    id_usuario: DataTypes.INTEGER,
-    id_cancion: DataTypes.INTEGER,
+    usuario_id: DataTypes.INTEGER,
+    cancion_id: DataTypes.INTEGER,
     fecha_reproduccion: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Historial',
+    tableName: process.env.TABLA_HISTORIAL
   });
   return Historial;
 };
