@@ -5,6 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { GustosMusicalesComponent } from './components/gustos-musicales/gustos-musicales.component';
 import { SelectAccessComponent } from './components/select-access/select-access.component';
 import { HomeComponent } from './components/home/home.component';
+import { PlatformManagementComponent } from './components/platform-management/platform-management.component';
 
 
 export const routes: Routes = [
@@ -13,5 +14,6 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'gustosMusicales', component: GustosMusicalesComponent },
     { path: 'selectAccess', component: SelectAccessComponent },
-    { path: 'home', component: HomeComponent }
+    { path: 'home', component: HomeComponent },
+    { path: 'platformManagement', component: PlatformManagementComponent}
 ];
