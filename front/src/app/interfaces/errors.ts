@@ -4,4 +4,5 @@ export interface Errors {
     password?: string;
     fecha_nacimiento?: string;
     genero?: string;
+    login?: string;
 }

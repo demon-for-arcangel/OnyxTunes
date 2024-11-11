@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Usuario } from '../../interfaces/usuario';
+import { Errors } from '../../interfaces/errors';
 
 @Component({
   selector: 'app-login',
@@ -14,26 +15,42 @@ import { Usuario } from '../../interfaces/usuario';
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  errors?: Usuario = {};
+  errors: Errors = {};  // Usamos la interfaz Errors
 
   constructor(private authService: AuthService, private router: Router) {}
 
   login() {
+    this.errors = {};  // Limpiar errores antes de hacer la solicitud
+
+    if (!this.email.trim()) {
+      this.errors.email = 'El correo electrónico es obligatorio.';
+    }
+
+    if (!this.password.trim()) {
+      this.errors.password = 'La contraseña es obligatoria.';
+    }
+
+    // Si hay errores, no continuar con el login
+    if (Object.keys(this.errors).length > 0) {
+      return;
+    }
+
+    // Si no hay errores, proceder con el login
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
         console.log('Iniciada la sesión');
-        const token = response.token; // Asegúrate de que response.token sea solo un string
-        localStorage.setItem('token', token); // Guarda solo el token
+        const token = response.token;
+        localStorage.setItem('token', token);
         this.authService.getUserByToken(token).subscribe({
           next: (user) => {
-            console.log(user)
+            console.log(user);
             if (user && user.roles && user.roles.length > 0) {
-              const userRole = user.roles[0].nombre; 
-    
+              const userRole = user.roles[0].nombre;
+
               if (userRole === 'Usuario') {
-                this.router.navigate(['/home']); 
+                this.router.navigate(['/home']);
               } else if (userRole === 'Artista' || userRole === 'Administrador') {
-                this.router.navigate(['/selectAccess']); 
+                this.router.navigate(['/selectAccess']);
               }
             }
           },
@@ -44,7 +61,8 @@ export class LoginComponent {
       },
       error: (error) => {
         console.error('Error en el login:', error);
+        this.errors.login = 'Credenciales incorrectas o error en el servidor.';
       }
-    });    
+    });
   }
 }
