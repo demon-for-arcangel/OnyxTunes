@@ -15,4 +15,12 @@ export class UserService {
   getArtists(): Observable<Usuario[]>{
     return this.http.get<Usuario[]>(`${this.url}/users/artists`)
   }
+
+  getUsuarios(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.url}/usuarios`);
+  }
+  
+  deleteUsuario(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/usuarios/${userId}`);
+  }
 }
