@@ -6,6 +6,9 @@ import { GustosMusicalesComponent } from './components/gustos-musicales/gustos-m
 import { SelectAccessComponent } from './components/select-access/select-access.component';
 import { HomeComponent } from './components/home/home.component';
 import { PlatformManagementComponent } from './components/platform-management/platform-management.component';
+import { UsersComponent } from './components/management/users/users.component';
+import { ArtistsComponent } from './components/management/artists/artists.component';
+import { AlbumsComponent } from './components/management/albums/albums.component';
 
 
 export const routes: Routes = [
@@ -15,5 +18,8 @@ export const routes: Routes = [
     { path: 'gustosMusicales', component: GustosMusicalesComponent },
     { path: 'selectAccess', component: SelectAccessComponent },
     { path: 'home', component: HomeComponent },
-    { path: 'platformManagement', component: PlatformManagementComponent}
+    { path: 'platformManagement', component: PlatformManagementComponent},
+    { path: 'platform/userManagement', component: UsersComponent },
+    { path: 'platform/artistManagement', component: ArtistsComponent },
+    { path: 'platform/albumsManagement', component: AlbumsComponent },
 ];
