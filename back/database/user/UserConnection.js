@@ -10,13 +10,22 @@ class UserModel {
 
     async indexUser() {
         try {
-            const users = await models.Usuario.findAll();
+            const users = await models.Usuario.findAll({
+                include: [
+                    {
+                        model: models.Rol,
+                        as: 'roles',
+                        attributes: ['nombre']  
+                    }
+                ]
+            });
             return users;
-        }catch (error) {
+        } catch (error) {
             console.error('Error al mostrar la lista de usuarios: ', error);
             throw error;
         }
     }
+    
 
     async indexArtist() {
         try {

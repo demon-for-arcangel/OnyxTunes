@@ -8,11 +8,11 @@
     <table class="user-table">
         <thead>
             <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Acciones</th>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody class="body-table">
@@ -21,7 +21,7 @@
                     <td>{{ usuario.id }}</td>
                     <td>{{ usuario.nombre }}</td>
                     <td>{{ usuario.email }}</td>
-                    <td>{{ usuario.roles }}</td>
+                    <td>{{ usuario.roles[0]?.nombre }}</td>
                     <td>
                         <button (click)="editUsuario(usuario)">Editar</button>
                         <button (click)="deleteUsuario(usuario.id)">Eliminar</button>
