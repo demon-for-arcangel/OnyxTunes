@@ -6,28 +6,28 @@
     </div>
     
     <table class="user-table">
-    <thead>
-        <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>Rol</th>
-        <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for(usuario of usuarios; track usuario){
+        <thead>
             <tr>
-                <td>{{ usuario.id }}</td>
-                <td>{{ usuario.nombre }}</td>
-                <td>{{ usuario.email }}</td>
-                <td>{{ usuario.roles[0]?.nombre }}</td>
-                <td>
-                    <button (click)="editUsuario(usuario)">Editar</button>
-                    <button (click)="deleteUsuario(usuario.id)">Eliminar</button>
-                </td>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Acciones</th>
             </tr>
-        }
-    </tbody>
+        </thead>
+        <tbody class="body-table">
+            @for(usuario of usuarios; track usuario){
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.roles }}</td>
+                    <td>
+                        <button (click)="editUsuario(usuario)">Editar</button>
+                        <button (click)="deleteUsuario(usuario.id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 </div>

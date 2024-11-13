@@ -13,7 +13,6 @@ import { UserService } from '../../../services/user.service';
 })
 export class UsersComponent {
   usuarios: Usuario[] = [];
-  filteredUsuarios: Usuario[] = [];
   searchQuery: string = '';
 
   constructor(private userService: UserService) {}
@@ -26,7 +25,7 @@ export class UsersComponent {
     this.userService.getUsuarios().subscribe({
       next: (usuarios) => {
         this.usuarios = usuarios;
-        this.filteredUsuarios = usuarios;
+        console.log(this.usuarios)
       },
       error: (error) => {
         console.error('Error al cargar usuarios:', error);
@@ -36,11 +35,11 @@ export class UsersComponent {
 
   searchUsuarios(): void {
     if (this.searchQuery) {
-      this.filteredUsuarios = this.usuarios.filter(usuario =>
+      this.usuarios = this.usuarios.filter(usuario =>
         usuario.nombre?.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     } else {
-      this.filteredUsuarios = [...this.usuarios]; 
+      this.usuarios = [...this.usuarios]; 
     }
   }
 
@@ -52,7 +51,7 @@ export class UsersComponent {
     if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
       this.userService.deleteUsuario(userId).subscribe({
         next: () => {
-          this.filteredUsuarios = this.filteredUsuarios.filter(usuario => usuario.id !== userId);
+          this.usuarios = this.usuarios.filter(usuario => usuario.id !== userId);
           this.usuarios = this.usuarios.filter(usuario => usuario.id !== userId);
         },
         error: (error) => {
