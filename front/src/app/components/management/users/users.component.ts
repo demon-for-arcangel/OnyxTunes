@@ -13,7 +13,13 @@ import { UserService } from '../../../services/user.service';
 })
 export class UsersComponent {
   usuarios: Usuario[] = [];
+  filteredUsuarios: Usuario[] = [];
   searchQuery: string = '';
+
+  paginatedUsuarios: Usuario[] = [];
+  itemsPerPage: number = 5;  
+  currentPage: number = 1;
+  totalPages: number = 0;
 
   constructor(private userService: UserService) {}
 
@@ -25,12 +31,34 @@ export class UsersComponent {
     this.userService.getUsuarios().subscribe({
       next: (usuarios) => {
         this.usuarios = usuarios;
-        console.log(this.usuarios)
+        this.totalPages = Math.ceil(this.usuarios.length / this.itemsPerPage);
+        this.updatePaginatedUsuarios();
       },
       error: (error) => {
         console.error('Error al cargar usuarios:', error);
       }
     });
+  }
+  
+  updatePaginatedUsuarios(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.paginatedUsuarios = this.usuarios.slice(start, end);
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedUsuarios();
+    }
+  }
+  
+  nextPage(): void {
+    this.goToPage(this.currentPage + 1);
+  }
+  
+  prevPage(): void {
+    this.goToPage(this.currentPage - 1);
   }
 
   searchUsuarios(): void {
