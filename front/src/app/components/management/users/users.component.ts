@@ -3,13 +3,21 @@ import { AuthService } from '../../../services/auth.service';
 import { Usuario } from '../../../interfaces/usuario';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../services/user.service';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogComponent } from '../../utils/dialog/dialog.component';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogModule } from 'primeng/dialog';
+import { CreateUserComponent } from '../create/create-user/create-user.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, DialogComponent, DialogModule, ConfirmDialogModule],
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css'
+  styleUrl: './users.component.css',
+  providers: [DialogService]
 })
 export class UsersComponent {
   usuarios: Usuario[] = [];
@@ -21,7 +29,10 @@ export class UsersComponent {
   currentPage: number = 1;
   totalPages: number = 0;
 
-  constructor(private userService: UserService) {}
+  ref: DynamicDialogRef | undefined;
+  dialog: any;
+
+  constructor(private userService: UserService, public dialogService: DialogService) {}
 
   ngOnInit(): void {
     this.loadUsuarios();
@@ -39,7 +50,16 @@ export class UsersComponent {
       }
     });
   }
-  
+
+  newUser(){
+    this.ref = this.dialogService.open(CreateUserComponent, {
+      header: 'Agregar Nuevo Usuario',
+      modal: true,
+      width: '60%',
+      styleClass: 'custom-modal'
+    })
+  }
+
   updatePaginatedUsuarios(): void {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;

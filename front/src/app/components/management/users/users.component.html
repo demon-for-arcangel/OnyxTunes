@@ -3,7 +3,11 @@
     <div class="search-bar">
         <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar usuario..." />
         <button (click)="searchUsuarios()">Buscar</button>
-        <button>Añadir Usuario</button>
+        <button (click)="newUser()">
+            <i class="pi pi-plus">
+                Añadir Usuario
+            </i>
+        </button>
     </div>
     
     <table class="user-table">

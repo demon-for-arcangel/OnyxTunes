@@ -93,7 +93,7 @@ class UserModel {
   
     async registerUser(userData) {
         try {
-            if (!userData || typeof userData !== 'object') {
+            if (!userData) {
                 throw new Error('Datos de usuario inválidos');
             }
         
