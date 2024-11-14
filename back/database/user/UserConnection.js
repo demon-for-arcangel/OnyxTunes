@@ -110,6 +110,20 @@ class UserModel {
         }
     }
 
+    async createUser(nombre, email, hashedPassword) {
+        try {
+            const newUser = await models.Usuario.create({
+                nombre,
+                email,
+                password: hashedPassword,
+            });
+            return newUser;
+        } catch (error) {
+            console.error('Error al crear el usuario:', error);
+            throw new Error('Error al crear usuario');
+        }
+    }    
+
     createUserRols = async (userId, arrRolesName) => {
         let newRoles = [];
         try {
