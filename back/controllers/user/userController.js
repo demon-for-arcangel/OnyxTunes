@@ -37,7 +37,7 @@ const sendMail = async (mailOptions) => {}
 const registerUserByAdmin = async (req, res) => {}
 
 const createUser = async (req, res) => {
-    const { nombre, email, password } = req.body;
+    const { nombre, email, password, roles } = req.body; 
 
     try {
         const existingUser = await conx.getUserByEmail(email);
@@ -50,12 +50,17 @@ const createUser = async (req, res) => {
 
         const newUser = await conx.createUser(nombre, email, hashedPassword);
 
+        if (roles && roles.length > 0) {
+            await conx.createUserRols(newUser.id, roles); 
+        }
+
         res.status(201).json({ msg: "Usuario creado exitosamente", user: newUser });
     } catch (error) {
         console.error("Error al crear usuario", error);
         res.status(500).json({ msg: "Error al crear usuario" });
     }
 };
+
 
 const updateUser = async (req, res) => {}
 
