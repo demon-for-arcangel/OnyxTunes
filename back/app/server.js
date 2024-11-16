@@ -15,9 +15,10 @@ class Server {
     this.middlewares();
 
     this.RoutePath = "/api";
+
     this.apiFiles = "/api/file";
     this.apiMail = "/api/mail";
-    this.apiRols = "/api/rols"
+
     this.apiEvents = "/api/events"
     this.apiPreferences = "/api/preferences"
     this.apiUserPreferences = "/api/userPreferences"
@@ -45,6 +46,7 @@ class Server {
 
   routes() {
     this.app.use(this.RoutePath, require("../routes/userRoutes"));
+    this.app.use(this.RoutePath, require('../routes/rolRoutes'));
 /*     this.app.use(this.apiMail, require('../routes/services/mailRoutes'));
     this.app.use(this.apiRols, require('../routes/rols/rolRoutes'));
     this.app.use(this.apiEvents, require('../routes/events/eventsRoutes'));

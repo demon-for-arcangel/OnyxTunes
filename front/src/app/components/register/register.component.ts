@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Usuario } from '../../interfaces/usuario';
+import { Errors } from '../../interfaces/errors';
 
 @Component({
   selector: 'app-register',
@@ -14,8 +15,17 @@ import { Usuario } from '../../interfaces/usuario';
 })
 export class RegisterComponent {
   step: number = 1;
-  registerData: Usuario = {}; 
-  errors?: Usuario = {}; 
+  registerData: Usuario = {
+    id: 0,               
+    nombre: '',          
+    email: '',           
+    password: '',        
+    fecha_nacimiento: '',
+    genero: '',          
+    foto_perfil: '',     
+    roles: []      
+  };
+  errors: Errors = {}; 
 
   constructor(private authService: AuthService, private http: HttpClient, private router: Router) {}
 
