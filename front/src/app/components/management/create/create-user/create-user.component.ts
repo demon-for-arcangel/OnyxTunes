@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { UserService } from '../../../../services/user.service';
+import { RolService } from '../../../../services/rol.service';
+import { Rol } from '../../../../interfaces/usuario';
 
 @Component({
   selector: 'app-create-user',
@@ -20,17 +22,27 @@ import { UserService } from '../../../../services/user.service';
   templateUrl: './create-user.component.html',
   styleUrl: './create-user.component.css'
 })
-export class CreateUserComponent {
+export class CreateUserComponent implements OnInit {
   nombre: string = '';
   email: string = '';
   password: string = '';
   rol: string = '';
+  roles: Rol[] = [];
   
   errors: any = {};
-
   showPassword: boolean = false;
 
-  constructor(public ref: DynamicDialogRef, private userService: UserService) {}
+  constructor(public ref: DynamicDialogRef, private userService: UserService, private rolService: RolService) {}
+
+  ngOnInit(): void {
+    this.loadRoles();
+  }
+
+  loadRoles() {
+    this.rolService.getRoles().subscribe((roles) => {
+      this.roles = roles;
+    });
+  }
 
   validateForm() {
     this.errors = {};

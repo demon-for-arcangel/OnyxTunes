@@ -41,9 +41,9 @@
     <label for="rol">Rol</label>
     <select id="rol" [(ngModel)]="rol" name="rol">
       <option value="">Seleccione un rol</option>
-      <option value="Administrador">Administrador</option>
-      <option value="Usuario">Usuario</option>
-      <option value="Artista">Artista</option>
+      @for(rol of roles; track rol){
+        <option [value]="rol.nombre">{{ rol.nombre }}</option>
+      }
     </select>
 
     @if(errors.rol){
