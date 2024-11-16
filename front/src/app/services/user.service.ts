@@ -19,6 +19,10 @@ export class UserService {
   getUsuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.url}/users`);
   }
+
+  createUsuario(datosUser: {nombre: string, email: string, password: string, rol: string}): Observable<Usuario> {
+    return this.http.post<Usuario>(`${this.url}/users/new`, datosUser);
+  }
   
   deleteUsuario(userId: number): Observable<void> {
     return this.http.delete<void>(`${this.url}/usuarios/${userId}`);

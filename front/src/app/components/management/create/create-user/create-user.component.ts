@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
+import { UserService } from '../../../../services/user.service';
 
 @Component({
   selector: 'app-create-user',
@@ -29,7 +30,7 @@ export class CreateUserComponent {
 
   showPassword: boolean = false;
 
-  constructor(public ref: DynamicDialogRef) {}
+  constructor(public ref: DynamicDialogRef, private userService: UserService) {}
 
   validateForm() {
     this.errors = {};
@@ -59,11 +60,23 @@ export class CreateUserComponent {
 
   onSubmit() {
     if (this.validateForm()) {
-      this.ref.close({
+      const userData = {
         nombre: this.nombre,
         email: this.email,
         password: this.password,
         rol: this.rol
+      };
+  
+      this.userService.createUsuario(userData).subscribe({
+        next: (response) => {
+          this.ref.close(response);
+        },
+        error: (error) => {
+          console.error('Error al crear usuario:', error);
+          if (error.error?.errors) {
+            this.errors = error.error.errors;
+          }
+        }
       });
     }
   }
