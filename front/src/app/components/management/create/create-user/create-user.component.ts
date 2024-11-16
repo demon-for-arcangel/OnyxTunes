@@ -64,8 +64,10 @@ export class CreateUserComponent {
         nombre: this.nombre,
         email: this.email,
         password: this.password,
-        rol: this.rol
+        roles: [this.rol]
       };
+
+      console.log(userData);
   
       this.userService.createUsuario(userData).subscribe({
         next: (response) => {
