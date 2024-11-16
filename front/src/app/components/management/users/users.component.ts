@@ -8,6 +8,7 @@ import { DialogComponent } from '../../utils/dialog/dialog.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogModule } from 'primeng/dialog';
 import { CreateUserComponent } from '../create/create-user/create-user.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -30,10 +31,13 @@ export class UsersComponent {
   ref: DynamicDialogRef | undefined;
   dialog: any;
 
-  constructor(private userService: UserService, public dialogService: DialogService) {}
+  constructor(private userService: UserService, public dialogService: DialogService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadUsuarios();
+  }
+  goBack() {
+    this.router.navigate(['/platformManagement']);
   }
 
   loadUsuarios(): void {
