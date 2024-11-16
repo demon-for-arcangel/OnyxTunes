@@ -14,3 +14,25 @@ html, body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+
+.custom-modal .p-dialog-header {
+    background-color: #1e1e1e;
+    color: white ;
+    border-bottom: 1px solid #333 ;
+}
+
+.custom-modal .p-dialog-header-icon {
+    color: white ;
+}
+
+.custom-modal .p-dialog-header-icon:hover {
+    background-color: #333 ;
+    color: white ;
+}
+
+.custom-modal .p-dialog-title {
+    color: white ;
+    font-size: 1.2rem ;
+    font-weight: 500 ;
+}

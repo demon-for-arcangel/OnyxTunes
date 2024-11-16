@@ -10,13 +10,22 @@ class UserModel {
 
     async indexUser() {
         try {
-            const users = await models.Usuario.findAll();
+            const users = await models.Usuario.findAll({
+                include: [
+                    {
+                        model: models.Rol,
+                        as: 'roles',
+                        attributes: ['nombre']  
+                    }
+                ]
+            });
             return users;
-        }catch (error) {
+        } catch (error) {
             console.error('Error al mostrar la lista de usuarios: ', error);
             throw error;
         }
     }
+    
 
     async indexArtist() {
         try {
@@ -84,7 +93,7 @@ class UserModel {
   
     async registerUser(userData) {
         try {
-            if (!userData || typeof userData !== 'object') {
+            if (!userData) {
                 throw new Error('Datos de usuario inválidos');
             }
         
@@ -100,6 +109,25 @@ class UserModel {
             throw error;
         }
     }
+
+    async createUser(nombre, email, hashedPassword, arrRolesName = []) {
+        try {
+            const newUser = await models.Usuario.create({
+                nombre,
+                email,
+                password: hashedPassword,
+            });
+    
+            if (arrRolesName.length > 0) {
+                await this.createUserRols(newUser.id, arrRolesName);
+            }
+    
+            return newUser;
+        } catch (error) {
+            console.error('Error al crear el usuario:', error);
+            throw new Error('Error al crear usuario');
+        }
+    }   
 
     createUserRols = async (userId, arrRolesName) => {
         let newRoles = [];

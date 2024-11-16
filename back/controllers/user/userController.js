@@ -36,6 +36,32 @@ const sendMail = async (mailOptions) => {}
 
 const registerUserByAdmin = async (req, res) => {}
 
+const createUser = async (req, res) => {
+    const { nombre, email, password, roles } = req.body; 
+
+    try {
+        const existingUser = await conx.getUserByEmail(email);
+        if (existingUser) {
+            return res.status(400).json({ msg: "El correo ya está en uso" });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const newUser = await conx.createUser(nombre, email, hashedPassword);
+
+        if (roles && roles.length > 0) {
+            await conx.createUserRols(newUser.id, roles); 
+        }
+
+        res.status(201).json({ msg: "Usuario creado exitosamente", user: newUser });
+    } catch (error) {
+        console.error("Error al crear usuario", error);
+        res.status(500).json({ msg: "Error al crear usuario" });
+    }
+};
+
+
 const updateUser = async (req, res) => {}
 
 const deleteUsers = async (req, res) => {}
@@ -63,6 +89,6 @@ const getUserByToken = async (req, res) => {
 const searchUsers = async (req, res) => {}
 
 module.exports = {
-    index, indexArtist, getUserById, getUserByEmail, sendMail, registerUserByAdmin, updateUser, deleteUsers, 
+    index, indexArtist, getUserById, getUserByEmail, createUser, sendMail, registerUserByAdmin, updateUser, deleteUsers, 
     getUserByToken, searchUsers
 }

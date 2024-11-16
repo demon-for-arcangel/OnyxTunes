@@ -1,0 +1,44 @@
+<div class="user-management">
+    <h1>Gestión de Usuarios</h1>
+    <div class="search-bar">
+        <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar usuario..." />
+        <button (click)="searchUsuarios()">Buscar</button>
+        <button (click)="newUser()">
+            <i class="pi pi-plus">
+                Añadir Usuario
+            </i>
+        </button>
+    </div>
+    
+    <table class="user-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="body-table">
+            @for(usuario of paginatedUsuarios; track usuario){
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.roles[0]?.nombre }}</td>
+                    <td>
+                        <button (click)="editUsuario(usuario)">Editar</button>
+                        <button (click)="deleteUsuario(usuario.id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="pagination-controls">
+        <button (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+        <span>Página {{ currentPage }} de {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+    </div>
+</div>
