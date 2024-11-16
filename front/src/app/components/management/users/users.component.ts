@@ -8,8 +8,6 @@ import { DialogComponent } from '../../utils/dialog/dialog.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogModule } from 'primeng/dialog';
 import { CreateUserComponent } from '../create/create-user/create-user.component';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-users',
@@ -56,8 +54,21 @@ export class UsersComponent {
       header: 'Agregar Nuevo Usuario',
       modal: true,
       width: '60%',
-      styleClass: 'custom-modal'
-    })
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e'
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true
+    });
   }
 
   updatePaginatedUsuarios(): void {
