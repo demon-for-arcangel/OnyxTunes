@@ -24,7 +24,7 @@ export class UsersComponent {
   searchQuery: string = '';
 
   paginatedUsuarios: Usuario[] = [];
-  itemsPerPage: number = 5;  
+  maxItems: number = 5;  
   currentPage: number = 1;
   totalPages: number = 0;
 
@@ -36,6 +36,7 @@ export class UsersComponent {
   ngOnInit(): void {
     this.loadUsuarios();
   }
+  
   goBack() {
     this.router.navigate(['/platformManagement']);
   }
@@ -44,7 +45,7 @@ export class UsersComponent {
     this.userService.getUsuarios().subscribe({
       next: (usuarios) => {
         this.usuarios = usuarios;
-        this.totalPages = Math.ceil(this.usuarios.length / this.itemsPerPage);
+        this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
         this.updatePaginatedUsuarios();
       },
       error: (error) => {
@@ -76,8 +77,8 @@ export class UsersComponent {
   }
 
   updatePaginatedUsuarios(): void {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
+    const start = (this.currentPage - 1) * this.maxItems;
+    const end = start + this.maxItems;
     this.paginatedUsuarios = this.usuarios.slice(start, end);
   }
 
@@ -107,7 +108,7 @@ export class UsersComponent {
     }
     
     this.currentPage = 1; 
-    this.totalPages = Math.ceil(this.usuarios.length / this.itemsPerPage);
+    this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
     this.updatePaginatedUsuarios();
   }
 

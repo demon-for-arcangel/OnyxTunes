@@ -64,6 +64,7 @@
 .user-table {
     width: 100%;
     border-collapse: collapse;
+    color: black;
 }
 
 .user-table th, .user-table td {
