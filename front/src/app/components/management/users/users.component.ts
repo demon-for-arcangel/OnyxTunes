@@ -94,12 +94,17 @@ export class UsersComponent {
 
   searchUsuarios(): void {
     if (this.searchQuery) {
-      this.usuarios = this.usuarios.filter(usuario =>
+      const allUsuarios = [...this.usuarios]; 
+      this.usuarios = allUsuarios.filter(usuario =>
         usuario.nombre?.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     } else {
-      this.usuarios = [...this.usuarios]; 
+      this.loadUsuarios(); 
     }
+    
+    this.currentPage = 1; 
+    this.totalPages = Math.ceil(this.usuarios.length / this.itemsPerPage);
+    this.updatePaginatedUsuarios();
   }
 
   editUsuario(usuario: Usuario): void {
