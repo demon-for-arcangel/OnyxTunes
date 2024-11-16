@@ -46,28 +46,35 @@ export class CreateUserComponent implements OnInit {
 
   validateForm() {
     this.errors = {};
+    let isValid = true;
     
     if (!this.nombre) {
       this.errors.nombre = 'El nombre es requerido';
+      isValid = false;
     }
     
     if (!this.email) {
       this.errors.email = 'El email es requerido';
+      isValid = false;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) {
       this.errors.email = 'El email no es válido';
+      isValid = false;
     }
     
     if (!this.password) {
       this.errors.password = 'La contraseña es requerida';
+      isValid = false;
     } else if (this.password.length < 6) {
       this.errors.password = 'La contraseña debe tener al menos 6 caracteres';
+      isValid = false;
     }
     
     if (!this.rol) {
       this.errors.rol = 'El rol es requerido';
+      isValid = false;
     }
-
-    return Object.keys(this.errors).length === 0;
+  
+    return isValid;
   }
 
   onSubmit() {
