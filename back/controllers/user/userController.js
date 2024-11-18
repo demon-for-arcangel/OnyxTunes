@@ -61,8 +61,40 @@ const createUser = async (req, res) => {
     }
 };
 
+const updateUser = async (req, res) => {
+    const userId = req.params.id; 
+    const { nombre, email, password, roles } = req.body; 
 
-const updateUser = async (req, res) => {}
+    try {
+        const existingUser = await conx.getUserById(userId);
+        if (!existingUser) {
+            return res.status(404).json({ msg: "Usuario no encontrado" });
+        }
+
+        let hashedPassword;
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            hashedPassword = await bcrypt.hash(password, salt);
+        }
+
+        const updatedData = {
+            nombre: nombre || existingUser.nombre, 
+            email: email || existingUser.email, 
+            password: hashedPassword || existingUser.password 
+        };
+
+        const updatedUser = await conx.updateUser(userId, updatedData);
+
+        if (roles && roles.length > 0) {
+            await conx.createUserRols(userId, roles);
+        }
+
+        res.status(200).json({ msg: "Usuario actualizado exitosamente", user: updatedUser });
+    } catch (error) {
+        console.error("Error al actualizar usuario", error);
+        res.status(500).json({ msg: "Error al actualizar usuario" });
+    }
+};
 
 const deleteUsers = async (req, res) => {}
 

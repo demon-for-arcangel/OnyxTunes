@@ -25,7 +25,6 @@
     <table class="user-table">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Nombre</th>
                 <th>Email</th>
                 <th>Rol</th>
@@ -35,7 +34,6 @@
         <tbody class="body-table">
             @for(usuario of paginatedUsuarios; track usuario){
                 <tr>
-                    <td>{{ usuario.id }}</td>
                     <td>{{ usuario.nombre }}</td>
                     <td>{{ usuario.email }}</td>
                     <td>{{ usuario.roles && usuario.roles.length > 0 ? usuario.roles[0].nombre : 'Sin rol' }}</td>                    <td>
