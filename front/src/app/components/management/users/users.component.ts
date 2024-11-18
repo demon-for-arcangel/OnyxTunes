@@ -10,6 +10,7 @@ import { DialogModule } from 'primeng/dialog';
 import { CreateUserComponent } from '../create/create-user/create-user.component';
 import { Router } from '@angular/router';
 import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
+import { UpdateUserComponent } from '../update/update-user/update-user.component';
 
 @Component({
   selector: 'app-users',
@@ -119,6 +120,24 @@ export class UsersComponent {
 
   editUsuario(usuario: Usuario): void {
     console.log('Editar usuario:', usuario);
+    this.ref = this.dialogService.open(UpdateUserComponent, {
+      header: 'Editar Usuario',
+      modal: true,
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e'
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true
+    });
   }
 
   deleteUsuario(userId: number): void {

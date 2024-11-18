@@ -20,11 +20,29 @@ export class UserService {
     return this.http.get<Usuario[]>(`${this.url}/users`);
   }
 
+  getUserById(userId: string): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.url}/users/${userId}`);
+  }
+
+  getUserByEmail(email: string): Observable<any> {
+    return this.http.get(`${this.url}/users`, {
+      params: { email } 
+    });
+  }
+
+  getUserByToken(): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.url}/users/token`);
+  }
+
   createUsuario(datosUser: {nombre: string, email: string, password: string, roles: string[]}): Observable<Usuario> {
     return this.http.post<Usuario>(`${this.url}/users/new`, datosUser);
   }
   
   deleteUsuario(userId: number): Observable<void> {
     return this.http.delete<void>(`${this.url}/usuarios/${userId}`);
+  }
+
+  updateUser(userId: string, user: Usuario): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.url}/users/${userId}`, user);
   }
 }

@@ -28,13 +28,26 @@ const indexArtist = async (req, res = response) => {
     }
 };
 
-const getUserById = async (req, res) => {}
+const getUserById = async (req, res) => {} //por hacer
 
-const getUserByEmail = async (req, res) => {}
+const getUserByEmail = async (req, res) => {
+    const email = req.query;
 
-const sendMail = async (mailOptions) => {}
+    try {
+        const user = await conx.getUserByEmail(email);
+        if (!user) {
+            res.status(404).json({ msg: "Usuario no encontrado" }) 
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        console.error("Error al obtener usuario por email", error);
+        res.status(500).json({ msg: "Error al obtener usuario por email" });
+    }
+}
 
-const registerUserByAdmin = async (req, res) => {}
+const sendMail = async (mailOptions) => {} //por hacer
+
+const registerUserByAdmin = async (req, res) => {} //por hacer
 
 const createUser = async (req, res) => {
     const { nombre, email, password, roles } = req.body; 
@@ -45,8 +58,7 @@ const createUser = async (req, res) => {
             return res.status(400).json({ msg: "El correo ya está en uso" });
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = await conx.createUser(nombre, email, hashedPassword);
 
@@ -121,6 +133,6 @@ const getUserByToken = async (req, res) => {
 const searchUsers = async (req, res) => {}
 
 module.exports = {
-    index, indexArtist, getUserById, getUserByEmail, createUser, sendMail, registerUserByAdmin, updateUser, deleteUsers, 
+    index, indexArtist, getUserById, getUserByEmail, createUser, sendMail, /* registerUserByAdmin, */ updateUser, deleteUsers, 
     getUserByToken, searchUsers
 }
