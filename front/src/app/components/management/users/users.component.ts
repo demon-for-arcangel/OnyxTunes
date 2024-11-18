@@ -24,6 +24,8 @@ export class UsersComponent {
   filteredUsuarios: Usuario[] = [];
   searchQuery: string = '';
   showFilter: boolean = false;
+  filterType: 'todos' | 'artistas' | 'administradores' | 'usuarios' = 'todos';
+  private originalUsuarios: Usuario[] = [];
 
   paginatedUsuarios: Usuario[] = [];
   maxItems: number = 5;  
@@ -46,7 +48,8 @@ export class UsersComponent {
   loadUsuarios(): void {
     this.userService.getUsuarios().subscribe({
       next: (usuarios) => {
-        this.usuarios = usuarios;
+        this.originalUsuarios = usuarios;
+        this.usuarios = [...usuarios]; 
         this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
         this.updatePaginatedUsuarios();
       },
@@ -157,14 +160,26 @@ export class UsersComponent {
   }
 
   applyFilter(): void {
-    if (this.showFilter) {
-      this.usuarios = this.usuarios.filter(usuario =>
-        usuario.roles?.some(rol => rol.nombre.toLowerCase() === 'artista')
-      );
-    } else {
-      this.loadUsuarios(); // Recargar todos los usuarios
+    if (this.filterType === 'todos') {
+      this.usuarios = [...this.originalUsuarios]; 
+      this.currentPage = 1;
+      this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
+      this.updatePaginatedUsuarios();
+      return;
     }
-    
+  
+    const rolMap: { [key: string]: string } = {
+      'administradores': 'administrador',
+      'usuarios': 'usuario',
+      'artistas': 'artista'
+    };
+  
+    const rolBuscado = rolMap[this.filterType];
+  
+    this.usuarios = this.originalUsuarios.filter(usuario =>
+      usuario.roles?.some(rol => rol.nombre.toLowerCase() === rolBuscado.toLowerCase())
+    );
+  
     this.currentPage = 1;
     this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
     this.updatePaginatedUsuarios();

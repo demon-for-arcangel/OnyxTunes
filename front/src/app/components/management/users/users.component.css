@@ -93,3 +93,20 @@ button:hover {
     background-color: #005bb5;
     color: white;
 }
+
+.filter-container {
+    margin: 1rem 0;
+}
+
+select {
+    padding: 0.5rem;
+    border-radius: 4px;
+    background-color: #1e1e1e;
+    color: white;
+    border: 1px solid #333;
+}
+
+select option {
+    background-color: #1e1e1e;
+    color: white;
+}
