@@ -9,6 +9,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogModule } from 'primeng/dialog';
 import { CreateUserComponent } from '../create/create-user/create-user.component';
 import { Router } from '@angular/router';
+import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
 
 @Component({
   selector: 'app-users',
@@ -117,16 +118,34 @@ export class UsersComponent {
   }
 
   deleteUsuario(userId: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-      this.userService.deleteUsuario(userId).subscribe({
-        next: () => {
-          this.usuarios = this.usuarios.filter(usuario => usuario.id !== userId);
-          this.usuarios = this.usuarios.filter(usuario => usuario.id !== userId);
-        },
-        error: (error) => {
-          console.error('Error al eliminar usuario:', error);
-        }
-      });
-    }
+    this.ref = this.dialogService.open(DeleteConfirmationComponent, {
+      header: 'Confirmar Eliminación',
+      width: '400px',
+      modal: true,
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      data: {
+        userId: userId
+      }
+    });
+  
+    this.ref.onClose.subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.userService.deleteUsuario(userId).subscribe({
+          next: () => {
+            this.usuarios = this.usuarios.filter(usuario => usuario.id !== userId);
+            this.updatePaginatedUsuarios();
+          },
+          error: (error) => {
+            console.error('Error al eliminar usuario:', error);
+          }
+        });
+      }
+    });
   }
 }
