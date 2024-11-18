@@ -3,15 +3,15 @@
     <form (ngSubmit)="onSubmit()" #updateUserForm="ngForm">
         <div class="form-group">
             <label for="nombre">Nombre</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="user.nombre" required>
+            <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="usuario.nombre" required>
         </div>
         <div class="form-group">
             <label for="email">Correo Electrónico</label>
-            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="user.email" required>
+            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="usuario.email" required>
         </div>
         <div class="form-group">
             <label for="roles">Roles</label>
-            <select multiple class="form-control" id="roles" name="roles" [(ngModel)]="user.roles">
+            <select multiple class="form-control" id="roles" name="roles" [(ngModel)]="usuario.roles">
                 <option value="administrador">Administrador</option>
                 <option value="usuario">Usuario</option>
                 <option value="artista">Artista</option>

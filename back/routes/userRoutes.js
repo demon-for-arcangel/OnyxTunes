@@ -30,5 +30,6 @@ router.post('/users/new', [
 router.put('/users/:id', [
      /* checkToken, tokenCanAdmin */
 ], controlador.updateUser);
+router.get('/users/:id', controlador.getUserById);
 
 module.exports = router;

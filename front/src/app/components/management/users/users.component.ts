@@ -136,7 +136,10 @@ export class UsersComponent {
       },
       showHeader: true,
       closable: true,
-      closeOnEscape: true
+      closeOnEscape: true,
+      data: {
+        usuario: usuario
+      }
     });
   }
 
