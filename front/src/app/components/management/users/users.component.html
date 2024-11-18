@@ -7,6 +7,9 @@
     </div>
     <div class="search-bar">
         <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar usuario..." (keyup.enter)="searchUsuarios()"/>
+        <button (click)="toggleFilter()" [class.active]="showFilter">
+            <i class="pi pi-filter"></i>{{ showFilter ? 'Todos' : 'Solo Artistas' }}
+        </button>
         <button (click)="newUser()">
             <i class="pi pi-plus">
                 Añadir Usuario

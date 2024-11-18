@@ -23,6 +23,7 @@ export class UsersComponent {
   usuarios: Usuario[] = [];
   filteredUsuarios: Usuario[] = [];
   searchQuery: string = '';
+  showFilter: boolean = false;
 
   paginatedUsuarios: Usuario[] = [];
   maxItems: number = 5;  
@@ -147,5 +148,25 @@ export class UsersComponent {
         });
       }
     });
+  }
+
+
+  toggleFilter(): void {
+    this.showFilter = !this.showFilter;
+    this.applyFilter();
+  }
+
+  applyFilter(): void {
+    if (this.showFilter) {
+      this.usuarios = this.usuarios.filter(usuario =>
+        usuario.roles?.some(rol => rol.nombre.toLowerCase() === 'artista')
+      );
+    } else {
+      this.loadUsuarios(); // Recargar todos los usuarios
+    }
+    
+    this.currentPage = 1;
+    this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
+    this.updatePaginatedUsuarios();
   }
 }
