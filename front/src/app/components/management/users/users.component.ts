@@ -138,7 +138,7 @@ export class UsersComponent {
       closable: true,
       closeOnEscape: true,
       data: {
-        usuario: usuario
+        usuarioId: usuario.id
       }
     });
   }

@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './update-user.component.css'
 })
 export class UpdateUserComponent {
-  @Input() usuarioId!: string;
+  usuarioId!: string;
 
   usuario: any = {
     nombre: '',
@@ -25,11 +25,11 @@ export class UpdateUserComponent {
   constructor(private userService: UserService, private router: Router, private config: DynamicDialogConfig) {}
 
   ngOnInit(): void {
-    // Si se pasa el usuarioId, hacer la consulta para obtener los datos del usuario
+    // Obtener el usuarioId de la configuración del diálogo
+    this.usuarioId = this.config.data.usuarioId; // Asegúrate de que estás accediendo correctamente
     if (this.usuarioId) {
-      this.getUserById(this.usuarioId);
+      this.getUserById(this.usuarioId); // Llamar a la función para obtener los datos del usuario
     } else {
-      // Si no se pasa el ID, puedes manejarlo como desees
       console.error('No se proporcionó el usuarioId');
     }
   }
@@ -37,7 +37,7 @@ export class UpdateUserComponent {
   getUserById(id: string): void {
     this.userService.getUserById(id).subscribe(data => {
       this.usuario = data; 
-      console.log(this.usuario); 
+      console.log(this.usuario);
     }, error => {
       console.error('Error al obtener el usuario:', error);
     });
