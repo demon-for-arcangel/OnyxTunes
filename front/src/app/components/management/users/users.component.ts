@@ -8,6 +8,9 @@ import { DialogComponent } from '../../utils/dialog/dialog.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogModule } from 'primeng/dialog';
 import { CreateUserComponent } from '../create/create-user/create-user.component';
+import { Router } from '@angular/router';
+import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
+import { UpdateUserComponent } from '../update/update-user/update-user.component';
 
 @Component({
   selector: 'app-users',
@@ -21,26 +24,34 @@ export class UsersComponent {
   usuarios: Usuario[] = [];
   filteredUsuarios: Usuario[] = [];
   searchQuery: string = '';
+  showFilter: boolean = false;
+  filterType: 'todos' | 'artistas' | 'administradores' | 'usuarios' = 'todos';
+  private originalUsuarios: Usuario[] = [];
 
   paginatedUsuarios: Usuario[] = [];
-  itemsPerPage: number = 5;  
+  maxItems: number = 5;  
   currentPage: number = 1;
   totalPages: number = 0;
 
   ref: DynamicDialogRef | undefined;
   dialog: any;
 
-  constructor(private userService: UserService, public dialogService: DialogService) {}
+  constructor(private userService: UserService, public dialogService: DialogService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadUsuarios();
+  }
+  
+  goBack() {
+    this.router.navigate(['/platformManagement']);
   }
 
   loadUsuarios(): void {
     this.userService.getUsuarios().subscribe({
       next: (usuarios) => {
-        this.usuarios = usuarios;
-        this.totalPages = Math.ceil(this.usuarios.length / this.itemsPerPage);
+        this.originalUsuarios = usuarios;
+        this.usuarios = [...usuarios]; 
+        this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
         this.updatePaginatedUsuarios();
       },
       error: (error) => {
@@ -72,8 +83,8 @@ export class UsersComponent {
   }
 
   updatePaginatedUsuarios(): void {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
+    const start = (this.currentPage - 1) * this.maxItems;
+    const end = start + this.maxItems;
     this.paginatedUsuarios = this.usuarios.slice(start, end);
   }
 
@@ -94,29 +105,105 @@ export class UsersComponent {
 
   searchUsuarios(): void {
     if (this.searchQuery) {
-      this.usuarios = this.usuarios.filter(usuario =>
+      const allUsuarios = [...this.usuarios]; 
+      this.usuarios = allUsuarios.filter(usuario =>
         usuario.nombre?.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     } else {
-      this.usuarios = [...this.usuarios]; 
+      this.loadUsuarios(); 
     }
+    
+    this.currentPage = 1; 
+    this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
+    this.updatePaginatedUsuarios();
   }
 
   editUsuario(usuario: Usuario): void {
     console.log('Editar usuario:', usuario);
+    this.ref = this.dialogService.open(UpdateUserComponent, {
+      header: 'Editar Usuario',
+      modal: true,
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e'
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true,
+      data: {
+        usuarioId: usuario.id
+      }
+    });
   }
 
   deleteUsuario(userId: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-      this.userService.deleteUsuario(userId).subscribe({
-        next: () => {
-          this.usuarios = this.usuarios.filter(usuario => usuario.id !== userId);
-          this.usuarios = this.usuarios.filter(usuario => usuario.id !== userId);
-        },
-        error: (error) => {
-          console.error('Error al eliminar usuario:', error);
-        }
-      });
+    this.ref = this.dialogService.open(DeleteConfirmationComponent, {
+      header: 'Confirmar Eliminación',
+      width: '400px',
+      modal: true,
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      data: {
+        userId: userId
+      }
+    });
+  
+    this.ref.onClose.subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.userService.deleteUsuario(userId).subscribe({
+          next: () => {
+            this.usuarios = this.usuarios.filter(usuario => usuario.id !== userId);
+            this.updatePaginatedUsuarios();
+          },
+          error: (error) => {
+            console.error('Error al eliminar usuario:', error);
+          }
+        });
+      }
+    });
+  }
+
+
+  toggleFilter(): void {
+    this.showFilter = !this.showFilter;
+    this.applyFilter();
+  }
+
+  applyFilter(): void {
+    if (this.filterType === 'todos') {
+      this.usuarios = [...this.originalUsuarios]; 
+      this.currentPage = 1;
+      this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
+      this.updatePaginatedUsuarios();
+      return;
     }
+  
+    const rolMap: { [key: string]: string } = {
+      'administradores': 'administrador',
+      'usuarios': 'usuario',
+      'artistas': 'artista'
+    };
+  
+    const rolBuscado = rolMap[this.filterType];
+  
+    this.usuarios = this.originalUsuarios.filter(usuario =>
+      usuario.roles?.some(rol => rol.nombre.toLowerCase() === rolBuscado.toLowerCase())
+    );
+  
+    this.currentPage = 1;
+    this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
+    this.updatePaginatedUsuarios();
   }
 }

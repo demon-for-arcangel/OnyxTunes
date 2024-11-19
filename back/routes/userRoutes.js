@@ -27,17 +27,9 @@ router.post('/users/new', [
     check('email', 'No es un email válido').isEmail(),
     validateFilds
 ], controlador.createUser );
-
-/* router.post('/register/', [check('firstName', 'El nombre es obligatorio').notEmpty(), check('lastName', 'Los apellido son obligatorios').notEmpty(),
-check('email', 'El email es obligatorio').notEmpty(),
-check('email', 'No es un email válido').isEmail(), validateFilds], register);
-router.post('/login/', statusUser, login );
-router.get('/users/active', [checkToken, tokenCanAdmin], controlador.getActiveUsers);
-router.get('/users/inactive', [checkToken, tokenCanAdmin], controlador.getInactiveUsers);
-
-router.get('/user/:id', checkToken, controlador.getUserById);
-router.post('/user', checkToken, controlador.getUserByEmail);
-
-router.get('/users/search/:query', [checkToken], controlador.searchUsers); */
+router.put('/users/:id', [
+     /* checkToken, tokenCanAdmin */
+], controlador.updateUser);
+router.get('/users/:id', controlador.getUserById);
 
 module.exports = router;

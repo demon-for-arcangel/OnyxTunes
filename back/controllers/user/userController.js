@@ -28,13 +28,41 @@ const indexArtist = async (req, res = response) => {
     }
 };
 
-const getUserById = async (req, res) => {}
+const getUserById = async (req, res) => {
+    const userId = req.params.id;
 
-const getUserByEmail = async (req, res) => {}
+    try {
+        const user = await conx.getUserById(userId); 
 
-const sendMail = async (mailOptions) => {}
+        if (!user) {
+            return res.status(404).json({ msg: "Usuario no encontrado" });
+        }
 
-const registerUserByAdmin = async (req, res) => {}
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error al obtener el usuario:', error);
+        res.status(500).json({ msg: "Error al obtener el usuario" }); 
+    }
+};
+
+const getUserByEmail = async (req, res) => {
+    const email = req.query;
+
+    try {
+        const user = await conx.getUserByEmail(email);
+        if (!user) {
+            res.status(404).json({ msg: "Usuario no encontrado" }) 
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        console.error("Error al obtener usuario por email", error);
+        res.status(500).json({ msg: "Error al obtener usuario por email" });
+    }
+}
+
+const sendMail = async (mailOptions) => {} //por hacer
+
+const registerUserByAdmin = async (req, res) => {} //por hacer
 
 const createUser = async (req, res) => {
     const { nombre, email, password, roles } = req.body; 
@@ -45,8 +73,7 @@ const createUser = async (req, res) => {
             return res.status(400).json({ msg: "El correo ya está en uso" });
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = await conx.createUser(nombre, email, hashedPassword);
 
@@ -61,8 +88,40 @@ const createUser = async (req, res) => {
     }
 };
 
+const updateUser = async (req, res) => {
+    const userId = req.params.id; 
+    const { nombre, email, password, roles } = req.body; 
 
-const updateUser = async (req, res) => {}
+    try {
+        const existingUser = await conx.getUserById(userId);
+        if (!existingUser) {
+            return res.status(404).json({ msg: "Usuario no encontrado" });
+        }
+
+        let hashedPassword;
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            hashedPassword = await bcrypt.hash(password, salt);
+        }
+
+        const updatedData = {
+            nombre: nombre || existingUser.nombre, 
+            email: email || existingUser.email, 
+            password: hashedPassword || existingUser.password 
+        };
+
+        const updatedUser = await conx.updateUser(userId, updatedData);
+
+        if (roles && roles.length > 0) {
+            await conx.createUserRols(userId, roles);
+        }
+
+        res.status(200).json({ msg: "Usuario actualizado exitosamente", user: updatedUser });
+    } catch (error) {
+        console.error("Error al actualizar usuario", error);
+        res.status(500).json({ msg: "Error al actualizar usuario" });
+    }
+};
 
 const deleteUsers = async (req, res) => {}
 
@@ -89,6 +148,6 @@ const getUserByToken = async (req, res) => {
 const searchUsers = async (req, res) => {}
 
 module.exports = {
-    index, indexArtist, getUserById, getUserByEmail, createUser, sendMail, registerUserByAdmin, updateUser, deleteUsers, 
+    index, indexArtist, getUserById, getUserByEmail, createUser, sendMail, /* registerUserByAdmin, */ updateUser, deleteUsers, 
     getUserByToken, searchUsers
 }

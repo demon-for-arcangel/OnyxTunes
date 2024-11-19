@@ -24,7 +24,7 @@ export class LandingComponent {
   goToHome() {
     console.log('Redirigiendo a inicio...');
   }
-  // Método para buscar artistas
+  
   searchArtists() {
     this.router.navigate(['/search']);
   }

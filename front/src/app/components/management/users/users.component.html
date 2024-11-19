@@ -1,8 +1,20 @@
 <div class="user-management">
-    <h1>Gestión de Usuarios</h1>
+    <div class="header-container">
+        <button class="back-button" (click)="goBack()">
+            <i class="pi pi-arrow-left"></i> Volver
+        </button>
+        <h1>Gestión de Usuarios</h1>
+    </div>
     <div class="search-bar">
-        <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar usuario..." />
-        <button (click)="searchUsuarios()">Buscar</button>
+        <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar usuario..." (keyup.enter)="searchUsuarios()"/>
+        <div class="filter-container">
+            <select [(ngModel)]="filterType" (change)="applyFilter()">
+              <option value="todos">Todos</option>
+              <option value="artistas">Artistas</option>
+              <option value="administradores">Administradores</option>
+              <option value="usuarios">Usuarios</option>
+            </select>
+        </div>
         <button (click)="newUser()">
             <i class="pi pi-plus">
                 Añadir Usuario
@@ -13,7 +25,6 @@
     <table class="user-table">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Nombre</th>
                 <th>Email</th>
                 <th>Rol</th>
@@ -23,11 +34,9 @@
         <tbody class="body-table">
             @for(usuario of paginatedUsuarios; track usuario){
                 <tr>
-                    <td>{{ usuario.id }}</td>
                     <td>{{ usuario.nombre }}</td>
                     <td>{{ usuario.email }}</td>
-                    <td>{{ usuario.roles[0]?.nombre }}</td>
-                    <td>
+                    <td>{{ usuario.roles && usuario.roles.length > 0 ? usuario.roles[0].nombre : 'Sin rol' }}</td>                    <td>
                         <button (click)="editUsuario(usuario)">Editar</button>
                         <button (click)="deleteUsuario(usuario.id)">Eliminar</button>
                     </td>
