@@ -11,7 +11,11 @@
         </div>
         <div class="form-group">
             <label for="roles">Roles</label>
-            <input type="text" class="form-control" id="roles" name="roles" [value]="rolUsuario" required>
+            <select class="form-control" id="roles" name="roles" [(ngModel)]="selectedRole" required>
+                @for(rol of roles; track rol) {
+                    <option [value]="rol.nombre">{{ rol.nombre }}</option>
+                }
+            </select>        
         </div>
         <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
     </form>
