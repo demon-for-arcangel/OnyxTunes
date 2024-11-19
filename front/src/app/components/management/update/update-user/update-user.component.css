@@ -58,3 +58,13 @@ select:focus {
     font-size: 0.9em; 
     color: #6c757d; 
 }
+
+.text-danger {
+    color: red; 
+    font-size: small;
+}
+
+.text-success {
+    color: green;
+    font-size: small;
+}

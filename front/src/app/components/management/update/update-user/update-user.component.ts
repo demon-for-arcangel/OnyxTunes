@@ -28,6 +28,9 @@ export class UpdateUserComponent {
   roles: Rol[] = []
   selectedRole: string = '';
 
+  message: string = '';
+  errorMessage: string = '';
+
   constructor(private userService: UserService, private rolService: RolService, private router: Router, private config: DynamicDialogConfig) {}
 
   ngOnInit(): void {
@@ -60,16 +63,45 @@ export class UpdateUserComponent {
     })
   }
 
-  onSubmit(): void {
-    this.usuario.roles = { nombre: this.selectedRole.trim() };
-    this.userService.updateUser(this.usuario.id, this.usuario).subscribe(response => {
-      alert('Usuario actualizado exitosamente'); //cambiar alert
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+  validateForm(): boolean {
+    this.errorMessage = ''; 
+    if (!this.usuario.nombre) {
+      this.errorMessage = 'El nombre no puede estar vacío.';
+      return false;
+    }
+    if (!this.usuario.email) {
+      this.errorMessage = 'El correo electrónico no puede estar vacío.';
+      return false;
+    }
+    if (!this.isValidEmail(this.usuario.email)) {
+      this.errorMessage = 'El correo electrónico no es válido.';
+      return false;
+    }
+    if (!this.selectedRole) {
+      this.errorMessage = 'Debes seleccionar un rol.';
+      return false;
+    }
+    return true;
+  }
 
-    }, error => {
-      console.error('Error al actualizar el usuario', error);
-    });
+  isValidEmail(email: string): boolean {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
+
+  onSubmit(): void {
+    if (this.validateForm()) {
+      this.usuario.roles = { nombre: this.selectedRole.trim() };
+
+      this.userService.updateUser(this.usuario.id, this.usuario).subscribe(response => {
+        this.message = 'Usuario actualizado exitosamente'
+        
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }, error => {
+        console.error('Error al actualizar el usuario', error);
+      });
+    }    
   }
 }
