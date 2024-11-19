@@ -22,13 +22,14 @@ export class UpdateUserComponent {
     roles: []
   };
 
+  rolUsuario: string = ""
+
   constructor(private userService: UserService, private router: Router, private config: DynamicDialogConfig) {}
 
   ngOnInit(): void {
-    // Obtener el usuarioId de la configuración del diálogo
-    this.usuarioId = this.config.data.usuarioId; // Asegúrate de que estás accediendo correctamente
+    this.usuarioId = this.config.data.usuarioId; 
     if (this.usuarioId) {
-      this.getUserById(this.usuarioId); // Llamar a la función para obtener los datos del usuario
+      this.getUserById(this.usuarioId); 
     } else {
       console.error('No se proporcionó el usuarioId');
     }
@@ -37,7 +38,12 @@ export class UpdateUserComponent {
   getUserById(id: string): void {
     this.userService.getUserById(id).subscribe(data => {
       this.usuario = data; 
-      console.log(this.usuario);
+
+      if (this.usuario.roles && Array.isArray(this.usuario.roles)) {
+        this.rolUsuario = this.usuario.roles
+          .map((role: any) => role.nombre)
+          .join(', ');
+      }
     }, error => {
       console.error('Error al obtener el usuario:', error);
     });
@@ -45,7 +51,7 @@ export class UpdateUserComponent {
 
   onSubmit(): void {
     this.userService.updateUser(this.usuario.id, this.usuario).subscribe(response => {
-      alert('Usuario actualizado exitosamente');
+      alert('Usuario actualizado exitosamente'); //cambiar alert
       this.router.navigate(['/userManagement']);
     }, error => {
       console.error('Error al actualizar el usuario', error);

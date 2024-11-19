@@ -11,12 +11,7 @@
         </div>
         <div class="form-group">
             <label for="roles">Roles</label>
-            <input type="text" class="form-control" id="roles" name="roles" [value]="usuario.roles[0]?.nombre" required>
-            <!-- <select multiple class="form-control" id="roles" name="roles" [(ngModel)]="usuario.roles">
-                <option value="administrador">Administrador</option>
-                <option value="usuario">Usuario</option>
-                <option value="artista">Artista</option>
-            </select> -->
+            <input type="text" class="form-control" id="roles" name="roles" [value]="rolUsuario" required>
         </div>
         <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
     </form>
