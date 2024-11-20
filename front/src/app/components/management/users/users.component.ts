@@ -118,6 +118,8 @@ export class UsersComponent {
     this.updatePaginatedUsuarios();
   }
 
+  showUsuario() {}
+
   editUsuario(usuario: Usuario): void {
     console.log('Editar usuario:', usuario);
     this.ref = this.dialogService.open(UpdateUserComponent, {
@@ -152,7 +154,6 @@ export class UsersComponent {
       contentStyle: {
         'background-color': '#1e1e1e',
         'color': 'white',
-        'border-radius': '8px',
         'padding': '20px'
       },
       data: {
