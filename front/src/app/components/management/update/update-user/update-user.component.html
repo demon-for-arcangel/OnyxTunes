@@ -1,20 +1,24 @@
-<!-- src/app/components/management/update/update-user/update-user.component.html -->
 <div class="form-container">
     <h2>Actualizar Usuario</h2>
     <form (ngSubmit)="onSubmit()" #updateUserForm="ngForm">
         <div class="form-group">
             <label for="nombre">Nombre</label>
             <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="usuario.nombre">
-            <div *ngIf="errorMessage && !usuario.nombre" class="text-danger">
-                {{errorMessage}}
-            </div>
+            @if(errorMessage && !usuario.nombre){
+                <div class="text-danger">
+                    {{errorMessage}}
+                </div>
+            }
         </div>
         <div class="form-group">
             <label for="email">Correo Electrónico</label>
             <input type="email" class="form-control" id="email" name="email" [(ngModel)]="usuario.email">
-            <div *ngIf="errorMessage && !usuario.email" class="text-danger">
-                {{errorMessage}}
-            </div>
+            @if(errorMessage && !usuario.email){
+                <div class="text-danger">
+                    {{errorMessage}}
+                </div>
+            }
+            
         </div>
 
         <div class="form-group">
@@ -23,25 +27,34 @@
             <button type="button" (click)="toggleRoleSelection()">Modificar Roles</button>
         </div>
 
-        <div *ngIf="showRoles" class="form-group">
-            <label for="roles">Roles Disponibles</label>
-            <div *ngFor="let rol of roles">
-                <input type="checkbox" 
-                       [value]="rol.id" 
-                       [(ngModel)]="rol.selected" 
-                       name="rol-{{rol.id}}"> 
-                {{ rol.nombre }}
+        @if(showRoles){
+            <div class="form-group">
+                <label for="roles">Roles Disponibles</label>
+    
+                @for(rol of roles; track rol){
+                    <div>
+                        <input type="checkbox" 
+                               [value]="rol.id" 
+                               [(ngModel)]="rol.selected" 
+                               name="rol-{{rol.id}}">
+                        {{ rol.nombre }}
+                    </div>
+                }
+            </div> 
+        }
+             
+        @if(errorMessage && !hasSelectedRoles()){
+            <div class="text-danger">
+                {{errorMessage}}
             </div>
-        </div>
-
-        <div *ngIf="errorMessage && !hasSelectedRoles()" class="text-danger">
-            {{errorMessage}}
-        </div>
+        }
 
         <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
     </form>
 
-    <div *ngIf="message" class="text-success">
-        {{ message }}
-    </div>
+    @if(message){
+        <div class="text-success">
+            {{ message }}
+        </div>
+    }
 </div>

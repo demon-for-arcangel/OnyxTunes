@@ -34,7 +34,12 @@ export class UpdateUserComponent {
   message: string = '';
   errorMessage: string = '';
 
-  constructor(private userService: UserService, private rolService: RolService, private router: Router, private config: DynamicDialogConfig) {}
+  constructor(
+    private userService: UserService, 
+    private rolService: RolService, 
+    private router: Router, 
+    private config: DynamicDialogConfig
+  ) {}
 
   ngOnInit(): void {
     this.usuarioId = this.config.data.usuarioId; 
@@ -64,20 +69,24 @@ export class UpdateUserComponent {
   loadUser(): void {
     this.userService.getUserById(this.usuarioId).subscribe({
       next: (user) => {
-        this.usuario = user;
-        console.log('Usuario cargado:', this.usuario); 
-
-        this.roles.forEach(rol => {
-          rol.selected = user.roles.some((userRole: any) => userRole.id === rol.id);
+        this.usuario = user; // Usuario completo cargado
+        console.log('Usuario cargado:', this.usuario);
+        
+        // Comparar y marcar roles seleccionados
+        this.roles.forEach((rol) => {
+          rol.selected = this.usuario.roles.some(
+            (userRole: any) => userRole.id === rol.id // Asegúrate de que `id` sea el campo correcto
+          );
         });
-
-        console.log('Roles después de asignar seleccionados:', this.roles); 
+        
+        console.log('Roles después de asignar seleccionados:', this.roles);
       },
-      error: error => {
+      error: (error) => {
         console.error('Error al cargar el usuario:', error);
-      }
+      },
     });
   }
+  
 
   toggleRoleSelection(): void {
     this.showRoles = !this.showRoles; 
