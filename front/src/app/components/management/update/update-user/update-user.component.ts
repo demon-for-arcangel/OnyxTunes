@@ -1,4 +1,3 @@
-// src/app/components/management/update/update-user/update-user.component.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../../../services/user.service';
@@ -17,7 +16,7 @@ import { RolService } from '../../../../services/rol.service';
 })
 export class UpdateUserComponent {
   usuarioId!: string;
-  showRoles: boolean = false; // Variable para controlar la visibilidad de los roles
+  showRoles: boolean = false; 
 
   usuario: any = {
     nombre: '',
@@ -40,7 +39,7 @@ export class UpdateUserComponent {
   ngOnInit(): void {
     this.usuarioId = this.config.data.usuarioId; 
     if (this.usuarioId) {
-      this.loadRoles(); // Cargar roles primero
+      this.loadRoles(); 
     } else {
       console.error('No se proporcionó el usuarioId');
     }
@@ -51,10 +50,10 @@ export class UpdateUserComponent {
       next: (roles) => {
         this.roles = roles.map(rol => ({
           ...rol,
-          selected: false // Inicializa la selección en false
+          selected: false 
         }));
-        console.log('Roles cargados:', this.roles); // Verifica que los roles se carguen correctamente
-        this.loadUser(); // Cargar el usuario después de cargar los roles
+        console.log('Roles cargados:', this.roles); 
+        this.loadUser(); 
       },
       error: error => {
         console.error('Error al cargar los roles:', error);
@@ -66,14 +65,13 @@ export class UpdateUserComponent {
     this.userService.getUserById(this.usuarioId).subscribe({
       next: (user) => {
         this.usuario = user;
-        console.log('Usuario cargado:', this.usuario); // Verifica que el usuario se cargue correctamente
+        console.log('Usuario cargado:', this.usuario); 
 
-        // Marca los roles existentes como seleccionados
         this.roles.forEach(rol => {
           rol.selected = user.roles.some((userRole: any) => userRole.id === rol.id);
         });
 
-        console.log('Roles después de asignar seleccionados:', this.roles); // Verifica que los roles se marquen correctamente
+        console.log('Roles después de asignar seleccionados:', this.roles); 
       },
       error: error => {
         console.error('Error al cargar el usuario:', error);
@@ -82,11 +80,11 @@ export class UpdateUserComponent {
   }
 
   toggleRoleSelection(): void {
-    this.showRoles = !this.showRoles; // Alterna la visibilidad de la lista de roles
+    this.showRoles = !this.showRoles; 
   }
 
   getCurrentRoles(): string {
-    return this.usuario.roles.map((rol: any) => rol.nombre).join(', '); // Devuelve los nombres de los roles actuales
+    return this.usuario.roles.map((rol: any) => rol.nombre).join(', '); 
   }
 
   validateForm(): boolean {
@@ -111,7 +109,7 @@ export class UpdateUserComponent {
   }
 
   hasSelectedRoles(): boolean {
-    return this.roles.some(rol => rol.selected); // Método que verifica si hay roles seleccionados
+    return this.roles.some(rol => rol.selected); 
   }
 
   isValidEmail(email: string): boolean {
@@ -121,7 +119,6 @@ export class UpdateUserComponent {
 
   onSubmit(): void {
     if (this.validateForm()) {
-      // Asigna los roles seleccionados al usuario
       this.usuario.roles = this.roles.filter(rol => rol.selected).map(rol => ({ id: rol.id }));
 
       this.userService.updateUser(this.usuarioId, this.usuario).subscribe(response => {
