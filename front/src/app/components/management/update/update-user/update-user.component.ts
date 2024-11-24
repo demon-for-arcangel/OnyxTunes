@@ -21,7 +21,12 @@ export class UpdateUserComponent {
     nombre: '',
     email: '',
     password: '',
-    roles: []
+    roles: [],
+    fecha_nacimiento: '',
+    telefono: '', 
+    direccion: '',
+    genero: '',
+    activo: ''
   };
 
   rolUsuario: string = ""

@@ -11,6 +11,7 @@ import { CreateUserComponent } from '../create/create-user/create-user.component
 import { Router } from '@angular/router';
 import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
 import { UpdateUserComponent } from '../update/update-user/update-user.component';
+import { ShowUserComponent } from '../show/show-user/show-user.component';
 
 @Component({
   selector: 'app-users',
@@ -118,10 +119,31 @@ export class UsersComponent {
     this.updatePaginatedUsuarios();
   }
 
-  showUsuario() {}
+  showUsuario(usuario: Usuario): void {
+    this.ref = this.dialogService.open(ShowUserComponent, {
+      header: 'Ver Datos del Usuario',
+      modal: true,
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e'
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true,
+      data: {
+        usuarioId: usuario.id
+      }
+    });
+  }
 
   editUsuario(usuario: Usuario): void {
-    console.log('Editar usuario:', usuario);
     this.ref = this.dialogService.open(UpdateUserComponent, {
       header: 'Editar Usuario',
       modal: true,
@@ -207,4 +229,11 @@ export class UsersComponent {
     this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
     this.updatePaginatedUsuarios();
   }
+
+  getRoles(roles: any[]): string {
+    if (!roles || roles.length === 0) {
+        return 'Sin rol';
+    }
+    return roles.map(role => role.nombre).join(', ');
+}
 }
