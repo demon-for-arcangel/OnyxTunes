@@ -10,5 +10,10 @@ export interface Usuario {
 }
 
 export interface Rol {
+    id: number,
     nombre: string;
+}
+
+export interface RolSeleccionado extends Rol {
+    selected?: boolean; // Propiedad para manejar la selección
 }

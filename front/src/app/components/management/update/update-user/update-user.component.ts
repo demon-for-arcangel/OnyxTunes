@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+// src/app/components/management/update/update-user/update-user.component.ts
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { CommonModule } from '@angular/common';
-import { Rol } from '../../../../interfaces/usuario';
+import { Rol, RolSeleccionado } from '../../../../interfaces/usuario';
 import { RolService } from '../../../../services/rol.service';
 
 @Component({
@@ -12,10 +13,11 @@ import { RolService } from '../../../../services/rol.service';
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './update-user.component.html',
-  styleUrl: './update-user.component.css'
+  styleUrls: ['./update-user.component.css']
 })
 export class UpdateUserComponent {
   usuarioId!: string;
+  showRoles: boolean = false; // Variable para controlar la visibilidad de los roles
 
   usuario: any = {
     nombre: '',
@@ -29,10 +31,7 @@ export class UpdateUserComponent {
     activo: ''
   };
 
-  rolUsuario: string = ""
-  roles: Rol[] = []
-  selectedRole: string = '';
-
+  roles: RolSeleccionado[] = [];
   message: string = '';
   errorMessage: string = '';
 
@@ -41,31 +40,53 @@ export class UpdateUserComponent {
   ngOnInit(): void {
     this.usuarioId = this.config.data.usuarioId; 
     if (this.usuarioId) {
-      this.getUserById(this.usuarioId); 
-      this.loadRoles();
+      this.loadRoles(); // Cargar roles primero
     } else {
       console.error('No se proporcionó el usuarioId');
     }
   }
 
-  getUserById(id: string): void {
-    this.userService.getUserById(id).subscribe(data => {
-      this.usuario = data; 
-      if (this.usuario.roles.length > 0) {
-        this.selectedRole = this.usuario.roles[0].nombre;
+  loadRoles(): void {
+    this.rolService.getRoles().subscribe({
+      next: (roles) => {
+        this.roles = roles.map(rol => ({
+          ...rol,
+          selected: false // Inicializa la selección en false
+        }));
+        console.log('Roles cargados:', this.roles); // Verifica que los roles se carguen correctamente
+        this.loadUser(); // Cargar el usuario después de cargar los roles
+      },
+      error: error => {
+        console.error('Error al cargar los roles:', error);
       }
-
-    }, error => {
-      console.error('Error al obtener el usuario:', error);
     });
   }
 
-  loadRoles(): void {
-    this.rolService.getRoles().subscribe(data => {
-      this.roles = data;
-    }, error => {
-      console.error('Error al cargar los roles:', error);
-    })
+  loadUser(): void {
+    this.userService.getUserById(this.usuarioId).subscribe({
+      next: (user) => {
+        this.usuario = user;
+        console.log('Usuario cargado:', this.usuario); // Verifica que el usuario se cargue correctamente
+
+        // Marca los roles existentes como seleccionados
+        this.roles.forEach(rol => {
+          rol.selected = user.roles.some((userRole: any) => userRole.id === rol.id);
+        });
+
+        console.log('Roles después de asignar seleccionados:', this.roles); // Verifica que los roles se marquen correctamente
+      },
+      error: error => {
+        console.error('Error al cargar el usuario:', error);
+      }
+    });
+  }
+
+  toggleRoleSelection(): void {
+    this.showRoles = !this.showRoles; // Alterna la visibilidad de la lista de roles
+  }
+
+  getCurrentRoles(): string {
+    return this.usuario.roles.map((rol: any) => rol.nombre).join(', '); // Devuelve los nombres de los roles actuales
   }
 
   validateForm(): boolean {
@@ -82,11 +103,15 @@ export class UpdateUserComponent {
       this.errorMessage = 'El correo electrónico no es válido.';
       return false;
     }
-    if (!this.selectedRole) {
-      this.errorMessage = 'Debes seleccionar un rol.';
+    if (!this.hasSelectedRoles()) {
+      this.errorMessage = 'Debes seleccionar al menos un rol.';
       return false;
     }
     return true;
+  }
+
+  hasSelectedRoles(): boolean {
+    return this.roles.some(rol => rol.selected); // Método que verifica si hay roles seleccionados
   }
 
   isValidEmail(email: string): boolean {
@@ -96,10 +121,11 @@ export class UpdateUserComponent {
 
   onSubmit(): void {
     if (this.validateForm()) {
-      this.usuario.roles = { nombre: this.selectedRole.trim() };
+      // Asigna los roles seleccionados al usuario
+      this.usuario.roles = this.roles.filter(rol => rol.selected).map(rol => ({ id: rol.id }));
 
-      this.userService.updateUser(this.usuario.id, this.usuario).subscribe(response => {
-        this.message = 'Usuario actualizado exitosamente'
+      this.userService.updateUser(this.usuarioId, this.usuario).subscribe(response => {
+        this.message = 'Usuario actualizado exitosamente';
         
         setTimeout(() => {
           window.location.reload();
