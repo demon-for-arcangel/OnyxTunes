@@ -10,7 +10,8 @@ export interface Usuario {
 }
 
 export interface Rol {
-    id: number,
+    id: number;
     nombre?: string;
-    selected?: boolean
-}
+    descripcion?: string; // Campo opcional
+    selected?: boolean; // Campo para marcar si está seleccionado
+  }

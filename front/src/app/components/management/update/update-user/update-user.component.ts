@@ -1,4 +1,3 @@
-// src/app/components/management/update/update-user/update-user.component.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../../../services/user.service';

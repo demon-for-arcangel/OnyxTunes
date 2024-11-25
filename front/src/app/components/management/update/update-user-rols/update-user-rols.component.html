@@ -1,0 +1,21 @@
+<div class="roles-container">
+    <div class="available-roles">
+      <h3>Roles Disponibles</h3>
+      <ul>
+        <li *ngFor="let rol of roles" [class.selected]="rol.selected">
+          {{ rol.nombre }}
+          <button (click)="addRole(rol)" [disabled]="rol.selected">Añadir</button>
+        </li>
+      </ul>
+    </div>
+    <div class="user-roles">
+      <h3>Roles de Usuario</h3>
+      <ul>
+        <li *ngFor="let rol of selectedRoles">
+          {{ rol.nombre }}
+          <button (click)="removeRole(rol)">Eliminar</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
