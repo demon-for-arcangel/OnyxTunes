@@ -68,3 +68,16 @@ select:focus {
     color: green;
     font-size: small;
 }
+
+.roles-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.available-roles, .user-roles {
+    width: 45%;
+}
+
+.selected {
+    font-weight: bold;
+}

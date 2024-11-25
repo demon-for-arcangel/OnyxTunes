@@ -21,33 +21,42 @@
             
         </div>
 
-        <div class="form-group">
-            <label for="roles">Roles Actuales</label>
-            <input type="text" class="form-control" id="roles" name="roles" [value]="getCurrentRoles()" disabled>
-            <button type="button" (click)="toggleRoleSelection()">Modificar Roles</button>
-        </div>
+        <button type="button" (click)="toggleRoleSelection()">Modificar Roles</button>
 
         @if(showRoles){
             <div class="form-group">
-                <label for="roles">Roles Disponibles</label>
-    
-                @for(rol of roles; track rol){
-                    <div>
-                        <input type="checkbox" 
-                               [value]="rol.id" 
-                               [(ngModel)]="rol.selected" 
-                               name="rol-{{rol.id}}">
-                        {{ rol.nombre }}
+                <div class="roles-container">
+                    <div class="available-roles">
+                        <h3>Roles Disponibles</h3>
+                        <ul>
+                            @for(rol of roles; track rol){
+                                <li [class.selected]="rol.selected">
+                                    {{ rol.nombre }}
+                                    <button (click)="addRole(rol)">Añadir</button>
+                                </li>
+                            }
+                        </ul>
                     </div>
-                }
+                    <div class="user-roles">
+                        <h3>Roles de Usuario</h3>
+                        <ul>
+                            @for(rol of selectedRoles; track rol){
+                                <li>
+                                    {{ rol.nombre }}
+                                    <button (click)="removeRole(rol)">Eliminar</button>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
             </div> 
         }
              
-        @if(errorMessage && !hasSelectedRoles()){
+<!--         @if(errorMessage && !selectedRoles()){
             <div class="text-danger">
                 {{errorMessage}}
             </div>
-        }
+        } -->
 
         <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
     </form>
