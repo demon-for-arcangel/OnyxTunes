@@ -129,21 +129,16 @@ class UserModel {
         }
     }   
 
-    createUserRols = async (userId, arrRolesName) => {
+    async createUserRols(userId, arrRolesId) {
         let newRoles = [];
         try {
-            for (const roleName of arrRolesName) { 
-                console.log(roleName);
-                const role = await models.Rol.findOne({
-                    where: {
-                        nombre: roleName 
-                    }
-                });
-    
+            for (const roleId of arrRolesId) { 
+                const role = await models.Rol.findByPk(roleId); 
+
                 if (!role) {
-                    throw new Error(`El rol con nombre ${roleName} no se encontró.`);
+                    throw new Error(`El rol con ID ${roleId} no se encontró.`);
                 }
-    
+
                 let newRole = await models.RolUsuario.create({
                     usuario_id: userId,
                     rol_id: role.id 
@@ -155,7 +150,8 @@ class UserModel {
             throw error; 
         }
         return newRoles;
-    };
+    }
+
     
 
     updateUser = async (userId, newData) => {
@@ -189,6 +185,44 @@ class UserModel {
         } catch (error) {
             console.error('Error al eliminar los usuarios:', error);
             throw error;
+        }
+    }
+
+    async getUserRoles(userId) {
+        try {
+            const user = await models.Usuario.findByPk(userId, {
+                include: [
+                    {
+                        model: models.Rol,
+                        as: 'roles', 
+                        attributes: ['id', 'nombre']
+                    }
+                ]
+            });
+
+            if (!user) {
+                throw new Error('Usuario no encontrado');
+            }
+
+            return user.roles; 
+        } catch (error) {
+            console.error('Error al obtener roles del usuario:', error);
+            throw error; 
+        }
+    }
+
+    async removeUserRole(userId, roleId) {
+        try {
+            const result = await models.RolUsuario.destroy({
+                where: {
+                    usuario_id: userId,
+                    rol_id: roleId
+                }
+            });
+            return result; 
+        } catch (error) {
+            console.error('Error al eliminar rol de usuario:', error);
+            throw error; 
         }
     }
 }

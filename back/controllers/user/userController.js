@@ -112,8 +112,19 @@ const updateUser = async (req, res) => {
 
         const updatedUser = await conx.updateUser(userId, updatedData);
 
-        if (roles && roles.length > 0) {
-            await conx.createUserRols(userId, roles);
+        if (roles) {
+            const currentRoles = await conx.getUserRoles(userId);
+
+            const rolesToRemove = currentRoles.filter(role => !roles.includes(role.id));
+            for (const role of rolesToRemove) {
+                await conx.removeUserRole(userId, role.id);
+            }
+
+            for (const roleId of roles) {
+                if (!currentRoles.some(role => role.id === roleId)) {
+                    await conx.createUserRols(userId, [roleId]);
+                }
+            }
         }
 
         res.status(200).json({ msg: "Usuario actualizado exitosamente", user: updatedUser });

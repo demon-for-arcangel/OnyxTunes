@@ -24,6 +24,9 @@ module.exports = {
       foto_perfil: {
         type: Sequelize.STRING
       },
+      direccion: {
+        type: Sequelize.STRING
+      },
       telefono: {
         type: Sequelize.STRING
       },
