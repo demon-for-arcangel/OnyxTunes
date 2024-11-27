@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../../../services/user.service';
 import { RolService } from '../../../../services/rol.service';
-import { Rol } from '../../../../interfaces/usuario'; // Asegúrate de que Rol esté definido correctamente
+import { Rol } from '../../../../interfaces/usuario'; 
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 @Component({
@@ -16,12 +16,12 @@ export class UpdateUserRolsComponent {
   usuario: any = {
     nombre: '',
     email: '',
-    roles: [] // Aquí se almacenan los roles actuales del usuario
+    roles: [] 
   };
 
-  roles: Rol[] = []; // Todos los roles disponibles
-  rolesDisponibles: Rol[] = []; // Roles que no están asignados al usuario
-  selectedRoles: Rol[] = []; // Roles seleccionados para el usuario
+  roles: Rol[] = []; 
+  rolesDisponibles: Rol[] = [];
+  selectedRoles: Rol[] = [];
 
   constructor(
     private userService: UserService,
@@ -34,16 +34,13 @@ export class UpdateUserRolsComponent {
     this.usuarioId = this.config.data.usuarioId;
   
     if (this.usuarioId) {
-      this.loadRoles(); // Carga los roles disponibles
-      this.loadUser();  // Carga los roles del usuario
-    } else {
-      console.error('No se proporcionó el usuarioId');
+      this.loadRoles(); 
+      this.loadUser(); 
     }
   }
   
   filterAvailableRoles(): void {
     if (!this.roles || !this.selectedRoles) {
-      console.warn('Roles o roles seleccionados no están definidos.');
       return;
     }
   
@@ -53,8 +50,6 @@ export class UpdateUserRolsComponent {
       );
       return !isSelected;
     });
-  
-    console.log('Después de filtrar: roles disponibles', this.rolesDisponibles);
   }
   
   
@@ -63,7 +58,7 @@ export class UpdateUserRolsComponent {
       next: (roles) => {
         this.roles = roles;
         console.log('Todos los roles disponibles:', this.roles);
-        this.filterAvailableRoles(); // Llama al filtro después de cargar los roles
+        this.filterAvailableRoles(); 
       },
       error: (error) => {
         console.error('Error al cargar los roles desde la API:', error);
@@ -77,17 +72,15 @@ export class UpdateUserRolsComponent {
         this.usuario = user;
         console.log('Usuario cargado desde la API:', this.usuario);
   
-        // Extraer roles correctamente
         this.selectedRoles = this.usuario.roles.map((userRole: any) => {
           return {
-            id: userRole.RolUsuario.rol_id, // Obtener el id del rol desde RolUsuario
-            nombre: userRole.nombre,       // Obtener el nombre directamente
+            id: userRole.RolUsuario.rol_id, 
+            nombre: userRole.nombre,      
           };
         });
   
         console.log('Roles asignados al usuario:', this.selectedRoles);
   
-        // Llamar al filtrado después de cargar usuario y roles
         this.filterAvailableRoles();
       },
       error: (error) => {
@@ -96,16 +89,12 @@ export class UpdateUserRolsComponent {
     });
   }
   
-  
-
-  // Método para agregar un rol
   addRole(rol: Rol): void {
     this.selectedRoles.push(rol);
     this.rolesDisponibles = this.rolesDisponibles.filter(r => r.id !== rol.id);
     console.log('Roles después de añadir:', this.selectedRoles, this.rolesDisponibles);
   }
 
-  // Método para eliminar un rol
   removeRole(rol: Rol): void {
     this.selectedRoles = this.selectedRoles.filter(r => r.id !== rol.id);
     this.rolesDisponibles.push(rol);
