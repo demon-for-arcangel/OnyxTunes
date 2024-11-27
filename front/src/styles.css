@@ -18,17 +18,16 @@ html, body {
 
 .custom-modal .p-dialog-header {
     background-color: #1e1e1e;
-    color: white ;
-    border-bottom: 1px solid #333 ;
+    color: white;
+    padding: 3px;
 }
 
 .custom-modal .p-dialog-header-icon {
-    color: white ;
-}
-
-.custom-modal .p-dialog-header-icon:hover {
-    background-color: #333 ;
-    color: white ;
+    color: white;
+    background-color: #ff0000;
+    border-style: none;
+    width: 40px;
+    height: auto;
 }
 
 .custom-modal .p-dialog-title {

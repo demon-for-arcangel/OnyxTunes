@@ -24,84 +24,99 @@ export class UpdateUserComponent {
     roles: []
   };
 
-  rolUsuario: string = ""
-  roles: Rol[] = []
-  selectedRole: string = '';
-
-  message: string = '';
-  errorMessage: string = '';
+  roles: Rol[] = []; 
+  rolesDisponibles: Rol[] = [];
+  selectedRoles: Rol[] = [];
 
   constructor(private userService: UserService, private rolService: RolService, private router: Router, private config: DynamicDialogConfig) {}
 
   ngOnInit(): void {
     this.usuarioId = this.config.data.usuarioId; 
+
+    if (this.usuarioId) {
+      this.loadRoles(); 
+      this.loadUser(); 
+    }
+
     if (this.usuarioId) {
       this.getUserById(this.usuarioId); 
-      this.loadRoles();
-    } else {
-      console.error('No se proporcionó el usuarioId');
     }
   }
 
   getUserById(id: string): void {
     this.userService.getUserById(id).subscribe(data => {
       this.usuario = data; 
-      if (this.usuario.roles.length > 0) {
-        this.selectedRole = this.usuario.roles[0].nombre;
-      }
-
     }, error => {
       console.error('Error al obtener el usuario:', error);
     });
   }
 
-  loadRoles(): void {
-    this.rolService.getRoles().subscribe(data => {
-      this.roles = data;
-    }, error => {
-      console.error('Error al cargar los roles:', error);
-    })
-  }
-
-  validateForm(): boolean {
-    this.errorMessage = ''; 
-    if (!this.usuario.nombre) {
-      this.errorMessage = 'El nombre no puede estar vacío.';
-      return false;
-    }
-    if (!this.usuario.email) {
-      this.errorMessage = 'El correo electrónico no puede estar vacío.';
-      return false;
-    }
-    if (!this.isValidEmail(this.usuario.email)) {
-      this.errorMessage = 'El correo electrónico no es válido.';
-      return false;
-    }
-    if (!this.selectedRole) {
-      this.errorMessage = 'Debes seleccionar un rol.';
-      return false;
-    }
-    return true;
-  }
-
-  isValidEmail(email: string): boolean {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  }
-
   onSubmit(): void {
-    if (this.validateForm()) {
-      this.usuario.roles = { nombre: this.selectedRole.trim() };
+    this.usuario.roles = this.selectedRoles.map((rol: any) => rol.id);
+  
+    this.userService.updateUser(this.usuario.id, this.usuario).subscribe(response => {
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+  
+    }, error => {
+      console.error('Error al actualizar el usuario', error);
+    });
+  }
 
-      this.userService.updateUser(this.usuario.id, this.usuario).subscribe(response => {
-        this.message = 'Usuario actualizado exitosamente'
-        
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      }, error => {
-        console.error('Error al actualizar el usuario', error);
-      });
-    }    
+  filterAvailableRoles(): void {
+    if (!this.roles || !this.selectedRoles) {
+      return;
+    }
+  
+    this.rolesDisponibles = this.roles.filter((rol) => {
+      const isSelected = this.selectedRoles.some(
+        (selectedRole) => selectedRole.id === rol.id
+      );
+      return !isSelected;
+    });
+  }
+  
+  
+  loadRoles(): void {
+    this.rolService.getRoles().subscribe({
+      next: (roles) => {
+        this.roles = roles;
+        this.filterAvailableRoles(); 
+      },
+      error: (error) => {
+        console.error('Error al cargar los roles desde la API:', error);
+      }
+    });
+  }
+  
+  loadUser(): void {
+    this.userService.getUserById(this.usuarioId).subscribe({
+      next: (user) => {
+        this.usuario = user;
+  
+        this.selectedRoles = this.usuario.roles.map((userRole: any) => {
+          return {
+            id: userRole.RolUsuario.rol_id, 
+            nombre: userRole.nombre,      
+          };
+        });
+    
+        this.filterAvailableRoles();
+      },
+      error: (error) => {
+        console.error('Error al cargar usuario:', error);
+      }
+    });
+  }
+  
+  addRole(rol: Rol): void {
+    this.selectedRoles.push(rol);
+    this.rolesDisponibles = this.rolesDisponibles.filter(r => r.id !== rol.id);
+  }
+  
+  removeRole(rol: Rol): void {
+    this.selectedRoles = this.selectedRoles.filter(r => r.id !== rol.id);
+    this.rolesDisponibles.push(rol);
   }
 }
