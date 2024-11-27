@@ -100,4 +100,26 @@ export class UpdateUserRolsComponent {
     this.rolesDisponibles.push(rol);
     console.log('Roles después de eliminar:', this.selectedRoles, this.rolesDisponibles);
   }
+
+  actualizarRoles(): void {
+    const rolesIds = this.selectedRoles.map((role) => role.id);
+    
+    const usuarioActualizado = {
+      ...this.usuario,
+      roles: rolesIds, 
+    };
+  
+    this.userService.updateUser(this.usuarioId, usuarioActualizado).subscribe({
+      next: (response) => {
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000);
+        console.log('Roles actualizados exitosamente:', response);
+      },
+      error: (error) => {
+        console.error('Error al actualizar los roles:', error);
+      },
+    });
+  }
+  
 }
