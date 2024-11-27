@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
 import { UpdateUserComponent } from '../update/update-user/update-user.component';
 import { ShowUserComponent } from '../show/show-user/show-user.component';
-import { UpdateUserRolsComponent } from '../update/update-user-rols/update-user-rols.component';
 
 @Component({
   selector: 'app-users',
@@ -168,30 +167,6 @@ export class UsersComponent {
     });
   }
 
-  editRoles(usuario: Usuario): void {
-    this.ref = this.dialogService.open(UpdateUserRolsComponent, {
-      header: 'Editar Roles del Usuario',
-      modal: true,
-      styleClass: 'custom-modal',
-      contentStyle: {
-        'background-color': '#1e1e1e',
-        'color': 'white',
-        'border-radius': '8px',
-        'padding': '20px'
-      },
-      baseZIndex: 10000,
-      style: {
-        'background-color': '#1e1e1e'
-      },
-      showHeader: true,
-      closable: true,
-      closeOnEscape: true,
-      data: {
-        usuarioId: usuario.id
-      }
-    });
-  }
-
   deleteUsuario(userId: number): void {
     this.ref = this.dialogService.open(DeleteConfirmationComponent, {
       header: 'Confirmar Eliminación',
@@ -260,5 +235,5 @@ export class UsersComponent {
         return 'Sin rol';
     }
     return roles.map(role => role.nombre).join(', ');
-}
+  }
 }
