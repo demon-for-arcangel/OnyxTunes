@@ -61,7 +61,7 @@ export class UsersComponent {
     });
   }
 
-  newUser(){
+  newUser(){// revisar (crea el usuario bien pero no con el rol que se le pone, lo deja sin rol)
     this.ref = this.dialogService.open(CreateUserComponent, {
       header: 'Agregar Nuevo Usuario',
       modal: true,
@@ -104,7 +104,7 @@ export class UsersComponent {
     this.goToPage(this.currentPage - 1);
   }
 
-  searchUsuarios(): void {
+  searchUsuarios(): void { //revisar (intentar hacer para que haga la busqueda a partir del tercer caracter que se añada)
     if (this.searchQuery) {
       const allUsuarios = [...this.usuarios]; 
       this.usuarios = allUsuarios.filter(usuario =>
@@ -119,10 +119,11 @@ export class UsersComponent {
     this.updatePaginatedUsuarios();
   }
 
-  showUsuario(usuario: Usuario): void {
+  showUsuario(usuario: Usuario): void {//revisar
     this.ref = this.dialogService.open(ShowUserComponent, {
       header: 'Ver Datos del Usuario',
       modal: true,
+      width: '70vw',
       styleClass: 'custom-modal',
       contentStyle: {
         'background-color': '#1e1e1e',
@@ -188,12 +189,12 @@ export class UsersComponent {
           next: () => {
             this.usuarios = this.usuarios.filter(usuario => usuario.id !== userIds);
             this.updatePaginatedUsuarios();
-          },
+          }, 
           error: (error) => {
             console.error('Error al eliminar usuario:', error);
           }
         });
-      }
+      };
     });
   }
 
