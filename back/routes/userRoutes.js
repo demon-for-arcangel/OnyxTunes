@@ -31,5 +31,6 @@ router.put('/users/:id', [
      /* checkToken, tokenCanAdmin */
 ], controlador.updateUser);
 router.get('/users/:id', controlador.getUserById);
+router.delete('/users', controlador.deleteUsers);
 
 module.exports = router;

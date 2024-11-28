@@ -152,8 +152,6 @@ class UserModel {
         return newRoles;
     }
 
-    
-
     updateUser = async (userId, newData) => {
         try {
             const user = await models.Usuario.findByPk(userId);
@@ -169,23 +167,20 @@ class UserModel {
         }
     }
 
-    deleteUsers = async (userIds) => {
-        try {
-            if (!Array.isArray(userIds) || userIds.length === 0) {
-                throw new Error('No se proporcionaron IDs de usuario para eliminar.');
-            }
-        
-            const result = await models.Usuario.destroy({
-                where: {
-                    id: userIds
-                }
-            });
-        
-            return { message: `${result} usuarios eliminados.` };
-        } catch (error) {
-            console.error('Error al eliminar los usuarios:', error);
-            throw error;
+    async deleteUsers(userIds) {
+        if (!userIds) {
+            throw new Error("No se proporcionaron IDs de usuario para eliminar.");
         }
+
+        await models.RolUsuario.destroy({
+            where: { usuario_id: userIds }
+        });
+
+        const result = await models.Usuario.destroy({
+            where: { id: userIds }
+        });
+
+        return result;
     }
 
     async getUserRoles(userId) {

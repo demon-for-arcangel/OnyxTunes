@@ -134,7 +134,22 @@ const updateUser = async (req, res) => {
     }
 };
 
-const deleteUsers = async (req, res) => {}
+const deleteUsers = async (req, res) => {
+    const userIds = req.body.userIds;
+   
+    try {
+       if (!Array.isArray(userIds) || userIds.length === 0) {
+         return res.status(400).json({ msg: "No se proporcionaron IDs de usuario para eliminar." });
+       }
+
+       const result = await conx.deleteUsers(userIds);
+       
+       res.status(200).json(result);
+    } catch (error) {
+       console.error('Error al eliminar los usuarios:', error);
+       res.status(500).json({ msg: "Error al eliminar los usuarios" });
+    }
+   }
 
 const getUserByToken = async (req, res) => {
     const token = req.headers['x-token'];

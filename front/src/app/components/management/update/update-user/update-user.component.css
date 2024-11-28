@@ -1,7 +1,6 @@
 .form-container {
-    max-width: 600px; 
-    margin: auto;
     padding: 20px; 
+    margin: 20px;
     border-radius: 8px; 
     background-color: #333333; 
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
@@ -80,4 +79,67 @@ select:focus {
 
 .selected {
     font-weight: bold;
+}
+
+.roles-container {
+    display: flex; /* Usar flexbox para alinear los elementos en fila */
+    justify-content: space-between; /* Espacio entre los elementos */
+    gap: 20px; /* Espacio entre columnas */
+}
+
+.available-roles, .user-roles {
+    flex: 1; /* Ambas columnas comparten espacio equitativamente */
+    max-width: 48%; /* Limita su ancho máximo */
+    min-width: 200px; /* Ancho mínimo para evitar colapso */
+    background-color: #444; /* Fondo más oscuro para destacar */
+    padding: 15px; /* Espaciado interno */
+    border-radius: 6px; /* Bordes redondeados */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+}
+
+h3 {
+    text-align: center; /* Centrar el título de cada columna */
+    color: white;
+    margin-bottom: 10px; /* Separación entre el título y el contenido */
+}
+
+ul {
+    list-style: none; 
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 10px; 
+    margin-bottom: 10px; 
+    background-color: #555; 
+    border-radius: 4px;
+    color: white;
+}
+
+li:last-child {
+    margin-bottom: 0; 
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    color: #666;
 }
