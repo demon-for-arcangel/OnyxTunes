@@ -37,33 +37,38 @@ export class ShowUserComponent {
 
   constructor(private userService: UserService, private rolService: RolService, private router: Router, private config: DynamicDialogConfig) {}
 
-  ngOnInit(): void {
-    this.usuarioId = this.config.data.usuarioId; 
-    if (this.usuarioId) {
-      this.getUserById(this.usuarioId); 
-      this.loadRoles();
-    } else {
-      console.error('No se proporcionó el usuarioId');
+  rolesString: string = '';
+
+    ngOnInit(): void {
+        this.usuarioId = this.config.data.usuarioId; 
+        if (this.usuarioId) {
+            this.getUserById(this.usuarioId); 
+        } else {
+            console.error('No se proporcionó el usuarioId');
+        }
     }
-  }
 
-  getUserById(id: string): void {
-    this.userService.getUserById(id).subscribe(data => {
-      this.usuario = data; 
-      if (this.usuario.roles.length > 0) {
-        this.selectedRole = this.usuario.roles[0].nombre;
-      }
+    getUserById(id: string): void {
+        this.userService.getUserById(id).subscribe(data => {
+            this.usuario = data; 
+            this.rolesString = this.getRoles(this.usuario.roles); // Almacena el resultado en rolesString
+        }, error => {
+            console.error('Error al obtener el usuario:', error);
+        });
+    }
 
-    }, error => {
-      console.error('Error al obtener el usuario:', error);
-    });
-  }
+    getRoles(roles: any[]): string {
+        if (!roles || roles.length === 0) {
+            return 'Sin rol';
+        }
+        return roles.map(role => role.nombre).join(', ');
+    }
 
-  loadRoles(): void {
+/*   loadRoles(): void {
     this.rolService.getRoles().subscribe(data => {
       this.roles = data;
     }, error => {
       console.error('Error al cargar los roles:', error);
     })
-  }
+  } */
 }

@@ -10,11 +10,7 @@
     </div>
     <div class="form-group">
         <label for="roles">Roles</label>
-        <select class="form-control" id="roles" name="roles" [(ngModel)]="selectedRole">
-            @for(rol of roles; track rol) {
-                <option [value]="rol.nombre">{{ rol.nombre }}</option>
-            }
-        </select>     
+        <input type="text" class="form-control" id="roles" name="roles" [(ngModel)]="rolesString" disabled>
     </div>
     <div>
         <label for="fecha_nacimiento">Fecha de Nacimiento</label>
