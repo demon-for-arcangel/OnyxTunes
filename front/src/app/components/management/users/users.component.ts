@@ -123,6 +123,7 @@ export class UsersComponent {
     this.ref = this.dialogService.open(ShowUserComponent, {
       header: 'Ver Datos del Usuario',
       modal: true,
+      width: '70vw',
       styleClass: 'custom-modal',
       contentStyle: {
         'background-color': '#1e1e1e',
