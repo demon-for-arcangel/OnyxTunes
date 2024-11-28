@@ -38,8 +38,10 @@ export class UserService {
     return this.http.post<Usuario>(`${this.url}/users/new`, datosUser);
   }
   
-  deleteUsuario(userId: number): Observable<void> {
-    return this.http.delete<void>(`${this.url}/usuarios/${userId}`);
+  deleteUsuarios(userIds: number[]): Observable<void> {
+    return this.http.delete<void>(`${this.url}/users`, { 
+      body: { userIds } 
+    });
   }
 
   updateUser(userId: string, user: Usuario): Observable<Usuario> {
