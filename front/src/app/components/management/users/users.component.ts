@@ -166,7 +166,7 @@ export class UsersComponent {
     });
   }
 
-  deleteUsuario(userId: number): void {
+  deleteUsuario(userIds: number): void {
     this.ref = this.dialogService.open(DeleteConfirmationComponent, {
       header: 'Confirmar Eliminación',
       width: '400px',
@@ -178,15 +178,15 @@ export class UsersComponent {
         'padding': '20px'
       },
       data: {
-        userId: userId
+        userIds: userIds
       }
     });
   
     this.ref.onClose.subscribe((confirmed: boolean) => {
       if (confirmed) {
-        this.userService.deleteUsuario(userId).subscribe({
+        this.userService.deleteUsuarios([userIds]).subscribe({
           next: () => {
-            this.usuarios = this.usuarios.filter(usuario => usuario.id !== userId);
+            this.usuarios = this.usuarios.filter(usuario => usuario.id !== userIds);
             this.updatePaginatedUsuarios();
           },
           error: (error) => {
@@ -196,7 +196,6 @@ export class UsersComponent {
       }
     });
   }
-
 
   toggleFilter(): void {
     this.showFilter = !this.showFilter;
