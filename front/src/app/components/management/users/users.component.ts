@@ -147,16 +147,15 @@ export class UsersComponent {
     this.ref = this.dialogService.open(UpdateUserComponent, {
       header: 'Editar Usuario',
       modal: true,
+      width: '70vw',
       styleClass: 'custom-modal',
       contentStyle: {
         'background-color': '#1e1e1e',
         'color': 'white',
         'border-radius': '8px',
-        'padding': '20px'
       },
-      baseZIndex: 10000,
       style: {
-        'background-color': '#1e1e1e'
+        'background-color': '#1e1e1e',
       },
       showHeader: true,
       closable: true,
