@@ -90,7 +90,7 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     const userId = req.params.id; 
-    const { nombre, email, password, roles } = req.body; 
+    const { nombre, email, fecha_nacimiento, telefono, direccion, genero, activo, password, roles } = req.body; 
 
     try {
         const existingUser = await conx.getUserById(userId);
@@ -100,13 +100,17 @@ const updateUser = async (req, res) => {
 
         let hashedPassword;
         if (password) {
-            const salt = await bcrypt.genSalt(10);
-            hashedPassword = await bcrypt.hash(password, salt);
+            hashedPassword = await bcrypt.hash(password, 10);
         }
 
         const updatedData = {
             nombre: nombre || existingUser.nombre, 
             email: email || existingUser.email, 
+            fecha_nacimiento: fecha_nacimiento || existingUser.fecha_nacimiento,
+            telefono: telefono || existingUser.telefono,
+            direccion: direccion || existingUser.direccion,
+            genero: genero || existingUser.genero,
+            activo: activo || existingUser.activo,
             password: hashedPassword || existingUser.password 
         };
 
