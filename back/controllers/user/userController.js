@@ -46,19 +46,20 @@ const getUserById = async (req, res) => {
 };
 
 const getUserByEmail = async (req, res) => {
-    const email = req.query;
+    const email = req.query.email;
 
     try {
         const user = await conx.getUserByEmail(email);
         if (!user) {
-            res.status(404).json({ msg: "Usuario no encontrado" }) 
+            res.status(404).json({ msg: "Usuario no encontrado" });
+        } else {
+            res.status(200).json(user);
         }
-        res.status(200).json(user);
     } catch (error) {
-        console.error("Error al obtener usuario por email", error);
-        res.status(500).json({ msg: "Error al obtener usuario por email" });
+        console.error('Error al obtener el usuario:', error);
+        res.status(500).json({ msg: "Error al obtener el usuario" });
     }
-}
+};
 
 const sendMail = async (mailOptions) => {} //por hacer
 

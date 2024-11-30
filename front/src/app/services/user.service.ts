@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
@@ -25,9 +25,8 @@ export class UserService {
   }
 
   getUserByEmail(email: string): Observable<any> {
-    return this.http.get(`${this.url}/users`, {
-      params: { email } 
-    });
+    const params = new HttpParams().set('email', email);
+    return this.http.get<any>(`${this.url}/users/found`, { params });
   }
 
   createUsuario(datosUser: {nombre: string, email: string, password: string, roles: string[]}): Observable<Usuario> {

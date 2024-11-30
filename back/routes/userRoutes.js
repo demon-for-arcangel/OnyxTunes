@@ -25,11 +25,14 @@ router.post('/users/create', [
     check('email', 'El email es obligatorio').notEmpty(),
     check('email', 'No es un email válido').isEmail(),
     validateFilds
-], registerByAdmin)
+], registerByAdmin);
+router.get('/users/found', controlador.getUserByEmail);
+
 router.put('/users/:id', [
      /* checkToken, tokenCanAdmin */
 ], controlador.updateUser);
 router.get('/users/:id', controlador.getUserById);
+
 router.delete('/users', controlador.deleteUsers);
 
 module.exports = router;

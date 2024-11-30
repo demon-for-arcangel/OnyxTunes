@@ -31,18 +31,21 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let cancion of paginatedCanciones">
-                    <td>{{ cancion.titulo }}</td>
-                    <td>{{ cancion.artista }}</td>
-                    <td>{{ cancion.album }}</td>
-                    <td>{{ cancion.duracion }}</td>
-                    <td>{{ cancion.genero }}</td>
-                    <td>
-                        <button (click)="editCancion(cancion)">Editar</button>
-                        <button (click)="deleteCancion(cancion.id)">Eliminar</button>
-                        <button (click)="showCancion(cancion)">Ver Detalles</button>
-                    </td>
-                </tr>
+                @for(cancion of paginatedCanciones; track cancion){
+                    <tr>
+                        <td>{{ cancion.titulo }}</td>
+                        <td>{{ cancion.artista }}</td>
+                        <td>{{ cancion.album }}</td>
+                        <td>{{ cancion.duracion }}</td>
+                        <td>{{ cancion.genero }}</td>
+                        <td>
+                            <button (click)="editCancion(cancion)">Editar</button>
+                            <button (click)="deleteCancion(cancion.id)">Eliminar</button>
+                            <button (click)="showCancion(cancion)">Ver Detalles</button>
+                        </td>
+                    </tr>
+                }
+                
             </tbody>
         </table>
 
@@ -68,18 +71,20 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let album of paginatedAlbums">
-                    <td>{{ album.titulo }}</td>
-                    <td>{{ album.artista }}</td>
-                    <td>{{ album.anio }}</td>
-                    <td>{{ album.numCanciones }}</td>
-                    <td>{{ album.genero }}</td>
-                    <td>
-                        <button (click)="editAlbum(album)">Editar</button>
-                        <button (click)="deleteAlbum(album.id)">Eliminar</button>
-                        <button (click)="showAlbum(album)">Ver Detalles</button>
-                    </td>
-                </tr>
+                @for(album of paginatedAlbums; track album){
+                    <tr>
+                        <td>{{ album.titulo }}</td>
+                        <td>{{ album.artista }}</td>
+                        <td>{{ album.anio }}</td>
+                        <td>{{ album.numCanciones }}</td>
+                        <td>{{ album.genero }}</td>
+                        <td>
+                            <button (click)="editAlbum(album)">Editar</button>
+                            <button (click)="deleteAlbum(album.id)">Eliminar</button>
+                            <button (click)="showAlbum(album)">Ver Detalles</button>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
 

@@ -69,21 +69,23 @@ class UserModel {
 
     async getUserByEmail(email) {
         try {
-            console.log('Buscando usuario con email:', email);
             let user = await models.Usuario.findOne({
                 where: {
-                    email: email
-                }
+                    [Op.or]: [
+                        { id: email },
+                        { email: email }
+                    ]
+                },
+                include: [
+                    {
+                        model: models.Rol,
+                        attributes: ['nombre']
+                    }
+                ]
             });
-            
-            if (!user) {
-                console.log('Usuario no encontrado');
-                return null;
-            }
-            
+
             return user;
         } catch (error) {
-            console.error('Error al obtener usuario por email:', error);
             throw error;
         }
     }
