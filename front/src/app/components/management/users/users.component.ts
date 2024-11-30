@@ -220,7 +220,7 @@ export class UsersComponent {
     const rolBuscado = rolMap[this.filterType];
   
     this.usuarios = this.originalUsuarios.filter(usuario =>
-      usuario.rol?.some(rol => rol.nombre?.toLowerCase() === rolBuscado.toLowerCase())
+      usuario.Rol?.some(rol => rol.nombre?.toLowerCase() === rolBuscado.toLowerCase())
     );
   
     this.currentPage = 1;

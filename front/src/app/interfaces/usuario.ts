@@ -1,6 +1,6 @@
 export interface Usuario {
     id: number,
-    rol: Rol[];
+    Rol: Rol[];
     nombre: string;
     email: string;
     password: string;
@@ -14,4 +14,4 @@ export interface Rol {
     nombre?: string;
     descripcion?: string; 
     selected?: boolean; 
-  }
+}

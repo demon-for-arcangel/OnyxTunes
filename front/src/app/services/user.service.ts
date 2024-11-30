@@ -30,10 +30,6 @@ export class UserService {
     });
   }
 
-  getUserByToken(): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.url}/users/token`);
-  }
-
   createUsuario(datosUser: {nombre: string, email: string, password: string, roles: string[]}): Observable<Usuario> {
     return this.http.post<Usuario>(`${this.url}/users/new`, datosUser);
   }

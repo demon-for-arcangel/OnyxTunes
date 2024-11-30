@@ -19,47 +19,53 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   login() {
-    this.errors = {}; 
+    this.errors = {}; // Limpiar errores previos
     if (!this.email.trim()) {
       this.errors.email = 'El correo electrónico es obligatorio.';
     }
-
+  
     if (!this.password.trim()) {
       this.errors.password = 'La contraseña es obligatoria.';
     }
-
+  
     if (Object.keys(this.errors).length > 0) {
-      return;
+      return; // Detener el login si hay errores de validación
     }
+    const token = localStorage.getItem('token'); // Obtén el token del almacenamiento
 
-    this.authService.login(this.email, this.password).subscribe({
-      next: (response) => {
-        console.log('Iniciada la sesión');
-        const token = response.token;
-        localStorage.setItem('token', token);
-        console.log(token)
-        this.authService.getUserByToken(token).subscribe({
-          next: (user) => {
-            console.log(user); // hacer una consulta para saber a que id corresponde el rol
-            if (user && user.rol && user.rol.length > 0) {
-              const userRole = user.rol[0].nombre;
-
-              if (userRole === 'Usuario') {
-                this.router.navigate(['/home']);
-              } else if (userRole === 'Artista' || userRole === 'Administrador') {
-                this.router.navigate(['/selectAccess']);
-              }
-            }
-          },
-          error: (error) => {
-            console.error('Error al obtener el usuario por token:', error);
-          },
-        });
+  
+    this.authService.getUserByToken(token).subscribe({
+      next: (user) => {
+        console.log('Respuesta del usuario:', user); // Agrega este log para verificar la respuesta
+        if (!user) {
+          console.error('Usuario no definido.');
+          this.errors.login = 'No se pudo obtener el usuario.';
+          return;
+        }
+    
+        const roles = Array.isArray(user.Rol) ? user.Rol : [user.Rol];
+        console.log('Roles del usuario:', roles); // Verificar los roles
+    
+        if (roles && roles.length > 0 && roles[0].nombre) {
+          const userRole = roles[0].nombre;
+          console.log('Rol del usuario:', userRole);
+    
+          if (userRole === 'Usuario') {
+            this.router.navigate(['/home']);
+          } else if (userRole === 'Artista' || userRole === 'Administrador') {
+            this.router.navigate(['/selectAccess']);
+          }
+        } else {
+          console.error('El usuario no tiene un rol asociado o Rol es undefined');
+          this.errors.login = 'El usuario no tiene un rol asignado.';
+        }
       },
       error: (error) => {
-        console.error('Error en el login:', error);
-        this.errors.login = 'Credenciales incorrectas o error en el servidor.';
-      }
+        console.error('Error al obtener el usuario por token:', error);
+        this.errors.login = 'No se pudo obtener la información del usuario.';
+      },
     });
+    
   }
+  
 }
