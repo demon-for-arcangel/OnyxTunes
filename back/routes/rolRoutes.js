@@ -8,6 +8,7 @@ const { register, login, logout } = require('../controllers/user/authController'
  */const router = Router();
 
 router.get('/roles', controlador.getRoles);
+router.get('/roles/:id', controlador.getRolById);
 
 module.exports = router;
 
