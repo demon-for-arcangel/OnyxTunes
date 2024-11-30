@@ -14,7 +14,6 @@ class UserModel {
                 include: [
                     {
                         model: models.Rol,
-                        as: 'roles',
                         attributes: ['nombre']  
                     }
                 ]
@@ -33,7 +32,6 @@ class UserModel {
                 include: [
                     {
                         model: models.Rol,
-                        as: 'roles',
                         where: { nombre: 'Artista' }, 
                     }
                 ]
@@ -52,7 +50,6 @@ class UserModel {
                 include: [
                     {
                         model: models.Rol,
-                        as: 'roles',
                         attributes: ['nombre']
                     }
                 ]
@@ -189,7 +186,6 @@ class UserModel {
                 include: [
                     {
                         model: models.Rol,
-                        as: 'roles', 
                         attributes: ['id', 'nombre']
                     }
                 ]

@@ -37,11 +37,12 @@ export class LoginComponent {
         console.log('Iniciada la sesión');
         const token = response.token;
         localStorage.setItem('token', token);
+        console.log(token)
         this.authService.getUserByToken(token).subscribe({
           next: (user) => {
-            console.log(user);
-            if (user && user.roles && user.roles.length > 0) {
-              const userRole = user.roles[0].nombre;
+            console.log(user); // hacer una consulta para saber a que id corresponde el rol
+            if (user && user.rol && user.rol.length > 0) {
+              const userRole = user.rol[0].nombre;
 
               if (userRole === 'Usuario') {
                 this.router.navigate(['/home']);

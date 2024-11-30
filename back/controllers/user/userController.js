@@ -170,14 +170,14 @@ const getUserByToken = async (req, res) => {
     
     res.status(200).json(user);
     } catch (error) {
-    console.error('Error al obtener el usuario por token:', error);
-    res.status(500).json({ error: 'Error al obtener el usuario por token' });
+        console.error('Error al obtener el usuario por token:', error);
+        res.status(500).json({ error: 'Error al obtener el usuario por token' });
     }
 };
 
 const searchUsers = async (req, res) => {}
 
 module.exports = {
-    index, indexArtist, getUserById, getUserByEmail, createUser, sendMail, /* registerUserByAdmin, */ updateUser, deleteUsers, 
+    index, indexArtist, getUserById, getUserByEmail, /* createUser, */ sendMail, /* registerUserByAdmin, */ updateUser, deleteUsers, 
     getUserByToken, searchUsers
 }

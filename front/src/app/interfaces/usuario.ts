@@ -1,6 +1,6 @@
 export interface Usuario {
     id: number,
-    roles: Rol[];
+    rol: Rol[];
     nombre: string;
     email: string;
     password: string;

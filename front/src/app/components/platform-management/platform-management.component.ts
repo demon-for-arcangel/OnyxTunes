@@ -11,15 +11,17 @@ import { Usuario } from '../../interfaces/usuario';
   styleUrl: './platform-management.component.css'
 })
 export class PlatformManagementComponent {
-  roles: string[] = []; // Almacena los roles del usuario
+  rol: string = ''; // Almacena el rol del usuario
 
   constructor(private router: Router, private usuarioService: UserService) {}
 
   ngOnInit(): void {
     this.usuarioService.getUserByToken().subscribe({
       next: (usuario: Usuario) => {
-        // Extraer los nombres de los roles del usuario
-        this.roles = usuario.roles.map(role => role.nombre.toLowerCase());
+        // Extraer el nombre del rol del usuario (asumiendo que solo tiene un rol)
+        if (usuario.rol && usuario.rol[0]?.nombre) {
+          this.rol = usuario.rol[0].nombre.toLowerCase();
+        }
       },
       error: (err) => {
         console.error('Error al obtener los datos del usuario', err);
@@ -34,10 +36,9 @@ export class PlatformManagementComponent {
   }
 
   canAccess(section: string): boolean {
-    // Define las reglas de acceso para cada sección
-    const accessRules = {
-      userManagement: this.roles.includes('administrador'),
-      musicManagement: this.roles.includes('administrador') || this.roles.includes('artista')
+    const accessRules: { [key: string]: boolean } = {
+      userManagement: this.rol === 'Administrador',
+      musicManagement: this.rol === 'Administrador' || this.rol === 'Artista'
     };
 
     return accessRules[section];

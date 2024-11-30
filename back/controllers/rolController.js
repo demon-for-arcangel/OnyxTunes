@@ -13,6 +13,10 @@ const getRoles = async (req, res) => {
     }
 }
 
+const getRolById = async (req, res) => {
+    
+}
+
 module.exports = {
     getRoles
 }

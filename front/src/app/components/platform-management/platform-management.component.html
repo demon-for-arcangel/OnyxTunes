@@ -1,24 +1,27 @@
 <div class="platform-management">
     <h1>Gestión de la Plataforma</h1>
     <div class="management-sections">
-        <div class="section" *ngIf="canAccess('userManagement')">
-            <button (click)="navigateTo('userManagement')">
-                <img src="assets/images/gestion-de-usuarios.jpg" class="image">
-                <div class="overlay">
-                    <h2>Gestión de Usuarios</h2>
-                    <p>Administrar Usuarios</p>
-                </div>
-            </button>
-        </div>
-
-        <div class="section" *ngIf="canAccess('musicManagement')">
-            <button (click)="navigateTo('musicManagement')">
-                <img src="assets/images/gestion-de-albumes.jpg" class="image">
-                <div class="overlay">
-                    <h2>Gestión de Música</h2>
-                    <p>Administrar Música</p>
-                </div>
-            </button>
-        </div>
+        @if(canAccess('userManagement')){
+            <div class="section">
+                <button (click)="navigateTo('userManagement')">
+                    <img src="assets/images/gestion-de-usuarios.jpg" class="image">
+                    <div class="overlay">
+                        <h2>Gestión de Usuarios</h2>
+                        <p>Administrar Usuarios</p>
+                    </div>
+                </button>
+            </div>
+        }
+        @if(canAccess('musicManagement')){
+            <div class="section">
+                <button (click)="navigateTo('musicManagement')">
+                    <img src="assets/images/gestion-de-albumes.jpg" class="image">
+                    <div class="overlay">
+                        <h2>Gestión de Música</h2>
+                        <p>Administrar Música</p>
+                    </div>
+                </button>
+            </div>
+        } 
     </div>
 </div>
