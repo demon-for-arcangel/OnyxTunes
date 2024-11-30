@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Usuario } from '../../interfaces/usuario';
 import { Errors } from '../../interfaces/errors';
 
 @Component({
@@ -15,13 +14,12 @@ import { Errors } from '../../interfaces/errors';
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  errors: Errors = {};  // Usamos la interfaz Errors
+  errors: Errors = {}; 
 
   constructor(private authService: AuthService, private router: Router) {}
 
   login() {
-    this.errors = {};  // Limpiar errores antes de hacer la solicitud
-
+    this.errors = {}; 
     if (!this.email.trim()) {
       this.errors.email = 'El correo electrónico es obligatorio.';
     }
@@ -30,12 +28,10 @@ export class LoginComponent {
       this.errors.password = 'La contraseña es obligatoria.';
     }
 
-    // Si hay errores, no continuar con el login
     if (Object.keys(this.errors).length > 0) {
       return;
     }
 
-    // Si no hay errores, proceder con el login
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
         console.log('Iniciada la sesión');

@@ -10,9 +10,6 @@ const register = async (req, res) => {
     const body = req.body;
     console.log('cuerpo', body);
 
-    let roles = body.roles || ['Usuario'];
-    console.log('roles', roles);
-
     try {
         const existingUser = await conx.getUserByEmail(body.email);
         if (existingUser) {
@@ -29,19 +26,13 @@ const register = async (req, res) => {
             password: body.password,
             fecha_nacimiento: body.fecha_nacimiento,
             direccion: body.direccion,
-            telefono: body.telefono
+            telefono: body.telefono,
+            genero: body.genero,
+            activo: body.activo,
+            rol: 3
         });
 
-        if (!roles || roles.length === 0) {
-            roles = ['Usuario'];
-        }
-
-        if (roles.length > 0) {
-            console.log("Asignando roles:", roles);
-            await conx.createUserRols(newUser.id, roles); 
-        }
-
-        const token = await generarJWT(newUser.id, roles);
+        const token = await generarJWT(newUser.id);
 
         res.status(201).json({
             nombre: newUser.nombre,
@@ -49,6 +40,9 @@ const register = async (req, res) => {
             fecha_nacimiento: newUser.fecha_nacimiento,
             direccion: newUser.direccion,
             telefono: newUser.telefono,
+            genero: newUser.genero,
+            activo: newUser.activo,
+            rol: newUser.rol,
             token
         });
 
@@ -57,6 +51,8 @@ const register = async (req, res) => {
         res.status(500).json({ msg: "Error al registrar el usuario" });
     }
 };
+
+/* crear una funcion de registro de usuarios siendo administrador */
 
 const login = async (req, res) => {
     let email = req.body.email;

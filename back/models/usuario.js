@@ -11,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.Rol, {
+      /* this.belongsToMany(models.Rol, {
         through: models.RolUsuario,
         foreignKey: 'usuario_id',
         otherKey: "rol_id",
         as: "roles",
         onDelete: "CASCADE"
-      });
+      }); */
 
       this.belongsToMany(models.Cancion, {
         through: models.UsuarioCancion,
@@ -60,7 +60,8 @@ module.exports = (sequelize, DataTypes) => {
     direccion: DataTypes.STRING,
     telefono: DataTypes.STRING,
     genero: DataTypes.ENUM('Femenino', 'Masculino', 'Otro'),
-    active: DataTypes.BOOLEAN
+    active: DataTypes.BOOLEAN,
+    rol: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Usuario',

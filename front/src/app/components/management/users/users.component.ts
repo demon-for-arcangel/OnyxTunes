@@ -4,7 +4,6 @@ import { Usuario } from '../../../interfaces/usuario';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../services/user.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { DialogComponent } from '../../utils/dialog/dialog.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogModule } from 'primeng/dialog';
 import { CreateUserComponent } from '../create/create-user/create-user.component';
@@ -16,7 +15,7 @@ import { ShowUserComponent } from '../show/show-user/show-user.component';
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [FormsModule, DialogComponent, DialogModule, ConfirmDialogModule],
+  imports: [FormsModule, DialogModule, ConfirmDialogModule],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
   providers: [DialogService]
