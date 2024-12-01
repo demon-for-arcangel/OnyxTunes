@@ -1,5 +1,5 @@
 <div class="platform-management">
-    <h1>Gestión de la Plataforma</h1>
+    <h1>Gestiones</h1>
     <div class="management-sections">
         @if(canAccess('userManagement')){
             <div class="section">
@@ -15,7 +15,11 @@
         @if(canAccess('musicManagement')){
             <div class="section">
                 <button (click)="navigateTo('musicManagement')">
-                    <img src="assets/images/gestion-de-albumes.jpg" class="image">
+                    <img src="assets/images/gestion-de-albumes.jpg" class="image"
+                    [ngStyle]="{
+                        width: rol === 'Artista' ? '50%' : '100%',
+                        height: rol === 'Artista' ? 'auto' : '100%',
+                      }">
                     <div class="overlay">
                         <h2>Gestión de Música</h2>
                         <p>Administrar Música</p>
