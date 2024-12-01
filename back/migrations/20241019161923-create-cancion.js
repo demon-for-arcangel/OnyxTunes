@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       duracion: {
-        type: Sequelize.TIME
+        type: Sequelize.INTEGER
       },
       likes: {
         type: Sequelize.INTEGER

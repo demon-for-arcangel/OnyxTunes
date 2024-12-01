@@ -15,9 +15,9 @@ module.exports = {
    await queryInterface.bulkInsert(process.env.TABLA_CANCION, [
     {
       titulo: 'Luz de Luna',
-      duracion: '00:03:45',
+      duracion: 120,
       likes: 20,
-      reproduciones: 30,
+      reproducciones: 30,
       album_id: 1,    
       artista_id: 1,  
       createdAt: new Date(),
@@ -25,9 +25,9 @@ module.exports = {
     },
     {
       titulo: 'Caminos Infinitos',
-      duracion: '00:04:20',
+      duracion: 200,
       likes: 666,
-      reproduciones: 7321,
+      reproducciones: 7321,
       album_id: 1,    
       artista_id: 2,  
       createdAt: new Date(),
@@ -35,9 +35,9 @@ module.exports = {
     },
     {
       titulo: 'Ecos de Ayer',
-      duracion: '00:05:10',
+      duracion: 260,
       likes: 12500,
-      reproduciones: 18000,
+      reproducciones: 18000,
       album_id: 2,    
       artista_id: 1,  
       createdAt: new Date(),
@@ -45,9 +45,9 @@ module.exports = {
     },
     {
       titulo: 'Sueños Perdidos',
-      duracion: '00:03:30',
+      duracion: 243,
       likes: 9900,
-      reproduciones: 11855,
+      reproducciones: 11855,
       album_id: 2,    
       artista_id: 2,  
       createdAt: new Date(),
