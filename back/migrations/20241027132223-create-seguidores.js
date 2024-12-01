@@ -10,7 +10,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      seguidor_id: {
+      user_id: {
         primaryKey: true,
         type: Sequelize.INTEGER,
         references: {
@@ -20,7 +20,7 @@ module.exports = {
           key: 'id'
         },
       },
-      seguido_id: {
+      seguidor_id: {
         primaryKey: true,
         type: Sequelize.INTEGER,
         references: {

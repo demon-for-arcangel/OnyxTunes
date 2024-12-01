@@ -15,6 +15,12 @@ module.exports = {
       duracion: {
         type: Sequelize.TIME
       },
+      likes: {
+        type: Sequelize.INTEGER
+      },
+      reproducciones: {
+        type: Sequelize.INTEGER
+      },
       album_id: {
         primaryKey: true,
         type: Sequelize.INTEGER,

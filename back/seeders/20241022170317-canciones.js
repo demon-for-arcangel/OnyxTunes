@@ -16,6 +16,8 @@ module.exports = {
     {
       titulo: 'Luz de Luna',
       duracion: '00:03:45',
+      likes: 20,
+      reproduciones: 30,
       album_id: 1,    
       artista_id: 1,  
       createdAt: new Date(),
@@ -24,6 +26,8 @@ module.exports = {
     {
       titulo: 'Caminos Infinitos',
       duracion: '00:04:20',
+      likes: 666,
+      reproduciones: 7321,
       album_id: 1,    
       artista_id: 2,  
       createdAt: new Date(),
@@ -32,6 +36,8 @@ module.exports = {
     {
       titulo: 'Ecos de Ayer',
       duracion: '00:05:10',
+      likes: 12500,
+      reproduciones: 18000,
       album_id: 2,    
       artista_id: 1,  
       createdAt: new Date(),
@@ -40,6 +46,8 @@ module.exports = {
     {
       titulo: 'Sueños Perdidos',
       duracion: '00:03:30',
+      likes: 9900,
+      reproduciones: 11855,
       album_id: 2,    
       artista_id: 2,  
       createdAt: new Date(),
