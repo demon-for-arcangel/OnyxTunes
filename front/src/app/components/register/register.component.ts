@@ -23,7 +23,7 @@ export class RegisterComponent {
     fecha_nacimiento: '',
     genero: '',          
     foto_perfil: '',     
-    roles: []      
+    Rol: []      
   };
   errors: Errors = {}; 
 

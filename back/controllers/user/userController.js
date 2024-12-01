@@ -46,19 +46,20 @@ const getUserById = async (req, res) => {
 };
 
 const getUserByEmail = async (req, res) => {
-    const email = req.query;
+    const email = req.query.email;
 
     try {
         const user = await conx.getUserByEmail(email);
         if (!user) {
-            res.status(404).json({ msg: "Usuario no encontrado" }) 
+            res.status(404).json({ msg: "Usuario no encontrado" });
+        } else {
+            res.status(200).json(user);
         }
-        res.status(200).json(user);
     } catch (error) {
-        console.error("Error al obtener usuario por email", error);
-        res.status(500).json({ msg: "Error al obtener usuario por email" });
+        console.error('Error al obtener el usuario:', error);
+        res.status(500).json({ msg: "Error al obtener el usuario" });
     }
-}
+};
 
 const sendMail = async (mailOptions) => {} //por hacer
 
@@ -90,7 +91,7 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     const userId = req.params.id; 
-    const { nombre, email, password, roles } = req.body; 
+    const { nombre, email, fecha_nacimiento, telefono, direccion, genero, activo, password, roles } = req.body; 
 
     try {
         const existingUser = await conx.getUserById(userId);
@@ -100,13 +101,17 @@ const updateUser = async (req, res) => {
 
         let hashedPassword;
         if (password) {
-            const salt = await bcrypt.genSalt(10);
-            hashedPassword = await bcrypt.hash(password, salt);
+            hashedPassword = await bcrypt.hash(password, 10);
         }
 
         const updatedData = {
             nombre: nombre || existingUser.nombre, 
             email: email || existingUser.email, 
+            fecha_nacimiento: fecha_nacimiento || existingUser.fecha_nacimiento,
+            telefono: telefono || existingUser.telefono,
+            direccion: direccion || existingUser.direccion,
+            genero: genero || existingUser.genero,
+            activo: activo || existingUser.activo,
             password: hashedPassword || existingUser.password 
         };
 
@@ -166,14 +171,14 @@ const getUserByToken = async (req, res) => {
     
     res.status(200).json(user);
     } catch (error) {
-    console.error('Error al obtener el usuario por token:', error);
-    res.status(500).json({ error: 'Error al obtener el usuario por token' });
+        console.error('Error al obtener el usuario por token:', error);
+        res.status(500).json({ error: 'Error al obtener el usuario por token' });
     }
 };
 
 const searchUsers = async (req, res) => {}
 
 module.exports = {
-    index, indexArtist, getUserById, getUserByEmail, createUser, sendMail, /* registerUserByAdmin, */ updateUser, deleteUsers, 
+    index, indexArtist, getUserById, getUserByEmail, /* createUser, */ sendMail, /* registerUserByAdmin, */ updateUser, deleteUsers, 
     getUserByToken, searchUsers
 }

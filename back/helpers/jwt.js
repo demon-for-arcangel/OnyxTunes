@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
-const generarJWT = (uid = '', roles) => {
-    return jwt.sign({uid, roles}, process.env.SECRETORPRIVATEKEY, {
+const generarJWT = (uid = '') => {
+    return jwt.sign({uid}, process.env.SECRETORPRIVATEKEY, {
         expiresIn: '6h'
     });
 }
