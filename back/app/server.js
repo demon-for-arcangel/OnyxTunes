@@ -18,15 +18,8 @@ class Server {
 
     this.apiFiles = "/api/file";
     this.apiMail = "/api/mail";
-
-    this.apiEvents = "/api/events"
-    this.apiPreferences = "/api/preferences"
-    this.apiUserPreferences = "/api/userPreferences"
     this.apiChats = "/api/chats"
-    this.apiAssets = "/api/assets"
-    this.apiUserEvents = "/api/userEvents"
-    this.apiRecommendUsers = "/api/recommendations"
-  
+
 /*     this.serverExpress = require('http').createServer(this.app);
  */  
     this.routes();
@@ -47,6 +40,15 @@ class Server {
   routes() {
     this.app.use(this.RoutePath, require("../routes/userRoutes"));
     this.app.use(this.RoutePath, require('../routes/rolRoutes'));
+    this.app.use(this.RoutePath, require('../routes/albumRoutes'));
+    this.app.use(this.RoutePath, require('../routes/cancionRoutes'));
+/*     
+    
+    this.app.use(this.RoutePath, require('../routes/PlaylistRoutes'));
+    this.app.use(this.RoutePath, require('../routes/generoRoutes'));
+ */
+
+
 /*     this.app.use(this.apiMail, require('../routes/services/mailRoutes'));
     this.app.use(this.apiRols, require('../routes/rols/rolRoutes'));
     this.app.use(this.apiEvents, require('../routes/events/eventsRoutes'));

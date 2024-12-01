@@ -21,7 +21,7 @@ class UserModel {
             return users;
         } catch (error) {
             console.error('Error al mostrar la lista de usuarios: ', error);
-            throw error;
+            throw new Error('Error al listar los usuarios');
         }
     }
     
@@ -40,7 +40,7 @@ class UserModel {
             return artists;
         } catch (error) {
             console.error('Error al mostrar la lista de artistas:', error);
-            throw error;
+            throw new Error('Error al listar los artistas');
         }
     }
 
@@ -62,7 +62,7 @@ class UserModel {
             return user;
         } catch (error) {
             console.error('Error al mostrar el usuario: ', error);
-            throw error;
+            throw new Error('Error al buscar el usuario por su Id');
         }
     }
     
@@ -86,7 +86,7 @@ class UserModel {
 
             return user;
         } catch (error) {
-            throw error;
+            throw new Error('Error al buscar el usuario por el email');
         }
     }
   
@@ -105,7 +105,7 @@ class UserModel {
             return newUser;
         } catch (error) {
             console.error('Error al registrar un nuevo usuario:', error);
-            throw error;
+            throw new Error('Error al registrar al usuario');
         }
     }
 
@@ -146,7 +146,7 @@ class UserModel {
             }
         } catch (error) {
             console.error('Error al crear roles de usuario:', error);
-            throw error; 
+            throw new Error('Error al crear los roles'); 
         }
         return newRoles;
     }
@@ -162,7 +162,7 @@ class UserModel {
             return updated;
           }catch (error) {
             console.error('Error al actualizar el usuario: ', error);
-            throw error;
+            throw new Error('Erro al actualizar');
         }
     }
 
@@ -200,7 +200,7 @@ class UserModel {
             return user.roles; 
         } catch (error) {
             console.error('Error al obtener roles del usuario:', error);
-            throw error; 
+            throw new Error('Error al obtenr los roles'); 
         }
     }
 
@@ -215,7 +215,7 @@ class UserModel {
             return result; 
         } catch (error) {
             console.error('Error al eliminar rol de usuario:', error);
-            throw error; 
+            throw new Error('Error al eliminar el rol del usuario'); 
         }
     }
 }

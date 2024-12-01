@@ -13,7 +13,13 @@ module.exports = {
         type: Sequelize.STRING
       },
       duracion: {
-        type: Sequelize.TIME
+        type: Sequelize.INTEGER
+      },
+      likes: {
+        type: Sequelize.INTEGER
+      },
+      reproducciones: {
+        type: Sequelize.INTEGER
       },
       album_id: {
         primaryKey: true,
