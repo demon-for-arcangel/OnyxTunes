@@ -17,7 +17,7 @@ export class LoginComponent {
   password: string = '';
   errors: Errors = {}; 
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router, private authService: AuthService) {}
 
   login() {
     this.errors = {}; 
@@ -34,7 +34,19 @@ export class LoginComponent {
       return; 
     }
     console.log(this.email);
-   
+
+    this.authService.login(this.email, this.password).subscribe({
+      next: (token) => {
+          console.log('Inicio de sesión exitoso, token:', token);
+          this.getDatos()
+      },
+      error: (err) => {
+          console.error('Error al iniciar sesión:', err.message);
+      }
+  });
+  }
+
+  getDatos(){
     this.userService.getUserByEmail(this.email).subscribe({
       next: (user) => {
         console.log('Usuario recibido:', user); 
@@ -46,7 +58,7 @@ export class LoginComponent {
       },
       error: (error) => this.handleError(error)
     });
-   }
+  }
    
 
   handleUserResponse(user: any) {
@@ -81,3 +93,4 @@ export class LoginComponent {
     this.errors.login = 'No se pudo obtener la información del usuario.';
   }
 }
+

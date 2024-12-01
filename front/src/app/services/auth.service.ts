@@ -18,15 +18,25 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.url}/login`, { email, password }).pipe(
-      catchError(error => {
-        if (error.status === 401) {
-          throw new Error('Email o contraseña incorrectos');
-        }
-        throw new Error('Error desconocido');
-      })
+    return this.http.post<{ token: string }>(`${this.url}/login`, { email, password }).pipe(
+        map(response => {
+            const token = response.token; // Asegúrate de que el servidor envía este campo
+            if (token) {
+                localStorage.setItem('user', JSON.stringify({ token }));
+                console.log('Token guardado en localStorage:', token);
+            } else {
+                console.error('Token no encontrado en la respuesta');
+            }
+            return token;
+        }),
+        catchError(error => {
+            if (error.status === 401) {
+                return throwError(() => new Error('Email o contraseña incorrectos'));
+            }
+            return throwError(() => new Error('Error desconocido'));
+        })
     );
-  }
+}
 
   getUserByToken(tokenObject: string | null): Observable<Usuario | undefined> {
     console.log('token', tokenObject);
