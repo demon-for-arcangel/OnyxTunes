@@ -23,66 +23,62 @@ const getAlbumById = async (req, res) => {
         if (!album) {
             return res.status(404).json({ msg: "Album no encontrado" });
         }
+        res.status(200).json(album);
     } catch (error) {
         
     }
 }
 
 const createAlbum = async (req, res) => {
-    const { } = req.body;
+    const { titulo, artista_id, fecha_lanzamiento, likes } = req.body;
 
     try {
         const existingAlbum = await conx.getAlbumByTitle(titulo);
+
         if (existingAlbum) {
-            return res.status(400).json({ msg: "El titulo ya lo tiene otro album" });
+            return res.status(400).json({ msg: "El título ya lo tiene otro álbum" });
         }
-        const newAlbum = await conx.createAlbum();
 
-        res.status(201).json({ msg: "Album creado exitosamente", album: newAlbum });
+        const newAlbum = await conx.createAlbum(titulo, artista_id, fecha_lanzamiento, likes);
+        res.status(201).json({ msg: "Álbum creado exitosamente", album: newAlbum });
     } catch (error) {
-        console.error("Error al crear album", error);
-        res.status(500).json({ msg: "Error al crear album" });
+        console.error("Error al crear álbum", error);
+        res.status(500).json({ msg: "Error al crear álbum" });
     }
-}
+};
 
-const updateAlbum = async  (req, res) => {
+
+const updateAlbum = async (req, res) => {
     const albumId = req.params.id;
-    const { } = req.body;
+    const newData = req.body; 
 
     try {
-        const existingAlbum = await conx.getAlbumById(albumId);
-        if (!existingAlbum) {
-            return res.status(404).json({ msg: "Album no encontrado" });
-        }
-
-        const updatedData = {
-
-        };
-
-        const udpatedAlbum = await conx.updateAlbum()
-        res.status(200).json({ msg: "Album actualizado exitosamente", album: updatedAlbum });
+        const updatedAlbum = await conx.updateAlbum(albumId, newData);
+        res.status(200).json({ msg: "Álbum actualizado exitosamente", album: updatedAlbum });
     } catch (error) {
-        console.error("Error al actualizar album", error);
-        res.status(500).json({ msg: "Error al actualizar album" });
+        console.error("Error al actualizar álbum", error);
+        res.status(500).json({ msg: "Error al actualizar álbum" });
     }
-}
+};
+
 
 const deleteAlbum = async (req, res) => {
     const albumsIds = req.body.albumsIds;
 
     try {
         if (!Array.isArray(albumsIds) || albumsIds.length === 0) {
-            return res.status(400).json({ msg: "No se proporcionaron IDs de usuario para eliminar." });
-          }
-   
-          const result = await conx.deleteAlbum(albumsIds);
-          
-          res.status(200).json(result);
+            return res.status(400).json({ msg: "No se proporcionaron IDs de álbum para eliminar." });
+        }
+
+        const result = await conx.deleteAlbum(albumsIds);
+
+        res.status(200).json(result);
     } catch (error) {
-        console.error('Error al eliminar los usuarios:', error);
-        res.status(500).json({ msg: "Error al eliminar los usuarios" }); 
+        console.error("Error al eliminar álbum(es):", error);
+        res.status(500).json({ msg: "Error al eliminar álbum(es)." });
     }
-}
+};
+
 
 module.exports = {
     index, getAlbumById, createAlbum, updateAlbum, deleteAlbum
