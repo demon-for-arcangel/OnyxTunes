@@ -39,6 +39,16 @@ module.exports = {
         allowNull:false,
         defaultValue: 1,
       },
+      rol: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_ROL
+          },
+          key: 'id'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

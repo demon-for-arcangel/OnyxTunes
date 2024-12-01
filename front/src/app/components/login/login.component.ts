@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Usuario } from '../../interfaces/usuario';
 import { Errors } from '../../interfaces/errors';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -15,54 +15,82 @@ import { Errors } from '../../interfaces/errors';
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  errors: Errors = {};  // Usamos la interfaz Errors
+  errors: Errors = {}; 
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router, private authService: AuthService) {}
 
   login() {
-    this.errors = {};  // Limpiar errores antes de hacer la solicitud
-
+    this.errors = {}; 
+   
     if (!this.email.trim()) {
       this.errors.email = 'El correo electrónico es obligatorio.';
     }
-
+   
     if (!this.password.trim()) {
       this.errors.password = 'La contraseña es obligatoria.';
     }
-
-    // Si hay errores, no continuar con el login
+   
     if (Object.keys(this.errors).length > 0) {
+      return; 
+    }
+    console.log(this.email);
+
+    this.authService.login(this.email, this.password).subscribe({
+      next: (token) => {
+          console.log('Inicio de sesión exitoso, token:', token);
+          this.getDatos()
+      },
+      error: (err) => {
+          console.error('Error al iniciar sesión:', err.message);
+      }
+  });
+  }
+
+  getDatos(){
+    this.userService.getUserByEmail(this.email).subscribe({
+      next: (user) => {
+        console.log('Usuario recibido:', user); 
+        if (user ) {
+          this.handleUserResponse(user); 
+        } else {
+          this.errors.login = 'Credenciales incorrectas.';
+        }
+      },
+      error: (error) => this.handleError(error)
+    });
+  }
+   
+
+  handleUserResponse(user: any) {
+    console.log('Respuesta del usuario:', user); 
+
+    if (!user) {
+      console.error('Usuario no definido.');
+      this.errors.login = 'No se pudo obtener el usuario.';
       return;
     }
 
-    // Si no hay errores, proceder con el login
-    this.authService.login(this.email, this.password).subscribe({
-      next: (response) => {
-        console.log('Iniciada la sesión');
-        const token = response.token;
-        localStorage.setItem('token', token);
-        this.authService.getUserByToken(token).subscribe({
-          next: (user) => {
-            console.log(user);
-            if (user && user.roles && user.roles.length > 0) {
-              const userRole = user.roles[0].nombre;
+    const roles = Array.isArray(user.Rol) ? user.Rol : [user.Rol];
+    console.log('Roles del usuario:', roles);
 
-              if (userRole === 'Usuario') {
-                this.router.navigate(['/home']);
-              } else if (userRole === 'Artista' || userRole === 'Administrador') {
-                this.router.navigate(['/selectAccess']);
-              }
-            }
-          },
-          error: (error) => {
-            console.error('Error al obtener el usuario por token:', error);
-          },
-        });
-      },
-      error: (error) => {
-        console.error('Error en el login:', error);
-        this.errors.login = 'Credenciales incorrectas o error en el servidor.';
+    if (roles && roles.length > 0 && roles[0].nombre) {
+      const userRole = roles[0].nombre;
+      console.log('Rol del usuario:', userRole);
+
+      if (userRole === 'Usuario') {
+        this.router.navigate(['/home']);
+      } else if (userRole === 'Artista' || userRole === 'Administrador') {
+        this.router.navigate(['/selectAccess']);
       }
-    });
+    } else {
+      console.error('El usuario no tiene un rol asociado o Rol es undefined');
+      this.errors.login = 'El usuario no tiene un rol asignado.';
+    }
+  }
+
+  handleError(error: any) {
+    console.error('Error al obtener el usuario:', error);
+    this.errors.login = 'No se pudo obtener la información del usuario.';
   }
 }
+

@@ -7,7 +7,7 @@ import { SelectAccessComponent } from './components/select-access/select-access.
 import { HomeComponent } from './components/home/home.component';
 import { PlatformManagementComponent } from './components/platform-management/platform-management.component';
 import { UsersComponent } from './components/management/users/users.component';
-import { AlbumsComponent } from './components/management/albums/albums.component';
+import { MusicComponent } from './components/management/music/music.component';
 
 
 export const routes: Routes = [
@@ -19,5 +19,5 @@ export const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'platformManagement', component: PlatformManagementComponent},
     { path: 'platform/userManagement', component: UsersComponent },
-    { path: 'platform/albumsManagement', component: AlbumsComponent },
+    { path: 'platform/musicManagement', component: MusicComponent },
 ];

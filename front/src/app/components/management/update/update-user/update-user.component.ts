@@ -55,6 +55,7 @@ export class UpdateUserComponent {
     this.usuario.roles = this.selectedRoles.map((rol: any) => rol.id);
   
     this.userService.updateUser(this.usuario.id, this.usuario).subscribe(response => {
+      console.log('Actualizado', this.usuario)
       setTimeout(() => {
         window.location.reload();
       }, 2000);
