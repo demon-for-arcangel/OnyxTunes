@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
   Album.init({
     titulo: DataTypes.STRING,
     artista_id: DataTypes.INTEGER,
-    fecha_lanzamiento: DataTypes.DATE
+    fecha_lanzamiento: DataTypes.DATE,
+    likes: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Album',

@@ -17,6 +17,7 @@ module.exports = {
         titulo: 'Viaje Nocturno',
         artista_id: 1,
         fecha_lanzamiento: new Date('2020-01-01'),
+        likes: 3891,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -24,6 +25,7 @@ module.exports = {
         titulo: 'Ecos del Mar',
         artista_id: 2,
         fecha_lanzamiento: new Date('2019-06-15'),
+        likes: 6959,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -31,6 +33,7 @@ module.exports = {
         titulo: 'Luz de Luna',
         artista_id: 1,
         fecha_lanzamiento: new Date('2021-03-12'),
+        likes: 9745,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -38,6 +41,7 @@ module.exports = {
         titulo: 'Caminos Infinitos',
         artista_id: 3,
         fecha_lanzamiento: new Date('2018-10-08'),
+        likes: 1234,
         createdAt: new Date(),
         updatedAt: new Date()
       }
