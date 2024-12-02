@@ -38,14 +38,15 @@ export class MusicComponent implements OnInit {
 
   loadCanciones() {
     this.cancionesService.getCanciones().subscribe(
-      (data) => {
-        this.canciones = data;
-      },
-      (error) => {
-        console.error('Error al cargar las canciones', error);
-      }
+        (data) => {
+            this.canciones = data; // Asegúrate de que esta variable esté definida
+            console.log('Canciones cargadas:', this.canciones);
+        },
+        (error) => {
+            console.error('Error al cargar las canciones:', error);
+        }
     );
-  }
+}
 
   loadAlbums() {
     this.albumsService.getAlbums().subscribe(

@@ -18,7 +18,7 @@
     @if (showArtistas && artistasFiltrados.length > 0) {
         <ul>
             @for (artista of artistasFiltrados; track artista) {
-                <li (click)="nuevaCancion.artista = artista.nombre">
+                <li (click)="selectArtista(artista)">
                     {{ artista.nombre }}
                 </li>
             }

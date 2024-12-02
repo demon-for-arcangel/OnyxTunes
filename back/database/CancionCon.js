@@ -95,23 +95,36 @@ class SongModel {
             throw new Error("Error al buscar canción por título");
         }
     }
-    
 
     async createSong(songData) {
         try {
+            // Verificar que la duración es válida
             if (!Number.isInteger(songData.duracion)) {
-                throw new Error("La duración debe ser un número entero que represente los segundos");
+                throw new Error("La duración debe ser un número entero que represente los segundos.");
             }
-
-            const newSong = await models.Cancion.create(songData, {
-                include: [{ model: models.Like }]
-            });
+    
+            // Crear la canción
+            const newSong = await models.Cancion.create(songData);
+            console.log("Nueva canción creada:", newSong);
+    
+            // Relacionar géneros si se proporcionan
+            if (songData.generos && Array.isArray(songData.generos) && songData.generos.length > 0) {
+                console.log("Géneros a relacionar:", songData.generos);
+    
+                // Establecer la relación con los géneros mediante el método `setGeneros`
+                await newSong.setGeneros(songData.generos);
+                console.log("Relaciones con géneros creadas.");
+            } else {
+                console.warn("No se proporcionaron géneros o el array está vacío.");
+            }
+    
             return newSong;
         } catch (error) {
             console.error("Error al guardar la canción en la base de datos:", error);
-            throw new Error("Error al guardar la canción");
+            throw new Error("Error al guardar la canción.");
         }
     }
+    
 
     async updateSong(songId, updatedData) {
         try {

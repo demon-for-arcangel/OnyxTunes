@@ -15,7 +15,8 @@ import { UserService } from '../../../../services/user.service';
 export class CreateSongsComponent {
   nuevaCancion: any = {
     titulo: '',
-    artista: '',
+    artista: '', // Para mostrar el nombre del artista
+    artista_id: 0,
     album: '',
     duracion: 0,
     generos: []
@@ -55,15 +56,16 @@ export class CreateSongsComponent {
 
   loadArtistas() {
     this.usuarioService.getArtists().subscribe(
-      (data) => {
-        this.artistasDisponibles = data; 
-        this.artistasFiltrados = data; 
-      },
-      (error) => {
-        console.error('Error al cargar los artistas:', error);
-      }
+        (data) => {
+            this.artistasDisponibles = data; 
+            this.artistasFiltrados = data; 
+            console.log('Artistas disponibles:', this.artistasDisponibles); // Verifica los datos
+        },
+        (error) => {
+            console.error('Error al cargar los artistas:', error);
+        }
     );
-  }
+}
 
   filterArtistas(event: any) {
     const query = event.target.value.toLowerCase();
@@ -84,10 +86,12 @@ export class CreateSongsComponent {
   }
 
   selectArtista(artista: any) {
-    this.nuevaCancion.artista = artista.nombre; 
+    console.log('Artista seleccionado:', artista); // Verifica que el artista tenga un ID
+    this.nuevaCancion.artista = artista.nombre; // Almacenar el nombre del artista para mostrar
+    this.nuevaCancion.artista_id = artista.id; // Almacenar el ID del artista para enviar
+    console.log('ID del artista asignado:', this.nuevaCancion.artista_id); // Verifica el ID asignado
     this.showArtistas = false; 
-  }
-
+}
   toggleGenre(genre: any) {
     const index = this.generosSeleccionados.indexOf(genre);
     if (index === -1) {
@@ -104,14 +108,23 @@ export class CreateSongsComponent {
   crearCancion() {
     this.nuevaCancion.duracion = this.calcularDuracionEnSegundos(); 
     this.nuevaCancion.generos = this.generosSeleccionados.map(g => g.nombre); 
+
+    console.log('Datos de la canción a crear:', this.nuevaCancion); // Verifica los datos
+
+    // Asegúrate de que artista_id esté presente
+    if (!this.nuevaCancion.artista_id) {
+        console.error('Error: artista_id no está definido');
+        return; // Salir si no hay artista_id
+    }
+
     this.cancionesService.createCancion(this.nuevaCancion).subscribe(
-      (response) => {
-        console.log('Canción añadida:', response);
-        this.ref.close(); 
-      },
-      (error) => {
-        console.error('Error al añadir la canción', error);
-      }
+        (response) => {
+            console.log('Canción añadida:', response);
+            this.ref.close(); 
+        },
+        (error) => {
+            console.error('Error al añadir la canción', error);
+        }
     );
-  }
+}
 }
