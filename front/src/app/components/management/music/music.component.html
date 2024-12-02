@@ -36,8 +36,12 @@
                         <td>{{ cancion.titulo }}</td>
                         <td>{{ cancion.artista.nombre }}</td>
                         <td>{{ cancion.Album.titulo }}</td>
-                        <td>{{ cancion.duracion }}</td>
-                        <td>{{ cancion.genero }}</td>
+                        <td>{{ formatDuration(cancion.duracion) }}</td>
+                        <td>
+                            @for(genero of cancion.generos; track genero){
+                                {{ genero.nombre }}
+                            }
+                        </td>
                         <td>
                             <button (click)="editCancion(cancion)">Editar</button>
                             <button (click)="deleteCancion(cancion.id)">Eliminar</button>
