@@ -1,7 +1,7 @@
 .create-song-details {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Espacio entre los elementos */
+    gap: 10px; 
 }
 
 label {
@@ -17,25 +17,47 @@ input[type="number"] {
 
 .duracion-container {
     display: flex;
-    gap: 10px; /* Espacio entre los campos de tiempo */
+    gap: 10px; 
 }
 
 .duracion-container input[type="number"] {
-    width: 80px; /* Ancho fijo para los campos de horas, minutos y segundos */
-    text-align: center; /* Centrar el texto dentro de los campos */
+    width: 80px; 
+    text-align: center; 
 }
 
 .genero-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas */
-    gap: 10px; /* Espacio entre columnas */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px; 
 }
 
 .genero-item {
     display: flex;
-    align-items: center; /* Alinear checkbox y label verticalmente */
+    align-items: center;
 }
 
 .genero-item input {
-    margin-right: 5px; /* Espacio entre el checkbox y el texto */
+    margin-right: 5px; 
+}
+
+ul {
+    list-style-type: none; 
+    padding: 0; 
+    margin: 0;
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    max-height: 200px; 
+    overflow-y: auto; 
+    background-color: #464545;
+    z-index: 1000; 
+}
+
+li {
+    padding: 10px; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+}
+
+li:hover {
+    background-color: #2a2a2a; 
 }

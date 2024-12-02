@@ -5,7 +5,25 @@
     <input id="titulo" type="text" [(ngModel)]="nuevaCancion.titulo" required />
 
     <label for="artista">Artista:</label>
-    <input id="artista" type="text" [(ngModel)]="nuevaCancion.artista" required />
+    <input 
+        id="artista" 
+        type="text" 
+        [(ngModel)]="nuevaCancion.artista" 
+        (input)="filterArtistas($event)"
+        (focus)="onFocus()"
+        (blur)="onBlur()" 
+        required 
+        placeholder="Escribe el nombre del artista" 
+    />
+    @if (showArtistas && artistasFiltrados.length > 0) {
+        <ul>
+            @for (artista of artistasFiltrados; track artista) {
+                <li (click)="nuevaCancion.artista = artista.nombre">
+                    {{ artista.nombre }}
+                </li>
+            }
+        </ul>
+    }
 
     <label for="album">Álbum:</label>
     <input id="album" type="text" [(ngModel)]="nuevaCancion.album" required />

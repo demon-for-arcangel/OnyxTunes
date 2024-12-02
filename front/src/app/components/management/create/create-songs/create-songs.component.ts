@@ -3,6 +3,7 @@ import { SongService } from '../../../../services/song.service';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormsModule } from '@angular/forms';
 import { GeneroService } from '../../../../services/genero.service';
+import { UserService } from '../../../../services/user.service';
 
 @Component({
   selector: 'app-create-songs',
@@ -21,34 +22,70 @@ export class CreateSongsComponent {
   };
 
   generosDisponibles: any[] = [];
-  generosSeleccionados: any[] = []; // Inicializado como un array vacío
-
+  generosSeleccionados: any[] = [];
+  artistasDisponibles: any[] = [];
+  artistasFiltrados: any[] = [];
   horas: number = 0;
   minutos: number = 0;
   segundos: number = 0;
+  showArtistas: boolean = false;
 
   constructor(
     private cancionesService: SongService,
     private generosService: GeneroService,
+    private usuarioService: UserService,
     public ref: DynamicDialogRef
   ) {}
 
   ngOnInit(): void {
     this.loadGeneros(); 
-    this.generosSeleccionados = []; 
-    console.log(this.generosSeleccionados);
+    this.loadArtistas(); 
   }
 
   loadGeneros() {
     this.generosService.getGeneros().subscribe(
       (data) => {
         this.generosDisponibles = data; 
-        console.log(this.generosDisponibles);
       },
       (error) => {
         console.error('Error al cargar los géneros:', error);
       }
     );
+  }
+
+  loadArtistas() {
+    this.usuarioService.getArtists().subscribe(
+      (data) => {
+        this.artistasDisponibles = data; 
+        this.artistasFiltrados = data; 
+      },
+      (error) => {
+        console.error('Error al cargar los artistas:', error);
+      }
+    );
+  }
+
+  filterArtistas(event: any) {
+    const query = event.target.value.toLowerCase();
+    this.artistasFiltrados = this.artistasDisponibles.filter(artista => 
+      artista.nombre.toLowerCase().includes(query)
+    );
+    this.showArtistas = query.length > 0;
+  }
+
+  onFocus() {
+    this.showArtistas = true; 
+  }
+
+  onBlur() {
+    setTimeout(() => {
+      this.showArtistas = false;
+    }, 100); 
+  }
+
+  selectArtista(artista: any) {
+    this.nuevaCancion.artista = artista.nombre; 
+    this.showArtistas = false; 
   }
 
   toggleGenre(genre: any) {
