@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SongService } from '../../../services/song.service';
 import { AlbumsService } from '../../../services/albums.service';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ShowSongsComponent } from '../show/show-songs/show-songs.component';
 
 @Component({
   selector: 'app-music',
@@ -10,6 +12,7 @@ import { AlbumsService } from '../../../services/albums.service';
   imports: [FormsModule],
   templateUrl: './music.component.html',
   styleUrls: ['./music.component.css'],
+  providers: [DialogService]
 })
 export class MusicComponent implements OnInit {
 
@@ -21,11 +24,10 @@ export class MusicComponent implements OnInit {
   albumsPerPage = 5;
   searchQuery: string = '';
 
-  constructor(
-    private router: Router,
-    private cancionesService: SongService,
-    private albumsService: AlbumsService
-  ) { }
+  ref: DynamicDialogRef | undefined;
+  dialog: any;
+
+  constructor(private router: Router, private cancionesService: SongService, public dialogService: DialogService, private albumsService: AlbumsService) { }
 
   ngOnInit() {
     this.loadCanciones();
@@ -64,14 +66,14 @@ export class MusicComponent implements OnInit {
 
   getGenerosString(generos: any[]): string {
     return generos.map(genero => genero.nombre).join(', ');
-}
+  }
 
   newCancion() {
     const nuevaCancion = { /* datos de la nueva canción */ };
     this.cancionesService.createCancion(nuevaCancion).subscribe(
       (response) => {
         console.log('Canción añadida:', response);
-        this.loadCanciones(); // Recargar las canciones
+        this.loadCanciones();
       },
       (error) => {
         console.error('Error al añadir la canción', error);
@@ -108,7 +110,7 @@ export class MusicComponent implements OnInit {
     this.albumsService.createAlbum(nuevoAlbum).subscribe(
       (response) => {
         console.log('Álbum añadido:', response);
-        this.loadAlbums(); // Recargar los álbumes
+        this.loadAlbums(); 
       },
       (error) => {
         console.error('Error al añadir el álbum', error);
@@ -193,6 +195,28 @@ export class MusicComponent implements OnInit {
 
   showCancion(cancion: any) {
     console.log('Ver detalles de canción:', cancion);
+    this.ref = this.dialogService.open(ShowSongsComponent, {
+      header: 'Ver Datos de la Canción',
+      modal: true,
+      width: '70vw',
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e'
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true,
+      data: {
+        cancionId: cancion.id
+      }
+    });
   }
 
   showAlbum(album: any) {

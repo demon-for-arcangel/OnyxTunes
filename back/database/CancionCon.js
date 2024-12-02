@@ -11,7 +11,7 @@ class SongModel {
     async indexSongs() {
         try {
             const songs = await models.Cancion.findAll({
-                include: [ //añadir la tabla genero
+                include: [ 
                     {
                         model: models.Usuario, 
                         attributes: ['id', 'nombre'],
@@ -22,9 +22,9 @@ class SongModel {
                         attributes: ['id', 'titulo'] 
                     },
                     {
-                        model: models.Genero, // Incluir el modelo Genero
-                        attributes: ['id', 'nombre'], // Especifica los atributos que deseas incluir
-                        as: 'generos' // Usa el alias que definiste en la relación
+                        model: models.Genero, 
+                        attributes: ['id', 'nombre'], 
+                        as: 'generos' 
                     },
                     { model: models.Like } 
                 ],
@@ -39,7 +39,23 @@ class SongModel {
     async getSongById(id) {
         try {
             const song = await models.Cancion.findByPk(id, {
-                include: [{ model: models.Like }]
+                include: [ 
+                    {
+                        model: models.Usuario, 
+                        attributes: ['id', 'nombre'],
+                        as: 'artista'
+                    },
+                    {
+                        model: models.Album, 
+                        attributes: ['id', 'titulo'] 
+                    },
+                    {
+                        model: models.Genero, 
+                        attributes: ['id', 'nombre'], 
+                        as: 'generos' 
+                    },
+                    { model: models.Like } 
+                ],
             });
             if (!song) {
                 throw new Error('Cancion no encontrado');
@@ -55,7 +71,23 @@ class SongModel {
         try {
             const song = await models.Cancion.findOne({ 
                 where: { titulo },
-                include: [{ model: models.Like }]
+                include: [ 
+                    {
+                        model: models.Usuario, 
+                        attributes: ['id', 'nombre'],
+                        as: 'artista'
+                    },
+                    {
+                        model: models.Album, 
+                        attributes: ['id', 'titulo'] 
+                    },
+                    {
+                        model: models.Genero, 
+                        attributes: ['id', 'nombre'], 
+                        as: 'generos' 
+                    },
+                    { model: models.Like } 
+                ],
              });
             return song;
         } catch (error) {
