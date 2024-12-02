@@ -26,7 +26,6 @@ module.exports = (sequelize, DataTypes) => {
   Playlist.init({
     nombre: DataTypes.STRING,
     descripcion: DataTypes.STRING,
-    likes: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Playlist',

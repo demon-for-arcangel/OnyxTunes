@@ -25,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
     titulo: DataTypes.STRING,
     artista_id: DataTypes.INTEGER,
     fecha_lanzamiento: DataTypes.DATE,
-    likes: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Album',

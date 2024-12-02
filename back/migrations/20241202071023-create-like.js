@@ -2,28 +2,21 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable(process.env.TABLA_ALBUM, {
+    await queryInterface.createTable('Likes', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      titulo: {
+      usuario_id: {
+        type: Sequelize.INTEGER
+      },
+      entidad_id: {
+        type: Sequelize.INTEGER
+      },
+      entidad_tipo: {
         type: Sequelize.STRING
-      },
-      artista_id: {
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: process.env.TABLA_USUARIO
-          },
-          key: 'id'
-        }
-      },
-      fecha_lanzamiento: {
-        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -36,6 +29,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable(process.env.TABLA_ALBUM);
+    await queryInterface.dropTable('Likes');
   }
 };
