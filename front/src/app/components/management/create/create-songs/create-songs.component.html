@@ -1,1 +1,28 @@
-<p>create-songs works!</p>
+<div class="create-song-details">
+    <h2>Añadir Nueva Canción</h2>
+
+    <label for="titulo">Título:</label>
+    <input id="titulo" type="text" [(ngModel)]="nuevaCancion.titulo" required />
+
+    <label for="artista">Artista:</label>
+    <input id="artista" type="text" [(ngModel)]="nuevaCancion.artista" required />
+
+    <label for="album">Álbum:</label>
+    <input id="album" type="text" [(ngModel)]="nuevaCancion.album" required />
+
+    <label for="duracion">Duración (en segundos):</label>
+    <input id="duracion" type="number" [(ngModel)]="nuevaCancion.duracion" required />
+
+    <label for="generos">Géneros</label>
+    <div class="genero-container">
+        @for (genero of generosDisponibles; track genero) {
+            <div class="genero-item">
+                <input type="checkbox" [(ngModel)]="generosSeleccionados" [value]="genero" (change)="toggleGenre" [checked]="generosSeleccionados.includes(genero)"/>
+                {{genero.nombre}}
+            </div>
+        }
+    </div>
+
+    <button (click)="crearCancion()">Crear Canción</button>
+    <button (click)="ref.close()">Cancelar</button>
+</div>

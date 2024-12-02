@@ -5,6 +5,8 @@ import { SongService } from '../../../services/song.service';
 import { AlbumsService } from '../../../services/albums.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ShowSongsComponent } from '../show/show-songs/show-songs.component';
+import { CreateSongsComponent } from '../create/create-songs/create-songs.component';
+import { UpdateSongsComponent } from '../update/update-songs/update-songs.component';
 
 @Component({
   selector: 'app-music',
@@ -69,29 +71,59 @@ export class MusicComponent implements OnInit {
   }
 
   newCancion() {
-    const nuevaCancion = { /* datos de la nueva canción */ };
-    this.cancionesService.createCancion(nuevaCancion).subscribe(
-      (response) => {
-        console.log('Canción añadida:', response);
-        this.loadCanciones();
-      },
-      (error) => {
-        console.error('Error al añadir la canción', error);
-      }
-    );
-  }
+    this.ref = this.dialogService.open(CreateSongsComponent, {
+        header: 'Añadir Nueva Canción',
+        modal: true,
+        width: '70vw',
+        styleClass: 'custom-modal',
+        contentStyle: {
+            'background-color': '#1e1e1e',
+            'color': 'white',
+            'border-radius': '8px',
+            'padding': '20px'
+        },
+        baseZIndex: 10000,
+        style: {
+            'background-color': '#1e1e1e'
+        },
+        showHeader: true,
+        closable: true,
+        closeOnEscape: true,
+    });
+
+    this.ref.onClose.subscribe(() => {
+        this.loadCanciones(); 
+    });
+}
 
   editCancion(cancion: any) {
-    this.cancionesService.updateCancion(cancion).subscribe(
-      (response) => {
-        console.log('Canción editada:', response);
-        this.loadCanciones(); // Recargar las canciones
-      },
-      (error) => {
-        console.error('Error al editar la canción', error);
-      }
-    );
-  }
+    this.ref = this.dialogService.open(UpdateSongsComponent, {
+        header: 'Editar Canción',
+        modal: true,
+        width: '70vw',
+        styleClass: 'custom-modal',
+        contentStyle: {
+            'background-color': '#1e1e1e',
+            'color': 'white',
+            'border-radius': '8px',
+            'padding': '20px'
+        },
+        baseZIndex: 10000,
+        style: {
+            'background-color': '#1e1e1e'
+        },
+        showHeader: true,
+        closable: true,
+        closeOnEscape: true,
+        data: {
+            cancion: cancion 
+        }
+    });
+
+    this.ref.onClose.subscribe(() => {
+        this.loadCanciones(); 
+    });
+}
 
   deleteCancion(id: number) {
     this.cancionesService.deleteCancion(id).subscribe(

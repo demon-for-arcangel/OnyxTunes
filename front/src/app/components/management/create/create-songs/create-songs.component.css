@@ -1,0 +1,31 @@
+.create-song-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre los elementos */
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.genero-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+    gap: 10px; /* Espacio entre columnas */
+}
+
+.genero-item {
+    display: flex;
+    align-items: center; /* Alinear checkbox y label verticalmente */
+}
+
+.genero-item input {
+    margin-right: 5px; /* Espacio entre el checkbox y el texto */
+}
