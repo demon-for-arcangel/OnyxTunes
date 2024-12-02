@@ -35,7 +35,6 @@ const createSong = async (req, res) => {
 
         console.log('Datos recibidos:', req.body);
 
-        // Crear la canción
         const newSong = await models.Cancion.create({
             titulo,
             duracion,

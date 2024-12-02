@@ -107,7 +107,8 @@ export class CreateSongsComponent {
 
   crearCancion() {
     this.nuevaCancion.duracion = this.calcularDuracionEnSegundos(); 
-    this.nuevaCancion.generos = this.generosSeleccionados.map(g => g.nombre); 
+    // Cambia esto para usar los IDs de los géneros
+    this.nuevaCancion.generos = this.generosSeleccionados.map(g => g.id); 
 
     console.log('Datos de la canción a crear:', this.nuevaCancion); // Verifica los datos
 
