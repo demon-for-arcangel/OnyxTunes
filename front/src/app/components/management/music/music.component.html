@@ -34,10 +34,10 @@
                 @for(cancion of paginatedCanciones; track cancion){
                     <tr>
                         <td>{{ cancion.titulo }}</td>
-                        <td>{{ cancion.artista }}</td>
-                        <td>{{ cancion.album }}</td>
-                        <td>{{ cancion.duracion }}</td>
-                        <td>{{ cancion.genero }}</td>
+                        <td>{{ cancion.artista.nombre }}</td>
+                        <td>{{ cancion.Album.titulo }}</td>
+                        <td>{{ formatDuration(cancion.duracion) }}</td>
+                        <td>{{ getGenerosString(cancion.generos) }}</td>
                         <td>
                             <button (click)="editCancion(cancion)">Editar</button>
                             <button (click)="deleteCancion(cancion.id)">Eliminar</button>
@@ -45,7 +45,6 @@
                         </td>
                     </tr>
                 }
-                
             </tbody>
         </table>
 
