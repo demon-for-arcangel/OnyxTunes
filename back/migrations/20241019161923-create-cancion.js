@@ -19,8 +19,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       album_id: {
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        allowNull: true, 
         references: {
           model: {
             tableName: process.env.TABLA_ALBUM

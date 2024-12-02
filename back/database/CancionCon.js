@@ -11,7 +11,7 @@ class SongModel {
     async indexSongs() {
         try {
             const songs = await models.Cancion.findAll({
-                include: [ //añadir la tabla genero
+                include: [ 
                     {
                         model: models.Usuario, 
                         attributes: ['id', 'nombre'],
@@ -22,9 +22,9 @@ class SongModel {
                         attributes: ['id', 'titulo'] 
                     },
                     {
-                        model: models.Genero, // Incluir el modelo Genero
-                        attributes: ['id', 'nombre'], // Especifica los atributos que deseas incluir
-                        as: 'generos' // Usa el alias que definiste en la relación
+                        model: models.Genero, 
+                        attributes: ['id', 'nombre'], 
+                        as: 'generos' 
                     },
                     { model: models.Like } 
                 ],
@@ -39,7 +39,23 @@ class SongModel {
     async getSongById(id) {
         try {
             const song = await models.Cancion.findByPk(id, {
-                include: [{ model: models.Like }]
+                include: [ 
+                    {
+                        model: models.Usuario, 
+                        attributes: ['id', 'nombre'],
+                        as: 'artista'
+                    },
+                    {
+                        model: models.Album, 
+                        attributes: ['id', 'titulo'] 
+                    },
+                    {
+                        model: models.Genero, 
+                        attributes: ['id', 'nombre'], 
+                        as: 'generos' 
+                    },
+                    { model: models.Like } 
+                ],
             });
             if (!song) {
                 throw new Error('Cancion no encontrado');
@@ -55,7 +71,23 @@ class SongModel {
         try {
             const song = await models.Cancion.findOne({ 
                 where: { titulo },
-                include: [{ model: models.Like }]
+                include: [ 
+                    {
+                        model: models.Usuario, 
+                        attributes: ['id', 'nombre'],
+                        as: 'artista'
+                    },
+                    {
+                        model: models.Album, 
+                        attributes: ['id', 'titulo'] 
+                    },
+                    {
+                        model: models.Genero, 
+                        attributes: ['id', 'nombre'], 
+                        as: 'generos' 
+                    },
+                    { model: models.Like } 
+                ],
              });
             return song;
         } catch (error) {
@@ -63,23 +95,36 @@ class SongModel {
             throw new Error("Error al buscar canción por título");
         }
     }
-    
 
     async createSong(songData) {
         try {
+            // Verificar que la duración es válida
             if (!Number.isInteger(songData.duracion)) {
-                throw new Error("La duración debe ser un número entero que represente los segundos");
+                throw new Error("La duración debe ser un número entero que represente los segundos.");
             }
-
-            const newSong = await models.Cancion.create(songData, {
-                include: [{ model: models.Like }]
-            });
+    
+            // Crear la canción
+            const newSong = await models.Cancion.create(songData);
+            console.log("Nueva canción creada:", newSong);
+    
+            // Relacionar géneros si se proporcionan
+            if (songData.generos && Array.isArray(songData.generos) && songData.generos.length > 0) {
+                console.log("Géneros a relacionar:", songData.generos);
+    
+                // Establecer la relación con los géneros mediante el método `setGeneros`
+                await newSong.setGeneros(songData.generos);
+                console.log("Relaciones con géneros creadas.");
+            } else {
+                console.warn("No se proporcionaron géneros o el array está vacío.");
+            }
+    
             return newSong;
         } catch (error) {
             console.error("Error al guardar la canción en la base de datos:", error);
-            throw new Error("Error al guardar la canción");
+            throw new Error("Error al guardar la canción.");
         }
     }
+    
 
     async updateSong(songId, updatedData) {
         try {

@@ -33,9 +33,9 @@
             <tbody>
                 @for(cancion of paginatedCanciones; track cancion){
                     <tr>
-                        <td>{{ cancion.titulo }}</td>
-                        <td>{{ cancion.artista.nombre }}</td>
-                        <td>{{ cancion.Album.titulo }}</td>
+                        <td>{{ cancion.titulo || 'Sin título' }}</td>
+                        <td>{{ cancion.artista.nombre || 'Sin artista' }}</td>
+                        <td>{{ cancion.Album?.titulo || 'Sin álbum' }}</td>
                         <td>{{ formatDuration(cancion.duracion) }}</td>
                         <td>{{ getGenerosString(cancion.generos) }}</td>
                         <td>
@@ -72,11 +72,11 @@
             <tbody>
                 @for(album of paginatedAlbums; track album){
                     <tr>
-                        <td>{{ album.titulo }}</td>
-                        <td>{{ album.artista }}</td>
-                        <td>{{ album.anio }}</td>
-                        <td>{{ album.numCanciones }}</td>
-                        <td>{{ album.genero }}</td>
+                        <td>{{ album.titulo || 'Sin título' }}</td>
+                        <td>{{ album.artista || 'Sin artista' }}</td>
+                        <td>{{ album.anio || 'Sin año' }}</td>
+                        <td>{{ album.numCanciones || 'Sin número de canciones' }}</td>
+                        <td>{{ album.genero || 'Sin género' }}</td>
                         <td>
                             <button (click)="editAlbum(album)">Editar</button>
                             <button (click)="deleteAlbum(album.id)">Eliminar</button>

@@ -23,10 +23,9 @@ export class SongService {
     return this.http.post(`${this.url}/songs/new`, cancion);
   }
 
-  updateCancion(cancion: any): Observable<any> {
-    return this.http.put(`${this.url}/songs/${cancion.id}`, cancion);
+  updateCancion(id: number, cancion: any): Observable<any> {
+    return this.http.put(`${this.url}/songs/${id}`, cancion);
   }
-
   deleteCancion(id: number): Observable<any> {
     return this.http.delete(`${this.url}/songs/${id}`);
   }

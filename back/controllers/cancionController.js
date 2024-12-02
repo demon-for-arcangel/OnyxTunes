@@ -31,32 +31,54 @@ const getSongById = async (req, res) => {
 
 const createSong = async (req, res) => {
     try {
-      const { titulo, duracion, likes, reproducciones, album_id, artista_id } = req.body;
+        const { titulo, duracion, likes, reproducciones, album_id, artista_id, generos } = req.body;
 
-      console.log('datos', req.body)
-      const newSong = await models.Cancion.create({
-        titulo,
-        duracion, 
-        likes: likes || 0,
-        reproducciones: reproducciones || 0,
-        album_id,
-        artista_id,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
-  
-      return res.status(201).json({
-        message: 'Canción creada con éxito',
-        cancion: newSong
-      });
+        console.log('Datos recibidos:', req.body);
+
+        const newSong = await models.Cancion.create({
+            titulo,
+            duracion,
+            likes: likes || 0,
+            reproducciones: reproducciones || 0,
+            album_id,
+            artista_id,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        });
+
+        console.log("Canción creada:", newSong);
+
+        // Asociar géneros, si existen
+        if (Array.isArray(generos) && generos.length > 0) {
+            const generosExistentes = await models.Genero.findAll({
+                where: {
+                    id: generos,
+                },
+            });
+
+            if (generosExistentes.length !== generos.length) {
+                console.warn(
+                    "Algunos géneros no fueron encontrados en la base de datos. IDs encontrados:",
+                    generosExistentes.map(g => g.id)
+                );
+            }
+
+            await newSong.setGeneros(generosExistentes); // Crea las relaciones en GeneroCancion
+            console.log("Relaciones con géneros creadas.");
+        }
+
+        return res.status(201).json({
+            message: "Canción creada con éxito",
+            cancion: newSong,
+        });
     } catch (error) {
-      console.error('Error al crear la canción:', error);
-      return res.status(500).json({
-        message: 'Error al guardar la canción en la base de datos',
-        error: error.message
-      });
+        console.error("Error al crear la canción:", error);
+        return res.status(500).json({
+            message: "Error al guardar la canción en la base de datos",
+            error: error.message,
+        });
     }
-  }
+};
 
   const updateSong = async (req, res) => {
     const songId = req.params.id; 
