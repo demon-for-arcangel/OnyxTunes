@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'entidad_id', 
         constraints: false, 
         scope: {
-          entidad_tipo: 'playlist' 
+          entidad_tipo: 'Playlist' 
         }
       });
     

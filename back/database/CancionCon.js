@@ -10,7 +10,9 @@ class SongModel {
 
     async indexSongs() {
         try {
-            const songs = await models.Cancion.findAll();
+            const songs = await models.Cancion.findAll({
+                include: [{ model: models.Like }]
+            });
             return songs;
         } catch (error) {
             console.error('Error al mostrar la lista de los Albums: ', error);
@@ -20,7 +22,9 @@ class SongModel {
 
     async getSongById(id) {
         try {
-            const song = await models.Cancion.findByPk(id);
+            const song = await models.Cancion.findByPk(id, {
+                include: [{ model: models.Like }]
+            });
             if (!song) {
                 throw new Error('Cancion no encontrado');
             }
@@ -33,7 +37,10 @@ class SongModel {
 
     async getSongByTitle(titulo) {
         try {
-            const song = await models.Cancion.findOne({ where: { titulo } });
+            const song = await models.Cancion.findOne({ 
+                where: { titulo },
+                include: [{ model: models.Like }]
+             });
             return song;
         } catch (error) {
             console.error("Error al buscar canción por título:", error);
@@ -48,7 +55,9 @@ class SongModel {
                 throw new Error("La duración debe ser un número entero que represente los segundos");
             }
 
-            const newSong = await models.Cancion.create(songData);
+            const newSong = await models.Cancion.create(songData, {
+                include: [{ model: models.Like }]
+            });
             return newSong;
         } catch (error) {
             console.error("Error al guardar la canción en la base de datos:", error);
@@ -58,7 +67,9 @@ class SongModel {
 
     async updateSong(songId, updatedData) {
         try {
-            const song = await models.Cancion.findByPk(songId);
+            const song = await models.Cancion.findByPk(songId, {
+                include: [{ model: models.Like }]
+            });
             if (!song) {
                 throw new Error('Canción no encontrada');
             }
@@ -84,6 +95,7 @@ class SongModel {
                         [Op.in]: songsIds,
                     },
                 },
+                include: [{ model: models.Like }]
             });
     
             if (result === 0) {

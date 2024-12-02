@@ -15,7 +15,7 @@ module.exports = {
       entidad_id: {
         type: Sequelize.INTEGER
       },
-      tipo_entidad: {
+      entidad_tipo: {
         type: Sequelize.ENUM('Cancion', 'Playlist', 'Album'),
         allowNull: false,
       },
