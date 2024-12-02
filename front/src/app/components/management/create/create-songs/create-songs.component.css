@@ -15,6 +15,16 @@ input[type="number"] {
     border-radius: 4px;
 }
 
+.duracion-container {
+    display: flex;
+    gap: 10px; /* Espacio entre los campos de tiempo */
+}
+
+.duracion-container input[type="number"] {
+    width: 80px; /* Ancho fijo para los campos de horas, minutos y segundos */
+    text-align: center; /* Centrar el texto dentro de los campos */
+}
+
 .genero-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Dos columnas */
