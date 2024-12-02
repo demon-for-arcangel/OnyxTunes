@@ -5,7 +5,8 @@ class PlaylistConnection {
     async index() {
         try {
             const playlists = await models.Playlist.findAll({
-                attributes: { exclude: ['usuario_id'] } 
+                attributes: { exclude: ['usuario_id'] },
+                include: [{ model: models.Like }] 
             });
             return playlists;
         } catch (error) {
@@ -17,51 +18,74 @@ class PlaylistConnection {
     async getPlaylistById(id) {
         try {
             const playlist = await models.Playlist.findByPk(id, {
-                attributes: { exclude: ['usuario_id'] }
+                attributes: { exclude: ['usuario_id'] },
+                include: [{ model: models.Like }] 
             });
-            if (!playlist) throw new Error("Playlist no encontrada");
+            if (!playlist) {
+                throw new Error("Playlist no encontrada");
+            }
             return playlist;
         } catch (error) {
             console.error("Error al obtener la playlist:", error);
-            throw new Error("Error al obtener la playlist.");
+            throw new Error("Error al obtener la playlist");
         }
     }
 
     async createPlaylist(data) {
         try {
-            return await models.Playlist.create(data);
+            const newPlaylist = await models.Playlist.create(data, {
+                attributes: { exclude: ['usuario_id'] },
+            });
+            return newPlaylist;
         } catch (error) {
             console.error("Error al crear la playlist:", error);
-            throw new Error("Error al crear la playlist.");
+            throw new Error("Error al crear la playlist");
         }
     }
 
-    async updatePlaylist(id, updatedData) {
+    async updatePlaylist(playlistId, newData) {
         try {
-            const playlist = await models.Playlist.findByPk(id, {
-                attributes: { exclude: ['usuario_id'] }
+            const playlist = await models.Playlist.findByPk(playlistId, {
+                attributes: { exclude: ['usuario_id'] },
+                include: [{ model: models.Like }] 
             });
-            if (!playlist) throw new Error("Playlist no encontrada");
-
-            return await playlist.update(updatedData);
+            if (!playlist) {
+                throw new Error("Playlist no encontrada");
+            }
+            const updatedPlaylist = await playlist.update(newData);
+            return updatedPlaylist;
         } catch (error) {
             console.error("Error al actualizar la playlist:", error);
-            throw new Error("Error al actualizar la playlist.");
+            throw new Error("Error al actualizar la playlist");
         }
     }
 
-    async deletePlaylists(ids) {
+    async deletePlaylists(playlistIds) {
         try {
-            return await models.Playlist.destroy({
+            const playlistsToDelete = await models.Playlist.findAll({
+                attributes: { exclude: ['usuario_id'] },
                 where: {
-                    id: {
-                        [Op.in]: ids,
-                    },
+                    id: playlistIds
                 },
+                include: [{ model: models.Like }]
             });
+
+            if (playlistsToDelete.length !== playlistIds.length) {
+                throw new Error("Algunas playlists no fueron encontradas.");
+            }
+
+            const result = await models.Playlist.destroy({
+                where: {
+                    id: playlistIds
+                }
+            });
+
+            return {
+                msg: `Se eliminaron ${result} playlist(s) exitosamente.`
+            };
         } catch (error) {
-            console.error("Error al eliminar las playlists:", error);
-            throw new Error("Error al eliminar las playlists.");
+            console.error("Error al eliminar playlists:", error);
+            throw new Error("Error al eliminar playlists.");
         }
     }
 }

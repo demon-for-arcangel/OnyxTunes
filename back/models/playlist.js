@@ -16,6 +16,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'playlist_id', 
         otherKey: 'usuario_id',   
       });
+
+      this.hasMany(models.Like, { 
+        foreignKey: 'entidad_id', 
+        constraints: false, 
+        scope: {
+          entidad_tipo: 'playlist' 
+        }
+      });
     
       /* this.belongsToMany(models.Cancion, {
         through: models.CancionPlaylist,

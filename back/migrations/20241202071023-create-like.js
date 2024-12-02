@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Likes', {
+    await queryInterface.createTable(process.env.TABLA_LIKE, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -15,8 +15,9 @@ module.exports = {
       entidad_id: {
         type: Sequelize.INTEGER
       },
-      entidad_tipo: {
-        type: Sequelize.STRING
+      tipo_entidad: {
+        type: Sequelize.ENUM('Cancion', 'Playlist', 'Album'),
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Likes');
+    await queryInterface.dropTable(process.env.TABLA_LIKE);
   }
 };

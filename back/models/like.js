@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
   Like.init({
     usuario_id: DataTypes.INTEGER,
     entidad_id: DataTypes.INTEGER,
-    entidad_tipo: DataTypes.STRING
+    entidad_tipo: DataTypes.ENUM('Cancion', 'Playlist', 'Album'),
   }, {
     sequelize,
     modelName: 'Like',
