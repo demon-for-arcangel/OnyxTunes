@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SongService } from '../../../services/song.service';
+import { AlbumsService } from '../../../services/albums.service';
 
 @Component({
   selector: 'app-music',
@@ -9,53 +11,156 @@ import { Router } from '@angular/router';
   templateUrl: './music.component.html',
   styleUrls: ['./music.component.css'],
 })
-export class MusicComponent {
+export class MusicComponent implements OnInit {
 
-  constructor(private router: Router) { }
-  // Datos para canciones
-  canciones = [
-    { id: 1, titulo: 'Song 1', artista: 'Artist 1', album: 'Album 1', duracion: '3:45', genero: 'Pop' },
-    { id: 2, titulo: 'Song 2', artista: 'Artist 2', album: 'Album 2', duracion: '4:20', genero: 'Rock' },
-    // Agrega más canciones003 según sea necesario
-  ];
+  canciones: any[] = [];
+  albums: any[] = [];
   currentCancionesPage = 1;
   cancionesPerPage = 5;
-  get totalCancionesPages(): number {
-    return Math.ceil(this.canciones.length / this.cancionesPerPage);
-  }
-  get paginatedCanciones() {
-    const start = (this.currentCancionesPage - 1) * this.cancionesPerPage;
-    const end = start + this.cancionesPerPage;
-    return this.canciones.slice(start, end);
-  }
-
-  // Datos para álbumes
-  albums = [
-    { id: 1, titulo: 'Album 1', artista: 'Artist 1', anio: 2022, numCanciones: 10, genero: 'Pop' },
-    { id: 2, titulo: 'Album 2', artista: 'Artist 2', anio: 2020, numCanciones: 8, genero: 'Rock' },
-    // Agrega más álbumes según sea necesario
-  ];
   currentAlbumsPage = 1;
   albumsPerPage = 5;
+  searchQuery: string = '';
+
+  constructor(
+    private router: Router,
+    private cancionesService: SongService,
+    private albumsService: AlbumsService
+  ) { }
+
+  ngOnInit() {
+    this.loadCanciones();
+    this.loadAlbums();
+  }
+
+  loadCanciones() {
+    this.cancionesService.getCanciones().subscribe(
+      (data) => {
+        this.canciones = data;
+      },
+      (error) => {
+        console.error('Error al cargar las canciones', error);
+      }
+    );
+  }
+
+  loadAlbums() {
+    this.albumsService.getAlbums().subscribe(
+      (data) => {
+        this.albums = data;
+      },
+      (error) => {
+        console.error('Error al cargar los álbumes', error);
+      }
+    );
+  }
+
+  // Métodos de navegación y acciones para canciones
+  newCancion() {
+    const nuevaCancion = { /* datos de la nueva canción */ };
+    this.cancionesService.createCancion(nuevaCancion).subscribe(
+      (response) => {
+        console.log('Canción añadida:', response);
+        this.loadCanciones(); // Recargar las canciones
+      },
+      (error) => {
+        console.error('Error al añadir la canción', error);
+      }
+    );
+  }
+
+  editCancion(cancion: any) {
+    this.cancionesService.updateCancion(cancion).subscribe(
+      (response) => {
+        console.log('Canción editada:', response);
+        this.loadCanciones(); // Recargar las canciones
+      },
+      (error) => {
+        console.error('Error al editar la canción', error);
+      }
+    );
+  }
+
+  deleteCancion(id: number) {
+    this.cancionesService.deleteCancion(id).subscribe(
+      (response) => {
+        this.canciones = this.canciones.filter((c) => c.id !== id);
+        console.log('Canción eliminada:', id);
+      },
+      (error) => {
+        console.error('Error al eliminar la canción', error);
+      }
+    );
+  }
+
+  // Métodos para álbumes
+  newAlbum() {
+    const nuevoAlbum = { /* datos del nuevo álbum */ };
+    this.albumsService.createAlbum(nuevoAlbum).subscribe(
+      (response) => {
+        console.log('Álbum añadido:', response);
+        this.loadAlbums(); // Recargar los álbumes
+      },
+      (error) => {
+        console.error('Error al añadir el álbum', error);
+      }
+    );
+  }
+
+  editAlbum(album: any) {
+    this.albumsService.updateAlbum(album).subscribe(
+      (response) => {
+        console.log('Álbum editado:', response);
+        this.loadAlbums(); // Recargar los álbumes
+      },
+      (error) => {
+        console.error('Error al editar el álbum', error);
+      }
+    );
+  }
+
+  deleteAlbum(id: number) {
+    this.albumsService.deleteAlbum(id).subscribe(
+      (response) => {
+        this.albums = this.albums.filter((a) => a.id !== id);
+        console.log('Álbum eliminado:', id);
+      },
+      (error) => {
+        console.error('Error al eliminar el álbum', error);
+      }
+    );
+  }
+
+  // Búsqueda en canciones y álbumes
+  searchMusic() {
+    // Implementa la búsqueda aquí si es necesario
+  }
+
+  goBack() {
+    this.router.navigate(['/platformManagement']);
+  }
+
+  // Método para obtener el total de páginas de álbumes
   get totalAlbumsPages(): number {
     return Math.ceil(this.albums.length / this.albumsPerPage);
   }
+
+  // Método para obtener los álbumes paginados
   get paginatedAlbums() {
     const start = (this.currentAlbumsPage - 1) * this.albumsPerPage;
     const end = start + this.albumsPerPage;
     return this.albums.slice(start, end);
   }
 
-  // Métodos de navegación para canciones
-  prevCancionesPage() {
-    if (this.currentCancionesPage > 1) {
-      this.currentCancionesPage--;
-    }
+  // Método para obtener el total de páginas de canciones
+  get totalCancionesPages(): number {
+    return Math.ceil(this.canciones.length / this.cancionesPerPage);
   }
-  nextCancionesPage() {
-    if (this.currentCancionesPage < this.totalCancionesPages) {
-      this.currentCancionesPage++;
-    }
+
+  // Método para obtener las canciones paginadas
+  get paginatedCanciones() {
+    const start = (this.currentCancionesPage - 1) * this.cancionesPerPage;
+    const end = start + this.cancionesPerPage;
+    return this.canciones.slice(start, end);
   }
 
   // Métodos de navegación para álbumes
@@ -64,62 +169,32 @@ export class MusicComponent {
       this.currentAlbumsPage--;
     }
   }
+
   nextAlbumsPage() {
     if (this.currentAlbumsPage < this.totalAlbumsPages) {
       this.currentAlbumsPage++;
     }
   }
 
-  // Métodos de acciones para canciones
-  newCancion() {
-    console.log('Añadir nueva canción');
+  // Métodos de navegación para canciones
+  prevCancionesPage() {
+    if (this.currentCancionesPage > 1) {
+      this.currentCancionesPage--;
+    }
   }
-  editCancion(cancion: any) {
-    console.log('Editar canción:', cancion);
+
+  nextCancionesPage() {
+    if (this.currentCancionesPage < this.totalCancionesPages) {
+      this.currentCancionesPage++;
+    }
   }
-  deleteCancion(id: number) {
-    this.canciones = this.canciones.filter((c) => c.id !== id);
-    console.log('Canción eliminada:', id);
-  }
+
+  // Métodos para mostrar detalles de canción y álbum
   showCancion(cancion: any) {
     console.log('Ver detalles de canción:', cancion);
   }
 
-  // Métodos de acciones para álbumes
-  newAlbum() {
-    console.log('Añadir nuevo álbum');
-  }
-  editAlbum(album: any) {
-    console.log('Editar álbum:', album);
-  }
-  deleteAlbum(id: number) {
-    this.albums = this.albums.filter((a) => a.id !== id);
-    console.log('Álbum eliminado:', id);
-  }
   showAlbum(album: any) {
     console.log('Ver detalles de álbum:', album);
-  }
-
-  // Búsqueda en canciones y álbumes
-  searchQuery: string = '';
-  searchMusic() {
-    const query = this.searchQuery.toLowerCase();
-    this.canciones = this.canciones.filter(
-      (c) =>
-        c.titulo.toLowerCase().includes(query) ||
-        c.artista.toLowerCase().includes(query) ||
-        c.album.toLowerCase().includes(query)
-    );
-    this.albums = this.albums.filter(
-      (a) =>
-        a.titulo.toLowerCase().includes(query) ||
-        a.artista.toLowerCase().includes(query) ||
-        a.genero.toLowerCase().includes(query)
-    );
-    console.log('Búsqueda realizada:', query);
-  }
-
-  goBack() {
-    this.router.navigate(['/platformManagement']);
   }
 }
