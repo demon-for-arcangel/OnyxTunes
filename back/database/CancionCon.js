@@ -11,12 +11,23 @@ class SongModel {
     async indexSongs() {
         try {
             const songs = await models.Cancion.findAll({
-                include: [{ model: models.Like }]
+                include: [
+                    {
+                        model: models.Usuario, 
+                        attributes: ['id', 'nombre'],
+                        as: 'artista'
+                    },
+                    {
+                        model: models.Album, 
+                        attributes: ['id', 'titulo'] 
+                    },
+                    { model: models.Like } 
+                ],
             });
             return songs;
         } catch (error) {
-            console.error('Error al mostrar la lista de los Albums: ', error);
-            throw new Error('Error al mostrar la lista de albums');
+            console.error('Error al mostrar la lista de las Canciones: ', error);
+            throw new Error('Error al mostrar la lista de canciones');
         }
     }
 

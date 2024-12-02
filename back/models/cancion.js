@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Usuario, {
+        foreignKey: 'artista_id', // Asegúrate de que este sea el campo correcto
+        as: 'artista' // Puedes usar un alias para referenciarlo
+    });
+    
       this.belongsToMany(models.Genero, {
         through: models.GeneroCancion,
         foreignKey: 'cancion_id',

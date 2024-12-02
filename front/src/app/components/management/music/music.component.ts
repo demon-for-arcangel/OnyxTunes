@@ -54,7 +54,6 @@ export class MusicComponent implements OnInit {
     );
   }
 
-  // Métodos de navegación y acciones para canciones
   newCancion() {
     const nuevaCancion = { /* datos de la nueva canción */ };
     this.cancionesService.createCancion(nuevaCancion).subscribe(
@@ -92,7 +91,6 @@ export class MusicComponent implements OnInit {
     );
   }
 
-  // Métodos para álbumes
   newAlbum() {
     const nuevoAlbum = { /* datos del nuevo álbum */ };
     this.albumsService.createAlbum(nuevoAlbum).subscribe(
@@ -130,40 +128,33 @@ export class MusicComponent implements OnInit {
     );
   }
 
-  // Búsqueda en canciones y álbumes
   searchMusic() {
-    // Implementa la búsqueda aquí si es necesario
   }
 
   goBack() {
     this.router.navigate(['/platformManagement']);
   }
 
-  // Método para obtener el total de páginas de álbumes
   get totalAlbumsPages(): number {
     return Math.ceil(this.albums.length / this.albumsPerPage);
   }
 
-  // Método para obtener los álbumes paginados
   get paginatedAlbums() {
     const start = (this.currentAlbumsPage - 1) * this.albumsPerPage;
     const end = start + this.albumsPerPage;
     return this.albums.slice(start, end);
   }
 
-  // Método para obtener el total de páginas de canciones
   get totalCancionesPages(): number {
     return Math.ceil(this.canciones.length / this.cancionesPerPage);
   }
 
-  // Método para obtener las canciones paginadas
   get paginatedCanciones() {
     const start = (this.currentCancionesPage - 1) * this.cancionesPerPage;
     const end = start + this.cancionesPerPage;
     return this.canciones.slice(start, end);
   }
 
-  // Métodos de navegación para álbumes
   prevAlbumsPage() {
     if (this.currentAlbumsPage > 1) {
       this.currentAlbumsPage--;
@@ -176,7 +167,6 @@ export class MusicComponent implements OnInit {
     }
   }
 
-  // Métodos de navegación para canciones
   prevCancionesPage() {
     if (this.currentCancionesPage > 1) {
       this.currentCancionesPage--;
@@ -189,7 +179,6 @@ export class MusicComponent implements OnInit {
     }
   }
 
-  // Métodos para mostrar detalles de canción y álbum
   showCancion(cancion: any) {
     console.log('Ver detalles de canción:', cancion);
   }
