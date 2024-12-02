@@ -39,7 +39,7 @@ export class MusicComponent implements OnInit {
   loadCanciones() {
     this.cancionesService.getCanciones().subscribe(
         (data) => {
-            this.canciones = data; // Asegúrate de que esta variable esté definida
+            this.canciones = data; 
             console.log('Canciones cargadas:', this.canciones);
         },
         (error) => {
@@ -117,7 +117,7 @@ export class MusicComponent implements OnInit {
         closable: true,
         closeOnEscape: true,
         data: {
-            cancion: cancion 
+          cancionId: cancion.id
         }
     });
 
