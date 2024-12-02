@@ -15,9 +15,6 @@ module.exports = {
       duracion: {
         type: Sequelize.INTEGER
       },
-      likes: {
-        type: Sequelize.INTEGER
-      },
       reproducciones: {
         type: Sequelize.INTEGER
       },

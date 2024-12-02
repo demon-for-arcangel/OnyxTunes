@@ -2,28 +2,22 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable(process.env.TABLA_ALBUM, {
+    await queryInterface.createTable(process.env.TABLA_LIKE, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      titulo: {
-        type: Sequelize.STRING
+      usuario_id: {
+        type: Sequelize.INTEGER
       },
-      artista_id: {
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: process.env.TABLA_USUARIO
-          },
-          key: 'id'
-        }
+      entidad_id: {
+        type: Sequelize.INTEGER
       },
-      fecha_lanzamiento: {
-        type: Sequelize.DATE
+      entidad_tipo: {
+        type: Sequelize.ENUM('Cancion', 'Playlist', 'Album'),
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -36,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable(process.env.TABLA_ALBUM);
+    await queryInterface.dropTable(process.env.TABLA_LIKE);
   }
 };
