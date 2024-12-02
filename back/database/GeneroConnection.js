@@ -51,17 +51,20 @@ class GeneroModel {
         }
     }
 
-    async deleteGenero(id) {
+    async deleteGeneros(generosIds) {
         try {
-            const genero = await models.Genero.findByPk(id);
-            if (!genero) {
-                throw new Error('Género no encontrado');
-            }
-            await genero.destroy();
-            return true;
+            const result = await models.Genero.destroy({
+                where: {
+                    id: {
+                        [Op.in]: generosIds, 
+                    },
+                },
+            });
+
+            return result;
         } catch (error) {
-            console.error('Error al eliminar el género: ', error);
-            throw new Error('Error al eliminar el género');
+            console.error("Error al eliminar los géneros:", error);
+            throw new Error("Error al eliminar los géneros.");
         }
     }
 }

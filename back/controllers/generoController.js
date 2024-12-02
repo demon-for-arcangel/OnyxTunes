@@ -59,21 +59,25 @@ const updateGenero = async (req, res) => {
     }
 };
 
-const deleteGenero = async (req, res) => {
-    const generoId = req.params.id;
+const deleteGeneros = async (req, res) => {
+    const { generosIds } = req.body;
 
     try {
-        const deletedGenero = await conx.deleteGenero(generoId);
-        if (!deletedGenero) {
-            return res.status(404).json({ msg: "Género no encontrado" });
+        if (!Array.isArray(generosIds) || generosIds.length === 0) {
+            return res.status(400).json({ msg: "No se proporcionaron IDs de géneros para eliminar." });
         }
-        res.status(200).json({ msg: "Género eliminado con éxito" });
+
+        const result = await generoConnection.deleteGeneros(generosIds);
+
+        res.status(200).json({ 
+            msg: `${result} géneros eliminados exitosamente.` 
+        });
     } catch (error) {
-        console.error('Error al eliminar el género:', error);
-        res.status(500).json({ msg: "Error al eliminar el género" });
+        console.error("Error al eliminar los géneros:", error);
+        res.status(500).json({ msg: "Error al eliminar los géneros." });
     }
 };
 
 module.exports = {
-    index, getGeneroById, createGenero, updateGenero, deleteGenero
+    index, getGeneroById, createGenero, updateGenero, deleteGeneros
 };

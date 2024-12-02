@@ -11,14 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Usuario, {
-        foreignKey: 'usuario_id'
+      this.belongsToMany(models.Usuario, {
+        through: process.env.TABLA_USUARIO_PLAYLIST,
+        foreignKey: 'playlist_id', 
+        otherKey: 'usuario_id',   
       });
     
-      this.belongsToMany(models.Cancion, {
+      /* this.belongsToMany(models.Cancion, {
         through: models.CancionPlaylist,
         foreignKey: 'playlist_id',
-      });
+      }); */
     }
   }
   Playlist.init({
