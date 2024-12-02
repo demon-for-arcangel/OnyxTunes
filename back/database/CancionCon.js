@@ -11,12 +11,28 @@ class SongModel {
     async indexSongs() {
         try {
             const songs = await models.Cancion.findAll({
-                include: [{ model: models.Like }]
+                include: [ //añadir la tabla genero
+                    {
+                        model: models.Usuario, 
+                        attributes: ['id', 'nombre'],
+                        as: 'artista'
+                    },
+                    {
+                        model: models.Album, 
+                        attributes: ['id', 'titulo'] 
+                    },
+                    {
+                        model: models.Genero, // Incluir el modelo Genero
+                        attributes: ['id', 'nombre'], // Especifica los atributos que deseas incluir
+                        as: 'generos' // Usa el alias que definiste en la relación
+                    },
+                    { model: models.Like } 
+                ],
             });
             return songs;
         } catch (error) {
-            console.error('Error al mostrar la lista de los Albums: ', error);
-            throw new Error('Error al mostrar la lista de albums');
+            console.error('Error al mostrar la lista de las Canciones: ', error);
+            throw new Error('Error al mostrar la lista de canciones');
         }
     }
 
