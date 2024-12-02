@@ -62,6 +62,10 @@ export class MusicComponent implements OnInit {
     return `${hours > 0 ? hours + 'h ' : ''}${minutes}m ${secs}s`;
   }
 
+  getGenerosString(generos: any[]): string {
+    return generos.map(genero => genero.nombre).join(', ');
+}
+
   newCancion() {
     const nuevaCancion = { /* datos de la nueva canción */ };
     this.cancionesService.createCancion(nuevaCancion).subscribe(
