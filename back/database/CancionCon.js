@@ -11,7 +11,7 @@ class SongModel {
     async indexSongs() {
         try {
             const songs = await models.Cancion.findAll({
-                include: [
+                include: [ //añadir la tabla genero
                     {
                         model: models.Usuario, 
                         attributes: ['id', 'nombre'],
@@ -20,6 +20,11 @@ class SongModel {
                     {
                         model: models.Album, 
                         attributes: ['id', 'titulo'] 
+                    },
+                    {
+                        model: models.Genero, // Incluir el modelo Genero
+                        attributes: ['id', 'nombre'], // Especifica los atributos que deseas incluir
+                        as: 'generos' // Usa el alias que definiste en la relación
                     },
                     { model: models.Like } 
                 ],

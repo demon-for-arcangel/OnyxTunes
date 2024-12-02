@@ -34,8 +34,8 @@
                 @for(cancion of paginatedCanciones; track cancion){
                     <tr>
                         <td>{{ cancion.titulo }}</td>
-                        <td>{{ cancion.artista }}</td>
-                        <td>{{ cancion.album }}</td>
+                        <td>{{ cancion.artista.nombre }}</td>
+                        <td>{{ cancion.Album.titulo }}</td>
                         <td>{{ cancion.duracion }}</td>
                         <td>{{ cancion.genero }}</td>
                         <td>
@@ -45,7 +45,6 @@
                         </td>
                     </tr>
                 }
-                
             </tbody>
         </table>
 
