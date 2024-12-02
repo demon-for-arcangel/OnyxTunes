@@ -10,7 +10,9 @@ class AlbumModel {
 
     async indexAlbums() {
         try {
-            const albums = await models.Album.findAll();
+            const albums = await models.Album.findAll({
+                include: [{ model: models.Like }]
+            });
             return albums;
         } catch (error) {
             console.error('Error al mostrar la lista de los Albums: ', error);
@@ -21,7 +23,9 @@ class AlbumModel {
     async getAlbumById(id) {
         try {
             console.log(id)
-            const album = await models.Album.findByPk(id);
+            const album = await models.Album.findByPk(id, {
+                include: [{ model: models.Like }]
+            });
             if (!album) {
                 throw new Error('Album no encontrado');
             }
@@ -34,12 +38,11 @@ class AlbumModel {
 
     async getAlbumByTitle(titulo) {
         try {
-            // Busca el álbum por su título
             const album = await models.Album.findOne({
                 where: { titulo },
+                include: [{ model: models.Like }]
             });
     
-            // Si no se encuentra el álbum, devuelve null
             return album || null;
         } catch (error) {
             console.error('Error al buscar el álbum por título: ', error);
@@ -69,7 +72,9 @@ class AlbumModel {
             if (!album) {
                 throw new Error('Álbum no encontrado');
             }
-            const updatedAlbum = await album.update(newData); 
+            const updatedAlbum = await album.update(newData, {
+                include: [{ model: models.Like }]
+            }); 
             return updatedAlbum;
         } catch (error) {
             console.error('Error al actualizar el álbum', error);
@@ -82,7 +87,8 @@ class AlbumModel {
             const albumsToDelete = await models.Album.findAll({
                 where: {
                     id: albumsIds
-                }
+                },
+                include: [{ model: models.Like }]
             });
     
             if (albumsToDelete.length !== albumsIds.length) {
