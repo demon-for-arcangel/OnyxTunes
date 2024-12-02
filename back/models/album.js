@@ -19,13 +19,20 @@ module.exports = (sequelize, DataTypes) => {
         through: models.UsuarioAlbum,
         foreignKey: 'album_id'
       });
+
+      this.hasMany(models.Like, { 
+        foreignKey: 'entidad_id', 
+        constraints: false, 
+        scope: {
+          entidad_tipo: 'Album' 
+        }
+      });
     }
   }
   Album.init({
     titulo: DataTypes.STRING,
     artista_id: DataTypes.INTEGER,
     fecha_lanzamiento: DataTypes.DATE,
-    likes: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Album',

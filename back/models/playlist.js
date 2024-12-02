@@ -16,6 +16,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'playlist_id', 
         otherKey: 'usuario_id',   
       });
+
+      this.hasMany(models.Like, { 
+        foreignKey: 'entidad_id', 
+        constraints: false, 
+        scope: {
+          entidad_tipo: 'Playlist' 
+        }
+      });
     
       /* this.belongsToMany(models.Cancion, {
         through: models.CancionPlaylist,
@@ -26,7 +34,6 @@ module.exports = (sequelize, DataTypes) => {
   Playlist.init({
     nombre: DataTypes.STRING,
     descripcion: DataTypes.STRING,
-    likes: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Playlist',
