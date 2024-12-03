@@ -9,6 +9,7 @@ import { PlatformManagementComponent } from './components/platform-management/pl
 import { UsersComponent } from './components/management/users/users.component';
 import { MusicComponent } from './components/management/music/music.component';
 import { ChatComponent } from './components/chatting/chat/chat.component';
+import { ChatBaseComponent } from './components/chatting/chat-base/chat-base.component';
 
 
 export const routes: Routes = [
@@ -21,5 +22,5 @@ export const routes: Routes = [
     { path: 'platformManagement', component: PlatformManagementComponent},
     { path: 'platform/userManagement', component: UsersComponent },
     { path: 'platform/musicManagement', component: MusicComponent },
-    { path: 'chat', component: ChatComponent},
+    { path: 'chat', component: ChatBaseComponent},
 ];

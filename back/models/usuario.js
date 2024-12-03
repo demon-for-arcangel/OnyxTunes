@@ -45,6 +45,16 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.ReaccionComentario, {
         foreignKey: 'usuario_id'
       })
+
+      this.hasMany(models.Mensaje, {
+        foreignKey: 'emisor',
+        as: 'mensajesEnviados',
+      })
+
+      this.hasMany(models.Mensaje, {
+        foreignKey: 'receptor',
+        as: 'mensajesRecibidos',
+      })
     }
   }
   Usuario.init({

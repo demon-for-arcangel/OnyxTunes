@@ -1,115 +1,75 @@
 import { Component } from '@angular/core';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
-import { ChatService } from '../../../services/chat.service';
-import { SocketService } from '../../../services/socket.service';
-import { ChatMessages, FileMessage, Message, MessageUser, SendMessageApiParams, SendMessageSocketParams } from '../../../interfaces/message';
-import { ChatJoin, MessagesRead } from '../../../interfaces/chat';
-import { BrowserModule } from '@angular/platform-browser';
-import { AvatarModule } from 'primeng/avatar';
-import { MessageComponent } from '../message/message.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MessageInputComponent } from '../message-input/message-input.component';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { MessageComponent } from '../message/message.component';
+import { MessageInputComponent } from '../message-input/message-input.component';
+import { ChatMessages } from '../../../interfaces/message';
+import { Message } from '../../../interfaces/message';
+import { SocketService } from '../../../services/socket.service';
+import { ChatService } from '../../../services/chat.service';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, AvatarModule, MessageComponent, FormsModule, MessageInputComponent, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, RouterModule, MessageComponent, MessageInputComponent],
   templateUrl: './chat.component.html',
-  styleUrl: './chat.component.css',
-  providers: []
+  styleUrls: ['./chat.component.css'],
 })
 export class ChatComponent {
-  constructor(private route: ActivatedRoute, private chatService: ChatService, private socketService: SocketService, private router: Router) { }
+  partnerId?: number;
+  messages: Map<number, Message> = new Map();
+  partner?: any; // Define el tipo correcto según tu interfaz
+  self?: any; // Define el tipo correcto según tu interfaz
+
+  constructor(
+    private route: ActivatedRoute,
+    private chatService: ChatService,
+    private socketService: SocketService
+  ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      this.partnerId = Number(params.get('id')!);
+      const id = params.get('id');
+      this.partnerId = id ? Number(id) : 0;
+
+      if (this.partnerId === 0) {
+        console.error('Partner ID no válido:', this.partnerId);
+        return;
+      }
+
+      this.loadMessages();
+      this.socketService.joinChat(this.partnerId!);
     });
 
     this.socketService.listenMessages((message: Message) => {
-      this.pushMessage(message)
-      this.socketService.sendMessageRead(this.partnerId!);
-    })
-
-    this.socketService.listenFileMessages((fileMessage: FileMessage) => {
-      this.pushMessage(fileMessage.message)
-      this.socketService.sendMessageRead(this.partnerId!);
-    });
-
-    this.socketService.joinChat(this.partnerId!)
-    this.chatService.getMessages(this.partnerId!).subscribe(this.getMessages);
-
-    this.socketService.listenJoinChat((params: ChatJoin) => this.handleJoining(params));
-    this.socketService.listenReadMessages((params: MessagesRead) => this.handleMessagesRead(params));
-
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.socketService.sendLeavingChat(this.receptor?.id!)
-        this.socketService.removeAllListeners();
-      }
+      this.pushMessage(message);
     });
   }
 
-  partnerId?: number
-  partner?: MessageUser
+  loadMessages() {
+    this.chatService.getMessages(this.partnerId!).subscribe(
+      (data: ChatMessages) => {
+        this.getMessages(data);
+      },
+      (error) => {
+        console.error('Error al cargar los mensajes:', error);
+      }
+    );
+  }
 
-  self?: MessageUser
-  messages: Map<number, Message> = new Map();
-  emisor?: MessageUser
-  receptor?: MessageUser
-
-  joined = false;
-
-  private getMessages = (body: ChatMessages) => {
+  private getMessages(body: ChatMessages) {
     body.data.query.messages.forEach(message => {
-      this.pushMessage(message)
+      this.pushMessage(message);
     });
-
-    this.partner = body.data.query.receptorUser;
-    this.self = body.data.query.emisorUser;
   }
 
-  sendMessage = (content: SendMessageSocketParams) => {
-    this.socketService.sendMessage(content, this.partner!.id!);
+  private pushMessage(message: Message) {
+    this.messages.set(message.id, message);
   }
 
-  pushMessage = (message: Message) => {
-    this.messages.set(message.id, message)
-  }
-
-  handleNewMessage = (content: SendMessageApiParams) => {
+  handleNewMessage(content: any) { // Define el tipo correcto
     if (content.text && content.text.length > 0) {
-      this.sendMessage({text: content.text})
-    } else if (content.files && content.files.length > 0) {
-      this.handleFilesMessage(content.files)
+      this.socketService.sendMessage({ text: content.text }, this.partnerId!);
     }
-  };
-
-  handleJoining = (params: ChatJoin) => {
-    if (params.joined) {
-      this.joined = params.joined
-    }
-  }
-
-  handleMessagesRead = (params: MessagesRead) => {
-    if (params.messages) {
-      params.messages.forEach(messageId => {
-        const message = this.messages.get(messageId);
-
-        message!.read = true;
-
-        this.messages.set(messageId, message!);
-      })
-    }
-  }
-
-  handleFilesMessage(files: File[]) {
-    this.chatService.uploadMessagesFile(files, this.partnerId!).subscribe(body => {
-      if (body.data.files.length === files.length) {
-        this.sendMessage({urls: body.data.files})
-      }
-    })
   }
 }

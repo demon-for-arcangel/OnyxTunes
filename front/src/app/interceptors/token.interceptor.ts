@@ -1,15 +1,28 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('user'); // O de donde estés almacenando el token
+  // Cambia 'user' a 'token' si el token se almacena bajo esa clave
+  const tokenData = localStorage.getItem('user'); 
+  let token;
+
+  // Si el token está en formato JSON, parsea el objeto
+  if (tokenData) {
+    try {
+      const parsedData = JSON.parse(tokenData);
+      token = parsedData.token; // Asegúrate de que 'token' sea la clave correcta
+    } catch (error) {
+      console.error('Error al parsear el token:', error);
+    }
+  }
+
+  console.log('Token a enviar:', token);
 
   if (token) {
-    // Clona la solicitud y agrega el token a las cabeceras
     const clonedRequest = req.clone({
       headers: req.headers.set('x-token', token)
     });
-    return next(clonedRequest); // Envía la solicitud clonada
+    return next(clonedRequest); 
   }
 
-  return next(req); // Envía la solicitud original si no hay token
+  return next(req); 
 };

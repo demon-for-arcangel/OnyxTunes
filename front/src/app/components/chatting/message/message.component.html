@@ -1,13 +1,13 @@
 <div class="flex flex-col gap-3 h-full">
     @for (message of messages.values()!; track message.id) {
-    @if (message.emitter === self!.id) {
-        <div>
-        <app-send-message [message]="message" [user]="self"></app-send-message>
-        </div>
-    } @else if (message.emitter === partner!.id)  {
-        <div>
-        <app-received-message [message]="message" [user]="partner"></app-received-message>
-        </div>
-    }
+        @if (message.emisor === self!.id) {
+            <div>
+                <app-send-message [message]="message" [user]="self"></app-send-message>
+            </div>
+        } @else if (message.emisor === partner!.id)  {
+            <div>
+                <app-received-message [message]="message" [user]="partner"></app-received-message>
+            </div>
+        }
     }
 </div>

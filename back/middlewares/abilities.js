@@ -18,33 +18,22 @@ const statusUser = (req, res, next) => {
 };
 
 const checkToken = (req, res, next) => {
-    const token = req.header("x-token");
-  
-    if (!token) {
-      return res.status(401).json({ msg: "No hay token en la petición." });
-    }
-  
-    try {
-      const { uid, roles } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
-      req.userId = uid;
-      req.uroles = roles;
-      next();
-    } catch (error) {
-      res.status(401).json({ msg: "Token no valido" });
-    }
-};
-
-const checkTokenPayload = (req, res, next) => {
   const token = req.header("x-token");
+
   if (!token) {
       return res.status(401).json({ msg: "No hay token en la petición." });
   }
+
+  console.log('token', token);
+
   try {
       const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
-      req.payload = { userId: uid }; // Asegúrate de que esto esté configurado correctamente
+      console.log('uid', uid);
+      req.userId = uid; // Asegúrate de que esto esté configurado correctamente
       next();
   } catch (error) {
-      res.status(401).json({ msg: "Token no válido" });
+      console.error('Error al verificar el token:', error); // Agrega este log
+      res.status(401).json({ msg: "Token no válido", error: error.message }); // Incluye el mensaje de error
   }
 };
 
@@ -105,6 +94,5 @@ module.exports = {
     checkToken,
     tokenCanAdmin,
     tokenCanUser,
-    userExist,
-    checkTokenPayload
+    userExist
 }

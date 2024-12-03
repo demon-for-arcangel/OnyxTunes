@@ -1,0 +1,30 @@
+@if (pending && notPending) {
+    <ul id="pendingList">
+    @for (user of pending!.values(); track user.id) {
+        <li (click)="goToChat(user)">
+        <div>
+            <div>
+            <div>
+                <img src="{{user.foto_perfil}}">
+            </div>
+            <!-- <p>{{user.nickname}}</p> -->
+            <span>{{user.pendingCount}}</span>
+            </div>
+        </div>
+        </li>
+    }
+
+    @for (user of notPending!.values(); track user.id) {
+        <li (click)="goToChat(user)">
+        <div>
+            <div>
+                <div>
+                    <img src="{{user.foto_perfil}}">
+                </div>
+                <p>{{user.nickname}}</p>
+            </div>
+        </div>
+        </li>
+    }
+    </ul>
+}
