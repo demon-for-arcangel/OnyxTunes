@@ -2,28 +2,30 @@ const models = require('../models/index');
 const { Op } = require("sequelize");
 
 class Message {
-    static findRecentChatMessages = async (emitter, receiver) => {
+    static findRecentChatMessages = async (emisor, receptor) => {
         try {
-            console.log(emitter, receiver);
+            console.log(emisor, receptor);
 
-            const emitterUser = await models.User.findOne({
-                where: { id: emitter },
-                attributes: ['id', 'email', 'nickname', 'pic_url', 'connected']
+            // Obtener información del emisor
+            const emisorUser = await models.Usuario.findOne({
+                where: { id: emisor },
+                attributes: ['id', 'email', 'nickname', 'foto_perfil', 'connected']
             });
-            const receiverUser = await models.User.findOne({
-                where: { id: receiver },
-                attributes: ['id', 'email', 'nickname', 'pic_url', 'connected']
-            });
+            console.log(emisorUser);
 
-            const messages = await models.Message.findAll({
+            // Obtener información del receptor
+            const receptorUser = await models.Usuario.findOne({
+                where: { id: receptor },
+                attributes: ['id', 'email', 'nickname', 'foto_perfil', 'connected']
+            });
+            console.log(receptorUser);
+
+            // Obtener mensajes entre el emisor y el receptor
+            const messages = await models.Mensaje.findAll({
                 where: {
-                    [Op.and]: [
-                        {
-                            [Op.or]: [
-                                { emitter: emitter, receiver: receiver },
-                                { emitter: receiver, receiver: emitter },
-                            ]
-                        },
+                    [Op.or]: [
+                        { emisor: emisor, receptor: receptor },
+                        { emisor: receptor, receptor: emisor },
                     ]
                 },
                 include: {
@@ -32,16 +34,21 @@ class Message {
                     attributes: ['file_link']
                 },
                 order: [
-                    ['created_at', 'ASC'],
+                    ['createdAt', 'ASC'],
                 ]
             });
+         
+            console.log('Mensajes recuperados:', messages);  // Verifica que los mensajes se estén recuperando correctamente
 
-            console.log(messages);
-
+            // Retornar la respuesta con los datos
             return {
                 success: true,
                 message: 'Se han obtenido los mensajes correctamente.',
-                data: { emitterUser, receiverUser, messages }
+                data: {
+                    emisorUser,
+                    receptorUser,
+                    messages // Asegúrate de que los mensajes se incluyan aquí
+                }
             };
         } catch (e) {
             console.error(e);
@@ -49,18 +56,18 @@ class Message {
         }
     };
 
-    static pushMessage = async (emitter, receiver, text) => {
+    static pushMessage = async (emisor, receptor, texto) => {
         try {
             const data = {
-                emitter,
-                receiver,
-                text,
-                read: false,
-                created_at: new Date(),
-                updated_at: new Date(),
+                emisor,
+                receptor,
+                texto,
+                leido: false,
+                createdAt: new Date(),
+                updatedAt: new Date(),
             };
 
-            const query = await models.Message.create(data);
+            const query = await models.Mensaje.create(data);
             const message = query.get({ plain: true });
 
             return {
@@ -79,7 +86,7 @@ class Message {
             const assetRecords = urls.map(url => ({
                 message_id: messageId,
                 file_link: url,
-                created_at: new Date(),
+                createdAt: new Date(),
             }));
 
             const query = await models.Asset.bulkCreate(assetRecords);
@@ -95,14 +102,14 @@ class Message {
         }
     };
 
-    static getUnreadedMessages = async (emitter, receiver) => {
+    static getUnreadedMessages = async (emisor, receptor) => {
         try {
-            const messages = await models.Message.findAll({
+            const messages = await models.Mensaje.findAll({
                 where: {
                     [Op.and]: [
-                        { emitter: emitter },
-                        { receiver: receiver },
-                        { read: false }
+                        { emisor: emisor },
+                        { receptor: receptor },
+                        { leido: false }
                     ]
                 },
                 attributes: ['id']
@@ -121,7 +128,7 @@ class Message {
 
     static markMessageAsReaded = async (id) => {
         try {
-            const query = await models.Message.update({ read: true }, { where: { id } });
+            const query = await models.Mensaje.update({ leido: true }, { where: { id } });
 
             return {
                 success: true,
@@ -136,10 +143,10 @@ class Message {
 
     static getPendingChats = async (userId) => {
         try {
-            const usersWithPendingMessages = await models.Message.findAll({
+            const usersWithPendingMessages = await models.Mensaje.findAll({
                 where: {
-                    receiver: userId,
-                    read: false,
+                    receptor: userId,
+                    leido: false,
                 },
                 attributes: [
                     [models.sequelize.fn('COUNT', models.Sequelize.col('id')), 'count'],
@@ -149,7 +156,7 @@ class Message {
                 raw: true
             });
 
-            const users = await models.User.findAll({
+            const users = await models.Usuario.findAll({
                 where: {
                     id: {
                         [Op.in]: (usersWithPendingMessages.map(message => message.emitter))
@@ -178,24 +185,24 @@ class Message {
 
     static getNotPendingChats = async (userId) => {
         try {
-            const usersWithPendingMessages = await models.Message.findAll({
+            const usersWithPendingMessages = await models.Mensaje.findAll({
                 where: {
-                    receiver: userId,
-                    read: false,
+                    receptor: userId,
+                    leido: false,
                 },
                 attributes: [
                     [models.sequelize.fn('COUNT', models.Sequelize.col('id')), 'count'],
-                    'emitter',
+                    'emisor',
                 ],
-                group: ['emitter'],
-                order: [['created_at', 'DESC']],
+                group: ['emisor'],
+                order: [['createdAt', 'DESC']],
                 raw: true
             });
 
-            const usersWithReadMessages = await models.Message.findAll({
+            const usersWithReadMessages = await models.Mensaje.findAll({
                 where: {
-                    receiver: userId,
-                    emitter: {
+                    receptor: userId,
+                    emisor: {
                         [Op.and]: [
                             { [Op.not]: userId },
                             { [Op.notIn]: usersWithPendingMessages.map(message => message.emitter) }
@@ -208,14 +215,14 @@ class Message {
                     'emitter',
                 ],
                 group: ['emitter'],
-                order: [['created_at', 'ASC']],
+                order: [['createdAt', 'ASC']],
                 raw: true
             });
 
             const usersWhoSendMessages = await models.Message.findAll({
                 where: {
-                    emitter: userId,
-                    receiver: {
+                    emisor: userId,
+                    receptor: {
                         [Op.and]: [
                             { [Op.not]: userId },
                             { [Op.notIn]: usersWithPendingMessages.map(message => message.emitter) }
@@ -224,22 +231,22 @@ class Message {
                 },
                 attributes: [
                     [models.sequelize.fn('COUNT', models.Sequelize.col('id')), 'count'],
-                    'receiver',
+                    'receptor',
                 ],
-                group: ['receiver'],
-                order: [['created_at', 'ASC']],
+                group: ['receptor'],
+                order: [['createdAt', 'ASC']],
                 raw: true
             });
 
-            const users = await models.User.findAll({
+            const users = await models.Usuario.findAll({
                 where: {
                     id: {
                         [Op.or]: [
                             {
-                                [Op.in]: (usersWhoSendMessages.map(message => message.receiver))
+                                [Op.in]: (usersWhoSendMessages.map(message => message.receptor))
                             },
                             {
-                                [Op.in]: (usersWithReadMessages.map(message => message.emitter))
+                                [Op.in]: (usersWithReadMessages.map(message => message.emisor))
                             },
                         ]
                     }
