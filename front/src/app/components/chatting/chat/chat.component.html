@@ -1,0 +1,15 @@
+<section class="min-w-full w-full h-screen flex flex-col items-center">
+    <div id="menu"  class="min-w-screen mt-4 rounded-lg fixed top-0 gap-6 bg-gray-700 flex flex-row justify-between items-center p-2">
+      <div class="min-w-screen flex gap-1 flex-row items-center">
+        <button class="px-3" routerLink="/pending-chats"><i class="fa-solid fa-chevron-left"></i></button>
+        <p-avatar
+          image="{{partner?.pic_url}}"
+          size="normal"
+          shape="circle" styleClass="flex items-center" />
+      </div>
+  
+      <span>{{partner?.nickname}}</span>
+    </div>
+    <app-message id="messages" class="min-w-full flex justify-center mt-6 py-8" [messages]="messages" [partner]="partner" [self]="self"></app-message>
+    <app-message-input id="chatInput" (onSendMessage)="handleNewMessage($event)" class="fixed bottom-0"></app-message-input>
+  </section>
