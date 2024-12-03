@@ -50,7 +50,8 @@ class ChatController {
         const userId = req.userId; // Asegúrate de que este ID se extraiga correctamente del payload
 
         try {
-            const chats = await Message.getChatsByUserId(userId);
+            /* const chats = await Message.getChatsByUserId(userId); */
+            const chats = await Message.getChatsGroupedByReceiver(userId);
 
             return res.status(200).json({
                 executed: true,

@@ -213,6 +213,60 @@ class Message {
             throw new Error('Error al obtener los chats.');
         }
     };
+
+    static getChatsGroupedByReceiver = async (userId) => {
+        try {
+            // Obtener todos los mensajes donde el emisor es el userId
+            const messages = await models.Mensaje.findAll({
+                where: {
+                    emisor: userId,
+                },
+                include: [
+                    {
+                        model: models.Usuario,
+                        as: 'receptorUsuario', // Usar el alias correcto para el receptor
+                        attributes: ['id', 'nickname', 'foto_perfil']
+                    }
+                ],
+                order: [['createdAt', 'DESC']], // Ordenar por createdAt descendente
+                raw: true
+            });
+    
+            // Agrupar mensajes por receptor
+            const groupedChats = messages.reduce((acc, message) => {
+                const receptorId = message['receptorUsuario.id']; // ID del receptor
+                if (!acc[receptorId]) {
+                    acc[receptorId] = {
+                        receptorInfo: {
+                            id: receptorId,
+                            nickname: message['receptorUsuario.nickname'],
+                            foto_perfil: message['receptorUsuario.foto_perfil']
+                        },
+                        messages: []
+                    };
+                }
+                acc[receptorId].messages.push({
+                    id: message.id,
+                    texto: message.texto,
+                    createdAt: message.createdAt,
+                    leido: message.leido
+                });
+                return acc;
+            }, {});
+    
+            // Convertir el objeto agrupado en un array
+            const result = Object.values(groupedChats);
+    
+            return {
+                success: true,
+                message: 'Se han obtenido los chats agrupados correctamente.',
+                data: result // Retorna la lista de chats agrupados
+            };
+        } catch (e) {
+            console.log(e);
+            throw new Error('Error al obtener los chats agrupados.');
+        }
+    };
 }
 
 module.exports = Message;
