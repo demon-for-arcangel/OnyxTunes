@@ -18,6 +18,9 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
+      nickname: {
+        type: Sequelize.STRING
+      },
       fecha_nacimiento: {
         type: Sequelize.DATE
       },
@@ -38,6 +41,12 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull:false,
         defaultValue: 1,
+      },
+      last_login: {
+        type: Sequelize.DATE
+      },
+      connected: {
+        type: Sequelize.BOOLEAN
       },
       rol: {
         primaryKey: true,
