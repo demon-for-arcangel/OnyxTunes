@@ -10,8 +10,9 @@ export class GeneroService {
 
   constructor(private http: HttpClient) { }
   url = environment.baseUrl
+  generosUrl = environment.generosUrl
 
   getGeneros(): Observable<any> {
-    return this.http.get(`${this.url}/genero`);
+    return this.http.get(`${this.url}` + `${this.generosUrl}`);
   }
 }

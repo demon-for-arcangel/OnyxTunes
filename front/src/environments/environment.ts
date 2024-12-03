@@ -5,10 +5,16 @@ export const environment = {
     --------------------------
     */
     baseUrl: 'http://localhost:9292/api',
+    socketUrl: 'http://localhost:9292',
+    usersUrl: '/users',
+    songsUrl: '/songs',
+    rolesUrl: '/roles',
+    generosUrl: '/genero',
+    albumsUrl: '/albums',
+    chatsUrl: '/chats',
     
     // usuarios
-    login: '/login',
-    register: '/register',
+
     sendMail: '/mail/request-reset', //por hacer
     resetPassword: '/mail/reset', //por hacer
     myProfile: '/userToken', //por hacer
@@ -23,13 +29,6 @@ export const environment = {
     showFriendship: '/friendship', //por hacer
     searchUser: '/users/search', //por hacer
     googleSignIn: '/google', //por hacer
-
-    // preferencias
-    preferences: '/userPreferences',
-    getOptionsRelation: '/options/relation',
-    getOptionsInterest: '/options/interest',
-    optionInterest: '/preferences/options/interest',
-    optionRelation: '/preferences/options/relation',
     
     // roles
     showRols: '/rols/',
@@ -38,15 +37,6 @@ export const environment = {
     showChatsUser: '/chats',
     getChatMessages: '/chats/messages',
     createChat: '/chats/new',
-
-    // eventos
-    events: '/events',
-    activeEvents: '/events/show/active',
-    inactiveEvents: '/events/show/inactive',
-    activateEvents: '/events/update/activate',
-    desactivateEvents: '/events/update/desactivate',
-    searchEvent: '/events/search',
-    inscriptions: '/userEvents',
 
     // assets
     getFile: '/assets',
