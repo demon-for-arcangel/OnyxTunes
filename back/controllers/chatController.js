@@ -50,16 +50,12 @@ class ChatController {
         const userId = req.userId; // Asegúrate de que este ID se extraiga correctamente del payload
 
         try {
-            const pendingChats = await Message.getPendingChats(userId);
-            const notPendingChats = await Message.getNotPendingChats(userId);
+            const chats = await Message.getChatsByUserId(userId);
 
             return res.status(200).json({
                 executed: true,
                 message: "Se han obtenido la lista de chats correctamente",
-                chats: {
-                    pending: pendingChats.query,
-                    notPending: notPendingChats.query
-                }
+                chats: chats
             });
         } catch (error) {
             console.error('Error en getChats:', error);

@@ -138,128 +138,81 @@ class Message {
         }
     };
 
-    static getPendingChats = async (userId) => {
+    static getChatsByUserId = async (userId) => {
         try {
-            const usersWithPendingMessages = await models.Mensaje.findAll({
-                where: {
-                    receptor: userId,
-                    leido: false,
-                },
-                attributes: [
-                    [models.sequelize.fn('COUNT', models.Sequelize.col('id')), 'count'],
-                    'emisor',
-                ],
-                group: ['emisor'],
-                raw: true
-            });
-
-            const users = await models.Usuario.findAll({
-                where: {
-                    id: {
-                        [Op.in]: (usersWithPendingMessages.map(message => message.emisor))
-                    }
-                },
-                raw: true
-            });
-
-            users.forEach(user => {
-                const userPending = usersWithPendingMessages.find(message => message.emisor === user.id);
-                user.pendingCount = userPending.count;
-            });
-
-            if (!users) throw new Error('El usuario indicado no existe.');
-
-            return {
-                success: true,
-                message: 'Se han obtenido los chats correctamente.',
-                data: users
-            };
-        } catch (e) {
-            console.log(e);
-            throw new Error('Error al obtener los chats pendientes.');
-        }
-    };
-
-    static getNotPendingChats = async (userId) => {
-        try {
-            const usersWithPendingMessages = await models.Mensaje.findAll({
-                where: {
-                    receptor: userId,
-                    leido: false,
-                },
-                attributes: [
-                    [models.sequelize.fn('COUNT', models.Sequelize.col('id')), 'count'],
-                    'emisor',
-                ],
-                group: ['emisor'],
-                raw: true
-            });
-
+            // Obtener mensajes leídos
             const usersWithReadMessages = await models.Mensaje.findAll({
                 where: {
-                    receptor: userId,
-                    emisor: {
-                        [Op.and]: [
-                            { [Op.not]: userId },
-                            { [Op.notIn]: usersWithPendingMessages.map(message => message.emisor) }
-                        ]
-                    },
+                    emisor: userId, // Aquí se busca el emisor
                     leido: true,
                 },
                 attributes: [
-                    [models.sequelize.fn('COUNT', models.Sequelize.col('id')), 'count'],
-                    'emisor',
-                ],
-                group: ['emisor'],
-                raw: true
-            });
-
-            const usersWhoSendMessages = await models.Mensaje.findAll({
-                where: {
-                    emisor: userId,
-                    receptor: {
-                        [Op.and]: [
-                            { [Op.not]: userId },
-                            { [Op.notIn]: usersWithPendingMessages.map(message => message.emisor) }
-                        ]
-                    },
-                },
-                attributes: [
-                    [models.sequelize.fn('COUNT', models.Sequelize.col('id')), 'count'],
-                    'receptor',
+                    'receptor', // ID del receptor
+                    [models.sequelize.fn('COUNT', models.sequelize.col('id')), 'readCount'],
+                    [models.sequelize.fn('MAX', models.sequelize.col('createdAt')), 'lastReadMessageDate'] // Última fecha del mensaje leído
                 ],
                 group: ['receptor'],
                 raw: true
             });
-
-            const users = await models.Usuario.findAll({
+    
+            // Obtener mensajes no leídos
+            const usersWithPendingMessages = await models.Mensaje.findAll({
                 where: {
-                    id: {
-                        [Op.or]: [
-                            {
-                                [Op.in]: (usersWhoSendMessages.map(message => message.receptor))
-                            },
-                            {
-                                [Op.in]: (usersWithReadMessages.map(message => message.emisor))
-                            },
-                        ]
-                    }
+                    emisor: userId, // Aquí se busca el emisor
+                    leido: false,
                 },
+                attributes: [
+                    'receptor', // ID del receptor
+                    [models.sequelize.fn('COUNT', models.sequelize.col('id')), 'pendingCount'],
+                    [models.sequelize.fn('MAX', models.sequelize.col('createdAt')), 'lastPendingMessageDate'] // Última fecha del mensaje no leído
+                ],
+                group: ['receptor'],
                 raw: true
             });
-
-            if (!users) throw new Error('El usuario indicado no existe.');
-
+    
+            // Obtener información de los usuarios receptores para mensajes leídos
+            const readChats = await Promise.all(usersWithReadMessages.map(async (message) => {
+                const receptorInfo = await models.Usuario.findOne({
+                    where: { id: message.receptor },
+                    attributes: ['id', 'nickname', 'foto_perfil'] // Atributos que deseas incluir
+                });
+    
+                return {
+                    receptor: message.receptor,
+                    readCount: message.readCount,
+                    lastReadMessageDate: message.lastReadMessageDate,
+                    receptorInfo // Información del usuario receptor
+                };
+            }));
+    
+            // Obtener información de los usuarios receptores para mensajes no leídos
+            const pendingChats = await Promise.all(usersWithPendingMessages.map(async (message) => {
+                const receptorInfo = await models.Usuario.findOne({
+                    where: { id: message.receptor },
+                    attributes: ['id', 'nickname', 'foto_perfil'] // Atributos que deseas incluir
+                });
+    
+                return {
+                    receptor: message.receptor,
+                    pendingCount: message.pendingCount,
+                    lastPendingMessageDate: message.lastPendingMessageDate,
+                    receptorInfo // Información del usuario receptor
+                };
+            }));
+    
             return {
                 success: true,
-                message: 'Se han obtenido los usuarios correctamente.',
-                data: users
+                message: 'Se han obtenido los chats correctamente.',
+                data: {
+                    readChats, // Chats leídos
+                    pendingChats // Chats no leídos
+                }
             };
         } catch (e) {
             console.log(e);
-            throw new Error('Error al obtener los usuarios no pendientes.');
+            throw new Error('Error al obtener los chats.');
         }
-    }
+    };
 }
 
 module.exports = Message;
