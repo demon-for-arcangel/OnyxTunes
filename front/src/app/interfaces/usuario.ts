@@ -15,3 +15,17 @@ export interface Rol {
     descripcion?: string; 
     selected?: boolean; 
 }
+
+export interface UserChat {
+    id?: number
+    email?: string
+    nombre?: string
+    primerApellido?: string
+    segundoApellido?: string
+    nombreUsuario?: string
+    foto_perfil?: string
+    lastLogin?: any
+    connected?: boolean
+    createdAt?: string
+    updatedAt?: string
+  }
