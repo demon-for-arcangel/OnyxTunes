@@ -102,10 +102,10 @@ class ConversationController {
         return firstConversationFree[0];
     }
 
-    findChatRoom = (receiverId) => {
+    findChatRoom = (receptorId) => {
         const rooms = [...ConversationController.rooms.entries()];
 
-        const chatConversation = conversations.find(([uuid, users]) => users.has(this.socket.user.userId) && users.has(receiverId));
+        const chatConversation = conversations.find(([uuid, users]) => users.has(this.socket.user.userId) && users.has(receptorId));
 
         if (chatConversation) {
             return chatConversation[0] // La primera posicion es el ID de la room.

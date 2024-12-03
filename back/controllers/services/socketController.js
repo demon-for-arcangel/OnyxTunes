@@ -74,17 +74,17 @@ class SocketController {
 
     static onMessageRead = async (socket, params) => {
         // Maneja la lectura de mensajes
-        const receiverId = params.receiverId;
-        const unreadMessages = await models.Message.getUnreadedMessages(receiverId, socket.user.userId);
+        const receptorId = params.receptorId;
+        const unreadMessages = await models.Message.getUnreadedMessages(receptorId, socket.user.userId);
 
         const readedMessages = [];
         if (unreadMessages.data.length > 0) {
             unreadMessages.data.forEach(message => {
-                models.Message.markMessageAsReaded(message.id);
+                models.Mensaje.markMessageAsReaded(message.id);
                 readedMessages.push(message.id);
             });
 
-            this.io.to(receiverId).emit('message-read', { messages: readedMessages });
+            this.io.to(receptorId).emit('message-read', { messages: readedMessages });
         }
     }
 
@@ -104,8 +104,8 @@ class SocketController {
 
     static onJoinChat = async (socket, params) => {
         // Maneja la unión de un usuario a una room
-        const { receiverId } = params;
-        const roomId = `room_${receiverId}`; // Ejemplo de ID de sala
+        const { receptorId } = params;
+        const roomId = `room_${receptorId}`; // Ejemplo de ID de sala
         socket.join(roomId);
 
         console.log(`Usuario ${socket.user.userId} se unió a la sala ${roomId}`);
@@ -114,8 +114,8 @@ class SocketController {
 
     static onLeaveChat = async (socket, params) => {
         // Maneja la salida de un usuario de una room
-        const { receiverId } = params;
-        const roomId = `room_${receiverId}`;
+        const { receptorId } = params;
+        const roomId = `room_${receptorId}`;
         socket.leave(roomId);
 
         console.log(`Usuario ${socket.user.userId} salió de la sala ${roomId}`);

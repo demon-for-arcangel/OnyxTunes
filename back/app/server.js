@@ -16,6 +16,7 @@ class Server {
 
 
     this.RoutePath = "/api";
+    this.apiUsers = "/api/users";
     this.apiFiles = "/api/file";
     this.apiMail = "/api/mail";
     this.apiChats = "/api/chats"
@@ -53,7 +54,10 @@ class Server {
   }
 
   routes() {
-    this.app.use(this.RoutePath, require("../routes/userRoutes"));
+    this.app.use(this.RoutePath, require("../routes/authRoutes"));
+    this.app.use(this.apiUsers, require("../routes/userRoutes"));
+    this.app.use(this.apiChats, require("../routes/chatRoutes"));
+
     this.app.use(this.RoutePath, require('../routes/rolRoutes'));
     this.app.use(this.RoutePath, require('../routes/albumRoutes'));
     this.app.use(this.RoutePath, require('../routes/cancionRoutes'));
