@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import { ChatMessages, SendFilesResponse } from '../interfaces/message';
+import { ChatMessages, MessageUser, ReceptorResponse, SendFilesResponse } from '../interfaces/message';
 import { UserChat } from '../interfaces/usuario';
 import { Observable } from 'rxjs';
 import { PendingChat } from '../interfaces/usuario';
@@ -41,5 +41,10 @@ export class ChatService {
     };
 
     return this.http.post<ChatMessages>(this.url + this.chatsUrl, body); // Cambia a POST y envía el cuerpo
+  }
+
+
+  getReceptoresPorEmisor(emisorId: number): Observable<ReceptorResponse> {
+    return this.http.get<ReceptorResponse>(`${this.url}` + `${this.chatsUrl}` + `/receptores/${emisorId}`); // Usa el ID en la URL
   }
 }

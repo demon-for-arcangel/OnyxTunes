@@ -59,3 +59,9 @@ export interface SendMessageSocketParams {
 export interface NewMessageArgs {
   from: number
 }
+
+export interface ReceptorResponse {
+  success: boolean;
+  data: MessageUser[];
+  message?: string; 
+}
