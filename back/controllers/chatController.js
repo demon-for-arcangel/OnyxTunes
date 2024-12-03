@@ -47,7 +47,7 @@ class ChatController {
     }
 
     static async getChats(req, res) {
-        const userId = req.payload.userId; // Asegúrate de que este ID se extraiga correctamente del payload
+        const userId = req.userId; // Asegúrate de que este ID se extraiga correctamente del payload
 
         try {
             const pendingChats = await Message.getPendingChats(userId);

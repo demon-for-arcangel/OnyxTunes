@@ -33,9 +33,6 @@ class Message {
                     as: 'files',
                     attributes: ['file_link']
                 },
-                order: [
-                    ['createdAt', 'ASC'],
-                ]
             });
          
             console.log('Mensajes recuperados:', messages);  // Verifica que los mensajes se estén recuperando correctamente
@@ -150,23 +147,23 @@ class Message {
                 },
                 attributes: [
                     [models.sequelize.fn('COUNT', models.Sequelize.col('id')), 'count'],
-                    'emitter',
+                    'emisor',
                 ],
-                group: ['emitter'],
+                group: ['emisor'],
                 raw: true
             });
 
             const users = await models.Usuario.findAll({
                 where: {
                     id: {
-                        [Op.in]: (usersWithPendingMessages.map(message => message.emitter))
+                        [Op.in]: (usersWithPendingMessages.map(message => message.emisor))
                     }
                 },
                 raw: true
             });
 
             users.forEach(user => {
-                const userPending = usersWithPendingMessages.find(message => message.emitter === user.id);
+                const userPending = usersWithPendingMessages.find(message => message.emisor === user.id);
                 user.pendingCount = userPending.count;
             });
 
@@ -195,7 +192,6 @@ class Message {
                     'emisor',
                 ],
                 group: ['emisor'],
-                order: [['createdAt', 'DESC']],
                 raw: true
             });
 
@@ -205,27 +201,26 @@ class Message {
                     emisor: {
                         [Op.and]: [
                             { [Op.not]: userId },
-                            { [Op.notIn]: usersWithPendingMessages.map(message => message.emitter) }
+                            { [Op.notIn]: usersWithPendingMessages.map(message => message.emisor) }
                         ]
                     },
-                    read: true,
+                    leido: true,
                 },
                 attributes: [
                     [models.sequelize.fn('COUNT', models.Sequelize.col('id')), 'count'],
-                    'emitter',
+                    'emisor',
                 ],
-                group: ['emitter'],
-                order: [['createdAt', 'ASC']],
+                group: ['emisor'],
                 raw: true
             });
 
-            const usersWhoSendMessages = await models.Message.findAll({
+            const usersWhoSendMessages = await models.Mensaje.findAll({
                 where: {
                     emisor: userId,
                     receptor: {
                         [Op.and]: [
                             { [Op.not]: userId },
-                            { [Op.notIn]: usersWithPendingMessages.map(message => message.emitter) }
+                            { [Op.notIn]: usersWithPendingMessages.map(message => message.emisor) }
                         ]
                     },
                 },
@@ -234,7 +229,6 @@ class Message {
                     'receptor',
                 ],
                 group: ['receptor'],
-                order: [['createdAt', 'ASC']],
                 raw: true
             });
 
