@@ -1,0 +1,30 @@
+<div class="flex items-start gap-2.5">
+    <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 bg-purple-400 rounded-b-lg rounded-l-lg dark:bg-purple-900">
+      <span class="font-bold text-right">{{user?.nickname}}</span>
+      <div class="flex items-center space-x-2 rtl:space-x-reverse">
+        <span class="text-sm font-semibold text-gray-900 dark:text-white"></span>
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{message!.created_at | date}}</span>
+      </div>
+      <div class="content">
+        @if (message.text !== "") {
+          <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{{message!.text}}</p>
+        } @else if (message!.files) {
+          <div class="grid">
+            @for (file of message.files; track $index) {
+              <img class="object-cover h-48 w-48 rounded-lg" src="{{file.file_link}}" alt="message_image">
+            }
+          </div>
+        }
+      </div>
+  
+      @if (message!.read) {
+        <span class="text-sm font-normal text-blue-500 dark:text-blue-400"><i class="fa-solid fa-check-double"></i></span>
+      } @else {
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400"><i class="fa-solid fa-check-double"></i></span>
+      }
+  
+    </div>
+    <img class="w-8 h-8 rounded-full" src="{{user!.pic_url}}">
+  
+  </div>
+  
