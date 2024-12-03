@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       })
 
       this.belongsTo(models.Usuario, {
-        foreignKey: 'receiver',
+        foreignKey: 'receptor',
         as: 'receptorUsuario',
       })
 
