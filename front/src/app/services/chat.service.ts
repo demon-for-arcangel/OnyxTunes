@@ -33,4 +33,13 @@ export class ChatService {
   getPendingChats(): Observable<{ data: { chats: { pending: PendingChat[], notPending: UserChat[] } } }> {
     return this.http.get<{ data: { chats: { pending: PendingChat[], notPending: UserChat[] } } }>(`${this.url}` + `${this.chatsUrl}` + `/pending-chats`);
   }
+
+  getChats(emisorId: number, receptorId: number): Observable<ChatMessages> {
+    const body = {
+      emisorId: emisorId,
+      receptorId: receptorId
+    };
+
+    return this.http.post<ChatMessages>(this.url + this.chatsUrl, body); // Cambia a POST y envía el cuerpo
+  }
 }

@@ -67,6 +67,23 @@ class ChatController {
         }
     }
 
+    static getReceptoresPorEmisor = async (req, res) => {
+        const emisorId = req.params.emisorId; // Obtener el ID del emisor de los parámetros de la URL
+    
+        try {
+            const receptores = await Message.getReceptoresPorEmisor(emisorId);
+
+            return res.status(200).json({
+                executed: true,
+                message: "Se han obtenido los receptores correctamente",
+                data: receptores
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ executed: false, message: 'Error al obtener los receptores.' });
+        }
+    };
+
     static uploadMessageImages = async (req, res) => {
         try {
             const filesUploaded = await uploadFiles(req.files, { fileExtension: ['jpg', 'png', 'jpeg'], dir: 'chat_images', numberLimit: 4 });

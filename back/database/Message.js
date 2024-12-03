@@ -53,6 +53,47 @@ class Message {
         }
     };
 
+    static getReceptoresPorEmisor = async (emisorId) => {
+        console.log(emisorId);
+    
+        if (!emisorId) {
+            return res.status(400).json({ success: false, message: 'Emisor ID no proporcionado.' });
+        }
+    
+        try {
+            const receptores = await models.Mensaje.findAll({
+                where: {
+                    emisor: emisorId
+                },
+                attributes: ['receptor'], // Solo queremos el ID del receptor
+                group: ['receptor'] // Agrupamos por receptor para obtener solo únicos
+            });
+
+            console.log(receptores);
+    
+            // Si necesitas obtener información adicional sobre los receptores, puedes hacer un join con el modelo Usuario
+            const receptoresConInfo = await Promise.all(receptores.map(async (mensaje) => {
+                const usuario = await models.Usuario.findByPk(mensaje.receptor);
+                return {
+                    id: mensaje.receptor,
+                    nickname: usuario.nickname,
+                    foto_perfil: usuario.foto_perfil
+                };
+            }));
+
+            return {
+                success: true,
+                message: 'Se han obtenido los mensajes correctamente.',
+                data: {
+                    receptoresConInfo,
+                }
+            };
+        } catch (error) {
+            console.error(error);
+            throw new Error('Error al obtener los mensajes.');
+        }
+    };
+
     static pushMessage = async (emisor, receptor, texto) => {
         try {
             const data = {

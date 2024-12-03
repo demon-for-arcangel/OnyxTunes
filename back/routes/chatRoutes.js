@@ -7,8 +7,9 @@ const router = Router();
 router.get('/messages/:receptor', [
     checkToken,
     check('receptor', 'El usuario no existe.').custom(userExist),
-], ChatController.getMessages)
-router.get('/pending-chats', checkToken, ChatController.getChats)
-router.post('/messages/files/:receptor', checkToken, ChatController.uploadMessageImages)
+], ChatController.getMessages);
+router.get('/', checkToken, ChatController.getChats);
+router.post('/messages/files/:receptor', checkToken, ChatController.uploadMessageImages);
+router.get('/receptores/:emisorId', checkToken, ChatController.getReceptoresPorEmisor);
 
 module.exports = router;

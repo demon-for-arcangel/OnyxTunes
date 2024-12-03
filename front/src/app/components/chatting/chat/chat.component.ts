@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MessageComponent } from '../message/message.component';
 import { MessageInputComponent } from '../message-input/message-input.component';
-import { ChatMessages } from '../../../interfaces/message';
+import { ChatMessages, MessageUser } from '../../../interfaces/message';
 import { Message } from '../../../interfaces/message';
 import { SocketService } from '../../../services/socket.service';
 import { ChatService } from '../../../services/chat.service';
@@ -20,6 +20,7 @@ export class ChatComponent {
   messages: Map<number, Message> = new Map();
   partner?: any; // Define el tipo correcto según tu interfaz
   self?: any; // Define el tipo correcto según tu interfaz
+  chats: { receptorInfo: MessageUser; messages: Message[] }[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -47,16 +48,30 @@ export class ChatComponent {
   }
 
   loadMessages() {
-    this.chatService.getMessages(this.partnerId!).subscribe(
-      (data: ChatMessages) => {
-        this.getMessages(data);
-      },
-      (error) => {
-        console.error('Error al cargar los mensajes:', error);
-      }
-    );
-  }
+    // Asegúrate de que tienes los IDs de emisor y receptor
+    const emisorId = this.self?.id; // O de donde obtengas el ID del emisor
+    const receptorId = this.partnerId; // Asumiendo que partnerId es el ID del receptor
 
+    // Verifica que emisorId y receptorId no sean undefined
+    if (emisorId !== undefined && receptorId !== undefined) {
+        this.chatService.getChats(emisorId, receptorId).subscribe((response: ChatMessages) => {
+            if (response.data.executed) {
+                // Desestructuración de response.data.query
+                const { emisorUser, receptorUser, messages } = response.data.query;
+
+                // Aquí puedes construir la estructura que necesitas para this.chats
+                this.chats = [{
+                    receptorInfo: receptorUser, // Asigna el receptor
+                    messages: messages // Asigna los mensajes
+                }];
+            } else {
+                console.error('Error en la ejecución de la consulta:', response.data.errors);
+            }
+        });
+    } else {
+        console.error('Emisor ID o Receptor ID no válidos:', emisorId, receptorId);
+    }
+}
   private getMessages(body: ChatMessages) {
     body.data.query.messages.forEach(message => {
       this.pushMessage(message);
