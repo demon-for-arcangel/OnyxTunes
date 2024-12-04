@@ -1,30 +1,20 @@
-@if (pending && notPending) {
-    <ul id="pendingList">
-    @for (user of pending!.values(); track user.id) {
-        <li (click)="goToChat(user)">
+<div class="chat-list">
+    <h2>Lista de Receptores</h2>
+
+    @if (receptores && receptores.length > 0) {
         <div>
-            <div>
-            <div>
-                <img src="{{user.foto_perfil}}">
-            </div>
-            <!-- <p>{{user.nickname}}</p> -->
-            <span>{{user.pendingCount}}</span>
-            </div>
+            <ul>
+                @for (receptor of receptores; track receptor.id) {
+                    <li>
+                        <p>{{ receptor.nickname }}</p> 
+                        <button (click)="goToChat(receptor)">Iniciar Chat</button>
+                    </li>
+                }
+            </ul>
         </div>
-        </li>
     }
 
-    @for (user of notPending!.values(); track user.id) {
-        <li (click)="goToChat(user)">
-        <div>
-            <div>
-                <div>
-                    <img src="{{user.foto_perfil}}">
-                </div>
-                <p>{{user.nickname}}</p>
-            </div>
-        </div>
-        </li>
-    }
-    </ul>
-}
+    <ng-template #noReceptores>
+    <p>No hay receptores disponibles.</p>
+    </ng-template>
+</div>

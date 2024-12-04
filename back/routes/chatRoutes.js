@@ -10,6 +10,6 @@ router.get('/messages/:receptor', [
 ], ChatController.getMessages);
 router.get('/', checkToken, ChatController.getChats);
 router.post('/messages/files/:receptor', checkToken, ChatController.uploadMessageImages);
-router.get('/receptores/:emisorId', checkToken, ChatController.getReceptoresPorEmisor);
+router.get('/receptores/:emisorId', /* checkToken, */ ChatController.getReceptoresPorEmisor);
 
 module.exports = router;

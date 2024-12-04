@@ -61,7 +61,10 @@ export interface NewMessageArgs {
 }
 
 export interface ReceptorResponse {
+  executed: boolean;
   success: boolean;
-  data: MessageUser[];
+  data: {
+    receptoresConInfo: MessageUser[];
+  };
   message?: string; 
 }

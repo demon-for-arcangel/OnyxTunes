@@ -27,12 +27,16 @@ export class ChatListComponent {
 
   loadReceptores(emisorId: number) {
     this.chatService.getReceptoresPorEmisor(emisorId).subscribe(response => {
+      console.log('Respuesta del servidor:', response);
       if (response.success) {
-        this.receptores = response.data; // Asigna la lista de receptores
+        this.receptores = response.data.receptoresConInfo; // Asigna la lista de receptores
         console.log('Receptores:', this.receptores);
       } else {
-        console.error('Error al obtener los receptores:', response.message);
+        this.receptores = []; // Manejo de error si no hay receptores
       }
+    }, error => {
+      console.error('Error al cargar receptores:', error);
+      this.receptores = []; // Manejo de error
     });
   }
 

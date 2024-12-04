@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import { ChatMessages, MessageUser, ReceptorResponse, SendFilesResponse } from '../interfaces/message';
 import { UserChat } from '../interfaces/usuario';
@@ -45,6 +45,11 @@ export class ChatService {
 
 
   getReceptoresPorEmisor(emisorId: number): Observable<ReceptorResponse> {
-    return this.http.get<ReceptorResponse>(`${this.url}` + `${this.chatsUrl}` + `/receptores/${emisorId}`); // Usa el ID en la URL
+    const token = localStorage.getItem('user'); // Asegúrate de que la clave sea correcta
+    const headers = new HttpHeaders({
+      'x-token': token ? token : '' // Agregar el token al encabezado x-token
+    });
+
+    return this.http.get<ReceptorResponse>(`${this.url}${this.chatsUrl}/receptores/${emisorId}`, { headers });
   }
 }

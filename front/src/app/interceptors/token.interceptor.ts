@@ -1,28 +1,15 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
-  // Cambia 'user' a 'token' si el token se almacena bajo esa clave
-  const tokenData = localStorage.getItem('user'); 
-  let token;
-
-  // Si el token está en formato JSON, parsea el objeto
-  if (tokenData) {
-    try {
-      const parsedData = JSON.parse(tokenData);
-      token = parsedData.token; // Asegúrate de que 'token' sea la clave correcta
-    } catch (error) {
-      console.error('Error al parsear el token:', error);
+@Injectable()
+export class TokenInterceptor implements HttpInterceptor {
+  constructor() { }
+  intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    const token = localStorage.getItem('token');
+    if (token) {
+      req = req.clone({ setHeaders: { 'x-token': token } });
     }
+    return next.handle(req);
   }
-
-  console.log('Token a enviar:', token);
-
-  if (token) {
-    const clonedRequest = req.clone({
-      headers: req.headers.set('x-token', token)
-    });
-    return next(clonedRequest); 
-  }
-
-  return next(req); 
-};
+} 
