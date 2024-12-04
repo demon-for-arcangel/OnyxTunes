@@ -25,10 +25,10 @@ module.exports = (sequelize, DataTypes) => {
         }
       });
     
-      /* this.belongsToMany(models.Cancion, {
+      this.belongsToMany(models.Cancion, {
         through: models.CancionPlaylist,
         foreignKey: 'playlist_id',
-      }); */
+      });
     }
   }
   Playlist.init({

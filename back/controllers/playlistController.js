@@ -30,18 +30,20 @@ const getPlaylistById = async (req, res) => {
 };
 
 const createPlaylist = async (req, res) => {
-    const { nombre, descripcion } = req.body;
+    const { nombre, descripcion, canciones, usuario_id } = req.body; // Asegúrate de que 'canciones' sea un array de IDs
 
     try {
+        // Crea la nueva playlist y asocia las canciones
         const newPlaylist = await conx.createPlaylist({
             nombre,
             descripcion,
-        });
+            usuario_id // Pasa el ID del usuario desde el cuerpo de la solicitud
+        }, canciones); // Pasa el array de IDs de canciones
 
         res.status(201).json({ msg: "Playlist creada con éxito", playlist: newPlaylist });
     } catch (error) {
         console.error("Error al crear la playlist:", error);
-        res.status(500).json({ msg: "Error al crear la playlist" });
+        res.status(500).json({ msg: error.message }); // Devuelve el mensaje de error
     }
 };
 
