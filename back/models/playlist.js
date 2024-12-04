@@ -30,11 +30,17 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'playlist_id',
         as: 'canciones'
       });
+
+      this.belongsTo(models.Asset, {
+        foreignKey: 'assetId',
+        as: 'asset',
+      })
     }
   }
   Playlist.init({
     nombre: DataTypes.STRING,
     descripcion: DataTypes.STRING,
+    assetId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Playlist',

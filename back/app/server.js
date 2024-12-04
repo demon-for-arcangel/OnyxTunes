@@ -21,6 +21,8 @@ class Server {
     this.apiMail = "/api/mail";
     this.apiChats = "/api/chats"
     this.apiPlaylist = "/api/playlist";
+    this.apiAssets = "/api/assets"
+
 
     this.app.use(fileUpload({
       useTempFiles : true,
@@ -59,6 +61,8 @@ class Server {
     this.app.use(this.apiUsers, require("../routes/userRoutes"));
     this.app.use(this.apiChats, require("../routes/chatRoutes"));
     this.app.use(this.apiMail, require('../routes/mailRoutes'));
+    this.app.use(this.apiAssets, require("../routes/assetRoutes"));
+
 
     this.app.use(this.RoutePath, require('../routes/rolRoutes'));
     this.app.use(this.RoutePath, require('../routes/albumRoutes'));

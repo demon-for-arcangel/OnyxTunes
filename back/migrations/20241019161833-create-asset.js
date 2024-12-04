@@ -9,23 +9,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      asset_type: {
-        type: Sequelize.STRING
-      },
-      asset_id: {
-        type: Sequelize.INTEGER
-      },
-      file_link: {
-        type: Sequelize.STRING
-      },
-      file_type: {
-        type: Sequelize.STRING
-      },
-      createdAt: {
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        type: Sequelize.DATE
+      path: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

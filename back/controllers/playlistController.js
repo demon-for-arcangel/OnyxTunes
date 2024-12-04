@@ -1,8 +1,12 @@
 const { response, request } = require("express");
+const fs = require('fs');
+const path = require('path');
 const Conexion = require("../database/PlaylistConnection");
+const ConexionAssets = require('../database/AssetConnection')
 const models = require('../models');
 
 const conx = new Conexion();
+const conxAsset = new ConexionAssets();
 
 const index = async (req, res) => {
     try {

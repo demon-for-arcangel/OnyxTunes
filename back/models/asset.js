@@ -18,10 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Asset.init({
-    asset_type: DataTypes.STRING,
-    asset_id: DataTypes.INTEGER,
-    file_link: DataTypes.STRING,
-    file_type: DataTypes.STRING,
+    path: DataTypes.STRING,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
   }, {

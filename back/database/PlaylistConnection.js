@@ -29,6 +29,11 @@ class PlaylistConnection {
                             model: models.Album,
                             attributes: ['id', 'titulo']
                         }]
+                    },
+                    {
+                        model: models.Asset,
+                        as: 'asset',
+                        attributes: ['file_link', 'file_type']
                     }
                 ]
             });
@@ -68,13 +73,11 @@ class PlaylistConnection {
             const newPlaylist = await models.Playlist.create(playlistData);
 
             // Si hay canciones, inserta las relaciones en la tabla intermedia
-            if (canciones && canciones.length > 0) {
+            if (Array.isArray(canciones) && canciones.length > 0) {
                 const cancionesData = canciones.map(cancionId => ({
                     playlist_id: newPlaylist.id,
                     cancion_id: cancionId
                 }));
-
-                // Inserta las relaciones en la tabla intermedia
                 await models.CancionPlaylist.bulkCreate(cancionesData);
             }
 
