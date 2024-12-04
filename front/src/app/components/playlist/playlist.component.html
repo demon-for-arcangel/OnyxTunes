@@ -8,11 +8,10 @@
         <ul> 
             @for(cancion of canciones; track cancion) {
                 <li> 
-                    <strong>{{ cancion.titulo }}</strong> - {{ cancion.duracion }} segundos
+                    <strong>{{ cancion.titulo }}</strong> {{ formatDuration(cancion.duracion) }} segundos
                     <button (click)="reproducirCancion(cancion)">Reproducir</button>
                 </li>
             }
         </ul>
     }
-
 </div>
