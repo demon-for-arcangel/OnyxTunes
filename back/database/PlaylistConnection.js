@@ -88,6 +88,46 @@ class PlaylistConnection {
             throw new Error("Error al eliminar playlists.");
         }
     }
+
+    async getUserPlaylists(userId) {
+        try {
+            const playlists = await models.Playlist.findAll({
+                attributes: { exclude: ['usuario_id'] },
+                include: [
+                    {
+                        model: models.Usuario, 
+                        through: { 
+                            attributes: [] 
+                        },
+                        where: { id: userId } 
+                    },
+                    { model: models.Like } 
+                ]
+            });
+            return playlists;
+        } catch (error) {
+            console.error("Error al obtener las playlists del usuario:", error);
+            throw new Error("Error al obtener las playlists del usuario.");
+        }
+    }
+
+    async createPlaylistByUser(data, userId) {
+        try {
+            // Crea la nueva playlist
+            const newPlaylist = await models.Playlist.create(data);
+    
+            // Asocia la playlist con el usuario en la tabla intermedia
+            await models.UsuarioPlaylist.create({
+                usuario_id: userId,
+                playlist_id: newPlaylist.id
+            });
+    
+            return newPlaylist;
+        } catch (error) {
+            console.error("Error al crear la playlist:", error);
+            throw new Error("Error al crear la playlist");
+        }
+    }
 }
 
 module.exports = PlaylistConnection;

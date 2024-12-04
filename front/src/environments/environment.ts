@@ -12,6 +12,7 @@ export const environment = {
     generosUrl: '/genero',
     albumsUrl: '/albums',
     chatsUrl: '/chats',
+    playlistUrl: '/playlist',
     
     // usuarios
 

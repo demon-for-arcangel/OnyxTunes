@@ -10,19 +10,19 @@
             [(ngModel)]="searchTerm"
             (input)="searchArtists()"
         />
-        <div class="btn-auth">
-            <button (click)="navigateTo('login')">Iniciar Sesión</button>
-            <button (click)="navigateTo('register')">Registrarte</button>    
-        </div>
     </div>
 </header>
   
 <main>
     <div class="section-left">
-        <h2>Artistas:</h2>
+        <h2>Tu Biblioteca:</h2>
         <ul>
-            @for(artist of artists; track artist){
-                <li>{{ artist }}</li>
+            @for(playlist of playlists; track playlist){
+                <li>
+                    <button (click)="navigateToPlaylist(playlist)">
+                        {{ playlist.nombre }}
+                    </button>
+                </li>
             }
         </ul>
     </div>
@@ -41,9 +41,3 @@
         </ul>
     </div>
 </main>
-
-
-<footer>
-    <p>Regístrate para disfrutar de todas las características que ofrece la plataforma</p>
-    <button (click)="navigateTo('register')">Registrarse</button>
-</footer>

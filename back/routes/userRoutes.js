@@ -17,7 +17,7 @@ router.get('/found', controlador.getUserByEmail);
 router.put('/:id', [
      /* checkToken, tokenCanAdmin */
 ], controlador.updateUser);
-router.get('/users/:id', controlador.getUserById);
+router.get('/:id', controlador.getUserById);
 router.delete('/', controlador.deleteUsers);
 
 module.exports = router;

@@ -74,6 +74,38 @@ const deletePlaylists = async (req, res) => {
     }
 };
 
+
+
+const getUserPlaylists = async (req, res) => {
+    const { userId } = req.params; 
+
+    try {
+        const playlists = await conx.getUserPlaylists(userId);
+        res.status(200).json({ success: true, data: playlists });
+    } catch (error) {
+        console.error("Error al obtener las playlists del usuario:", error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+const createPlaylistByUser = async (req, res) => {
+    const { nombre, descripcion } = req.body;
+    const userId = req.params.userId; // Obtén el userId de los parámetros de la solicitud
+
+    try {
+        const newPlaylist = await conx.createPlaylistByUser({
+            nombre,
+            descripcion,
+        }, userId); // Pasa el userId al método de conexión
+
+        res.status(201).json({ msg: "Playlist creada con éxito", playlist: newPlaylist });
+    } catch (error) {
+        console.error("Error al crear la playlist:", error);
+        res.status(500).json({ msg: "Error al crear la playlist" });
+    }
+};
+
 module.exports = {
-    index, getPlaylistById, createPlaylist, updatePlaylist, deletePlaylists,
+    index, getPlaylistById, createPlaylist, updatePlaylist, deletePlaylists, 
+    getUserPlaylists, createPlaylistByUser
 };
