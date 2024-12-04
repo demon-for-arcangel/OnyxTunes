@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Playlist } from '../../interfaces/playlist';
 import { PlaylistService } from '../../services/playlist.service';
 import { CommonModule } from '@angular/common';
+import { SidebarComponent } from '../utils/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-playlist',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SidebarComponent],
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.css'
 })
@@ -34,6 +35,7 @@ export class PlaylistComponent {
         this.canciones = response.canciones; // Asigna las canciones al nuevo atributo
         console.log('Playlist cargada:', this.playlist);
         console.log('Canciones:', this.canciones);
+        console.log('titulo', response.canciones[0]?.titulo);
       } else {
         console.error('Error al obtener los detalles de la playlist:', response.message || 'Respuesta no válida');
       }

@@ -1,48 +1,35 @@
-import { Component, Input } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { PlaylistService } from '../../services/playlist.service';
-import { UserService } from '../../services/user.service';
-import { AuthService } from '../../services/auth.service';
-import { Usuario } from '../../interfaces/usuario';
-import { Playlist } from '../../interfaces/playlist';
-import { SidebarComponent } from '../utils/sidebar/sidebar.component';
-import { PlaylistComponent } from '../playlist/playlist.component';
+import { Playlist } from '../../../interfaces/playlist';
+import { AuthService } from '../../../services/auth.service';
+import { PlaylistService } from '../../../services/playlist.service';
+import { Usuario } from '../../../interfaces/usuario';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-sidebar',
   standalone: true,
-  imports: [FormsModule, SidebarComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  imports: [],
+  templateUrl: './sidebar.component.html',
+  styleUrl: './sidebar.component.css'
 })
-export class HomeComponent {  
-  searchTerm: string = '';
+export class SidebarComponent {
   playlists: Playlist[] = [];
   userId: number | null = null;
 
-  artists: string[] = ['Artista 1', 'Artista 2', 'Artista 3', 'Artista 4'];
-  albumes: string[] = ['album1', 'album 2', 'album 3', 'album 4'];
-  listas: string[] = ['lista 1', 'lista 2', 'lista 3', 'lista 4'];
-  
-  constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService, private usuarioService: UserService){}
 
+  constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService) {}
   ngOnInit() {
     this.loadUserId();
   }
+
+  navigateToHome(){}
+  search(){}
+
 
 navigateToPlaylist(playlist: Playlist) {
   const playlistName = encodeURIComponent(playlist.nombre); // Codifica el nombre para la URL
   this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]); // Navega usando el ID y el nombre
 }
-
-  navigateTo(route: string) {
-    this.router.navigate([`/${route}`]);
-  }
-  
-  searchArtists() {
-    console.log('Buscando:', this.searchTerm);
-  }
 
   loadUserId() {
     const tokenObject = localStorage.getItem('user'); 
@@ -83,5 +70,4 @@ navigateToPlaylist(playlist: Playlist) {
         console.error('No se encontró el token.');
     }
 }
-
 }

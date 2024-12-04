@@ -1,32 +1,6 @@
-<header>
-    <div class="header-content">
-        <img src="assets/images/onyxtunes.jpeg" alt="OnyxTunes Logo" class="logo" />
-        <button (click)="navigateTo('home')">
-            <i class="pi pi-home" style="font-size: 1.5rem"></i>
-        </button> 
-        <input
-            type="text"
-            placeholder="Desea reproducir algo..."
-            [(ngModel)]="searchTerm"
-            (input)="searchArtists()"
-        />
-    </div>
-</header>
-  
-<main>
-    <div class="section-left">
-        <h2>Tu Biblioteca:</h2>
-        <ul>
-            @for(playlist of playlists; track playlist){
-                <li>
-                    <button (click)="navigateToPlaylist(playlist)">
-                        {{ playlist.nombre }}
-                    </button>
-                </li>
-            }
-        </ul>
-    </div>
-    <div class="section-right">
+<div class="container">
+    <app-sidebar></app-sidebar>
+    <main>
         <h2>Álbumes populares</h2>
         <ul>
             @for(album of albumes; track album){
@@ -39,5 +13,5 @@
                 <li>{{ lista }}</li>
             }
         </ul>
-    </div>
-</main>
+    </main>
+</div>

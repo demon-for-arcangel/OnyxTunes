@@ -1,0 +1,14 @@
+<div class="sidebar">
+    <button (click)="navigateToHome()">Inicio</button>
+    <button (click)="search()">Buscar</button>
+        <h2>Tu Biblioteca:</h2>
+        <ul>
+            @for(playlist of playlists; track playlist){
+                <li>
+                    <button (click)="navigateToPlaylist(playlist)">
+                        {{ playlist.nombre }}
+                    </button>
+                </li>
+            }
+        </ul>
+</div>

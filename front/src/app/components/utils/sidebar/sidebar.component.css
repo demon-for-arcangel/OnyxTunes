@@ -1,0 +1,29 @@
+.sidebar {
+    background-color: #1f1f1f; /* Color de fondo */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 20px; /* Bordes redondeados */
+    color: white; /* Color de texto */
+    height: 100%; /* Altura completa */
+}
+
+.sidebar h2 {
+    margin-bottom: 20px; /* Espacio inferior */
+}
+
+.sidebar button {
+    background-color: #007BFF; /* Color de fondo azul */
+    color: white; /* Color de texto blanco */
+    border: none; /* Sin borde */
+    padding: 10px 15px; /* Espaciado interno */
+    text-align: center; /* Centrar texto */
+    text-decoration: none; /* Sin subrayado */
+    display: block; /* Mostrar como bloque */
+    width: 100%; /* Ancho completo */
+    margin-bottom: 10px; /* Espacio entre botones */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s; /* Transición suave para el color de fondo */
+}
+
+.sidebar button:hover {
+    background-color: #0056b3; /* Color de fondo más oscuro al pasar el mouse */
+}

@@ -24,7 +24,11 @@ class PlaylistConnection {
                     {
                         model: models.Cancion, // Asegúrate de que este modelo esté definido
                         through: { attributes: [] }, // Si usas una tabla intermedia, no necesitas atributos de ella
-                        as: 'canciones'
+                        as: 'canciones',
+                        include: [{
+                            model: models.Album,
+                            attributes: ['id', 'titulo']
+                        }]
                     }
                 ]
             });
