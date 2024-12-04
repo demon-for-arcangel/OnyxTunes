@@ -4,19 +4,20 @@ import { Playlist } from '../../interfaces/playlist';
 import { PlaylistService } from '../../services/playlist.service';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../utils/sidebar/sidebar.component';
+import { PlayerComponent } from '../player/player.component';
 
 @Component({
   selector: 'app-playlist',
   standalone: true,
-  imports: [CommonModule, SidebarComponent],
+  imports: [CommonModule, SidebarComponent, PlayerComponent],
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.css'
 })
 export class PlaylistComponent {
   playlistId: number | null = null;
   playlist: Playlist | null = null;
-  canciones: any[] = []; // Nuevo atributo para las canciones
-
+  canciones: any[] = []; 
+  
   constructor(private route: ActivatedRoute, private playlistService: PlaylistService) {}
 
   ngOnInit(): void {

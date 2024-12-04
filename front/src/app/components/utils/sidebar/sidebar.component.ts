@@ -22,14 +22,17 @@ export class SidebarComponent {
     this.loadUserId();
   }
 
-  navigateToHome(){}
+  navigateToHome() {
+    this.router.navigate(['/home']); 
+  }
+
   search(){}
 
 
-navigateToPlaylist(playlist: Playlist) {
-  const playlistName = encodeURIComponent(playlist.nombre); // Codifica el nombre para la URL
-  this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]); // Navega usando el ID y el nombre
-}
+  navigateToPlaylist(playlist: Playlist) {
+    const playlistName = encodeURIComponent(playlist.nombre); // Codifica el nombre para la URL
+    this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]); // Navega usando el ID y el nombre
+  }
 
   loadUserId() {
     const tokenObject = localStorage.getItem('user'); 
@@ -69,5 +72,5 @@ navigateToPlaylist(playlist: Playlist) {
     } else {
         console.error('No se encontró el token.');
     }
-}
+  }
 }

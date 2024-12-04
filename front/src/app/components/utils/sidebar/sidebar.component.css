@@ -1,9 +1,22 @@
 .sidebar {
-    background-color: #1f1f1f; /* Color de fondo */
-    padding: 20px; /* Espaciado interno */
     border-radius: 20px; /* Bordes redondeados */
     color: white; /* Color de texto */
-    height: 100%; /* Altura completa */
+    height: 90%; /* Altura completa */
+}
+
+.inicio-busqueda {
+    background-color: #1f1f1f; /* Color de fondo general */
+    padding: 15px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    margin-bottom: 20px; /* Espacio entre la sección de inicio/busqueda y la biblioteca */
+}
+
+.biblioteca {
+    background-color: #1f1f1f; /* Color de fondo general */
+    padding: 45px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    height: 65%; /* Altura completa */
+
 }
 
 .sidebar h2 {
@@ -26,4 +39,9 @@
 
 .sidebar button:hover {
     background-color: #0056b3; /* Color de fondo más oscuro al pasar el mouse */
+}
+
+/* Estilo específico para los botones en la sección "Tu Biblioteca" */
+.biblioteca button {
+    margin-bottom: 15px; /* Aumenta el margen inferior para separar los botones */
 }

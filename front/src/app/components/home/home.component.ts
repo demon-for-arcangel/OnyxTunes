@@ -8,11 +8,12 @@ import { Usuario } from '../../interfaces/usuario';
 import { Playlist } from '../../interfaces/playlist';
 import { SidebarComponent } from '../utils/sidebar/sidebar.component';
 import { PlaylistComponent } from '../playlist/playlist.component';
+import { PlayerComponent } from '../player/player.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule, SidebarComponent],
+  imports: [FormsModule, SidebarComponent, PlayerComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

@@ -1,0 +1,18 @@
+<div class="player-container">
+    <button (click)="previous()" aria-label="Anterior">
+        <i class="pi pi-step-backward"></i> <!-- Icono de anterior -->
+    </button>
+    <button (click)="isPlaying ? pause() : play()" aria-label="Reproducir/Pausar">
+        <i class="pi" [ngClass]="isPlaying ? 'pi-pause' : 'pi-play'"></i> <!-- Icono de reproducir/pausar -->
+    </button>
+    <button (click)="next()" aria-label="Siguiente">
+        <i class="pi pi-step-forward"></i> <!-- Icono de siguiente -->
+    </button>
+    <button (click)="toggleRandom()" aria-label="Aleatorio">
+        <i class="pi" [ngClass]="isRandom ? 'pi-random' : 'pi-refresh'"></i> <!-- Icono de aleatorio -->
+    </button>
+    
+    <button (click)="toggleLoop()" aria-label="Bucle">
+        <i class="pi" [ngClass]="isLoop ? 'pi-repeat' : 'pi-repeat-off'"></i> <!-- Icono de bucle -->
+    </button>
+</div>

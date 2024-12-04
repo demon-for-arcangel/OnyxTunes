@@ -1,6 +1,9 @@
 <div class="sidebar">
-    <button (click)="navigateToHome()">Inicio</button>
-    <button (click)="search()">Buscar</button>
+    <div class="inicio-busqueda">
+        <button (click)="navigateToHome()">Inicio</button>
+        <button (click)="search()">Buscar</button>    
+    </div>
+    <div class="biblioteca">
         <h2>Tu Biblioteca:</h2>
         <ul>
             @for(playlist of playlists; track playlist){
@@ -11,4 +14,5 @@
                 </li>
             }
         </ul>
+    </div>
 </div>
