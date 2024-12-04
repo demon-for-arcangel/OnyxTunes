@@ -2,17 +2,19 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Playlist } from '../../interfaces/playlist';
 import { PlaylistService } from '../../services/playlist.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-playlist',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.css'
 })
 export class PlaylistComponent {
   playlistId: number | null = null;
   playlist: Playlist | null = null;
+  canciones: any[] = []; // Nuevo atributo para las canciones
 
   constructor(private route: ActivatedRoute, private playlistService: PlaylistService) {}
 
@@ -26,14 +28,21 @@ export class PlaylistComponent {
 
   loadPlaylistDetails(id: number) {
     this.playlistService.getPlaylistById(id).subscribe(response => {
-      console.log(response)
-        if (response) {
-            this.playlist = response.data;
-        } else {
-            console.error('Error al obtener los detalles de la playlist:', response.message || 'Respuesta no válida');
-        }
+      console.log(response);
+      if (response) {
+        this.playlist = response;
+        this.canciones = response.canciones; // Asigna las canciones al nuevo atributo
+        console.log('Playlist cargada:', this.playlist);
+        console.log('Canciones:', this.canciones);
+      } else {
+        console.error('Error al obtener los detalles de la playlist:', response.message || 'Respuesta no válida');
+      }
     }, error => {
-        console.error('Error en la solicitud:', error);
+      console.error('Error en la solicitud:', error);
     });
+  }
+
+  reproducirCancion(cancion: any) {
+    console.log('Reproduciendo:', cancion);
   }
 }

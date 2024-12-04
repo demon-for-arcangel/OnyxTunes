@@ -1,1 +1,18 @@
-<p>playlist works!</p>
+<div class="playlist-container">
+    <h1>{{ playlist?.nombre }}</h1>
+    <p>{{ playlist?.descripcion }}</p>
+
+    <h2>Canciones en la Playlist</h2>
+    
+    @if(canciones.length > 0){
+        <ul> 
+            @for(cancion of canciones; track cancion) {
+                <li> 
+                    <strong>{{ cancion.titulo }}</strong> - {{ cancion.duracion }} segundos
+                    <button (click)="reproducirCancion(cancion)">Reproducir</button>
+                </li>
+            }
+        </ul>
+    }
+
+</div>

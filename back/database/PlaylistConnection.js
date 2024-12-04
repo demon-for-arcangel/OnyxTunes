@@ -23,7 +23,8 @@ class PlaylistConnection {
                     { model: models.Like }, // Incluye los "likes"
                     {
                         model: models.Cancion, // Asegúrate de que este modelo esté definido
-                        through: { attributes: [] } // Si usas una tabla intermedia, no necesitas atributos de ella
+                        through: { attributes: [] }, // Si usas una tabla intermedia, no necesitas atributos de ella
+                        as: 'canciones'
                     }
                 ]
             });
