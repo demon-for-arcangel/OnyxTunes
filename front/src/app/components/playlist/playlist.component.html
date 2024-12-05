@@ -1,0 +1,33 @@
+<div class="playlist-container">
+    <app-sidebar></app-sidebar>
+    <main>
+        <h1>{{ playlist?.nombre }}</h1>
+        <p>{{ playlist?.descripcion }}</p>
+        <h2>Canciones en la Playlist</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Álbum</th>
+                    <th>Duracción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            @if(canciones.length > 0){
+                <tbody>
+                    @for(cancion of canciones; track cancion) {
+                        <tr>
+                            <td>{{ cancion.titulo }}</td>
+                            <td>{{ cancion.Album?.titulo }}</td>
+                            <td>{{ formatDuration(cancion.duracion) }}</td>
+                            <td>
+                                <button (click)="reproducirCancion(cancion)">Reproducir</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            }
+        </table>
+        <app-player></app-player>
+    </main>
+</div>

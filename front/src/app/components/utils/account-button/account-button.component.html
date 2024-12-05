@@ -1,0 +1,12 @@
+<div class="user-account">
+    <button (click)="toggleMenu()" class="account-button">
+        Cuenta
+    </button>
+    @if(menuOpen) {
+        <div class="menu">
+            <button (click)="navigateTo('profile')">Perfil</button>
+            <button (click)="navigateTo('settings')">Configuración</button>
+            <button (click)="logout()">Cerrar sesión</button>
+        </div>
+    }
+</div>

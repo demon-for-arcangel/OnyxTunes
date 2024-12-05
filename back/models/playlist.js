@@ -25,15 +25,22 @@ module.exports = (sequelize, DataTypes) => {
         }
       });
     
-      /* this.belongsToMany(models.Cancion, {
+      this.belongsToMany(models.Cancion, {
         through: models.CancionPlaylist,
         foreignKey: 'playlist_id',
-      }); */
+        as: 'canciones'
+      });
+
+      this.belongsTo(models.Asset, {
+        foreignKey: 'assetId',
+        as: 'asset',
+      })
     }
   }
   Playlist.init({
     nombre: DataTypes.STRING,
     descripcion: DataTypes.STRING,
+    assetId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Playlist',

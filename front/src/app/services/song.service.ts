@@ -10,23 +10,24 @@ export class SongService {
 
   constructor(private http: HttpClient) { }
   url = environment.baseUrl
+  songsUrl = environment.songsUrl
 
   getCanciones(): Observable<any> {
-    return this.http.get(`${this.url}/songs`);
+    return this.http.get(`${this.url}` + `${this.songsUrl}`);
   }
 
   getCancionById(id: number): Observable<any> {
-    return this.http.get(`${this.url}/songs/${id}`);
+    return this.http.get(`${this.url}` + `${this.songsUrl}` + `/${id}`);
   }
 
   createCancion(cancion: any): Observable<any> {
-    return this.http.post(`${this.url}/songs/new`, cancion);
+    return this.http.post(`${this.url}` + `${this.songsUrl}` + `/new`, cancion);
   }
 
   updateCancion(id: number, cancion: any): Observable<any> {
-    return this.http.put(`${this.url}/songs/${id}`, cancion);
+    return this.http.put(`${this.url}` + `${this.songsUrl}` + `/${id}`, cancion);
   }
   deleteCancion(id: number): Observable<any> {
-    return this.http.delete(`${this.url}/songs/${id}`);
+    return this.http.delete(`${this.url}` + `${this.songsUrl}` + `/${id}`);
   }
 }

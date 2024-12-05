@@ -1,0 +1,100 @@
+/* Estilos generales para el contenedor del chat */
+section {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Ocupa toda la altura de la ventana */
+  background-color: #f9f9f9; /* Color de fondo claro */
+  font-family: Arial, sans-serif; /* Fuente general */
+}
+
+/* Estilos para el menú del chat */
+#menu {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #007bff; /* Color de fondo del menú */
+  color: white; /* Color del texto */
+}
+
+#menu div {
+  display: flex;
+  align-items: center;
+}
+
+#menu button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+#menu button:hover {
+  opacity: 0.8; /* Efecto hover para el botón */
+}
+
+/* Estilos para el avatar */
+p-avatar {
+  margin-right: 10px;
+}
+
+/* Estilos para el nombre del compañero */
+#menu span {
+  font-weight: bold;
+  font-size: 1.2em; /* Tamaño de fuente del nombre */
+}
+
+/* Estilos para el área de mensajes */
+#messages {
+  flex: 1; /* Ocupa el espacio restante */
+  overflow-y: auto; /* Permite el desplazamiento vertical */
+  padding: 10px;
+  background-color: #ffffff; /* Color de fondo de los mensajes */
+  border-top: 1px solid #e0e0e0; /* Línea superior */
+}
+
+/* Estilos para los mensajes individuales */
+.message {
+  margin-bottom: 10px; /* Espacio entre mensajes */
+  padding: 10px;
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+.message.self {
+  background-color: #d1e7dd; /* Color de fondo para mensajes propios */
+  align-self: flex-end; /* Alinea a la derecha */
+}
+
+.message.partner {
+  background-color: #f8d7da; /* Color de fondo para mensajes del compañero */
+  align-self: flex-start; /* Alinea a la izquierda */
+}
+
+/* Estilos para el área de entrada de mensajes */
+#chatInput {
+  padding: 10px;
+  border-top: 1px solid #e0e0e0; /* Línea superior */
+  background-color: #f1f1f1; /* Color de fondo del área de entrada */
+}
+
+/* Estilos para el campo de entrada de texto */
+input[type="text"] {
+  width: 100%; /* Ocupa todo el ancho */
+  padding: 10px;
+  border: 1px solid #ccc; /* Borde del campo de entrada */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+/* Estilos para el botón de enviar */
+button[type="submit"] {
+  background-color: #007bff; /* Color de fondo del botón */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  padding: 10px 15px; /* Espaciado interno */
+  cursor: pointer; /* Cambia el cursor al pasar el mouse */
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3; /* Color de fondo al pasar el mouse */
+}

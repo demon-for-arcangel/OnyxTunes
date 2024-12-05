@@ -1,1 +1,62 @@
-<p>search works!</p>
+<div class="search-container">
+    <app-sidebar></app-sidebar>
+    <main>
+        <div>
+            <input [(ngModel)]="query" placeholder="Buscar..." />
+            <button (click)="search()">Buscar</button>
+        </div>
+          
+        @if (results) {
+            <div>
+                @if (results.songs.length > 0) {
+                    <h3>Canciones:</h3>
+                    <ul>
+                        @for (song of results.songs; track song) {
+                            <li>
+                                {{ song.titulo }}
+                            </li>
+                        }
+                    </ul>
+                }
+    
+                @if (results.playlists.length > 0) {
+                    <h3>Listas de Reproducción:</h3>
+                    <ul>
+                        @for (playlist of results.playlists; track playlist) {
+                            <li>
+                                {{ playlist.nombre }}
+                            </li>
+                        }
+                    </ul>
+                }
+    
+                @if (results.artists.length > 0) {
+                    <h3>Artistas:</h3>
+                    <ul>
+                        @for (artist of results.artists; track artist) {
+                            <li>
+                                {{ artist.nombre }} ({{ artist.nickname }}) - {{ artist.Rol.nombre }}
+                            </li>
+                        }
+                    </ul>
+                }
+    
+                @if (results.albums.length > 0) {
+                    <h3>Álbumes:</h3>
+                    <ul>
+                        @for (album of results.albums; track album) {
+                            <li>
+                                {{ album.titulo }}
+                            </li>
+                        }
+                    </ul>
+                }
+    
+                @if (results.songs.length === 0 && results.playlists.length === 0 && results.artists.length === 0 && results.albums.length === 0) {
+                    <p>No se ha encontrado nada.</p>
+                }
+            </div>
+        }   
+        <app-player></app-player>
+    </main>
+</div>
