@@ -29,6 +29,22 @@ const getSongById = async (req, res) => {
     }
 }
 
+const getSongByUser = async (req, res) => {
+    const userId = req.params.userId; // Suponiendo que el ID del usuario se pasa como parámetro en la URL
+
+    try {
+        const songs = await conx.getSongByUser(userId);
+
+        if (!songs || songs.length === 0) {
+            return res.status(404).json({ msg: "No se encontraron canciones para este usuario." });
+        }
+        res.status(200).json(songs);
+    } catch (error) {
+        console.error('Error al obtener las canciones del usuario:', error);
+        res.status(500).json({ msg: "Error al obtener las canciones del usuario" });
+    }
+};
+
 const createSong = async (req, res) => {
     try {
         const { titulo, duracion, likes, reproducciones, album_id, artista_id, generos } = req.body;
@@ -48,7 +64,6 @@ const createSong = async (req, res) => {
 
         console.log("Canción creada:", newSong);
 
-        // Asociar géneros, si existen
         if (Array.isArray(generos) && generos.length > 0) {
             const generosExistentes = await models.Genero.findAll({
                 where: {
@@ -119,5 +134,5 @@ const deleteSong = async (req, res) => {
 
 
 module.exports = {
-    index, getSongById, createSong, updateSong, deleteSong
+    index, getSongById, createSong, updateSong, deleteSong, getSongByUser
 }

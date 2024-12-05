@@ -1,14 +1,28 @@
 import { Component } from '@angular/core';
+import { DialogService } from 'primeng/dynamicdialog';
+import { SongService } from '../../../services/song.service';
+import { Router } from '@angular/router';
+import { ShowSongsComponent } from '../show/show-songs/show-songs.component';
+import { UpdateSongsComponent } from '../update/update-songs/update-songs.component';
+import { CreateSongsComponent } from '../create/create-songs/create-songs.component';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { AlbumsService } from '../../../services/albums.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../services/auth.service';
+import { Usuario } from '../../../interfaces/usuario';
 
 @Component({
   selector: 'app-music-artist',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './music-artist.component.html',
-  styleUrl: './music-artist.component.css'
+  styleUrl: './music-artist.component.css',
+  providers: [DialogService]
 })
 export class MusicArtistComponent {
-/* 
+
+  user: any;
   canciones: any[] = [];
   albums: any[] = [];
   currentCancionesPage = 1;
@@ -20,7 +34,7 @@ export class MusicArtistComponent {
   ref: DynamicDialogRef | undefined;
   dialog: any;
 
-  constructor(private router: Router, private cancionesService: SongService, public dialogService: DialogService, private albumsService: AlbumsService) { }
+  constructor(private router: Router, private authService: AuthService, private cancionesService: SongService, public dialogService: DialogService, private albumsService: AlbumsService) { }
 
   ngOnInit() {
     this.loadCanciones();
@@ -28,13 +42,35 @@ export class MusicArtistComponent {
   }
 
   loadCanciones() {
-    this.cancionesService.getCanciones().subscribe(
-        (data) => {
-            this.canciones = data; 
-            console.log('Canciones cargadas:', this.canciones);
+    const tokenObject = localStorage.getItem('user'); 
+    if (!tokenObject) {
+        console.error('Token no encontrado, redirigiendo a login');
+        this.router.navigate(['/login']);
+        return;
+    }
+
+    this.authService.getUserByToken(tokenObject).subscribe(
+        (usuario: Usuario | undefined) => {
+            if (usuario) {
+                this.user = usuario; 
+                const userId = this.user.id; 
+                this.cancionesService.getCancionesByUser(userId).subscribe(
+                    (data) => {
+                        this.canciones = data; 
+                        console.log('Canciones cargadas:', this.canciones);
+                    },
+                    (err) => {
+                        console.error('Error al cargar las canciones:', err);
+                    }
+                );
+            } else {
+                console.error('Usuario no encontrado en el token');
+                this.router.navigate(['/login']);
+            }
         },
-        (error) => {
-            console.error('Error al cargar las canciones:', error);
+        (err) => { 
+            console.error('Error al obtener el usuario desde el token:', err);
+            this.router.navigate(['/login']);
         }
     );
 }
@@ -245,5 +281,5 @@ export class MusicArtistComponent {
 
   showAlbum(album: any) {
     console.log('Ver detalles de álbum:', album);
-  } */
+  }
 }

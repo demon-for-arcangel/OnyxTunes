@@ -23,6 +23,7 @@ class Server {
     this.apiPlaylist = "/api/playlist";
     this.apiAssets = "/api/assets"
     this.apiSearch = "/api/search";
+    this.apiSongs = "/api/songs";
 
 
     this.app.use(fileUpload({
@@ -64,7 +65,7 @@ class Server {
     this.app.use(this.apiMail, require('../routes/mailRoutes'));
     this.app.use(this.apiAssets, require("../routes/assetRoutes"));
     this.app.use(this.apiSearch, require("../routes/searchRoutes"));
-
+    this.app.use(this.apiSongs, require("../routes/cancionRoutes"));
     this.app.use(this.RoutePath, require('../routes/rolRoutes'));
     this.app.use(this.RoutePath, require('../routes/albumRoutes'));
     this.app.use(this.RoutePath, require('../routes/cancionRoutes'));

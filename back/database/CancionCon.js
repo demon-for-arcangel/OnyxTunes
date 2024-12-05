@@ -96,6 +96,37 @@ class SongModel {
         }
     }
 
+    async getSongByUser(userId) {
+        try {
+            const songs = await models.Cancion.findAll({
+                where: {
+                    artista_id: userId // Suponiendo que 'artista_id' es la clave foránea en la tabla Cancion
+                },
+                include: [
+                    {
+                        model: models.Usuario,
+                        attributes: ['id', 'nombre'],
+                        as: 'artista'
+                    },
+                    {
+                        model: models.Album,
+                        attributes: ['id', 'titulo']
+                    },
+                    {
+                        model: models.Genero,
+                        attributes: ['id', 'nombre'],
+                        as: 'generos'
+                    },
+                    { model: models.Like }
+                ],
+            });
+            return songs;
+        } catch (error) {
+            console.error('Error al obtener las canciones del usuario:', error);
+            throw new Error('Error al obtener las canciones del usuario');
+        }
+    }
+
     async createSong(songData) {
         try {
             if (!Number.isInteger(songData.duracion)) {
