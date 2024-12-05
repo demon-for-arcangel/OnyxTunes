@@ -177,13 +177,37 @@ class SongModel {
                 throw new Error("Debe proporcionar una lista de IDs de canciones para eliminar.");
             }
     
+            const songsToDelete = await models.Cancion.findAll({
+                where: {
+                    id: {
+                        [Op.in]: songsIds,
+                    },
+                },
+                include: [
+                    {
+                        model: models.Album,
+                        required: false 
+                    },
+                    {
+                        model: models.Genero, 
+                        as: 'generos',
+                        through: { 
+                            attributes: [] 
+                        }
+                    }
+                ]
+            });
+    
+            for (const song of songsToDelete) {
+                await song.setGeneros([]); 
+            }
+    
             const result = await models.Cancion.destroy({
                 where: {
                     id: {
                         [Op.in]: songsIds,
                     },
                 },
-                include: [{ model: models.Like }]
             });
     
             if (result === 0) {
@@ -196,7 +220,6 @@ class SongModel {
             throw new Error("Error al eliminar las canciones.");
         }
     }
-    
 }
 
 module.exports = SongModel;

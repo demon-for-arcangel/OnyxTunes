@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { Usuario } from '../../../interfaces/usuario';
+import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
 
 @Component({
   selector: 'app-music-artist',
@@ -153,17 +154,38 @@ export class MusicArtistComponent {
     });
 }
 
-  deleteCancion(id: number) {
-    this.cancionesService.deleteCancion(id).subscribe(
-      (response) => {
-        this.canciones = this.canciones.filter((c) => c.id !== id);
-        console.log('Canción eliminada:', id);
-      },
-      (error) => {
-        console.error('Error al eliminar la canción', error);
-      }
-    );
-  }
+deleteSongs(ids: number[]): void { // Acepta un solo ID o un array de IDs
+  const idsArray = Array.isArray(ids) ? ids : [ids]; // Convierte a array si es un solo ID
+
+  this.ref = this.dialogService.open(DeleteConfirmationComponent, {
+    header: 'Confirmar Eliminación',
+    width: '400px',
+    modal: true,
+    styleClass: 'custom-modal',
+    contentStyle: {
+      'background-color': '#1e1e1e',
+      'color': 'white',
+      'padding': '20px'
+    },
+    data: {
+      songsIds: idsArray // Asegúrate de que 'ids' sea un array
+    }
+  });
+
+  this.ref.onClose.subscribe((confirmed: boolean) => {
+    if (confirmed) {
+      this.cancionesService.deleteCancion(idsArray).subscribe( // Aquí pasamos 'idsArray' directamente
+        (response) => {
+          console.log('Canciones eliminadas:', response);
+          // No actualizamos la lista de canciones aquí, ya que lo has solicitado
+        },
+        (error) => {
+          console.error('Error al eliminar las canciones', error);
+        }
+      );
+    }
+  });
+}
 
   newAlbum() {
     const nuevoAlbum = {  };
@@ -201,6 +223,8 @@ export class MusicArtistComponent {
       }
     );
   }
+
+
 
   searchMusic() {
   }
