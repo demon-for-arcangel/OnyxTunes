@@ -9,11 +9,12 @@ import { Playlist } from '../../interfaces/playlist';
 import { SidebarComponent } from '../utils/sidebar/sidebar.component';
 import { PlaylistComponent } from '../playlist/playlist.component';
 import { PlayerComponent } from '../player/player.component';
+import { AccountButtonComponent } from '../utils/account-button/account-button.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule, SidebarComponent, PlayerComponent],
+  imports: [FormsModule, SidebarComponent, PlayerComponent, AccountButtonComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -21,7 +22,7 @@ export class HomeComponent {
   searchTerm: string = '';
   playlists: Playlist[] = [];
   userId: number | null = null;
-
+  menuOpen: boolean = false;
   artists: string[] = ['Artista 1', 'Artista 2', 'Artista 3', 'Artista 4'];
   albumes: string[] = ['album1', 'album 2', 'album 3', 'album 4'];
   listas: string[] = ['lista 1', 'lista 2', 'lista 3', 'lista 4'];
@@ -32,13 +33,24 @@ export class HomeComponent {
     this.loadUserId();
   }
 
-navigateToPlaylist(playlist: Playlist) {
-  const playlistName = encodeURIComponent(playlist.nombre); // Codifica el nombre para la URL
-  this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]); // Navega usando el ID y el nombre
-}
+  navigateToPlaylist(playlist: Playlist) {
+    const playlistName = encodeURIComponent(playlist.nombre); // Codifica el nombre para la URL
+    this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]); // Navega usando el ID y el nombre
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
 
   navigateTo(route: string) {
+    this.menuOpen = false;
     this.router.navigate([`/${route}`]);
+  }
+
+  logout() {
+    localStorage.removeItem('user');
+    this.menuOpen = false;
+    this.router.navigate(['/login']);
   }
   
   searchArtists() {
@@ -54,7 +66,6 @@ navigateToPlaylist(playlist: Playlist) {
     }
 
     if (tokenObject) {
-        
         this.authService.getUserByToken(tokenObject).subscribe({
           next: (usuario: Usuario | undefined) => {
             if (usuario?.id) {
@@ -81,8 +92,8 @@ navigateToPlaylist(playlist: Playlist) {
           }
         });
     } else {
-        console.error('No se encontró el token.');
+      console.error('No se encontró el token.');
     }
-}
+  }
 
 }
