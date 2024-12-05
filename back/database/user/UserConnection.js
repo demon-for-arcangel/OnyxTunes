@@ -72,21 +72,20 @@ class UserModel {
         try {
             let user = await models.Usuario.findOne({
                 where: {
-                    [Op.or]: [
-                        { id: email },
-                        { email: email }
-                    ]
+                    email: email 
                 },
                 include: [
                     {
                         model: models.Rol,
-                        attributes: ['nombre']
+                        attributes: ['nombre'],
+                        required: false 
                     }
                 ]
             });
-
+    
             return user;
         } catch (error) {
+            console.error('Error al buscar el usuario por el email:', error);
             throw new Error('Error al buscar el usuario por el email');
         }
     }
@@ -116,11 +115,8 @@ class UserModel {
                 nombre,
                 email,
                 password: hashedPassword,
+                rol
             });
-    
-            if (arrRolesName.length > 0) {
-                await this.createUserRols(newUser.id, arrRolesName);
-            }
     
             return newUser;
         } catch (error) {
@@ -128,29 +124,6 @@ class UserModel {
             throw new Error('Error al crear usuario');
         }
     }   
-
-    async createUserRols(userId, arrRolesId) {
-        let newRoles = [];
-        try {
-            for (const roleId of arrRolesId) { 
-                const role = await models.Rol.findByPk(roleId); 
-
-                if (!role) {
-                    throw new Error(`El rol con ID ${roleId} no se encontró.`);
-                }
-
-                let newRole = await models.RolUsuario.create({
-                    usuario_id: userId,
-                    rol_id: role.id 
-                });
-                newRoles.push(newRole);
-            }
-        } catch (error) {
-            console.error('Error al crear roles de usuario:', error);
-            throw new Error('Error al crear los roles'); 
-        }
-        return newRoles;
-    }
 
     updateUser = async (userId, newData) => {
         try {
@@ -205,21 +178,6 @@ class UserModel {
         }
     }
 
-    async removeUserRole(userId, roleId) {
-        try {
-            const result = await models.RolUsuario.destroy({
-                where: {
-                    usuario_id: userId,
-                    rol_id: roleId
-                }
-            });
-            return result; 
-        } catch (error) {
-            console.error('Error al eliminar rol de usuario:', error);
-            throw new Error('Error al eliminar el rol del usuario'); 
-        }
-    }
-
     async updatePassword(userId, currentPassword, newPassword, confirmPassword) {
         try {
             const user = await models.Usuario.findByPk(userId);
@@ -245,6 +203,40 @@ class UserModel {
         } catch (error) {
             console.error('Error al actualizar la contraseña: ', error);
             throw new Error('Error al actualizar la contraseña');
+        }
+    }
+
+    async createDefaultPlaylist(userId) {
+        try {
+            const existingPlaylist = await models.Playlist.findOne({
+                where: {
+                    nombre: 'Favoritos'
+                },
+                attributes: { exclude: ['usuario_id'] },
+            });
+    
+            let playlistId;
+    
+            if (!existingPlaylist) {
+                const newPlaylist = await models.Playlist.create({
+                    nombre: 'Favoritos'
+                });
+                playlistId = newPlaylist.id;
+                console.log('Lista de reproducción "Favoritos" creada.');
+            } else {
+                playlistId = existingPlaylist.id;
+                console.log('La lista de reproducción "Favoritos" ya existe.');
+            }
+    
+            await models.UsuarioPlaylist.create({
+                usuario_id: userId,
+                playlist_id: playlistId
+            });
+    
+            console.log('Lista de reproducción "Favoritos" asociada al usuario.');
+        } catch (error) {
+            console.error('Error al crear o asociar la lista de reproducción "Favoritos":', error);
+            throw new Error('Error al crear o asociar la lista de reproducción');
         }
     }
 }

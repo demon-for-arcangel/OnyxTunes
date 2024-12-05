@@ -75,7 +75,8 @@ export class PlatformManagementComponent {
 
     const accessRules: { [key: string]: boolean } = {
       userManagement: this.rol === 'Administrador',
-      musicManagement: ['Administrador', 'Artista'].includes(this.rol)
+      musicManagement: this.rol === 'Administrador',
+      artistManagement: this.rol === 'Artista'
     };
   
     console.log(`Acceso para ${section}:`, accessRules[section]); 

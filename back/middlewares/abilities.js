@@ -6,7 +6,7 @@ const statusUser = (req, res, next) => {
     conx
       .getUserByEmail(req.body.email)
       .then((msg) => {
-        if (msg.active == 1) {
+        if (msg.activo == 1) {
           next();
         } else {
           res.status(403).json({ msg: "La cuenta esta desactivada" });
