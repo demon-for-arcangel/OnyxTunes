@@ -1,53 +1,50 @@
-
 .settings-container {
     display: flex;
-    height: 100vh; /* Altura completa de la pantalla */
-    overflow: hidden; /* Evita el desplazamiento no deseado */
+    height: 100vh; 
+    overflow: hidden; 
 }
 
-/* Sidebar styling */
 app-sidebar {
-    width: 450px; /* Anchura del sidebar */
-    background-color: #2c3e50; /* Color de fondo del sidebar */
-    color: #ecf0f1; /* Color de texto */
+    width: 450px; 
+    background-color: #2c3e50;
+    color: #ecf0f1; 
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
-    flex-direction: column; /* Para apilar contenido verticalmente */
-    gap: 15px; /* Espaciado entre elementos */
+    flex-direction: column; 
+    gap: 15px;
     font-size: 16px;
-    position: sticky; /* Fija el sidebar al hacer scroll */
+    position: sticky;
     top: 0;
     height: 100%;
 }
 
-/* Main content styling */
 main {
-    flex: 1; /* Ocupa el espacio restante */
+    flex: 1; 
     padding: 20px;
-    overflow-y: auto; /* Permite scroll si el contenido es largo */
-    background-color: #f4f4f9; /* Fondo del contenido principal */
-    color: #34495e; /* Color del texto */
+    overflow-y: auto; 
+    background-color: #f4f4f9; 
+    color: #34495e; 
 }
 
 form {
     display: flex;
-    flex-direction: column; /* Colocar los elementos en columna */
+    flex-direction: column; 
 }
 
 label {
-    margin-top: 10px; /* Espaciado superior */
+    margin-top: 10px; 
 }
 
 input {
-    padding: 10px; /* Espaciado interno */
-    border: 1px solid #ccc; /* Borde gris claro */
-    border-radius: 4px; /* Bordes redondeados */
-    margin-bottom: 15px; /* Espaciado inferior */
+    padding: 10px;
+    border: 1px solid #ccc; 
+    border-radius: 4px;
+    margin-bottom: 15px; 
 }
 
 button {
-    background-color: #007bff; /* Azul para el botón */
+    background-color: #007bff; 
     color: white;
     border: none;
     padding: 10px 20px;
@@ -57,5 +54,5 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3; /* Azul más oscuro al pasar el mouse */
+    background-color: #0056b3; 
 }
