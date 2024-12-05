@@ -29,12 +29,7 @@ class PlaylistConnection {
                             model: models.Album,
                             attributes: ['id', 'titulo']
                         }]
-                    },
-                    {
-                        model: models.Asset,
-                        as: 'asset',
-                        attributes: ['file_link', 'file_type']
-                    }
+                    }             
                 ]
             });
             if (!playlist) {

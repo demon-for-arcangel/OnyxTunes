@@ -1,6 +1,5 @@
 const { Router } = require("express");
 const playlistController = require("../controllers/playlistController");
-
 const router = Router();
 
 router.get("/", playlistController.index); //funcional

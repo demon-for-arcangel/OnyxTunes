@@ -33,21 +33,35 @@ const getPlaylistById = async (req, res) => {
     }
 };
 
-const createPlaylist = async (req, res) => {
-    const { nombre, descripcion, canciones, usuario_id } = req.body; // Asegúrate de que 'canciones' sea un array de IDs
-
+const createPlaylist = async (req, res = response) => {
     try {
-        // Crea la nueva playlist y asocia las canciones
+        const { nombre, descripcion, usuario_id, canciones } = req.body;
+        const cancionesArray = canciones ? JSON.parse(canciones) : []; // Asegúrate de que las canciones sean un array
+
+        // Manejo del archivo
+        let assetId = null;
+        if (req.file) { // Cambia a req.file si usas upload.single
+            const file = req.file;
+            const assetPath = path.join(__dirname, './../../uploads/', file.filename); // Define la ruta donde se guardará el archivo
+
+            // Crea el asset en la base de datos usando el modelo de assets
+            assetId = await assetsModel.addAsset(assetPath); // Usa el método addAsset para guardar el asset
+        } else {
+            console.error("No se recibió ningún archivo.");
+        }
+
+        // Crea la nueva playlist
         const newPlaylist = await conx.createPlaylist({
             nombre,
             descripcion,
-            usuario_id // Pasa el ID del usuario desde el cuerpo de la solicitud
-        }, canciones); // Pasa el array de IDs de canciones
+            usuario_id,
+            assetId // Asocia el assetId directamente al crear la playlist
+        }, cancionesArray);
 
-        res.status(201).json({ msg: "Playlist creada con éxito", playlist: newPlaylist });
+        res.status(201).json(newPlaylist);
     } catch (error) {
         console.error("Error al crear la playlist:", error);
-        res.status(500).json({ msg: error.message }); // Devuelve el mensaje de error
+        res.status(500).json({ error: error.message });
     }
 };
 
