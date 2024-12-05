@@ -15,6 +15,7 @@ import { SearchComponent } from './components/search/search.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { MusicArtistComponent } from './components/management/music-artist/music-artist.component';
 
 
 export const routes: Routes = [
@@ -32,5 +33,6 @@ export const routes: Routes = [
     { path: 'search', component: SearchComponent },
     { path: 'profile', component: ProfileComponent },
     { path: 'settings', component: SettingsComponent },
-    { path: 'change-password', component: ChangePasswordComponent }
+    { path: 'change-password', component: ChangePasswordComponent },
+    { path: 'platform/artistManagement', component: MusicArtistComponent },
 ];
