@@ -1,0 +1,48 @@
+.user-account {
+    position: relative; /* Añadir esta línea */
+}
+
+.account-button {
+    position: fixed;
+    top: 10px; /* Margen superior */
+    right: 10px; /* Ubicación en la esquina derecha */
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.menu {
+    position: absolute; /* Esto se mantiene */
+    top: 90%; /* Esto se mantiene */
+    right: 0; /* Esto se mantiene */
+    background-color: #222;
+    border: 1px solid #444;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: max-content;
+    z-index: 1001; /* Asegúrate de que el menú esté por encima */
+}
+
+.menu button {
+    padding: 10px;
+    color: #ddd;
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.menu button:hover {
+    background-color: #333;
+    color: white;
+}

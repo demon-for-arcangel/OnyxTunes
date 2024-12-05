@@ -9,9 +9,9 @@ import { UserService } from './user.service';
   providedIn: 'root'
 })
 export class AuthService {
-
   constructor(private http: HttpClient, private userService: UserService) { }
   url = environment.baseUrl
+  userUrl = environment.usersUrl;
 
   register(userData: any): Observable<any>{
     return this.http.post(`${this.url}/registro`, userData)
@@ -55,7 +55,7 @@ export class AuthService {
           'x-token': token
         });
 
-        return this.http.get<Usuario>(`${this.url}/userToken`, { headers, withCredentials: true }).pipe(
+        return this.http.get<Usuario>(`${this.url}` + `${this.userUrl}`+ `/Token`, { headers, withCredentials: true }).pipe(
           catchError((error: any) => {
             console.error('Error al obtener el usuario:', error);
             return throwError(() => new Error('Error al obtener el usuario'));
@@ -108,7 +108,7 @@ export class AuthService {
     }
   }
 
-  getIdOfToken(): any {
+/*   getIdOfToken(): any {
     try {
       let token = JSON.parse(localStorage.getItem('user') as string).token.split('.')[1]
       const idOfToken = JSON.parse(atob(token)).uid;
@@ -116,7 +116,7 @@ export class AuthService {
     } catch (error){
       return null;
     }
-  }
+  } */
 
   isAdmin(): Observable<boolean> {
     let token = localStorage.getItem('user');

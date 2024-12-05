@@ -10,24 +10,25 @@ export class AlbumsService {
 
   constructor(private http: HttpClient) { }
   url = environment.baseUrl
+  albumsUrl = environment.albumsUrl
 
   getAlbums(): Observable<any> {
-    return this.http.get(`${this.url}/albums`);
+    return this.http.get(`${this.url}` + `${this.albumsUrl}`);
   }
 
   getAlbumById(id: number): Observable<any> {
-    return this.http.get(`${this.url}/albums/${id}`);
+    return this.http.get(`${this.url}` + `${this.albumsUrl}` + `/${id}`);
   }
 
   createAlbum(cancion: any): Observable<any> {
-    return this.http.post(`${this.url}/albums/new`, cancion);
+    return this.http.post(`${this.url}` + `${this.albumsUrl}` + `/new`, cancion);
   }
 
   updateAlbum(cancion: any): Observable<any> {
-    return this.http.put(`${this.url}/albums/${cancion.id}`, cancion);
+    return this.http.put(`${this.url}` + `${this.albumsUrl}` + `/${cancion.id}`, cancion);
   }
 
   deleteAlbum(id: number): Observable<any> {
-    return this.http.delete(`${this.url}/albums/${id}`);
+    return this.http.delete(`${this.url}` + `${this.albumsUrl}` + `/${id}`);
   }
 }

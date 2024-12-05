@@ -1,0 +1,17 @@
+.chat-layout {
+    display: flex;
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+}
+
+.chat-list {
+    width: 300px; /* Ancho fijo para la lista de chats */
+    background-color: #f1f1f1; /* Color de fondo para la lista */
+    border-right: 1px solid #ccc; /* Borde derecho */
+    overflow-y: auto; /* Permite el desplazamiento si hay muchos chats */
+}
+
+.chat-area {
+    flex: 1; /* Ocupa el resto del espacio disponible */
+    display: flex;
+    flex-direction: column; /* Para que el contenido del chat se apile verticalmente */
+}

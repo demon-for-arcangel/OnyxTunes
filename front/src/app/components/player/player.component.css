@@ -1,0 +1,27 @@
+.player-container {
+    display: flex;
+    justify-content: center; /* Centra los botones */
+    align-items: center; /* Centra verticalmente */
+    background-color: #2c3e50; /* Color de fondo */
+    color: white; /* Color del texto */
+    padding: 10px; /* Espaciado interno */
+    position: fixed; /* Fija el reproductor en la parte inferior */
+    bottom: 0; /* Posición en la parte inferior */
+    left: 0; /* Alineado a la izquierda */
+    right: 0; /* Alineado a la derecha */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3); /* Sombra superior */
+}
+
+button {
+    background: none; /* Sin fondo */
+    border: none; /* Sin borde */
+    color: white; /* Color del texto */
+    font-size: 24px; /* Tamaño de fuente */
+    margin: 0 15px; /* Espaciado entre botones */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    transition: transform 0.2s; /* Transición suave */
+}
+
+button:hover {
+    transform: scale(1.1); /* Aumenta el tamaño al pasar el mouse */
+}
