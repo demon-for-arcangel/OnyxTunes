@@ -67,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
     direccion: DataTypes.STRING,
     telefono: DataTypes.STRING,
     genero: DataTypes.ENUM('Femenino', 'Masculino', 'Otro'),
-    active: DataTypes.BOOLEAN,
+    activo: DataTypes.BOOLEAN,
     last_login: DataTypes.DATE,
     connected: DataTypes.BOOLEAN,
     rol: DataTypes.INTEGER,
