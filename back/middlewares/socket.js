@@ -11,7 +11,7 @@ const authMiddleware = (socket, next) => {
     if (!type || type !== tokenTypes.socket) throw new Error('Invalid token.')
     if (!userId) throw new Error('Unauthorized')
 
-    socket.user = {userId} // Metemos el token en el objeto de socket.io para poder sacar el ID despues.
+    socket.user = {userId} 
 
     next();
 };

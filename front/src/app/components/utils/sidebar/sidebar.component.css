@@ -1,91 +1,92 @@
 .sidebar {
-    border-radius: 20px; /* Bordes redondeados */
-    color: white; /* Color de texto */
-    height: 100%; /* Altura completa */
+    border-radius: 20px; 
+    color: white; 
+    height: 100%;
 }
 
 .inicio-busqueda {
     margin-top: 20px;
-    background-color: #1f1f1f; /* Color de fondo general */
-    padding: 15px; /* Espaciado interno */
-    border-radius: 10px; /* Bordes redondeados */
-    margin-bottom: 20px; /* Espacio entre la sección de inicio/busqueda y la biblioteca */
+    background-color: #1f1f1f; 
+    padding: 15px; 
+    border-radius: 10px;
+    margin-bottom: 20px; 
 }
 
 .biblioteca {
-    background-color: #1f1f1f; /* Color de fondo */
-    padding: 15px; /* Espaciado interno */
-    border-radius: 10px; /* Bordes redondeados */
-    height: 65%; /* Altura relativa a la sección */
-    overflow-y: auto; /* Barra de desplazamiento vertical */
-}.header-biblioteca {
-    display: flex; /* Flexbox para alineación horizontal */
-    justify-content: space-between; /* Espacio entre título y botón */
-    align-items: center; /* Centrar verticalmente */
-    margin-bottom: 10px; /* Espaciado inferior */
+    background-color: #1f1f1f; 
+    padding: 15px; 
+    border-radius: 10px;
+    height: 65%; 
+    overflow-y: auto; 
+}
+
+.header-biblioteca {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 10px; 
 }
 
 .header-biblioteca .h2 {
-    margin: 0; /* Quitar margen para alinear correctamente */
-    font-size: 18px; /* Tamaño de texto para el título */
+    margin: 0; 
+    font-size: 18px;
 }
 
 .add-button {
-    background-color: #28a745; /* Color verde */
-    color: white; /* Texto blanco */
-    border: none; /* Sin bordes */
-    border-radius: 50%; /* Forma circular */
-    width: 30px; /* Ancho del botón */
-    height: 30px; /* Altura del botón */
-    display: flex; /* Flexbox para centrar el contenido */
-    align-items: center; /* Centrar verticalmente */
-    justify-content: center; /* Centrar horizontalmente */
-    font-size: 16px; /* Tamaño del texto */
-    cursor: pointer; /* Cambiar cursor al pasar el ratón */
-    transition: background-color 0.3s; /* Transición suave */
+    background-color: #28a745; 
+    color: white; 
+    border: none; 
+    border-radius: 50%; 
+    width: 30px; 
+    height: 30px;
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+    font-size: 16px; 
+    cursor: pointer;
+    transition: background-color 0.3s; 
 }
 
 .add-button:hover {
-    background-color: #218838; /* Verde más oscuro al pasar el ratón */
+    background-color: #218838; 
 }
 
 .biblioteca ul {
-    display: grid; /* Usar grid para el diseño en columnas */
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas del mismo ancho */
-    gap: 10px; /* Espaciado entre elementos */
-    list-style-type: none; /* Sin viñetas en la lista */
-    margin: 0; /* Eliminar márgenes */
-    padding: 0; /* Eliminar relleno */
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px; 
+    list-style-type: none; 
+    margin: 0; 
+    padding: 0; 
 }
 
 .biblioteca li {
-    display: flex; /* Para alinear correctamente el botón */
-    justify-content: center; /* Centrar el botón horizontalmente */
+    display: flex; 
+    justify-content: center; 
 }
 
 .sidebar h2 {
-    margin-bottom: 20px; /* Espacio inferior */
+    margin-bottom: 20px; 
 }
 
 .sidebar button {
-    background-color: #007BFF; /* Color de fondo azul */
-    color: white; /* Color de texto blanco */
-    border: none; /* Sin borde */
-    padding: 10px 15px; /* Espaciado interno */
-    text-align: center; /* Centrar texto */
-    text-decoration: none; /* Sin subrayado */
-    display: block; /* Mostrar como bloque */
-    width: 50%; /* Ancho completo */
-    margin-bottom: 10px; /* Espacio entre botones */
-    border-radius: 5px; /* Bordes redondeados */
-    transition: background-color 0.3s; /* Transición suave para el color de fondo */
+    background-color: #007BFF; 
+    color: white; 
+    border: none; 
+    padding: 10px 15px; 
+    text-align: center; 
+    text-decoration: none;
+    display: block; 
+    width: 50%; 
+    margin-bottom: 10px;
+    border-radius: 5px; 
+    transition: background-color 0.3s;
 }
 
 .sidebar button:hover {
-    background-color: #0056b3; /* Color de fondo más oscuro al pasar el mouse */
+    background-color: #0056b3; 
 }
 
-/* Estilo específico para los botones en la sección "Tu Biblioteca" */
 .biblioteca button {
-    margin-bottom: 15px; /* Aumenta el margen inferior para separar los botones */
+    margin-bottom: 15px;
 }

@@ -1,15 +1,7 @@
 <header>
     <div class="header-content">
         <img src="assets/images/onyxtunes.jpeg" alt="OnyxTunes Logo" class="logo" />
-        <button (click)="goToHome()">
-            <i class="pi pi-home" style="font-size: 1.5rem"></i>
-        </button> 
-        <input
-            type="text"
-            placeholder="Desea reproducir algo..."
-            [(ngModel)]="searchTerm"
-            (input)="searchArtists()"
-        />
+
         <div class="btn-auth">
             <button (click)="goToLogin()">Iniciar Sesión</button>
             <button (click)="goToRegister()">Registrarte</button>    
@@ -37,7 +29,6 @@
         </ul>
     </div>
 </main>
-
 
 <footer>
     <p>Regístrate para disfrutar de todas las características que ofrece la plataforma</p>

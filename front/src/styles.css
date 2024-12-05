@@ -3,18 +3,20 @@
 
 @import '@fortawesome/fontawesome-free/css/all.min.css'; */
 @import '../node_modules/primeicons/primeicons.css';
-:root {
+/* :root {
     display: flex;
     flex-direction: column;
     background-color: black;
 }
 
-html, body {
+
+ */
+
+ html, body {
     min-height: 100vh; 
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
-
 
 .custom-modal .p-dialog-header {
     background-color: #1e1e1e;

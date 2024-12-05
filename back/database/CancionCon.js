@@ -98,20 +98,16 @@ class SongModel {
 
     async createSong(songData) {
         try {
-            // Verificar que la duración es válida
             if (!Number.isInteger(songData.duracion)) {
                 throw new Error("La duración debe ser un número entero que represente los segundos.");
             }
     
-            // Crear la canción
             const newSong = await models.Cancion.create(songData);
             console.log("Nueva canción creada:", newSong);
     
-            // Relacionar géneros si se proporcionan
             if (songData.generos && Array.isArray(songData.generos) && songData.generos.length > 0) {
                 console.log("Géneros a relacionar:", songData.generos);
     
-                // Establecer la relación con los géneros mediante el método `setGeneros`
                 await newSong.setGeneros(songData.generos);
                 console.log("Relaciones con géneros creadas.");
             } else {

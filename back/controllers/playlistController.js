@@ -36,26 +36,24 @@ const getPlaylistById = async (req, res) => {
 const createPlaylist = async (req, res = response) => {
     try {
         const { nombre, descripcion, usuario_id, canciones } = req.body;
-        const cancionesArray = canciones ? JSON.parse(canciones) : []; // Asegúrate de que las canciones sean un array
+        const cancionesArray = canciones ? JSON.parse(canciones) : []; 
 
-        // Manejo del archivo
+        
         let assetId = null;
-        if (req.file) { // Cambia a req.file si usas upload.single
+        if (req.file) { 
             const file = req.file;
-            const assetPath = path.join(__dirname, './../../uploads/', file.filename); // Define la ruta donde se guardará el archivo
+            const assetPath = path.join(__dirname, './../../uploads/', file.filename); 
 
-            // Crea el asset en la base de datos usando el modelo de assets
-            assetId = await assetsModel.addAsset(assetPath); // Usa el método addAsset para guardar el asset
+            assetId = await assetsModel.addAsset(assetPath); 
         } else {
             console.error("No se recibió ningún archivo.");
         }
 
-        // Crea la nueva playlist
         const newPlaylist = await conx.createPlaylist({
             nombre,
             descripcion,
             usuario_id,
-            assetId // Asocia el assetId directamente al crear la playlist
+            assetId 
         }, cancionesArray);
 
         res.status(201).json(newPlaylist);
@@ -110,13 +108,13 @@ const getUserPlaylists = async (req, res) => {
 
 const createPlaylistByUser = async (req, res) => {
     const { nombre, descripcion } = req.body;
-    const userId = req.params.userId; // Obtén el userId de los parámetros de la solicitud
+    const userId = req.params.userId; 
 
     try {
         const newPlaylist = await conx.createPlaylistByUser({
             nombre,
             descripcion,
-        }, userId); // Pasa el userId al método de conexión
+        }, userId); 
 
         res.status(201).json({ msg: "Playlist creada con éxito", playlist: newPlaylist });
     } catch (error) {

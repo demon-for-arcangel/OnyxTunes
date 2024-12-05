@@ -1,85 +1,82 @@
-/* General layout */
 .search-container {
     display: flex;
-    height: 100vh; /* Altura completa de la pantalla */
-    overflow: hidden; /* Evita el desplazamiento no deseado */
+    height: 100vh; 
+    overflow: hidden; 
 }
 
-/* Sidebar styling */
 app-sidebar {
-    width: 450px; /* Anchura del sidebar */
-    background-color: #2c3e50; /* Color de fondo del sidebar */
-    color: #ecf0f1; /* Color de texto */
+    width: 450px;
+    background-color: #2c3e50; 
+    color: #ecf0f1; 
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
-    flex-direction: column; /* Para apilar contenido verticalmente */
-    gap: 15px; /* Espaciado entre elementos */
+    flex-direction: column;
+    gap: 15px; 
     font-size: 16px;
-    position: sticky; /* Fija el sidebar al hacer scroll */
+    position: sticky; 
     top: 0;
     height: 100%;
 }
 
-/* Main content styling */
 main {
-    flex: 1; /* Ocupa el espacio restante */
+    flex: 1; 
     padding: 20px;
-    overflow-y: auto; /* Permite scroll si el contenido es largo */
-    background-color: #f4f4f9; /* Fondo del contenido principal */
-    color: #34495e; /* Color del texto */
+    overflow-y: auto;
+    background-color: #f4f4f9; 
+    color: #34495e; 
 }
 
 
 input {
-    width: 100%; /* Ancho completo */
-    padding: 10px; /* Espaciado interno */
-    border: 1px solid #ccc; /* Borde gris claro */
-    border-radius: 4px; /* Bordes redondeados */
-    font-size: 16px; /* Tamaño de fuente */
-    transition: border-color 0.3s; /* Transición suave para el borde */
+    width: 100%; 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    font-size: 16px; 
+    transition: border-color 0.3s; 
 }
 
 input:focus {
-    border-color: #007bff; /* Color de borde al enfocar */
-    outline: none; /* Sin contorno */
+    border-color: #007bff; 
+    outline: none;
 }
 
 button {
-    padding: 10px 15px; /* Espaciado interno */
-    background-color: #007bff; /* Color de fondo azul */
-    color: white; /* Color del texto */
-    border: none; /* Sin borde */
-    border-radius: 4px; /* Bordes redondeados */
-    cursor: pointer; /* Cambia el cursor al pasar el mouse */
-    font-size: 16px; /* Tamaño de fuente */
-    transition: background-color 0.3s; /* Transición suave para el fondo */
+    padding: 10px 15px; 
+    background-color: #007bff; 
+    color: white; 
+    border: none; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-size: 16px; 
+    transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #0056b3; /* Color de fondo más oscuro al pasar el mouse */
+    background-color: #0056b3; 
 }
 
 h3 {
-    margin-top: 20px; /* Espaciado superior para el título */
-    font-size: 20px; /* Tamaño de fuente */
-    color: #333; /* Color del texto */
+    margin-top: 20px; 
+    font-size: 20px; 
+    color: #333; 
 }
 
 ul {
-    list-style-type: none; /* Sin viñetas */
-    padding: 0; /* Sin espaciado interno */
+    list-style-type: none; 
+    padding: 0; 
 }
 
 li {
-    padding: 10px; /* Espaciado interno para cada elemento de la lista */
-    border-bottom: 1px solid #ccc; /* Línea divisoria entre elementos */
+    padding: 10px; 
+    border-bottom: 1px solid #ccc; 
 }
 
 li:last-child {
-    border-bottom: none; /* Sin línea divisoria en el último elemento */
+    border-bottom: none; 
 }
 
 li:hover {
-    background-color: #f1f1f1; /* Color de fondo al pasar el mouse */
+    background-color: #f1f1f1;
 }
