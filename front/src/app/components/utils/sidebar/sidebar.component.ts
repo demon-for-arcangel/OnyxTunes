@@ -16,7 +16,6 @@ export class SidebarComponent {
   playlists: Playlist[] = [];
   userId: number | null = null;
 
-
   constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService) {}
   ngOnInit() {
     this.loadUserId();
@@ -26,12 +25,11 @@ export class SidebarComponent {
     this.router.navigate(['/home']); 
   }
 
-  search(){}
-
+  search(){}//por hacer
 
   navigateToPlaylist(playlist: Playlist) {
-    const playlistName = encodeURIComponent(playlist.nombre); // Codifica el nombre para la URL
-    this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]); // Navega usando el ID y el nombre
+    const playlistName = encodeURIComponent(playlist.nombre);
+    this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]); 
   }
 
   loadUserId() {
@@ -72,5 +70,10 @@ export class SidebarComponent {
     } else {
         console.error('No se encontró el token.');
     }
+  }
+
+  addPlaylist() {//por hacer
+    console.log('Añadir playlist');
+    this.router.navigate(['/create-playlist']);
   }
 }

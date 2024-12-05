@@ -1,10 +1,11 @@
 .sidebar {
     border-radius: 20px; /* Bordes redondeados */
     color: white; /* Color de texto */
-    height: 90%; /* Altura completa */
+    height: 100%; /* Altura completa */
 }
 
 .inicio-busqueda {
+    margin-top: 20px;
     background-color: #1f1f1f; /* Color de fondo general */
     padding: 15px; /* Espaciado interno */
     border-radius: 10px; /* Bordes redondeados */
@@ -12,11 +13,54 @@
 }
 
 .biblioteca {
-    background-color: #1f1f1f; /* Color de fondo general */
-    padding: 45px; /* Espaciado interno */
+    background-color: #1f1f1f; /* Color de fondo */
+    padding: 15px; /* Espaciado interno */
     border-radius: 10px; /* Bordes redondeados */
-    height: 65%; /* Altura completa */
+    height: 65%; /* Altura relativa a la sección */
+    overflow-y: auto; /* Barra de desplazamiento vertical */
+}.header-biblioteca {
+    display: flex; /* Flexbox para alineación horizontal */
+    justify-content: space-between; /* Espacio entre título y botón */
+    align-items: center; /* Centrar verticalmente */
+    margin-bottom: 10px; /* Espaciado inferior */
+}
 
+.header-biblioteca .h2 {
+    margin: 0; /* Quitar margen para alinear correctamente */
+    font-size: 18px; /* Tamaño de texto para el título */
+}
+
+.add-button {
+    background-color: #28a745; /* Color verde */
+    color: white; /* Texto blanco */
+    border: none; /* Sin bordes */
+    border-radius: 50%; /* Forma circular */
+    width: 30px; /* Ancho del botón */
+    height: 30px; /* Altura del botón */
+    display: flex; /* Flexbox para centrar el contenido */
+    align-items: center; /* Centrar verticalmente */
+    justify-content: center; /* Centrar horizontalmente */
+    font-size: 16px; /* Tamaño del texto */
+    cursor: pointer; /* Cambiar cursor al pasar el ratón */
+    transition: background-color 0.3s; /* Transición suave */
+}
+
+.add-button:hover {
+    background-color: #218838; /* Verde más oscuro al pasar el ratón */
+}
+
+.biblioteca ul {
+    display: grid; /* Usar grid para el diseño en columnas */
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas del mismo ancho */
+    gap: 10px; /* Espaciado entre elementos */
+    list-style-type: none; /* Sin viñetas en la lista */
+    margin: 0; /* Eliminar márgenes */
+    padding: 0; /* Eliminar relleno */
+}
+
+.biblioteca li {
+    display: flex; /* Para alinear correctamente el botón */
+    justify-content: center; /* Centrar el botón horizontalmente */
 }
 
 .sidebar h2 {
@@ -31,7 +75,7 @@
     text-align: center; /* Centrar texto */
     text-decoration: none; /* Sin subrayado */
     display: block; /* Mostrar como bloque */
-    width: 100%; /* Ancho completo */
+    width: 50%; /* Ancho completo */
     margin-bottom: 10px; /* Espacio entre botones */
     border-radius: 5px; /* Bordes redondeados */
     transition: background-color 0.3s; /* Transición suave para el color de fondo */

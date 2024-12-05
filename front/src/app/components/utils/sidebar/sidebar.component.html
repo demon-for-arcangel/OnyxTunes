@@ -4,7 +4,10 @@
         <button (click)="search()">Buscar</button>    
     </div>
     <div class="biblioteca">
-        <h2>Tu Biblioteca:</h2>
+        <div class="header-biblioteca">
+            <h2>Tu Biblioteca:</h2>
+            <button (click)="addPlaylist()" class="add-button">Añadir</button>
+        </div>
         <ul>
             @for(playlist of playlists; track playlist){
                 <li>
