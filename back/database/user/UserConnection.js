@@ -72,14 +72,13 @@ class UserModel {
         try {
             let user = await models.Usuario.findOne({
                 where: {
-                    email: email // Buscar solo por email
+                    email: email 
                 },
                 include: [
                     {
                         model: models.Rol,
                         attributes: ['nombre'],
-                        // Asegúrate de que la relación esté definida correctamente en el modelo
-                        required: false // Esto permite que la consulta funcione incluso si no hay rol asociado
+                        required: false 
                     }
                 ]
             });
@@ -209,7 +208,6 @@ class UserModel {
 
     async createDefaultPlaylist(userId) {
         try {
-            // Verificar si la lista de reproducción "Favoritos" ya existe
             const existingPlaylist = await models.Playlist.findOne({
                 where: {
                     nombre: 'Favoritos'
@@ -219,7 +217,6 @@ class UserModel {
     
             let playlistId;
     
-            // Si no existe, crear la lista de reproducción
             if (!existingPlaylist) {
                 const newPlaylist = await models.Playlist.create({
                     nombre: 'Favoritos'
@@ -231,7 +228,6 @@ class UserModel {
                 console.log('La lista de reproducción "Favoritos" ya existe.');
             }
     
-            // Asociar la lista de reproducción con el usuario en la tabla intermedia
             await models.UsuarioPlaylist.create({
                 usuario_id: userId,
                 playlist_id: playlistId
