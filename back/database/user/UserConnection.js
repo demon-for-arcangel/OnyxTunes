@@ -227,20 +227,18 @@ class UserModel {
                 throw new Error('Usuario no encontrado.');
             }
     
-            // Verificar la contraseña actual (sin hashing)
-            if (currentPassword !== user.password) {
+            const isMatch = await bcrypt.compare(currentPassword, user.password);
+            if (!isMatch) {
                 throw new Error('La contraseña actual es incorrecta.');
             }
     
-            // Validar que la nueva contraseña y la confirmación coincidan
             if (newPassword !== confirmPassword) {
                 throw new Error('La nueva contraseña y la confirmación no coinciden.');
             }
-
+    
             const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     
-            // Actualizar la contraseña en la base de datos (sin hashing)
-            user.password = hashedNewPassword; // Asignar la nueva contraseña directamente
+            user.password = hashedNewPassword;
             await user.save();
     
             return { message: 'Contraseña actualizada con éxito.' };
