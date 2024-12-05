@@ -1,3 +1,40 @@
+/* Estilos para el contenedor de inicio de sesión */
+header {
+    background-color: #2c3e50; /* Fondo oscuro */
+    color: #ecf0f1; /* Texto claro */
+    padding: 15px 20px; /* Espaciado interno */
+    display: flex;
+    height: 65px;
+    justify-content: space-between; /* Separar contenido a los extremos */
+    align-items: center; /* Centrado vertical */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra */
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espaciado entre elementos */
+    margin-left: auto; /* Alinea los elementos a la derecha */
+}
+
+.logo {
+    height: 70px; /* Tamaño del logo */
+
+    position: absolute;
+    left: 10px;  /* Ajusta el valor según tus necesidades */
+    top: 10px;   /* Ajusta el valor según tus necesidades */
+    z-index: 100;
+  }
+
+.login-container {
+    max-width: 400px; /* Ancho máximo del contenedor */
+    margin: 50px auto; /* Centrar el contenedor vertical y horizontalmente */
+    padding: 20px; /* Espaciado interno */
+    background-color: #ffffff; /* Fondo blanco */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
 .select-access-container {
     text-align: center;
     margin-top: 50px;
