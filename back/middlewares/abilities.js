@@ -29,11 +29,11 @@ const checkToken = (req, res, next) => {
   try {
       const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
       console.log('uid', uid);
-      req.userId = uid; // Asegúrate de que esto esté configurado correctamente
+      req.userId = uid; 
       next();
   } catch (error) {
-      console.error('Error al verificar el token:', error); // Agrega este log
-      res.status(401).json({ msg: "Token no válido", error: error.message }); // Incluye el mensaje de error
+      console.error('Error al verificar el token:', error); 
+      res.status(401).json({ msg: "Token no válido", error: error.message }); 
   }
 };
 
@@ -77,15 +77,15 @@ const tokenCanUser = (req, res, next) => {
 const userExist = async (userId) => {
   try {
       if (userId) {
-          const user = await conx.getUserById(userId); // Usa la instancia para llamar al método
+          const user = await conx.getUserById(userId); 
 
           if (!user) {
-              throw new Error('El usuario no existe.'); // Lanza un error estándar
+              throw new Error('El usuario no existe.'); 
           }
       }
   } catch (e) {
       console.log(e);
-      throw new Error('Ha habido un problema al comprobar si el usuario existe.'); // Lanza un error estándar
+      throw new Error('Ha habido un problema al comprobar si el usuario existe.');
   }
 };
 

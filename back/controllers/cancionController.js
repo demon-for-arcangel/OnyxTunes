@@ -63,7 +63,7 @@ const createSong = async (req, res) => {
                 );
             }
 
-            await newSong.setGeneros(generosExistentes); // Crea las relaciones en GeneroCancion
+            await newSong.setGeneros(generosExistentes);
             console.log("Relaciones con géneros creadas.");
         }
 

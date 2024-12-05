@@ -19,7 +19,7 @@ const searchAll = async (req = request, res = response) => {
             albums
         });
     } catch (error) {
-        console.error("Error en la búsqueda:", error); // Imprimir el error en la consola
+        console.error("Error en la búsqueda:", error); 
         res.status(500).json({ message: "Error al realizar la búsqueda" });
     }
 };

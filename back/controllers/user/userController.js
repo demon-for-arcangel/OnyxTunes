@@ -176,9 +176,20 @@ const getUserByToken = async (req, res) => {
     }
 };
 
-const searchUsers = async (req, res) => {}
+const updatePassword = async (req, res) => {
+    const userId = req.params.id; 
+    const { currentPassword, newPassword, confirmPassword } = req.body; 
+
+    try {
+        const result = await conx.updatePassword(userId, currentPassword, newPassword, confirmPassword);
+        res.status(200).json(result); 
+    } catch (error) {
+        console.error('Error al actualizar la contraseña:', error);
+        res.status(400).json({ error: error.message }); 
+    }
+};
 
 module.exports = {
     index, indexArtist, getUserById, getUserByEmail, /* createUser, */ sendMail, /* registerUserByAdmin, */ updateUser, deleteUsers, 
-    getUserByToken, searchUsers
+    getUserByToken, updatePassword
 }

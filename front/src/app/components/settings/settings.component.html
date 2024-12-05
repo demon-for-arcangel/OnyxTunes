@@ -1,0 +1,69 @@
+<div class="settings-container">
+    <app-sidebar></app-sidebar>
+    <main>
+        <h2>Configuración</h2>
+        <form (ngSubmit)="saveChanges()">
+            <label for="nombre">Nombre de usuario:</label>
+            <input type="text" id="nombre" [(ngModel)]="user.nombre" name="nombre" required />
+            @if(errorMessages) {
+                @if(errorMessages.nombre) {
+                    <p class="error">{{ errorMessages.nombre }}</p>
+                }
+            }
+
+            <label for="nickname">Nombre de usuario:</label>
+            <input type="text" id="nickname" [(ngModel)]="user.nickname" name="nickname" required />
+            @if(errorMessages) {
+                @if(errorMessages.nickname) {
+                    <p class="error">{{ errorMessages.nickname }}</p>
+                }
+            }
+
+            <label for="email">Correo electrónico:</label>
+            <input type="email" id="email" [(ngModel)]="user.email" name="email" required />
+            @if(errorMessages) {
+                @if(errorMessages.email) {
+                    <p class="error">{{ errorMessages.email }}</p>
+                }
+            }
+
+            <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+            <input type="date" id="fecha_nacimiento" [(ngModel)]="user.fecha_nacimiento" name="fecha_nacimiento" required />
+            @if(errorMessages) {
+                @if(errorMessages.fecha_nacimiento) {
+                    <p class="error">{{ errorMessages.fecha_nacimiento }}</p>
+                }
+            }
+
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" [(ngModel)]="user.direccion" name="direccion" />
+
+            <label for="genero">Género:</label>
+                <select id="genero" [(ngModel)]="user.genero" name="genero">
+                    <option value="Femenino">Femenino</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Otro">Otro</option>
+                </select>
+                @if(errorMessages) {
+                    @if(errorMessages.genero) {
+                        <p class="error">{{ errorMessages.genero }}</p>
+                    }
+                }
+
+            <label for="phone">Teléfono:</label>
+            <input type="text" id="phone" [(ngModel)]="user.telefono" name="phone" />
+            @if(errorMessages) {
+                @if(errorMessages.telefono) {
+                    <p class="error">{{ errorMessages.telefono }}</p>
+                }
+            }
+    
+            <button type="submit">Guardar cambios</button>
+
+            @if(successMessage) {
+                <p class="success">{{ successMessage }}</p>
+            }
+
+        </form>    
+    </main>
+</div>

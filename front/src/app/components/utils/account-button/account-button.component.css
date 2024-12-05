@@ -1,11 +1,11 @@
 .user-account {
-    position: relative; /* Añadir esta línea */
+    position: relative; 
 }
 
 .account-button {
     position: fixed;
-    top: 10px; /* Margen superior */
-    right: 10px; /* Ubicación en la esquina derecha */
+    top: 10px;
+    right: 10px; 
     background-color: #333;
     color: white;
     border: none;
@@ -16,9 +16,9 @@
 }
 
 .menu {
-    position: absolute; /* Esto se mantiene */
-    top: 90%; /* Esto se mantiene */
-    right: 0; /* Esto se mantiene */
+    position: absolute; 
+    top: 90%; 
+    right: 0; 
     background-color: #222;
     border: 1px solid #444;
     padding: 10px;
@@ -29,7 +29,7 @@
     flex-direction: column;
     gap: 5px;
     width: max-content;
-    z-index: 1001; /* Asegúrate de que el menú esté por encima */
+    z-index: 1001; 
 }
 
 .menu button {

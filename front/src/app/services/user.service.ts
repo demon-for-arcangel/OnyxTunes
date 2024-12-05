@@ -43,4 +43,13 @@ export class UserService {
   updateUser(userId: string, user: Usuario): Observable<Usuario> {
     return this.http.put<Usuario>(`${this.url}` + `${this.usersUrl}` + `/${userId}`, user);
   }
+
+  updatePassword(userId: string, currentPassword: string, newPassword: string, confirmPassword: string): Observable<any> {
+    const body = {
+      currentPassword,
+      newPassword,
+      confirmPassword
+    };
+    return this.http.put<any>(`${this.url}${this.usersUrl}/${userId}/password`, body);
+  }
 }

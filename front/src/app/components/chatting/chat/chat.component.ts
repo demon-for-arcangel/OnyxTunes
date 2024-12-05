@@ -18,8 +18,8 @@ import { ChatService } from '../../../services/chat.service';
 export class ChatComponent {
   partnerId?: number;
   messages: Map<number, Message> = new Map();
-  partner?: any; // Define el tipo correcto según tu interfaz
-  self?: any; // Define el tipo correcto según tu interfaz
+  partner?: any; 
+  self?: any; 
   chats: { receptorInfo: MessageUser; messages: Message[] }[] = [];
 
   constructor(
@@ -48,21 +48,17 @@ export class ChatComponent {
   }
 
   loadMessages() {
-    // Asegúrate de que tienes los IDs de emisor y receptor
-    const emisorId = this.self?.id; // O de donde obtengas el ID del emisor
-    const receptorId = this.partnerId; // Asumiendo que partnerId es el ID del receptor
+    const emisorId = this.self?.id; 
+    const receptorId = this.partnerId; 
 
-    // Verifica que emisorId y receptorId no sean undefined
     if (emisorId !== undefined && receptorId !== undefined) {
         this.chatService.getChats(emisorId, receptorId).subscribe((response: ChatMessages) => {
             if (response.data.executed) {
-                // Desestructuración de response.data.query
                 const { emisorUser, receptorUser, messages } = response.data.query;
 
-                // Aquí puedes construir la estructura que necesitas para this.chats
                 this.chats = [{
-                    receptorInfo: receptorUser, // Asigna el receptor
-                    messages: messages // Asigna los mensajes
+                    receptorInfo: receptorUser, 
+                    messages: messages 
                 }];
             } else {
                 console.error('Error en la ejecución de la consulta:', response.data.errors);
@@ -82,7 +78,7 @@ export class ChatComponent {
     this.messages.set(message.id, message);
   }
 
-  handleNewMessage(content: any) { // Define el tipo correcto
+  handleNewMessage(content: any) { 
     if (content.text && content.text.length > 0) {
       this.socketService.sendMessage({ text: content.text }, this.partnerId!);
     }

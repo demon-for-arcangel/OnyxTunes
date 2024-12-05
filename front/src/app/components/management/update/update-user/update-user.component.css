@@ -82,25 +82,25 @@ select:focus {
 }
 
 .roles-container {
-    display: flex; /* Usar flexbox para alinear los elementos en fila */
-    justify-content: space-between; /* Espacio entre los elementos */
-    gap: 20px; /* Espacio entre columnas */
+    display: flex; 
+    justify-content: space-between; 
+    gap: 20px; 
 }
 
 .available-roles, .user-roles {
-    flex: 1; /* Ambas columnas comparten espacio equitativamente */
-    max-width: 48%; /* Limita su ancho máximo */
-    min-width: 200px; /* Ancho mínimo para evitar colapso */
-    background-color: #444; /* Fondo más oscuro para destacar */
-    padding: 15px; /* Espaciado interno */
-    border-radius: 6px; /* Bordes redondeados */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+    flex: 1;
+    max-width: 48%;
+    min-width: 200px; 
+    background-color: #444; 
+    padding: 15px; 
+    border-radius: 6px; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); 
 }
 
 h3 {
-    text-align: center; /* Centrar el título de cada columna */
+    text-align: center; 
     color: white;
-    margin-bottom: 10px; /* Separación entre el título y el contenido */
+    margin-bottom: 10px; 
 }
 
 ul {
