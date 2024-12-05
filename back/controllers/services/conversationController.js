@@ -1,24 +1,11 @@
 const { v4: getUniqueId } = require('uuid');
 
-// Las Rooms son 'salas' que incluye Socket.io para poder enviar peticiones a usuarios especificos. Esto es genial para hacer un chat.
-// La idea que se ha planteado es que sea el backend el que se encargue de manejar estas rooms.
-//
-// La informacion que se guarda es:
-// - El ID de la room, generada automaticamente.
-// - Un array con los IDs de los usuarios que estén dentro.
-
-// Se utilizan instancias de socket.io para que sea mas sencillo identificar al usuario que llame al controlador.
-
 class ConversationController {
     constructor(socket) {
-        this.socket = socket; // Aqui está la instancia de socket.io perteneciente a cada usuario que realiza una conexión.
+        this.socket = socket; 
         this.userId = this.socket.user.userId
     }
 
-    /** Esto es una lista clave-valor, cuya claves son los uuid de las rooms, y los valores los usuarios de los mismos.
-     *
-     * @type {Map<string, Set<number>>}
-     */
     static conversations = new Map();
 
     static getAllConversations = () => {
@@ -108,7 +95,7 @@ class ConversationController {
         const chatConversation = conversations.find(([uuid, users]) => users.has(this.socket.user.userId) && users.has(receptorId));
 
         if (chatConversation) {
-            return chatConversation[0] // La primera posicion es el ID de la room.
+            return chatConversation[0] 
         } else {
             return false;
         }

@@ -5,22 +5,19 @@ class Message {
     static findRecentChatMessages = async (emisor, receptor) => {
         try {
             console.log(emisor, receptor);
-
-            // Obtener información del emisor
+            
             const emisorUser = await models.Usuario.findOne({
                 where: { id: emisor },
                 attributes: ['id', 'email', 'nickname', 'foto_perfil', 'connected']
             });
             console.log(emisorUser);
 
-            // Obtener información del receptor
             const receptorUser = await models.Usuario.findOne({
                 where: { id: receptor },
                 attributes: ['id', 'email', 'nickname', 'foto_perfil', 'connected']
             });
             console.log(receptorUser);
 
-            // Obtener mensajes entre el emisor y el receptor
             const messages = await models.Mensaje.findAll({
                 where: {
                     [Op.or]: [
@@ -35,16 +32,15 @@ class Message {
                 },
             });
          
-            console.log('Mensajes recuperados:', messages);  // Verifica que los mensajes se estén recuperando correctamente
+            console.log('Mensajes recuperados:', messages);  
 
-            // Retornar la respuesta con los datos
             return {
                 success: true,
                 message: 'Se han obtenido los mensajes correctamente.',
                 data: {
                     emisorUser,
                     receptorUser,
-                    messages // Asegúrate de que los mensajes se incluyan aquí
+                    messages 
                 }
             };
         } catch (e) {
@@ -65,13 +61,12 @@ class Message {
                 where: {
                     emisor: emisorId
                 },
-                attributes: ['receptor'], // Solo queremos el ID del receptor
-                group: ['receptor'] // Agrupamos por receptor para obtener solo únicos
+                attributes: ['receptor'], 
+                group: ['receptor'] 
             });
 
             console.log(receptores);
     
-            // Si necesitas obtener información adicional sobre los receptores, puedes hacer un join con el modelo Usuario
             const receptoresConInfo = await Promise.all(receptores.map(async (mensaje) => {
                 const usuario = await models.Usuario.findByPk(mensaje.receptor);
                 return {
@@ -181,63 +176,59 @@ class Message {
 
     static getChatsByUserId = async (userId) => {
         try {
-            // Obtener mensajes leídos
             const usersWithReadMessages = await models.Mensaje.findAll({
                 where: {
-                    emisor: userId, // Aquí se busca el emisor
+                    emisor: userId, 
                     leido: true,
                 },
                 attributes: [
-                    'receptor', // ID del receptor
+                    'receptor', 
                     [models.sequelize.fn('COUNT', models.sequelize.col('id')), 'readCount'],
-                    [models.sequelize.fn('MAX', models.sequelize.col('createdAt')), 'lastReadMessageDate'] // Última fecha del mensaje leído
+                    [models.sequelize.fn('MAX', models.sequelize.col('createdAt')), 'lastReadMessageDate'] 
                 ],
                 group: ['receptor'],
                 raw: true
             });
     
-            // Obtener mensajes no leídos
             const usersWithPendingMessages = await models.Mensaje.findAll({
                 where: {
-                    emisor: userId, // Aquí se busca el emisor
+                    emisor: userId, 
                     leido: false,
                 },
                 attributes: [
-                    'receptor', // ID del receptor
+                    'receptor', 
                     [models.sequelize.fn('COUNT', models.sequelize.col('id')), 'pendingCount'],
-                    [models.sequelize.fn('MAX', models.sequelize.col('createdAt')), 'lastPendingMessageDate'] // Última fecha del mensaje no leído
+                    [models.sequelize.fn('MAX', models.sequelize.col('createdAt')), 'lastPendingMessageDate'] 
                 ],
                 group: ['receptor'],
                 raw: true
             });
     
-            // Obtener información de los usuarios receptores para mensajes leídos
             const readChats = await Promise.all(usersWithReadMessages.map(async (message) => {
                 const receptorInfo = await models.Usuario.findOne({
                     where: { id: message.receptor },
-                    attributes: ['id', 'nickname', 'foto_perfil'] // Atributos que deseas incluir
+                    attributes: ['id', 'nickname', 'foto_perfil'] 
                 });
     
                 return {
                     receptor: message.receptor,
                     readCount: message.readCount,
                     lastReadMessageDate: message.lastReadMessageDate,
-                    receptorInfo // Información del usuario receptor
+                    receptorInfo 
                 };
             }));
     
-            // Obtener información de los usuarios receptores para mensajes no leídos
             const pendingChats = await Promise.all(usersWithPendingMessages.map(async (message) => {
                 const receptorInfo = await models.Usuario.findOne({
                     where: { id: message.receptor },
-                    attributes: ['id', 'nickname', 'foto_perfil'] // Atributos que deseas incluir
+                    attributes: ['id', 'nickname', 'foto_perfil'] 
                 });
     
                 return {
                     receptor: message.receptor,
                     pendingCount: message.pendingCount,
                     lastPendingMessageDate: message.lastPendingMessageDate,
-                    receptorInfo // Información del usuario receptor
+                    receptorInfo 
                 };
             }));
     
@@ -245,8 +236,8 @@ class Message {
                 success: true,
                 message: 'Se han obtenido los chats correctamente.',
                 data: {
-                    readChats, // Chats leídos
-                    pendingChats // Chats no leídos
+                    readChats, 
+                    pendingChats 
                 }
             };
         } catch (e) {
@@ -257,7 +248,6 @@ class Message {
 
     static getChatsGroupedByReceiver = async (userId) => {
         try {
-            // Obtener todos los mensajes donde el emisor es el userId
             const messages = await models.Mensaje.findAll({
                 where: {
                     emisor: userId,
@@ -265,17 +255,16 @@ class Message {
                 include: [
                     {
                         model: models.Usuario,
-                        as: 'receptorUsuario', // Usar el alias correcto para el receptor
+                        as: 'receptorUsuario', 
                         attributes: ['id', 'nickname', 'foto_perfil']
                     }
                 ],
-                order: [['createdAt', 'DESC']], // Ordenar por createdAt descendente
+                order: [['createdAt', 'DESC']], 
                 raw: true
             });
     
-            // Agrupar mensajes por receptor
             const groupedChats = messages.reduce((acc, message) => {
-                const receptorId = message['receptorUsuario.id']; // ID del receptor
+                const receptorId = message['receptorUsuario.id']; 
                 if (!acc[receptorId]) {
                     acc[receptorId] = {
                         receptorInfo: {
@@ -295,13 +284,12 @@ class Message {
                 return acc;
             }, {});
     
-            // Convertir el objeto agrupado en un array
             const result = Object.values(groupedChats);
     
             return {
                 success: true,
                 message: 'Se han obtenido los chats agrupados correctamente.',
-                data: result // Retorna la lista de chats agrupados
+                data: result 
             };
         } catch (e) {
             console.log(e);
