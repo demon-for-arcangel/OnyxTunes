@@ -1,1 +1,24 @@
-<p>search works!</p>
+<div class="search-container">
+    <h1>Buscar Artistas, Canciones y Álbumes</h1>
+    <input [(ngModel)]="query" placeholder="Buscar..." (input)="search()" />
+    @if(results.length > 0) {
+        <div>
+            <h2>Resultados</h2>
+        <ul>
+            @for(result of results; track result) {
+                <li>
+                    <strong>{{ result.name }}</strong> 
+                    <span>{{ result.type }}</span>
+                </li>
+            }
+            
+            </ul>
+        </div>
+    }
+
+    @if(results.length === 0) {
+    <div>
+        <p>No se encontraron resultados.</p>
+    </div>
+    }
+</div>
