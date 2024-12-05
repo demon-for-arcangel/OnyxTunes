@@ -2,6 +2,7 @@ require("dotenv").config();
 const { Sequelize, Op } = require("sequelize");
 const models = require("../../models");
 const Conexion = require("../connection.js");
+const bcrypt = require('bcrypt');
 
 const conexion = new Conexion();
 
@@ -216,6 +217,36 @@ class UserModel {
         } catch (error) {
             console.error('Error al eliminar rol de usuario:', error);
             throw new Error('Error al eliminar el rol del usuario'); 
+        }
+    }
+
+    async updatePassword(userId, currentPassword, newPassword, confirmPassword) {
+        try {
+            const user = await models.Usuario.findByPk(userId);
+            if (!user) {
+                throw new Error('Usuario no encontrado.');
+            }
+    
+            // Verificar la contraseña actual (sin hashing)
+            if (currentPassword !== user.password) {
+                throw new Error('La contraseña actual es incorrecta.');
+            }
+    
+            // Validar que la nueva contraseña y la confirmación coincidan
+            if (newPassword !== confirmPassword) {
+                throw new Error('La nueva contraseña y la confirmación no coinciden.');
+            }
+
+            const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    
+            // Actualizar la contraseña en la base de datos (sin hashing)
+            user.password = hashedNewPassword; // Asignar la nueva contraseña directamente
+            await user.save();
+    
+            return { message: 'Contraseña actualizada con éxito.' };
+        } catch (error) {
+            console.error('Error al actualizar la contraseña: ', error);
+            throw new Error('Error al actualizar la contraseña');
         }
     }
 }
