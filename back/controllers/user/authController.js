@@ -30,6 +30,8 @@ const register = async (req, res) => {
             rol: 3
         });
 
+        await conx.createDefaultPlaylist(newUser.id);
+
         const token = await generarJWT(newUser.id);
 
         res.status(201).json({
@@ -75,6 +77,8 @@ const registerByAdmin = async (req, res) => {
             activo: body.activo, 
             rol: body.rol 
         });
+
+        await conx.createDefaultPlaylist(newUser.id);
 
         res.status(201).json({
             nombre: newUser.nombre,
