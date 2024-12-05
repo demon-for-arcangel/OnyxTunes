@@ -25,7 +25,7 @@ export class SettingsComponent {
 
   loadUserData() {
     this.authService.getUserByToken(localStorage.getItem('user')).subscribe(data => {
-      this.user = data; // Almacena los datos del usuario
+      this.user = data; 
       if (this.user.fecha_nacimiento) {
         this.user.fecha_nacimiento = this.formatDate(this.user.fecha_nacimiento);
       }
@@ -47,11 +47,11 @@ export class SettingsComponent {
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     
-    const year = date.getFullYear(); // Obtener el año
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Obtener el mes (0-11) y agregar un cero inicial si es necesario
-    const day = String(date.getDate()).padStart(2, '0'); // Obtener el día y agregar un cero inicial si es necesario
+    const year = date.getFullYear(); 
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0'); 
 
-    return `${year}-${month}-${day}`; // Formato "yyyy-MM-dd"
+    return `${year}-${month}-${day}`; 
 }
 
   saveChanges() {
