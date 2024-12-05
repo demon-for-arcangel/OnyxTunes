@@ -25,8 +25,10 @@ export class SidebarComponent {
     this.router.navigate(['/home']); 
   }
 
-  search(){}//por hacer
 
+  navigateToSearch() {
+    this.router.navigate(['/search']);
+  }
   navigateToPlaylist(playlist: Playlist) {
     const playlistName = encodeURIComponent(playlist.nombre);
     this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]); 

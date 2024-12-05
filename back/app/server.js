@@ -22,6 +22,7 @@ class Server {
     this.apiChats = "/api/chats"
     this.apiPlaylist = "/api/playlist";
     this.apiAssets = "/api/assets"
+    this.apiSearch = "/api/search";
 
 
     this.app.use(fileUpload({
@@ -62,7 +63,7 @@ class Server {
     this.app.use(this.apiChats, require("../routes/chatRoutes"));
     this.app.use(this.apiMail, require('../routes/mailRoutes'));
     this.app.use(this.apiAssets, require("../routes/assetRoutes"));
-
+    this.app.use(this.apiSearch, require("../routes/searchRoutes"));
 
     this.app.use(this.RoutePath, require('../routes/rolRoutes'));
     this.app.use(this.RoutePath, require('../routes/albumRoutes'));

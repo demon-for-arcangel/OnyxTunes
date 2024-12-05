@@ -1,24 +1,62 @@
 <div class="search-container">
-    <h1>Buscar Artistas, Canciones y Álbumes</h1>
-    <input [(ngModel)]="query" placeholder="Buscar..." (input)="search()" />
-    @if(results.length > 0) {
+    <app-sidebar></app-sidebar>
+    <main>
         <div>
-            <h2>Resultados</h2>
-        <ul>
-            @for(result of results; track result) {
-                <li>
-                    <strong>{{ result.name }}</strong> 
-                    <span>{{ result.type }}</span>
-                </li>
-            }
-            
-            </ul>
+            <input [(ngModel)]="query" placeholder="Buscar..." />
+            <button (click)="search()">Buscar</button>
         </div>
-    }
-
-    @if(results.length === 0) {
-    <div>
-        <p>No se encontraron resultados.</p>
-    </div>
-    }
+          
+        @if (results) {
+            <div>
+                @if (results.songs.length > 0) {
+                    <h3>Canciones:</h3>
+                    <ul>
+                        @for (song of results.songs; track song) {
+                            <li>
+                                {{ song.titulo }}
+                            </li>
+                        }
+                    </ul>
+                }
+    
+                @if (results.playlists.length > 0) {
+                    <h3>Listas de Reproducción:</h3>
+                    <ul>
+                        @for (playlist of results.playlists; track playlist) {
+                            <li>
+                                {{ playlist.nombre }}
+                            </li>
+                        }
+                    </ul>
+                }
+    
+                @if (results.artists.length > 0) {
+                    <h3>Artistas:</h3>
+                    <ul>
+                        @for (artist of results.artists; track artist) {
+                            <li>
+                                {{ artist.nombre }} ({{ artist.nickname }}) - {{ artist.Rol.nombre }}
+                            </li>
+                        }
+                    </ul>
+                }
+    
+                @if (results.albums.length > 0) {
+                    <h3>Álbumes:</h3>
+                    <ul>
+                        @for (album of results.albums; track album) {
+                            <li>
+                                {{ album.titulo }}
+                            </li>
+                        }
+                    </ul>
+                }
+    
+                @if (results.songs.length === 0 && results.playlists.length === 0 && results.artists.length === 0 && results.albums.length === 0) {
+                    <p>No se ha encontrado nada.</p>
+                }
+            </div>
+        }   
+        <app-player></app-player>
+    </main>
 </div>

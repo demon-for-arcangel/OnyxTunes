@@ -38,6 +38,10 @@ export class HomeComponent {
     this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]); // Navega usando el ID y el nombre
   }
 
+  navigateToSearch() {
+    this.router.navigate(['/search']);
+  }
+
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }

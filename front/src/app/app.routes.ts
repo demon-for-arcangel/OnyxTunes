@@ -11,6 +11,7 @@ import { MusicComponent } from './components/management/music/music.component';
 import { ChatComponent } from './components/chatting/chat/chat.component';
 import { ChatBaseComponent } from './components/chatting/chat-base/chat-base.component';
 import { PlaylistComponent } from './components/playlist/playlist.component';
+import { SearchComponent } from './components/search/search.component';
 
 
 export const routes: Routes = [
@@ -24,5 +25,6 @@ export const routes: Routes = [
     { path: 'platform/userManagement', component: UsersComponent },
     { path: 'platform/musicManagement', component: MusicComponent },
     { path: 'chat', component: ChatBaseComponent },
-    { path: 'playlist/:id/:name', component: PlaylistComponent }
+    { path: 'playlist/:id/:name', component: PlaylistComponent },
+    { path: 'search', component: SearchComponent }
 ];
