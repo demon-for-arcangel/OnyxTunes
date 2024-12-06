@@ -1,6 +1,7 @@
 const { response, request } = require("express");
 const Conexion = require("../database/CancionCon");
 const models = require('../models');
+const { subirArchivo } = require('../helpers/subir-archivo');
 
 const conx = new Conexion();
 
@@ -51,6 +52,25 @@ const createSong = async (req, res) => {
 
         console.log('Datos recibidos:', req.body);
 
+        let assetId = null;
+
+        // Manejo de la subida de archivos
+        if (req.files && req.files.archivo) { // Verifica si se recibió un archivo
+            const nombreArchivo = await subirArchivo(req.files, ['mp3', 'wav', 'ogg'], 'canciones'); // Asegúrate de que la carpeta sea correcta
+            
+            // Registrar el path del archivo en la tabla Asset
+            const newAsset = await models.Asset.create({
+                path: nombreArchivo, // Guarda el path del archivo
+                createdAt: new Date(),
+                updatedAt: new Date()
+            });
+
+            assetId = newAsset.id; // Guarda el ID del nuevo asset
+        } else {
+            console.error("No se recibió ningún archivo.");
+        }
+
+        // Crea la nueva canción en la base de datos
         const newSong = await models.Cancion.create({
             titulo,
             duracion,
@@ -58,6 +78,7 @@ const createSong = async (req, res) => {
             reproducciones: reproducciones || 0,
             album_id,
             artista_id,
+            assetId, // Guarda el assetId en la tabla Cancion
             createdAt: new Date(),
             updatedAt: new Date()
         });

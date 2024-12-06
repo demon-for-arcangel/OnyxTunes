@@ -27,7 +27,7 @@ module.exports = {
       duracion: 200,
       reproducciones: 7321,
       album_id: 1,    
-      artista_id: 2,  
+      artista_id: 2,    
       createdAt: new Date(),
       updatedAt: new Date()
     },

@@ -38,22 +38,10 @@ const createPlaylist = async (req, res = response) => {
         const { nombre, descripcion, usuario_id, canciones } = req.body;
         const cancionesArray = canciones ? JSON.parse(canciones) : []; 
 
-        
-        let assetId = null;
-        if (req.file) { 
-            const file = req.file;
-            const assetPath = path.join(__dirname, './../../uploads/', file.filename); 
-
-            assetId = await assetsModel.addAsset(assetPath); 
-        } else {
-            console.error("No se recibió ningún archivo.");
-        }
-
         const newPlaylist = await conx.createPlaylist({
             nombre,
             descripcion,
             usuario_id,
-            assetId 
         }, cancionesArray);
 
         res.status(201).json(newPlaylist);

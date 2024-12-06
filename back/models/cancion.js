@@ -56,7 +56,9 @@ module.exports = (sequelize, DataTypes) => {
     duracion: DataTypes.INTEGER,
     reproducciones: DataTypes.INTEGER,
     album_id: DataTypes.INTEGER,
-    artista_id: DataTypes.INTEGER
+    artista_id: DataTypes.INTEGER,
+    assetId: DataTypes.INTEGER,
+
   }, {
     sequelize,
     modelName: 'Cancion',

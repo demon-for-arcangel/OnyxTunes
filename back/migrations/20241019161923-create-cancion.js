@@ -38,6 +38,16 @@ module.exports = {
           key: 'id'
         }
       },
+      assetId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: process.env.TABLA_ASSET
+          },
+          key: 'id'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
