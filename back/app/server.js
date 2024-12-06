@@ -17,6 +17,7 @@ class Server {
     this.apiAssets = "/api/assets";
     this.apiSearch = "/api/search";
     this.apiSongs = "/api/songs";
+    this.apiGeneros = "/api/generos";
 
     this.app.use(fileUpload({
       useTempFiles: true,
@@ -60,7 +61,7 @@ class Server {
     this.app.use(this.RoutePath, require('../routes/rolRoutes'));
     this.app.use(this.RoutePath, require('../routes/albumRoutes'));
     this.app.use(this.RoutePath, require('../routes/cancionRoutes'));
-    this.app.use(this.RoutePath, require('../routes/generoRoutes'));
+    this.app.use(this.apiGeneros, require('../routes/generoRoutes'));
     this.app.use(this.apiPlaylist, require('../routes/PlaylistRoutes'));
   }
 

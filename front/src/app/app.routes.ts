@@ -16,6 +16,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { MusicArtistComponent } from './components/management/music-artist/music-artist.component';
+import { authGuard } from './guards/auth.guard';
 
 
 export const routes: Routes = [
@@ -24,15 +25,15 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'gustosMusicales', component: GustosMusicalesComponent },
     { path: 'selectAccess', component: SelectAccessComponent },
-    { path: 'home', component: HomeComponent },
-    { path: 'platformManagement', component: PlatformManagementComponent},
-    { path: 'platform/userManagement', component: UsersComponent },
-    { path: 'platform/musicManagement', component: MusicComponent },
-    { path: 'chat', component: ChatBaseComponent },
-    { path: 'playlist/:id/:name', component: PlaylistComponent },
+    { path: 'home', component: HomeComponent, canActivate: [authGuard] },
+    { path: 'platformManagement', component: PlatformManagementComponent, canActivate: [authGuard] },
+    { path: 'platform/userManagement', component: UsersComponent, canActivate: [authGuard] },
+    { path: 'platform/musicManagement', component: MusicComponent, canActivate: [authGuard] },
+    { path: 'chat', component: ChatBaseComponent, canActivate: [authGuard] },
+    { path: 'playlist/:id/:name', component: PlaylistComponent, canActivate: [authGuard] },
     { path: 'search', component: SearchComponent },
-    { path: 'profile', component: ProfileComponent },
-    { path: 'settings', component: SettingsComponent },
-    { path: 'change-password', component: ChangePasswordComponent },
-    { path: 'platform/artistManagement', component: MusicArtistComponent },
+    { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
+    { path: 'settings', component: SettingsComponent, canActivate: [authGuard] },
+    { path: 'change-password', component: ChangePasswordComponent, canActivate: [authGuard] },
+    { path: 'platform/artistManagement', component: MusicArtistComponent, canActivate: [authGuard] },
 ];

@@ -168,6 +168,33 @@ class PlaylistConnection {
             throw new Error("Error al crear la playlist");
         }
     }
+
+    async addSongToFavorites(songId, userId) {
+        try {
+            let playlist;
+    
+            try {
+                playlist = await this.getPlaylistById(userId, 'Favoritos');
+            } catch (error) {
+                if (error.message !== "Playlist no encontrada") {
+                    throw error;
+                }
+            }
+    
+            if (!playlist) {
+                playlist = await models.Playlist.create({
+                    nombre: 'Favoritos',
+                    usuario_id: userId
+                });
+            }
+    
+            await playlist.addCanciones(songId); 
+            return { message: "Canción añadida a Favoritos." };
+        } catch (error) {
+            console.error('Error al añadir la canción a Favoritos:', error);
+            throw new Error("Error al añadir la canción a Favoritos.");
+        }
+    }
 }
 
 module.exports = PlaylistConnection;

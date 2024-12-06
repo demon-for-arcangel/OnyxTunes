@@ -2,13 +2,14 @@ const { Router } = require("express");
 const playlistController = require("../controllers/playlistController");
 const router = Router();
 
-router.get("/", playlistController.index); //funcional
-router.get("/:id", playlistController.getPlaylistById); //funcional
-router.post("/new", playlistController.createPlaylist); //funcional
-router.put("/:id", playlistController.updatePlaylist); //funcional
-router.delete("/", playlistController.deletePlaylists); //funcional
+router.get("/", playlistController.index); 
+router.get("/:id", playlistController.getPlaylistById); 
+router.post("/new", playlistController.createPlaylist); 
+router.put("/:id", playlistController.updatePlaylist); 
+router.delete("/", playlistController.deletePlaylists);
 router.get('/user/:userId', playlistController.getUserPlaylists);
 router.post('/:userId', playlistController.createPlaylistByUser);
+router.post('/like', playlistController.addToFavorites);
 
 module.exports = router;
  

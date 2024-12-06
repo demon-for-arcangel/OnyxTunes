@@ -24,8 +24,8 @@ export class SongService {
     return this.http.get(`${this.url}` + `${this.songsUrl}` + `/user/${userId}`);
   }
 
-  createCancion(cancion: any): Observable<any> {
-    return this.http.post(`${this.url}` + `${this.songsUrl}` + `/new`, cancion);
+  createCancion(formData: FormData): Observable<any> {
+    return this.http.post(`${this.url}` + `${this.songsUrl}` + `/new`, formData);
   }
 
   updateCancion(id: number, cancion: any): Observable<any> {

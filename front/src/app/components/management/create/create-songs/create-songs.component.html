@@ -30,9 +30,9 @@
 
     <label>Duración:</label>
     <div class="duracion-container">
-        <input type="number" [(ngModel)]="horas" placeholder="Horas" min="0" />
-        <input type="number" [(ngModel)]="minutos" placeholder="Minutos" min="0" max="59" />
-        <input type="number" [(ngModel)]="segundos" placeholder="Segundos" min="0" max="59" />
+        <input type="number" [(ngModel)]="horas" placeholder="Horas" min="0" disabled/>
+        <input type="number" [(ngModel)]="minutos" placeholder="Minutos" min="0" max="59" disabled/>
+        <input type="number" [(ngModel)]="segundos" placeholder="Segundos" min="0" max="59" disabled/>
     </div>
 
     <label for="generos">Géneros</label>
@@ -46,6 +46,9 @@
             </div>
         }
     </div>
+
+    <label for="archivo">Subir Archivo:</label>
+    <input id="archivo" type="file" (change)="onFileSelected($event)" accept=".mp3,.wav,.ogg" />
 
     <button (click)="crearCancion()">Crear Canción</button>
     <button (click)="ref.close()">Cancelar</button>

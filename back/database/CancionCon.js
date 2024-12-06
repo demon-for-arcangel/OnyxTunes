@@ -100,7 +100,7 @@ class SongModel {
         try {
             const songs = await models.Cancion.findAll({
                 where: {
-                    artista_id: userId // Suponiendo que 'artista_id' es la clave foránea en la tabla Cancion
+                    artista_id: userId 
                 },
                 include: [
                     {
