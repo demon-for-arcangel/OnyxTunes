@@ -37,17 +37,18 @@ export class PlayerComponent {
     }
   }
 
-    play() {
-      if (this.currentSong) {
-        this.audioPlayer.nativeElement.play();
-        this.isPlaying = true;
-      }
+  play() {
+    if (this.currentSong) {
+      this.audioPlayer.nativeElement.play();
+      this.isPlaying = true;
     }
+  }
 
   pause() {
-    this.isPlaying = false;
-    console.log('Pausado');
-    
+    if (this.audioPlayer) {
+      this.audioPlayer.nativeElement.pause(); 
+      this.isPlaying = false; 
+    }
   }
 
   next() {
