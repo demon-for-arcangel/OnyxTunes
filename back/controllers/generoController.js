@@ -4,7 +4,7 @@ const models = require('../models');
 
 const conx = new Conexion();
 
-const index = async (req, res) => {
+const getGeneros = async (req, res) => {
     try {
         const generos = await conx.indexGeneros();
         res.status(200).json(generos);
@@ -79,5 +79,5 @@ const deleteGeneros = async (req, res) => {
 };
 
 module.exports = {
-    index, getGeneroById, createGenero, updateGenero, deleteGeneros
+    getGeneros, getGeneroById, createGenero, updateGenero, deleteGeneros
 };

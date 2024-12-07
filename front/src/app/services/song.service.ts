@@ -20,14 +20,21 @@ export class SongService {
     return this.http.get(`${this.url}` + `${this.songsUrl}` + `/${id}`);
   }
 
-  createCancion(cancion: any): Observable<any> {
-    return this.http.post(`${this.url}` + `${this.songsUrl}` + `/new`, cancion);
+  getCancionesByUser(userId: number): Observable<any> {
+    return this.http.get(`${this.url}` + `${this.songsUrl}` + `/user/${userId}`);
+  }
+
+  createCancion(formData: FormData): Observable<any> {
+    return this.http.post(`${this.url}` + `${this.songsUrl}` + `/new`, formData);
   }
 
   updateCancion(id: number, cancion: any): Observable<any> {
     return this.http.put(`${this.url}` + `${this.songsUrl}` + `/${id}`, cancion);
   }
-  deleteCancion(id: number): Observable<any> {
-    return this.http.delete(`${this.url}` + `${this.songsUrl}` + `/${id}`);
+
+  deleteCancion(songIds: number[]): Observable<void> {
+    return this.http.delete<void>(`${this.url}` + `${this.songsUrl}`, { 
+      body: { songsIds: songIds } 
+    });
   }
 }

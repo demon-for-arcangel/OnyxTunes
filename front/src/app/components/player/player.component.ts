@@ -1,47 +1,73 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { SearchService } from '../../services/search.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-player',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './player.component.html',
   styleUrl: './player.component.css'
 })
 export class PlayerComponent {
-  isPlaying: boolean = false; // Estado de reproducción
-  isRandom: boolean = false; // Estado de aleatorio
-  isLoop: boolean = false; // Estado de bucle
+  isPlaying: boolean = false;
+  isRandom: boolean = false;
+  isLoop: boolean = false;
+  currentSong: any = null;
+  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+
+  constructor() {  }
+
+  ngOnInit() { }
+
+  playSong(song: any) {
+    this.currentSong = song; 
+    console.log('Canción seleccionada:', this.currentSong);
+
+    if (this.audioPlayer && this.currentSong) {
+        this.audioPlayer.nativeElement.src = `assets/uploads/canciones/${this.currentSong.asset.path}`;
+        this.audioPlayer.nativeElement.play().then(() => {
+            this.isPlaying = true;
+        }).catch(error => {
+            console.error('Error al reproducir:', error);
+        });
+    } else {
+        console.error('audioPlayer o currentSong no están definidos');
+    }
+  }
 
   play() {
-    this.isPlaying = true;
-    console.log('Reproduciendo...');
-    // Aquí puedes agregar la lógica para reproducir la canción
+    if (this.currentSong) {
+      this.audioPlayer.nativeElement.play();
+      this.isPlaying = true;
+    }
   }
 
   pause() {
-    this.isPlaying = false;
-    console.log('Pausado');
-    // Aquí puedes agregar la lógica para pausar la canción
+    if (this.audioPlayer) {
+      this.audioPlayer.nativeElement.pause(); 
+      this.isPlaying = false; 
+    }
   }
 
   next() {
     console.log('Siguiente canción');
-    // Aquí puedes agregar la lógica para ir a la siguiente canción
+    
   }
 
   previous() {
     console.log('Canción anterior');
-    // Aquí puedes agregar la lógica para ir a la canción anterior
+    
   }
 
   toggleRandom() {
-    this.isRandom = !this.isRandom; // Cambia el estado de aleatorio
+    this.isRandom = !this.isRandom; 
     console.log(`Aleatorio: ${this.isRandom}`);
   }
 
   toggleLoop() {
-    this.isLoop = !this.isLoop; // Cambia el estado de bucle
+    this.isLoop = !this.isLoop; 
     console.log(`Bucle: ${this.isLoop}`);
   }
 }

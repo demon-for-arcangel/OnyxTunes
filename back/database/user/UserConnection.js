@@ -67,7 +67,6 @@ class UserModel {
         }
     }
     
-
     async getUserByEmail(email) {
         try {
             let user = await models.Usuario.findOne({

@@ -50,12 +50,6 @@ export class HomeComponent {
     this.menuOpen = false;
     this.router.navigate([`/${route}`]);
   }
-
-  logout() {
-    localStorage.removeItem('user');
-    this.menuOpen = false;
-    this.router.navigate(['/login']);
-  }
   
   searchArtists() {
     console.log('Buscando:', this.searchTerm);

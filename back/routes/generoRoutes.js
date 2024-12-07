@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const generoController = require('../controllers/generoController');
 
-router.get('/genero', generoController.index);//funcional
-router.get('/genero/:id', generoController.getGeneroById);
-router.post('/genero/new', generoController.createGenero);//funcional
-router.put('/genero/:id', generoController.updateGenero);//funcional
-router.delete('/genero', generoController.deleteGeneros);
+router.get('/', generoController.getGeneros);
+router.get('/:id', generoController.getGeneroById);
+router.post('/new', generoController.createGenero);
+router.put('/:id', generoController.updateGenero);
+router.delete('/', generoController.deleteGeneros);
 
 module.exports = router;
