@@ -56,6 +56,10 @@ export class PlaylistComponent {
     }
   }
 
+  eliminarCancion(cancionId: number) {
+    console.log('ID de la canción a eliminar:', cancionId);
+  }
+
   formatDuration(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;

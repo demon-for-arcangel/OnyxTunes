@@ -220,6 +220,41 @@ class PlaylistConnection {
             throw new Error("Error al añadir la canción a Favoritos.");
         }
     }
+
+    async deleteSongPlaylist(songId, playlistId){
+        console.log(songId, playlistId);
+        try {
+            const playlist = await models.Playlist.findByPk(playlistId, {
+                attributes: { exclude: ['usuario_id'] },
+            });
+            if (!playlist) {
+                throw new Error("Playlist no encontrada");
+            }
+    
+            const songInPlaylist = await models.CancionPlaylist.findOne({
+                where: {
+                    playlist_id: playlistId,
+                    cancion_id: songId
+                }
+            });
+    
+            if (!songInPlaylist) {
+                throw new Error("La canción no está en la playlist");
+            }
+    
+            await models.CancionPlaylist.destroy({
+                where: {
+                    playlist_id: playlistId,
+                    cancion_id: songId
+                }
+            });
+    
+            return { message: "Canción eliminada de la playlist." };
+        } catch (error) {
+            console.error("Error al eliminar la canción de la playlist:", error);
+            throw new Error("Error al eliminar la canción de la playlist.");
+        }
+    }
 }
 
 module.exports = PlaylistConnection;

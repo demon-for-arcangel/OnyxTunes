@@ -10,6 +10,7 @@ router.delete("/", playlistController.deletePlaylists);
 router.get('/user/:userId', playlistController.getUserPlaylists);
 router.post('/:userId', playlistController.createPlaylistByUser);
 router.post('/song/like', playlistController.addToFavorites);
+router.delete('/song/delete', playlistController.deleteSongPlaylist);
 
 module.exports = router;
  
