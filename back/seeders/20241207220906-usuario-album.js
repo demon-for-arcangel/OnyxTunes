@@ -12,32 +12,33 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert(process.env.TABLA_ALBUM, [
+
+    await queryInterface.bulkInsert(process.env.TABLA_USUARIO_ALBUM, [
       {
-        titulo: 'Viaje Nocturno',
-        fecha_lanzamiento: new Date('2020-01-01'),
+          usuario_id: 2, 
+          album_id: 1,   
+          createdAt: new Date(),
+          updatedAt: new Date()
+      },
+      {
+          usuario_id: 2, 
+          album_id: 2,   
+          createdAt: new Date(),
+          updatedAt: new Date()
+      },
+      {
+        usuario_id: 3, 
+        album_id: 3,   
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        titulo: 'Ecos del Mar',
-        fecha_lanzamiento: new Date('2019-06-15'),
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        titulo: 'Luz de Luna',
-        fecha_lanzamiento: new Date('2021-03-12'),
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        titulo: 'Caminos Infinitos',
-        fecha_lanzamiento: new Date('2018-10-08'),
+        usuario_id: 3, 
+        album_id: 4,   
         createdAt: new Date(),
         updatedAt: new Date()
       }
-    ], {});
+  ], {});
   },
 
   async down (queryInterface, Sequelize) {
@@ -47,6 +48,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete(process.env.TABLA_ALBUM, null, {});
+    await queryInterface.bulkDelete(process.env.TABLA_USUARIO_ALBUM, null, {});
   }
 };

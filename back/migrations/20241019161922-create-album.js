@@ -12,16 +12,6 @@ module.exports = {
       titulo: {
         type: Sequelize.STRING
       },
-      artista_id: {
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: process.env.TABLA_USUARIO
-          },
-          key: 'id'
-        }
-      },
       fecha_lanzamiento: {
         type: Sequelize.DATE
       },

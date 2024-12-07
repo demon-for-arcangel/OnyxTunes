@@ -18,7 +18,7 @@ class Server {
     this.apiSearch = "/api/search";
     this.apiSongs = "/api/songs";
     this.apiGeneros = "/api/generos";
-
+    this.apiAlbums = "/api/albums";
     this.app.use(fileUpload({
       useTempFiles: true,
       tempFileDir: '/tmp/',
@@ -59,7 +59,7 @@ class Server {
     this.app.use(this.apiSearch, require("../routes/searchRoutes"));
     this.app.use(this.apiSongs, require("../routes/cancionRoutes"));
     this.app.use(this.RoutePath, require('../routes/rolRoutes'));
-    this.app.use(this.RoutePath, require('../routes/albumRoutes'));
+    this.app.use(this.apiAlbums, require('../routes/albumRoutes'));
     this.app.use(this.apiGeneros, require('../routes/generoRoutes'));
     this.app.use(this.apiPlaylist, require('../routes/PlaylistRoutes'));
   }
