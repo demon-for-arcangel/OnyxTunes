@@ -60,7 +60,6 @@ class Server {
     this.app.use(this.apiSongs, require("../routes/cancionRoutes"));
     this.app.use(this.RoutePath, require('../routes/rolRoutes'));
     this.app.use(this.RoutePath, require('../routes/albumRoutes'));
-    this.app.use(this.RoutePath, require('../routes/cancionRoutes'));
     this.app.use(this.apiGeneros, require('../routes/generoRoutes'));
     this.app.use(this.apiPlaylist, require('../routes/PlaylistRoutes'));
   }

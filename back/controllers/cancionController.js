@@ -150,7 +150,38 @@ const deleteSong = async (req, res) => {
     }
 };
 
+const addToHistory = async (req, res) => {
+    const { songId, userId } = req.body; 
+
+    try {
+        const newEntry = await conx.addToHistory(songId, userId);
+        res.status(201).json({
+            message: "Canción añadida al historial",
+            entry: newEntry
+        });
+    } catch (error) {
+        console.error("Error al añadir al historial:", error);
+        res.status(500).json({ message: "Error al añadir al historial" });
+    }
+};
+
+const getHistoryByUser = async (req, res) => {
+    const userId = req.params.userId; 
+
+    try {
+        const history = await conx.getHistoryByUser(userId);
+
+        if (!history || history.length === 0) {
+            return res.status(404).json({ msg: "No se encontraron entradas en el historial para este usuario." });
+        }
+        res.status(200).json(history);
+    } catch (error) {
+        console.error('Error al obtener el historial:', error);
+        res.status(500).json({ msg: "Error al obtener el historial" });
+    }
+};
 
 module.exports = {
-    index, getSongById, createSong, updateSong, deleteSong, getSongByUser
+    index, getSongById, createSong, updateSong, deleteSong, getSongByUser,
+    addToHistory, getHistoryByUser
 }

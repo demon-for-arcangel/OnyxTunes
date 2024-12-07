@@ -239,6 +239,47 @@ class SongModel {
             throw new Error("Error al eliminar las canciones.");
         }
     }
+
+
+    async addToHistory(songId, userId) {
+        try {
+            const newEntry = await models.Historial.create({
+                usuario_id: userId,
+                cancion_id: songId,
+                fecha_reproduccion: new Date() 
+            });
+            console.log("Nueva entrada en el historial:", newEntry);
+            return newEntry;
+        } catch (error) {
+            console.error("Error al agregar al historial:", error);
+            throw new Error("Error al agregar al historial");
+        }
+    }
+
+    async getHistoryByUser(userId) {
+        try {
+            const history = await models.Historial.findAll({
+                where: { usuario_id: userId },
+                include: [
+                    {
+                        model: models.Cancion,
+                        as: 'cancion',
+                        attributes: ['id', 'titulo'] 
+                    },
+                    {
+                        model: models.Usuario,
+                        as: 'usuario',
+                        attributes: ['id', 'nombre'] 
+                    }
+                ],
+                order: [['fecha_reproduccion', 'DESC']] 
+            });
+            return history;
+        } catch (error) {
+            console.error("Error al obtener el historial:", error);
+            throw new Error("Error al obtener el historial");
+        }
+    }
 }
 
 module.exports = SongModel;
