@@ -5,6 +5,9 @@ import { PlaylistService } from '../../services/playlist.service';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../utils/sidebar/sidebar.component';
 import { PlayerComponent } from '../player/player.component';
+import { SongService } from '../../services/song.service';
+import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-playlist',
@@ -17,10 +20,11 @@ export class PlaylistComponent {
   playlistId: number | null = null;
   playlist: Playlist | null = null;
   canciones: any[] = [];
+  user: any;
 
   @ViewChild(PlayerComponent) playerComponent!: PlayerComponent;
   
-  constructor(private route: ActivatedRoute, private playlistService: PlaylistService) {}
+  constructor(private route: ActivatedRoute, private playlistService: PlaylistService, private songService: SongService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -31,6 +35,19 @@ export class PlaylistComponent {
       console.log('ID de la playlist:', this.playlistId);
       this.loadPlaylistDetails(this.playlistId);
     });
+
+    const token = localStorage.getItem('user'); 
+    if (token) {
+      this.authService.getUserByToken(token).subscribe(
+        response => {
+          this.user = response; 
+          console.log('Usuario obtenido:', this.user);
+        },
+        error => {
+          console.error('Error al obtener el usuario:', error);
+        }
+      );
+    }
   }
 
   loadPlaylistDetails(id: number) {
@@ -53,8 +70,23 @@ export class PlaylistComponent {
   reproducirCancion(cancion: any) {
     if(this.playerComponent) {
       this.playerComponent.playSong(cancion);
+      this.addToHistory(cancion.id);
     }
   }
+
+  addToHistory(cancionId: number) {
+    if (this.user) { // Asegúrate de que el usuario esté definido
+        console.log('ID de la canción:', cancionId); // Verifica que el ID de la canción sea correcto
+        console.log('ID del usuario:', this.user.id); // Verifica que el ID del usuario sea correcto
+        this.songService.addToHistory(cancionId, this.user.id).subscribe(response => {
+            console.log('Canción añadida al historial:', response);
+        }, error => {
+            console.error('Error al añadir al historial:', error);
+        });
+    } else {
+        console.error('No se pudo añadir al historial, usuario no encontrado.');
+    }
+}
 
   eliminarCancion(cancionId: number) {
     console.log('ID de la playlist:', this.playlistId);

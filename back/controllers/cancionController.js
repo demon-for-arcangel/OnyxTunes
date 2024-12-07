@@ -151,7 +151,14 @@ const deleteSong = async (req, res) => {
 };
 
 const addToHistory = async (req, res) => {
-    const { songId, userId } = req.body; 
+    const { songId, userId } = req.body; // Asegúrate de que estás recibiendo el userId
+
+    console.log('ID de la canción:', songId); // Verifica que el ID de la canción sea correcto
+    console.log('ID del usuario:', userId); // Verifica que el ID del usuario sea correcto
+
+    if (!songId || !userId) {
+        return res.status(400).json({ message: "Faltan datos necesarios" });
+    }
 
     try {
         const newEntry = await conx.addToHistory(songId, userId);
