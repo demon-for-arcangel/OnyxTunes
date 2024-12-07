@@ -49,6 +49,11 @@ module.exports = (sequelize, DataTypes) => {
           entidad_tipo: 'Cancion' 
         }
       });
+
+      this.belongsTo(models.Asset, {
+        foreignKey: 'assetId',
+        as: 'asset',
+      });
     }
   }
   Cancion.init({
@@ -56,7 +61,9 @@ module.exports = (sequelize, DataTypes) => {
     duracion: DataTypes.INTEGER,
     reproducciones: DataTypes.INTEGER,
     album_id: DataTypes.INTEGER,
-    artista_id: DataTypes.INTEGER
+    artista_id: DataTypes.INTEGER,
+    assetId: DataTypes.INTEGER,
+
   }, {
     sequelize,
     modelName: 'Cancion',

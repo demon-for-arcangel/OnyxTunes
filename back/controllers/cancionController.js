@@ -1,6 +1,7 @@
 const { response, request } = require("express");
 const Conexion = require("../database/CancionCon");
 const models = require('../models');
+const { subirArchivo } = require('../helpers/subir-archivo');
 
 const conx = new Conexion();
 
@@ -29,11 +30,43 @@ const getSongById = async (req, res) => {
     }
 }
 
+const getSongByUser = async (req, res) => {
+    const userId = req.params.userId; // Suponiendo que el ID del usuario se pasa como parámetro en la URL
+
+    try {
+        const songs = await conx.getSongByUser(userId);
+
+        if (!songs || songs.length === 0) {
+            return res.status(404).json({ msg: "No se encontraron canciones para este usuario." });
+        }
+        res.status(200).json(songs);
+    } catch (error) {
+        console.error('Error al obtener las canciones del usuario:', error);
+        res.status(500).json({ msg: "Error al obtener las canciones del usuario" });
+    }
+};
+
 const createSong = async (req, res) => {
     try {
         const { titulo, duracion, likes, reproducciones, album_id, artista_id, generos } = req.body;
 
         console.log('Datos recibidos:', req.body);
+
+        let assetId = null;
+
+        if (req.files && req.files.archivo) { 
+            const nombreArchivo = await subirArchivo(req.files, ['mp3'], 'canciones'); 
+            
+            const newAsset = await models.Asset.create({
+                path: nombreArchivo,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            });
+
+            assetId = newAsset.id; 
+        } else {
+            console.error("No se recibió ningún archivo.");
+        }
 
         const newSong = await models.Cancion.create({
             titulo,
@@ -42,13 +75,13 @@ const createSong = async (req, res) => {
             reproducciones: reproducciones || 0,
             album_id,
             artista_id,
+            assetId,
             createdAt: new Date(),
             updatedAt: new Date()
         });
 
         console.log("Canción creada:", newSong);
 
-        // Asociar géneros, si existen
         if (Array.isArray(generos) && generos.length > 0) {
             const generosExistentes = await models.Genero.findAll({
                 where: {
@@ -119,5 +152,5 @@ const deleteSong = async (req, res) => {
 
 
 module.exports = {
-    index, getSongById, createSong, updateSong, deleteSong
+    index, getSongById, createSong, updateSong, deleteSong, getSongByUser
 }
