@@ -57,8 +57,10 @@ export class PlaylistComponent {
   }
 
   eliminarCancion(cancionId: number) {
+    console.log('ID de la playlist:', this.playlistId);
+    console.log('ID de la canción a eliminar:', cancionId);
     if (this.playlistId) {
-      this.playlistService.deleteSongPlaylist(this.playlistId, cancionId).subscribe(
+      this.playlistService.deleteSongPlaylist(cancionId, this.playlistId).subscribe(
         response => {
           console.log(response.message); 
           this.canciones = this.canciones.filter(c => c.id !== cancionId);
