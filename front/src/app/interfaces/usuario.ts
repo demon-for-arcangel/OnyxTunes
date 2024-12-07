@@ -11,7 +11,7 @@ export interface Usuario {
 
 export interface Rol {
     id: number;
-    nombre?: string;
+    nombre: string;
     descripcion?: string; 
     selected?: boolean; 
 }
