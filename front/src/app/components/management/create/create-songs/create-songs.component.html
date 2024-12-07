@@ -26,7 +26,11 @@
     }
 
     <label for="album">Álbum:</label>
-    <input id="album" type="text" [(ngModel)]="nuevaCancion.album" required />
+    <select id="album" [(ngModel)]="nuevaCancion.album" required >
+        @for (album of albumsDisponibles; track album) {
+            <option [value]="album.id">{{ album.titulo }}</option>
+        }
+    </select>
 
     <label>Duración:</label>
     <div class="duracion-container">
