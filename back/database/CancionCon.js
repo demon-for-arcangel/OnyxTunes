@@ -26,6 +26,11 @@ class SongModel {
                         attributes: ['id', 'nombre'], 
                         as: 'generos' 
                     },
+                    {
+                        model: models.Asset,
+                        attributes: ['id', 'path'],
+                        as: 'asset'
+                    },
                     { model: models.Like } 
                 ],
             });
@@ -53,6 +58,11 @@ class SongModel {
                         model: models.Genero, 
                         attributes: ['id', 'nombre'], 
                         as: 'generos' 
+                    },
+                    {
+                        model: models.Asset,
+                        attributes: ['id', 'path'],
+                        as: 'asset'
                     },
                     { model: models.Like } 
                 ],
@@ -86,6 +96,11 @@ class SongModel {
                         attributes: ['id', 'nombre'], 
                         as: 'generos' 
                     },
+                    {
+                        model: models.Asset,
+                        attributes: ['id', 'path'],
+                        as: 'asset'
+                    },
                     { model: models.Like } 
                 ],
              });
@@ -116,6 +131,11 @@ class SongModel {
                         model: models.Genero,
                         attributes: ['id', 'nombre'],
                         as: 'generos'
+                    },
+                    {
+                        model: models.Asset,
+                        attributes: ['id', 'path'],
+                        as: 'asset'
                     },
                     { model: models.Like }
                 ],
@@ -170,8 +190,7 @@ class SongModel {
         }
     }
      
-
-    async deleteSong(songsIds) {
+    async deleteSong(songsIds) { //mirar para incluir los assets
         try {
             if (!Array.isArray(songsIds) || songsIds.length === 0) {
                 throw new Error("Debe proporcionar una lista de IDs de canciones para eliminar.");

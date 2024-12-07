@@ -9,13 +9,12 @@ const subirArchivo = ( files, extensionesValidas = ['mp3', 'PNG',"JPG",'png','jp
         const nombreCortado = archivo.name.split('.');
         const extension = nombreCortado[ nombreCortado.length - 1 ];
 
-        // Validar la extension
         if ( !extensionesValidas.includes( extension ) ) {
             return reject(`La extensión ${ extension } no es permitida - ${extensionesValidas}`);
         }
         
         const nombreTemp = uuidv4() + '.' + extension;
-        const uploadPath = path.join( __dirname, '../uploads/', carpeta, nombreTemp );
+        const uploadPath = path.join( __dirname, '../../front/src/assets/uploads/', carpeta, nombreTemp );
         archivo.mv(uploadPath, (err) => {
             if (err) {
                 reject(err);
@@ -24,7 +23,6 @@ const subirArchivo = ( files, extensionesValidas = ['mp3', 'PNG',"JPG",'png','jp
             resolve( nombreTemp );
             return nombreTemp;
         });
-
     });
 
 }

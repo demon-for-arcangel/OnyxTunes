@@ -54,23 +54,20 @@ const createSong = async (req, res) => {
 
         let assetId = null;
 
-        // Manejo de la subida de archivos
-        if (req.files && req.files.archivo) { // Verifica si se recibió un archivo
-            const nombreArchivo = await subirArchivo(req.files, ['mp3', 'wav', 'ogg'], 'canciones'); // Asegúrate de que la carpeta sea correcta
+        if (req.files && req.files.archivo) { 
+            const nombreArchivo = await subirArchivo(req.files, ['mp3'], 'canciones'); 
             
-            // Registrar el path del archivo en la tabla Asset
             const newAsset = await models.Asset.create({
-                path: nombreArchivo, // Guarda el path del archivo
+                path: nombreArchivo,
                 createdAt: new Date(),
                 updatedAt: new Date()
             });
 
-            assetId = newAsset.id; // Guarda el ID del nuevo asset
+            assetId = newAsset.id; 
         } else {
             console.error("No se recibió ningún archivo.");
         }
 
-        // Crea la nueva canción en la base de datos
         const newSong = await models.Cancion.create({
             titulo,
             duracion,
@@ -78,7 +75,7 @@ const createSong = async (req, res) => {
             reproducciones: reproducciones || 0,
             album_id,
             artista_id,
-            assetId, // Guarda el assetId en la tabla Cancion
+            assetId,
             createdAt: new Date(),
             updatedAt: new Date()
         });

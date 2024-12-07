@@ -49,6 +49,11 @@ module.exports = (sequelize, DataTypes) => {
           entidad_tipo: 'Cancion' 
         }
       });
+
+      this.belongsTo(models.Asset, {
+        foreignKey: 'assetId',
+        as: 'asset',
+      });
     }
   }
   Cancion.init({

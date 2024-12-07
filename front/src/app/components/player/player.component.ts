@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SearchService } from '../../services/search.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-player',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './player.component.html',
   styleUrl: './player.component.css'
 })
@@ -14,18 +15,34 @@ export class PlayerComponent {
   isRandom: boolean = false;
   isLoop: boolean = false;
   currentSong: any = null;
+  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+
+  constructor() {  }
+
+  ngOnInit() { }
 
   playSong(song: any) {
     this.currentSong = song; 
-    this.play(); 
-  }
+    console.log('Canción seleccionada:', this.currentSong);
 
-  play() {
-    if (this.currentSong) {
-      console.log('Reproduciendo:', this.currentSong);
-      this.isPlaying = true;
+    if (this.audioPlayer && this.currentSong) {
+        this.audioPlayer.nativeElement.src = `assets/uploads/canciones/${this.currentSong.asset.path}`;
+        this.audioPlayer.nativeElement.play().then(() => {
+            this.isPlaying = true;
+        }).catch(error => {
+            console.error('Error al reproducir:', error);
+        });
+    } else {
+        console.error('audioPlayer o currentSong no están definidos');
     }
   }
+
+    play() {
+      if (this.currentSong) {
+        this.audioPlayer.nativeElement.play();
+        this.isPlaying = true;
+      }
+    }
 
   pause() {
     this.isPlaying = false;
