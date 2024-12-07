@@ -23,7 +23,8 @@ export class AccountButtonComponent {
   }
 
   logout() {
-    // Lógica para cerrar sesión
-    console.log('Cerrando sesión');
+    localStorage.removeItem('user');
+    this.menuOpen = false;
+    this.router.navigate(['/login']);
   }
 }

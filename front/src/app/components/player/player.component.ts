@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { SearchService } from '../../services/search.service';
 
 @Component({
   selector: 'app-player',
@@ -9,39 +10,46 @@ import { Component } from '@angular/core';
   styleUrl: './player.component.css'
 })
 export class PlayerComponent {
-  isPlaying: boolean = false; // Estado de reproducción
-  isRandom: boolean = false; // Estado de aleatorio
-  isLoop: boolean = false; // Estado de bucle
+  isPlaying: boolean = false;
+  isRandom: boolean = false;
+  isLoop: boolean = false;
+  currentSong: any = null;
+
+  playSong(song: any) {
+    this.currentSong = song; 
+    this.play(); 
+  }
 
   play() {
-    this.isPlaying = true;
-    console.log('Reproduciendo...');
-    // Aquí puedes agregar la lógica para reproducir la canción
+    if (this.currentSong) {
+      console.log('Reproduciendo:', this.currentSong);
+      this.isPlaying = true;
+    }
   }
 
   pause() {
     this.isPlaying = false;
     console.log('Pausado');
-    // Aquí puedes agregar la lógica para pausar la canción
+    
   }
 
   next() {
     console.log('Siguiente canción');
-    // Aquí puedes agregar la lógica para ir a la siguiente canción
+    
   }
 
   previous() {
     console.log('Canción anterior');
-    // Aquí puedes agregar la lógica para ir a la canción anterior
+    
   }
 
   toggleRandom() {
-    this.isRandom = !this.isRandom; // Cambia el estado de aleatorio
+    this.isRandom = !this.isRandom; 
     console.log(`Aleatorio: ${this.isRandom}`);
   }
 
   toggleLoop() {
-    this.isLoop = !this.isLoop; // Cambia el estado de bucle
+    this.isLoop = !this.isLoop; 
     console.log(`Bucle: ${this.isLoop}`);
   }
 }

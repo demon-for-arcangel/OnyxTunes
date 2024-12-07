@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { SearchService } from '../../services/search.service';
 import { PlayerComponent } from '../player/player.component';
 import { SidebarComponent } from '../utils/sidebar/sidebar.component';
@@ -13,13 +13,16 @@ import { SearchResults } from '../../interfaces/search-results';
   styleUrl: './search.component.css'
 })
 export class SearchComponent {
-  query: string = '';  // La consulta de búsqueda
+  query: string = '';  
   results: SearchResults= {
     songs: [],
     playlists:[],
     artists:[],
     albums:[]
-  };  // Los resultados de la búsqueda
+  };  
+  songHovered: any = null;
+
+  @ViewChild(PlayerComponent) playerComponent!: PlayerComponent;
 
   constructor(private searchService: SearchService) {}
 
@@ -34,6 +37,12 @@ export class SearchComponent {
           console.error('Error en la búsqueda:', error);
         }
       );
+    }
+  }
+
+  playSong(song: any) {
+    if(this.playerComponent) {
+      this.playerComponent.playSong(song);
     }
   }
 }

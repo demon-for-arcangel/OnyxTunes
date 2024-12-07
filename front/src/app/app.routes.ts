@@ -24,7 +24,7 @@ export const routes: Routes = [
     { path: 'register', component: RegisterComponent },
     { path: 'login', component: LoginComponent },
     { path: 'gustosMusicales', component: GustosMusicalesComponent },
-    { path: 'selectAccess', component: SelectAccessComponent },
+    { path: 'selectAccess', component: SelectAccessComponent, canActivate: [authGuard] },
     { path: 'home', component: HomeComponent, canActivate: [authGuard] },
     { path: 'platformManagement', component: PlatformManagementComponent, canActivate: [authGuard] },
     { path: 'platform/userManagement', component: UsersComponent, canActivate: [authGuard] },
