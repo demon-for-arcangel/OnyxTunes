@@ -57,7 +57,17 @@ export class PlaylistComponent {
   }
 
   eliminarCancion(cancionId: number) {
-    console.log('ID de la canción a eliminar:', cancionId);
+    if (this.playlistId) {
+      this.playlistService.deleteSongPlaylist(this.playlistId, cancionId).subscribe(
+        response => {
+          console.log(response.message); 
+          this.canciones = this.canciones.filter(c => c.id !== cancionId);
+        },
+        error => {
+          console.error('Error al eliminar la canción:', error);
+        }
+      );
+    }
   }
 
   formatDuration(seconds: number): string {
@@ -68,5 +78,5 @@ export class PlaylistComponent {
     const formattedSeconds = secs.toString().padStart(2, '0');
 
     return `${formattedMinutes}:${formattedSeconds}`; 
-}
+  }
 }

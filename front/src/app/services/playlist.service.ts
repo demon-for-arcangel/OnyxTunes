@@ -25,4 +25,13 @@ export class PlaylistService {
   addToFavorites(songId: number, userId: number): Observable<any> {
     return this.http.post<any>(this.url + this.playlistUrl + '/song/like', { songId, userId });
   }
+
+  deleteSongPlaylist(songId: number, playlistId: number): Observable<any> {
+    return this.http.delete<any>(this.url + this.playlistUrl + '/song/delete', { 
+      body: { 
+        songId, 
+        playlistId 
+      } 
+    });
+  }
 }
