@@ -9,7 +9,7 @@ export const environment = {
     usersUrl: '/users',
     songsUrl: '/songs',
     rolesUrl: '/roles',
-    generosUrl: '/genero',
+    generosUrl: '/generos',
     albumsUrl: '/albums',
     chatsUrl: '/chats',
     playlistUrl: '/playlist',
