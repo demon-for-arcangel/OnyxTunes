@@ -25,14 +25,14 @@ export class SidebarComponent {
     this.router.navigate(['/home']); 
   }
 
-
   navigateToSearch() {
     this.router.navigate(['/search']);
   }
+
   navigateToPlaylist(playlist: Playlist) {
-    const playlistName = encodeURIComponent(playlist.nombre);
-    this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]); 
-  }
+    const encodedData = btoa(`${playlist.id}:${playlist.nombre}`); // Codificamos el ID y el nombre
+    this.router.navigate([`/playlist/${encodedData}`]);
+}
 
   loadUserId() {
     const tokenObject = localStorage.getItem('user'); 

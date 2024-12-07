@@ -30,7 +30,7 @@ export const routes: Routes = [
     { path: 'platform/userManagement', component: UsersComponent, canActivate: [authGuard] },
     { path: 'platform/musicManagement', component: MusicComponent, canActivate: [authGuard] },
     { path: 'chat', component: ChatBaseComponent, canActivate: [authGuard] },
-    { path: 'playlist/:id/:name', component: PlaylistComponent, canActivate: [authGuard] },
+    { path: 'playlist/:data', component: PlaylistComponent, canActivate: [authGuard] },
     { path: 'search', component: SearchComponent },
     { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
     { path: 'settings', component: SettingsComponent, canActivate: [authGuard] },

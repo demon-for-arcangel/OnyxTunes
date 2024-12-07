@@ -28,8 +28,14 @@ class PlaylistConnection {
                         include: [{
                             model: models.Album,
                             attributes: ['id', 'titulo']
+                        },
+                        {
+                            model: models.Asset,
+                            attributes: ['id', 'path'],
+                            as: 'asset'
                         }]
-                    }             
+                    },
+           
                 ]
             });
             if (!playlist) {

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Playlist } from '../../interfaces/playlist';
 import { PlaylistService } from '../../services/playlist.service';
@@ -16,13 +16,18 @@ import { PlayerComponent } from '../player/player.component';
 export class PlaylistComponent {
   playlistId: number | null = null;
   playlist: Playlist | null = null;
-  canciones: any[] = []; 
+  canciones: any[] = [];
+
+  @ViewChild(PlayerComponent) playerComponent!: PlayerComponent;
   
   constructor(private route: ActivatedRoute, private playlistService: PlaylistService) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.playlistId = +params['id']; 
+      const encodedData = params['data']; 
+      const decodedData = atob(encodedData); 
+      const [id, nombre] = decodedData.split(':'); 
+      this.playlistId = +id; 
       console.log('ID de la playlist:', this.playlistId);
       this.loadPlaylistDetails(this.playlistId);
     });
@@ -33,7 +38,7 @@ export class PlaylistComponent {
       console.log(response);
       if (response) {
         this.playlist = response;
-        this.canciones = response.canciones; // Asigna las canciones al nuevo atributo
+        this.canciones = response.canciones; 
         console.log('Playlist cargada:', this.playlist);
         console.log('Canciones:', this.canciones);
         console.log('titulo', response.canciones[0]?.titulo);
@@ -46,7 +51,9 @@ export class PlaylistComponent {
   }
 
   reproducirCancion(cancion: any) {
-    console.log('Reproduciendo:', cancion);
+    if(this.playerComponent) {
+      this.playerComponent.playSong(cancion);
+    }
   }
 
   formatDuration(seconds: number): string {
