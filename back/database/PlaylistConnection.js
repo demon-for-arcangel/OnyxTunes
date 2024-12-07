@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const models = require("../models");
 
 class PlaylistConnection {
@@ -171,24 +171,43 @@ class PlaylistConnection {
 
     async addSongToFavorites(songId, userId) {
         try {
-            let playlist;
-    
-            try {
-                playlist = await this.getPlaylistById(userId, 'Favoritos');
-            } catch (error) {
-                if (error.message !== "Playlist no encontrada") {
-                    throw error;
-                }
+            if (typeof userId !== 'number') {
+                throw new Error("El userId debe ser un número entero.");
             }
     
-            if (!playlist) {
-                playlist = await models.Playlist.create({
-                    nombre: 'Favoritos',
-                    usuario_id: userId
+            let favoritesPlaylist = await models.Playlist.findOne({
+                attributes: { exclude: ['usuario_id'] },
+                where: { nombre: 'Favoritos' }
+            });
+    
+            let existingPlaylist;
+    
+            if (favoritesPlaylist) {
+                existingPlaylist = await models.UsuarioPlaylist.findOne({
+                    where: {
+                        usuario_id: userId,
+                        playlist_id: favoritesPlaylist.id 
+                    }
                 });
             }
     
-            await playlist.addCanciones(songId); 
+            if (!existingPlaylist) {
+                const newFavoritesPlaylist = await models.Playlist.create({
+                    nombre: 'Favoritos',
+                });
+    
+                await models.UsuarioPlaylist.create({
+                    usuario_id: userId,
+                    playlist_id: newFavoritesPlaylist.id
+                });
+            } else {
+                favoritesPlaylist = await models.Playlist.findByPk(
+                    existingPlaylist.playlist_id,
+                    { attributes: { exclude: ['usuario_id'] } } 
+                );
+            }
+    
+            await favoritesPlaylist.addCanciones(songId); 
             return { message: "Canción añadida a Favoritos." };
         } catch (error) {
             console.error('Error al añadir la canción a Favoritos:', error);

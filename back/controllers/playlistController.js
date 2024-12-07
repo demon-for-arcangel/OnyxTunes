@@ -112,10 +112,10 @@ const createPlaylistByUser = async (req, res) => {
 };
 
 const addToFavorites = async (req, res) => {
-    const { songId, userId } = req.body; // Asegúrate de que el ID de la canción y el ID del usuario se envíen en el cuerpo de la solicitud
+    const { songId, userId } = req.body;
 
     try {
-        const result = await playlistConnection.addSongToFavorites(songId, userId);
+        const result = await conx.addSongToFavorites(songId, userId);
         return res.status(200).json(result);
     } catch (error) {
         console.error('Error al añadir la canción a Favoritos:', error);
