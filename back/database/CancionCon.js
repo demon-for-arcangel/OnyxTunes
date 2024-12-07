@@ -26,6 +26,11 @@ class SongModel {
                         attributes: ['id', 'nombre'], 
                         as: 'generos' 
                     },
+                    {
+                        model: models.Asset,
+                        attributes: ['id', 'path'],
+                        as: 'asset'
+                    },
                     { model: models.Like } 
                 ],
             });
@@ -53,6 +58,11 @@ class SongModel {
                         model: models.Genero, 
                         attributes: ['id', 'nombre'], 
                         as: 'generos' 
+                    },
+                    {
+                        model: models.Asset,
+                        attributes: ['id', 'path'],
+                        as: 'asset'
                     },
                     { model: models.Like } 
                 ],
@@ -86,6 +96,11 @@ class SongModel {
                         attributes: ['id', 'nombre'], 
                         as: 'generos' 
                     },
+                    {
+                        model: models.Asset,
+                        attributes: ['id', 'path'],
+                        as: 'asset'
+                    },
                     { model: models.Like } 
                 ],
              });
@@ -93,6 +108,42 @@ class SongModel {
         } catch (error) {
             console.error("Error al buscar canción por título:", error);
             throw new Error("Error al buscar canción por título");
+        }
+    }
+
+    async getSongByUser(userId) {
+        try {
+            const songs = await models.Cancion.findAll({
+                where: {
+                    artista_id: userId 
+                },
+                include: [
+                    {
+                        model: models.Usuario,
+                        attributes: ['id', 'nombre'],
+                        as: 'artista'
+                    },
+                    {
+                        model: models.Album,
+                        attributes: ['id', 'titulo']
+                    },
+                    {
+                        model: models.Genero,
+                        attributes: ['id', 'nombre'],
+                        as: 'generos'
+                    },
+                    {
+                        model: models.Asset,
+                        attributes: ['id', 'path'],
+                        as: 'asset'
+                    },
+                    { model: models.Like }
+                ],
+            });
+            return songs;
+        } catch (error) {
+            console.error('Error al obtener las canciones del usuario:', error);
+            throw new Error('Error al obtener las canciones del usuario');
         }
     }
 
@@ -139,11 +190,35 @@ class SongModel {
         }
     }
      
-
-    async deleteSong(songsIds) {
+    async deleteSong(songsIds) { //mirar para incluir los assets
         try {
             if (!Array.isArray(songsIds) || songsIds.length === 0) {
                 throw new Error("Debe proporcionar una lista de IDs de canciones para eliminar.");
+            }
+    
+            const songsToDelete = await models.Cancion.findAll({
+                where: {
+                    id: {
+                        [Op.in]: songsIds,
+                    },
+                },
+                include: [
+                    {
+                        model: models.Album,
+                        required: false 
+                    },
+                    {
+                        model: models.Genero, 
+                        as: 'generos',
+                        through: { 
+                            attributes: [] 
+                        }
+                    }
+                ]
+            });
+    
+            for (const song of songsToDelete) {
+                await song.setGeneros([]); 
             }
     
             const result = await models.Cancion.destroy({
@@ -152,7 +227,6 @@ class SongModel {
                         [Op.in]: songsIds,
                     },
                 },
-                include: [{ model: models.Like }]
             });
     
             if (result === 0) {
@@ -165,7 +239,6 @@ class SongModel {
             throw new Error("Error al eliminar las canciones.");
         }
     }
-    
 }
 
 module.exports = SongModel;

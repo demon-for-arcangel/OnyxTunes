@@ -53,6 +53,7 @@ export class UsersComponent {
         this.usuarios = [...usuarios]; 
         this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
         this.updatePaginatedUsuarios();
+        console.log(this.usuarios);
       },
       error: (error) => {
         console.error('Error al cargar usuarios:', error);

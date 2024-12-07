@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const models = require("../models");
 
 class PlaylistConnection {
@@ -166,6 +166,52 @@ class PlaylistConnection {
         } catch (error) {
             console.error("Error al crear la playlist:", error);
             throw new Error("Error al crear la playlist");
+        }
+    }
+
+    async addSongToFavorites(songId, userId) {
+        try {
+            if (typeof userId !== 'number') {
+                throw new Error("El userId debe ser un número entero.");
+            }
+    
+            let favoritesPlaylist = await models.Playlist.findOne({
+                attributes: { exclude: ['usuario_id'] },
+                where: { nombre: 'Favoritos' }
+            });
+    
+            let existingPlaylist;
+    
+            if (favoritesPlaylist) {
+                existingPlaylist = await models.UsuarioPlaylist.findOne({
+                    where: {
+                        usuario_id: userId,
+                        playlist_id: favoritesPlaylist.id 
+                    }
+                });
+            }
+    
+            if (!existingPlaylist) {
+                const newFavoritesPlaylist = await models.Playlist.create({
+                    nombre: 'Favoritos',
+                });
+    
+                await models.UsuarioPlaylist.create({
+                    usuario_id: userId,
+                    playlist_id: newFavoritesPlaylist.id
+                });
+            } else {
+                favoritesPlaylist = await models.Playlist.findByPk(
+                    existingPlaylist.playlist_id,
+                    { attributes: { exclude: ['usuario_id'] } } 
+                );
+            }
+    
+            await favoritesPlaylist.addCanciones(songId); 
+            return { message: "Canción añadida a Favoritos." };
+        } catch (error) {
+            console.error('Error al añadir la canción a Favoritos:', error);
+            throw new Error("Error al añadir la canción a Favoritos.");
         }
     }
 }

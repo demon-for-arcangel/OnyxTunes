@@ -15,7 +15,12 @@ class SearchConnection {
                     titulo: {
                         [Op.like]: `%${titulo}%`
                     }
-                }
+                },
+                include: [{
+                    model: models.Asset,
+                    attributes: ['id', 'path'],
+                    as: 'asset'
+                }]
             });
             return songs;
         } catch (error) {

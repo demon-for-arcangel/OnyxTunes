@@ -7,6 +7,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ShowSongsComponent } from '../show/show-songs/show-songs.component';
 import { CreateSongsComponent } from '../create/create-songs/create-songs.component';
 import { UpdateSongsComponent } from '../update/update-songs/update-songs.component';
+import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
 
 @Component({
   selector: 'app-music',
@@ -126,17 +127,36 @@ export class MusicComponent implements OnInit {
     });
 }
 
-  deleteCancion(id: number) {
-    this.cancionesService.deleteCancion(id).subscribe(
-      (response) => {
-        this.canciones = this.canciones.filter((c) => c.id !== id);
-        console.log('Canción eliminada:', id);
+deleteSongs(id: number) {
+  this.ref = this.dialogService.open(DeleteConfirmationComponent, {
+      header: 'Confirmar Eliminación',
+      width: '400px',
+      modal: true,
+      styleClass: 'custom-modal',
+      contentStyle: {
+          'background-color': '#1e1e1e',
+          'color': 'white',
+          'padding': '20px'
       },
-      (error) => {
-        console.error('Error al eliminar la canción', error);
+      data: {
+          songsIds: [id]
       }
-    );
-  }
+  });
+
+  this.ref.onClose.subscribe((confirmed: boolean) => {
+      if (confirmed) {
+          this.cancionesService.deleteCancion([id]).subscribe( 
+              (response) => {
+                  console.log('Canción eliminada:', response);
+                  this.canciones = this.canciones.filter(c => c.id !== id);
+              },
+              (error) => {
+                  console.error('Error al eliminar la canción', error);
+              }
+          );
+      }
+  }); 
+}
 
   newAlbum() {
     const nuevoAlbum = { /* datos del nuevo álbum */ };

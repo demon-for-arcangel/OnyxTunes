@@ -38,22 +38,10 @@ const createPlaylist = async (req, res = response) => {
         const { nombre, descripcion, usuario_id, canciones } = req.body;
         const cancionesArray = canciones ? JSON.parse(canciones) : []; 
 
-        
-        let assetId = null;
-        if (req.file) { 
-            const file = req.file;
-            const assetPath = path.join(__dirname, './../../uploads/', file.filename); 
-
-            assetId = await assetsModel.addAsset(assetPath); 
-        } else {
-            console.error("No se recibió ningún archivo.");
-        }
-
         const newPlaylist = await conx.createPlaylist({
             nombre,
             descripcion,
             usuario_id,
-            assetId 
         }, cancionesArray);
 
         res.status(201).json(newPlaylist);
@@ -123,7 +111,19 @@ const createPlaylistByUser = async (req, res) => {
     }
 };
 
+const addToFavorites = async (req, res) => {
+    const { songId, userId } = req.body;
+
+    try {
+        const result = await conx.addSongToFavorites(songId, userId);
+        return res.status(200).json(result);
+    } catch (error) {
+        console.error('Error al añadir la canción a Favoritos:', error);
+        return res.status(500).json({ msg: "Error al añadir la canción a Favoritos." });
+    }
+};
+
 module.exports = {
     index, getPlaylistById, createPlaylist, updatePlaylist, deletePlaylists, 
-    getUserPlaylists, createPlaylistByUser
+    getUserPlaylists, createPlaylistByUser, addToFavorites
 };

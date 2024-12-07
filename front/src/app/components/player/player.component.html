@@ -16,3 +16,8 @@
         <i class="pi" [ngClass]="isLoop ? 'pi-repeat' : 'pi-repeat-off'"></i> <!-- Icono de bucle -->
     </button>
 </div>
+
+<audio #audioPlayer controls style="display: none;">
+    <source [src]="currentSong?.asset?.path" type="audio/mpeg">
+    Tu navegador no soporta el elemento de audio.
+</audio>
