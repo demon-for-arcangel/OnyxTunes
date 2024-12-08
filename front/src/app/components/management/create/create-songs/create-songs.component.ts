@@ -171,7 +171,7 @@ export class CreateSongsComponent {
     this.nuevaCancion.generos = this.generosSeleccionados.map(g => g.id); 
 
     console.log('Datos de la canción a crear:', this.nuevaCancion); 
-    console.log('ID del álbum antes de enviar:', this.nuevaCancion.album); // Verifica el ID del álbum
+    console.log('ID del álbum antes de enviar:', this.nuevaCancion.album); 
     console.log('Géneros antes de enviar:', JSON.stringify(this.nuevaCancion.generos));
 
     if (!this.nuevaCancion.artista_id) {

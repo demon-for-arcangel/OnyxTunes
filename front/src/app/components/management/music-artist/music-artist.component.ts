@@ -154,8 +154,8 @@ export class MusicArtistComponent {
     });
 }
 
-deleteSongs(ids: number[]): void { // Acepta un solo ID o un array de IDs
-  const idsArray = Array.isArray(ids) ? ids : [ids]; // Convierte a array si es un solo ID
+deleteSongs(ids: number[]): void {
+  const idsArray = Array.isArray(ids) ? ids : [ids]; 
 
   this.ref = this.dialogService.open(DeleteConfirmationComponent, {
     header: 'Confirmar Eliminación',
@@ -168,16 +168,15 @@ deleteSongs(ids: number[]): void { // Acepta un solo ID o un array de IDs
       'padding': '20px'
     },
     data: {
-      songsIds: idsArray // Asegúrate de que 'ids' sea un array
+      songsIds: idsArray
     }
   });
 
   this.ref.onClose.subscribe((confirmed: boolean) => {
     if (confirmed) {
-      this.cancionesService.deleteCancion(idsArray).subscribe( // Aquí pasamos 'idsArray' directamente
+      this.cancionesService.deleteCancion(idsArray).subscribe( 
         (response) => {
-          console.log('Canciones eliminadas:', response);
-          // No actualizamos la lista de canciones aquí, ya que lo has solicitado
+          this.loadCanciones();
         },
         (error) => {
           console.error('Error al eliminar las canciones', error);
