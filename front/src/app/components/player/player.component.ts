@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { SearchService } from '../../services/search.service';
 import { FormsModule } from '@angular/forms';
 
@@ -20,37 +20,48 @@ export class PlayerComponent {
   private progressInterval: any;
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
 
+  @Output() songEnded = new EventEmitter<void>();
+
   constructor() {  }
 
   ngOnInit() {
+
+    // Iniciar el intervalo para actualizar el tiempo actual
     setInterval(() => {
-        if (this.isPlaying && this.audioPlayer) {
-            this.currentTime = this.audioPlayer.nativeElement.currentTime;
-        }
-    }, 1000); 
+      if (this.isPlaying && this.audioPlayer) {
+        this.currentTime = this.audioPlayer.nativeElement.currentTime;
+      }
+    }, 1000);
 }
+
+ngAfterViewInit() {
+  if (this.audioPlayer) {
+    this.audioPlayer.nativeElement.addEventListener('ended', () => {
+      this.handleSongEnd();
+    });
+  }
+}
+
 
 playSong(song: any) {
   this.currentSong = song; 
-  console.log('Canción seleccionada:', this.currentSong);
-
   if (this.audioPlayer && this.currentSong) {
-      this.audioPlayer.nativeElement.src = `assets/uploads/canciones/${this.currentSong.asset.path}`;
-
-      this.audioPlayer.nativeElement.oncanplaythrough = () => {
-          this.duration = this.audioPlayer.nativeElement.duration; 
-      };
-
-      this.audioPlayer.nativeElement.play().then(() => {
-          this.isPlaying = true;
-          this.startProgressUpdate(); 
-      }).catch(error => {
-          console.error('Error al reproducir:', error);
-      });
+    const audioElement = this.audioPlayer.nativeElement;
+    audioElement.src = `assets/uploads/canciones/${this.currentSong.asset.path}`;
+    audioElement.oncanplaythrough = () => {
+      this.duration = audioElement.duration; 
+    };
+    audioElement.play()
+      .then(() => {
+        this.isPlaying = true;
+        this.startProgressUpdate();
+      })
+      .catch(error => console.error('Error al reproducir:', error));
   } else {
-      console.error('audioPlayer o currentSong no están definidos');
+    console.error('audioPlayer o currentSong no están definidos');
   }
 }
+
 
   play() {
     if (this.currentSong) {
@@ -69,6 +80,7 @@ playSong(song: any) {
   }
 
   next() {
+    this.songEnded.emit();
     console.log('Siguiente canción');
     
   }
@@ -125,6 +137,24 @@ playSong(song: any) {
   updateProgress() {
     if (this.audioPlayer) {
       this.currentTime = this.audioPlayer.nativeElement.currentTime; 
+    }
+  }
+
+  /* private handleSongEnd() {
+    this.isPlaying = false; // Detener la reproducción
+    this.songEnded.emit(); // Emitir evento de fin de canción
+    if (this.isLoop) {
+      this.playSong(this.currentSong); // Repetir la misma canción si está en bucle
+    }
+  } */
+
+  private handleSongEnd() {
+    this.isPlaying = false; // Detener la reproducción
+    this.songEnded.emit(); // Emitir evento de fin de canción
+  
+    // Si el bucle está activado, reinicia la reproducción de la canción actual
+    if (this.isLoop) {
+      this.playSong(this.currentSong);
     }
   }
 }

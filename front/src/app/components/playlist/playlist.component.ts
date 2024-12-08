@@ -23,6 +23,7 @@ export class PlaylistComponent {
   canciones: any[] = [];
   user: any;
   userLikes: number[] = [];
+  currentSongIndex: number = 0;
 
   @ViewChild(PlayerComponent) playerComponent!: PlayerComponent;
   
@@ -72,7 +73,8 @@ export class PlaylistComponent {
   }
 
   reproducirCancion(cancion: any) {
-    if(this.playerComponent) {
+    this.currentSongIndex = this.canciones.findIndex(c => c.id === cancion.id); // Establecer el índice de la canción actual
+    if (this.playerComponent) {
       this.playerComponent.playSong(cancion);
       this.addToHistory(cancion.id);
     }
@@ -95,24 +97,20 @@ export class PlaylistComponent {
 eliminarCancion(cancionId: number) {
   console.log('ID de la playlist:', this.playlistId);
   console.log('ID de la canción a eliminar:', cancionId);
-  console.log('ID del usuario:', this.user.id); // Verifica que el ID del usuario sea correcto
+  console.log('ID del usuario:', this.user.id); 
 
-  // Verificar si el like existe antes de intentar eliminarlo
   this.likeService.getLikesByUserId(this.user.id).subscribe(
       (response) => {
-          // Suponiendo que response.data es un array de likes
           const like = response.data.find(like => like.entidad_id === cancionId);
           if (like) {
-              // Aquí usamos el ID del like para eliminarlo
               this.likeService.deleteLike(like.id).subscribe(
                   (response) => {
                       console.log('Like eliminado:', response);
                       this.userLikes = this.userLikes.filter(id => id !== cancionId);
-                      this.canciones = this.canciones.filter(c => c.id !== cancionId); // Eliminar de la lista de canciones
+                      this.canciones = this.canciones.filter(c => c.id !== cancionId); 
                   },
                   (error) => {
                       console.error('Error al eliminar el like:', error);
-                      // Aquí puedes mostrar un mensaje al usuario si es necesario
                   }
               );
           } else {
@@ -134,4 +132,27 @@ eliminarCancion(cancionId: number) {
 
     return `${formattedMinutes}:${formattedSeconds}`; 
   }
+
+  onSongEnded() {
+    this.currentSongIndex++;
+  
+    // Si el índice supera el tamaño de la lista de canciones
+    if (this.currentSongIndex >= this.canciones.length) {
+      if (this.playerComponent.isLoop) {
+        // Reinicia desde la primera canción si el bucle está activado
+        this.currentSongIndex = 0;
+        const nextSong = this.canciones[this.currentSongIndex];
+        this.reproducirCancion(nextSong);
+      } else {
+        // Fin de la lista sin bucle
+        console.log('Fin de la lista de reproducción');
+        this.currentSongIndex = 0; // Opcional: Reinicia el índice
+      }
+    } else {
+      // Reproduce la siguiente canción en la lista si no se ha llegado al final
+      const nextSong = this.canciones[this.currentSongIndex];
+      this.reproducirCancion(nextSong);
+    }
+  }
+  
 }
