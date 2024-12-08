@@ -15,18 +15,15 @@
                 {{ mostrarCanciones ? 'Ver Álbumes' : 'Ver Canciones' }}
             </button>
         </div>
-
-        <div class="search-bar"><!-- por hacer -->
-            <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar canción o álbum..." (keyup.enter)="searchMusic()"/>
-            <button (click)="newCancion()">
-                <i class="pi pi-plus"></i> Añadir Canción
-            </button>
-            <button (click)="newAlbum()">
-                <i class="pi pi-plus"></i> Añadir Álbum
-            </button>
-        </div>
     
         @if(mostrarCanciones) {
+            <div class="search-bar"><!-- por hacer -->
+                <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar canción..." (keyup.enter)="searchMusic()"/>
+                <button (click)="newCancion()">
+                    <i class="pi pi-plus"></i> Añadir Canción
+                </button>
+            </div>
+
             <div class="songs-section">
                 <h2>Lista de Canciones</h2>
                 <table class="music-table">
@@ -67,6 +64,13 @@
         }
     
         @if(!mostrarCanciones) {
+            <div class="search-bar"><!-- por hacer -->
+                <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar álbum..." (keyup.enter)="searchMusic()"/>
+                <button (click)="newAlbum()">
+                    <i class="pi pi-plus"></i> Añadir Álbum
+                </button>
+            </div>
+
             <div class="albums-section">
                 <h2>Lista de Álbumes</h2>
                 <table class="music-table">
