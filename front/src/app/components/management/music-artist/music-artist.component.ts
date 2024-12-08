@@ -31,6 +31,7 @@ export class MusicArtistComponent {
   currentAlbumsPage = 1;
   albumsPerPage = 5;
   searchQuery: string = '';
+  mostrarCanciones: boolean = true;
 
   ref: DynamicDialogRef | undefined;
   dialog: any;
@@ -40,6 +41,9 @@ export class MusicArtistComponent {
   ngOnInit() {
     this.loadCanciones();
     this.loadAlbums();
+  }
+  view(){
+    this.mostrarCanciones = !this.mostrarCanciones;
   }
 
   loadCanciones() {
