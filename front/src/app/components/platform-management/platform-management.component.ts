@@ -46,6 +46,10 @@ export class PlatformManagementComponent {
     });
   }
 
+  goBack() {
+    this.router.navigate(['/selectAccess']);
+  }
+
   getUsuario(userId: string): void {
     this.usuarioService.getUserById(userId).subscribe({
       next: (usuario: Usuario ) => {
