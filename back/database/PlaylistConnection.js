@@ -190,6 +190,7 @@ class PlaylistConnection {
     
             if (favoritesPlaylist) {
                 existingPlaylist = await models.UsuarioPlaylist.findOne({
+                    attributes: { exclude: ['album_id'] },
                     where: {
                         usuario_id: userId,
                         playlist_id: favoritesPlaylist.id 
@@ -214,7 +215,24 @@ class PlaylistConnection {
             }
     
             await favoritesPlaylist.addCanciones(songId); 
-            return { message: "Canción añadida a Favoritos." };
+
+            const existingLike = await models.Like.findOne({
+                where: {
+                    usuario_id: userId,
+                    entidad_id: songId,
+                    entidad_tipo: 'Cancion'
+                }
+            })
+
+            if (!existingLike) {
+                await models.Like.create({
+                    usuario_id: userId,
+                    entidad_id: songId,
+                    entidad_tipo: 'Cancion'
+                })
+            }
+
+            return { message: "Canción añadida a Favoritos y añadido a la tabla Like." };
         } catch (error) {
             console.error('Error al añadir la canción a Favoritos:', error);
             throw new Error("Error al añadir la canción a Favoritos.");
