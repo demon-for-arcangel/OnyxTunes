@@ -44,7 +44,7 @@ class LikeConnection {
 
             if (like.entidad_tipo === 'Cancion') {
                 const favoritesPlaylist = await models.Playlist.findOne({
-                    attributes: { exclude: ['usuario_id'] }, // Manteniendo el exclude
+                    attributes: { exclude: ['usuario_id'] }, 
                     where: {
                         nombre: 'Favoritos'
                     }
@@ -54,7 +54,7 @@ class LikeConnection {
                 if (favoritesPlaylist) {
                     console.log(like.usuario_id);
                     const userPlaylist = await models.UsuarioPlaylist.findOne({
-                        attributes: { exclude: ['album_id'] }, // Manteniendo el exclude
+                        attributes: { exclude: ['album_id'] }, 
                         where: {
                             usuario_id: like.usuario_id,
                             playlist_id: favoritesPlaylist.id
@@ -63,11 +63,10 @@ class LikeConnection {
                     console.log('usuarioPlaylist', userPlaylist);
 
                     if (userPlaylist) {
-                        // Cambiar like.entidad_tipo a like.entidad_id
                         await models.CancionPlaylist.destroy({
                             where: {
                                 playlist_id: favoritesPlaylist.id,
-                                cancion_id: like.entidad_id // Usar entidad_id para el ID de la canción
+                                cancion_id: like.entidad_id 
                             }
                         });
                     }
