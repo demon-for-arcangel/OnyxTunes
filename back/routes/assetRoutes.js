@@ -1,5 +1,5 @@
-const express = require('express');
-const router = express.Router();
+const { Router } = require("express");
+const router = Router();
 const assetsController = require('../controllers/assetController');
 const { checkToken } = require('../middlewares/abilities');
 

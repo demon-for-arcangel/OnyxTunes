@@ -19,6 +19,9 @@ class Server {
     this.apiSongs = "/api/songs";
     this.apiGeneros = "/api/generos";
     this.apiAlbums = "/api/albums";
+    this.apiLikes = "/api/likes";
+
+
     this.app.use(fileUpload({
       useTempFiles: true,
       tempFileDir: '/tmp/',
@@ -62,6 +65,7 @@ class Server {
     this.app.use(this.apiAlbums, require('../routes/albumRoutes'));
     this.app.use(this.apiGeneros, require('../routes/generoRoutes'));
     this.app.use(this.apiPlaylist, require('../routes/PlaylistRoutes'));
+    this.app.use(this.apiLikes, require("../routes/likesRoutes"));
   }
 
   listen() {

@@ -80,8 +80,6 @@ const deletePlaylists = async (req, res) => {
     }
 };
 
-
-
 const getUserPlaylists = async (req, res) => {
     const { userId } = req.params; 
 
