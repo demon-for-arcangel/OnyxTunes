@@ -8,6 +8,7 @@ import { PlayerComponent } from '../player/player.component';
 import { SongService } from '../../services/song.service';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
+import { LikesService } from '../../services/likes.service';
 
 @Component({
   selector: 'app-playlist',
@@ -21,10 +22,13 @@ export class PlaylistComponent {
   playlist: Playlist | null = null;
   canciones: any[] = [];
   user: any;
+  userLikes: number[] = [];
 
   @ViewChild(PlayerComponent) playerComponent!: PlayerComponent;
   
-  constructor(private route: ActivatedRoute, private playlistService: PlaylistService, private songService: SongService, private authService: AuthService) {}
+  constructor(private route: ActivatedRoute, private playlistService: PlaylistService, 
+    private songService: SongService, private authService: AuthService,
+    private likeService: LikesService) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -75,9 +79,9 @@ export class PlaylistComponent {
   }
 
   addToHistory(cancionId: number) {
-    if (this.user) { // Asegúrate de que el usuario esté definido
-        console.log('ID de la canción:', cancionId); // Verifica que el ID de la canción sea correcto
-        console.log('ID del usuario:', this.user.id); // Verifica que el ID del usuario sea correcto
+    if (this.user) { 
+        console.log('ID de la canción:', cancionId);
+        console.log('ID del usuario:', this.user.id);
         this.songService.addToHistory(cancionId, this.user.id).subscribe(response => {
             console.log('Canción añadida al historial:', response);
         }, error => {
@@ -88,21 +92,38 @@ export class PlaylistComponent {
     }
 }
 
-  eliminarCancion(cancionId: number) {
-    console.log('ID de la playlist:', this.playlistId);
-    console.log('ID de la canción a eliminar:', cancionId);
-    if (this.playlistId) {
-      this.playlistService.deleteSongPlaylist(cancionId, this.playlistId).subscribe(
-        response => {
-          console.log(response.message); 
-          this.canciones = this.canciones.filter(c => c.id !== cancionId);
-        },
-        error => {
-          console.error('Error al eliminar la canción:', error);
-        }
-      );
-    }
-  }
+eliminarCancion(cancionId: number) {
+  console.log('ID de la playlist:', this.playlistId);
+  console.log('ID de la canción a eliminar:', cancionId);
+  console.log('ID del usuario:', this.user.id); // Verifica que el ID del usuario sea correcto
+
+  // Verificar si el like existe antes de intentar eliminarlo
+  this.likeService.getLikesByUserId(this.user.id).subscribe(
+      (response) => {
+          // Suponiendo que response.data es un array de likes
+          const like = response.data.find(like => like.entidad_id === cancionId);
+          if (like) {
+              // Aquí usamos el ID del like para eliminarlo
+              this.likeService.deleteLike(like.id).subscribe(
+                  (response) => {
+                      console.log('Like eliminado:', response);
+                      this.userLikes = this.userLikes.filter(id => id !== cancionId);
+                      this.canciones = this.canciones.filter(c => c.id !== cancionId); // Eliminar de la lista de canciones
+                  },
+                  (error) => {
+                      console.error('Error al eliminar el like:', error);
+                      // Aquí puedes mostrar un mensaje al usuario si es necesario
+                  }
+              );
+          } else {
+              console.error('El like no existe para esta canción.');
+          }
+      },
+      (error) => {
+          console.error('Error al obtener los likes del usuario:', error);
+      }
+  );
+}
 
   formatDuration(seconds: number): string {
     const minutes = Math.floor(seconds / 60);

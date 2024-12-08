@@ -18,9 +18,7 @@ export class LikesService {
     return this.http.get<LikeResponse>(this.url + this.likesUrl + `/user/${userId}`)
   }
 
-  deleteLike(songId: number, userId: number): Observable<any> {
-    return this.http.delete<any>(this.url + this.likesUrl + `/${songId}`, {
-      body: { userId } 
-    });
+  deleteLike(likeId: number): Observable<any> {
+    return this.http.delete<any>(`${this.url}${this.likesUrl}/${likeId}`);
   }
 }

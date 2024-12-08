@@ -104,14 +104,20 @@ export class SearchComponent {
 
   deleteLike(song: any) {
     const songId = song.id;
-    this.likeService.deleteLike(songId, this.userId).subscribe(
-      (response) => {
-        console.log('Like eliminado:', response);
-        this.userLikes = this.userLikes.filter(id => id !== songId); 
-      },
-      (error) => {
-        console.error('Error al eliminar el like:', error);
-      }
-    );
+    const likeId = this.userLikes[songId]; // Obtiene el ID del like correspondiente
+
+    if (likeId) {
+      this.likeService.deleteLike(likeId).subscribe(
+        (response) => {
+          console.log('Like eliminado:', response);
+          delete this.userLikes[songId]; // Elimina el like del objeto
+        },
+        (error) => {
+          console.error('Error al eliminar el like:', error);
+        }
+      );
+    } else {
+      console.error('No se encontró el like para la canción:', songId);
+    }
   }
 }
