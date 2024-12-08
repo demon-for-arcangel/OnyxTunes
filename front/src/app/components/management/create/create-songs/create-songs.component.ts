@@ -19,10 +19,12 @@ export class CreateSongsComponent {
     titulo: '',
     artista: '',
     artista_id: 0,
-    album: '', // Aquí se almacenará el ID del álbum
+    album: '', 
     duracion: 0,
     generos: []
   };
+
+  mostrarCrearAlbum: boolean = false; 
 
   generosDisponibles: any[] = [];
   generosSeleccionados: any[] = [];
@@ -43,6 +45,15 @@ export class CreateSongsComponent {
     this.loadGeneros(); 
     this.loadArtistas(); 
     this.getUserId();
+  }
+
+
+  mostrarBoton() {
+    this.mostrarCrearAlbum = true;
+  }
+
+  ocultarBoton() {
+    this.mostrarCrearAlbum = false;
   }
 
   getUserId() {
@@ -190,5 +201,9 @@ export class CreateSongsComponent {
           console.error('Error al añadir la canción', error);
         }
     );
+  }
+
+  crearAlbum() {
+    console.log('Crear álbum');
   }
 }
