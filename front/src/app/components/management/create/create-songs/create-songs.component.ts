@@ -161,6 +161,7 @@ export class CreateSongsComponent {
 
     console.log('Datos de la canción a crear:', this.nuevaCancion); 
     console.log('ID del álbum antes de enviar:', this.nuevaCancion.album); // Verifica el ID del álbum
+    console.log('Géneros antes de enviar:', JSON.stringify(this.nuevaCancion.generos));
 
     if (!this.nuevaCancion.artista_id) {
       console.error('Error: artista_id no está definido');
@@ -170,9 +171,11 @@ export class CreateSongsComponent {
     const formData = new FormData();
     formData.append('titulo', this.nuevaCancion.titulo);
     formData.append('artista_id', this.nuevaCancion.artista_id.toString()); 
-    formData.append('album_id', this.nuevaCancion.album.toString()); // Asegúrate de que esto sea un ID
+    formData.append('album_id', this.nuevaCancion.album.toString()); 
     formData.append('duracion', this.nuevaCancion.duracion.toString());
-    formData.append('generos', JSON.stringify(this.nuevaCancion.generos)); 
+    this.nuevaCancion.generos.forEach((genero: any) => {
+      formData.append('generos', genero.toString());
+    });
 
     if (this.selectedFile) {
         formData.append('archivo', this.selectedFile); 
@@ -187,5 +190,5 @@ export class CreateSongsComponent {
           console.error('Error al añadir la canción', error);
         }
     );
-}
+  }
 }

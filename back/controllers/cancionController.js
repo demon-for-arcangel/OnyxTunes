@@ -46,26 +46,24 @@ const getSongByUser = async (req, res) => {
     }
 };
 
-const createSong = async (req, res) => {
+/* const createSong = async (req, res) => {
     try {
-        const { titulo, duracion, likes, reproducciones, album_id, artista_id, generos } = req.body;
+        const { titulo, duracion, likes, reproducciones, album_id, artista_id } = req.body;
+        const generos = req.body.generos || []; // Procesar géneros como array
 
-        console.log('Datos recibidos:', req.body);
+        console.log('Datos completos recibidos:', req.body);
+        console.log('Generos recibidos:', generos);
 
         let assetId = null;
 
-        if (req.files && req.files.archivo) { 
-            const nombreArchivo = await subirArchivo(req.files, ['mp3'], 'canciones'); 
-            
+        if (req.files && req.files.archivo) {
+            const nombreArchivo = await subirArchivo(req.files, ['mp3'], 'canciones');
             const newAsset = await models.Asset.create({
                 path: nombreArchivo,
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
             });
-
-            assetId = newAsset.id; 
-        } else {
-            console.error("No se recibió ningún archivo.");
+            assetId = newAsset.id;
         }
 
         const newSong = await models.Cancion.create({
@@ -77,16 +75,12 @@ const createSong = async (req, res) => {
             artista_id,
             assetId,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
         });
-
-        console.log("Canción creada:", newSong);
 
         if (Array.isArray(generos) && generos.length > 0) {
             const generosExistentes = await models.Genero.findAll({
-                where: {
-                    id: generos,
-                },
+                where: { id: generos },
             });
 
             if (generosExistentes.length !== generos.length) {
@@ -111,7 +105,18 @@ const createSong = async (req, res) => {
             error: error.message,
         });
     }
+}; */
+
+const createSong = async (req, res) => {
+    try {
+        const result = await conx.createSong(req.body, req.files);
+        res.status(201).json(result);
+    } catch (error) {
+        console.error("Error al crear la canción:", error);
+        res.status(500).json({ message: 'Error al crear la canción' });
+    }
 };
+
 
   const updateSong = async (req, res) => {
     const songId = req.params.id; 
