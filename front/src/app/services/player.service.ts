@@ -1,5 +1,7 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { NavigationEnd, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,15 @@ export class PlayerService {
   public currentTime: number = 0;
   public duration: number = 0;
 
-  constructor() {
+  constructor(private router: Router) {
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        if (event.url === '/login') {
+          this.pause();
+        }
+      }
+    });
     
     this.audioPlayer.addEventListener('timeupdate', () => {
       console.log('entro')
@@ -33,8 +43,6 @@ export class PlayerService {
       this.handleSongEnd();
     });
   }
-
-  
 
   get playing(): boolean {
     return this.isPlaying;

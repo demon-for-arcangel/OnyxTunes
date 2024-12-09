@@ -28,6 +28,9 @@ module.exports = {
             },
             allowNull: true
       },
+      publico: {
+        type: DataTypes.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

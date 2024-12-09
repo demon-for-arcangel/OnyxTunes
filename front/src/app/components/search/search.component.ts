@@ -8,13 +8,14 @@ import { AuthService } from '../../services/auth.service';
 import { PlaylistService } from '../../services/playlist.service';
 import { LikesService } from '../../services/likes.service';
 import { PlayerService } from '../../services/player.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-search',
   standalone: true,
   imports: [PlayerComponent, SidebarComponent, FormsModule],
   templateUrl: './search.component.html',
-  styleUrl: './search.component.css'
+  styleUrl: './search.component.css',
 })
 export class SearchComponent {
   query: string = '';  

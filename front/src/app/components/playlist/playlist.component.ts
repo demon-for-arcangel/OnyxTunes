@@ -10,13 +10,14 @@ import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { LikesService } from '../../services/likes.service';
 import { PlayerService } from '../../services/player.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-playlist',
   standalone: true,
   imports: [CommonModule, SidebarComponent, PlayerComponent],
   templateUrl: './playlist.component.html',
-  styleUrl: './playlist.component.css'
+  styleUrl: './playlist.component.css',
 })
 export class PlaylistComponent {
   playlistId: number | null = null;
@@ -74,10 +75,10 @@ export class PlaylistComponent {
   }
 
   reproducirCancion(cancion: any) {
-    const songIndex = this.canciones.findIndex((s) => s.id === cancion.id); // Encuentra el índice de la canción
+    const songIndex = this.canciones.findIndex((s) => s.id === cancion.id); 
     if (songIndex !== -1) {
-      this.playerService.setQueue(this.canciones); // Establece toda la playlist como cola
-      this.playerService.playFromIndex(songIndex); // Reproduce desde el índice de la canción seleccionada
+      this.playerService.setQueue(this.canciones); 
+      this.playerService.playFromIndex(songIndex); 
     } else {
       console.error('La canción no se encontró en la playlist.');
     }

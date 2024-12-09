@@ -186,52 +186,46 @@ class PlaylistConnection {
                 where: { nombre: 'Favoritos' }
             });
     
-            let existingPlaylist;
-    
-            if (favoritesPlaylist) {
-                existingPlaylist = await models.UsuarioPlaylist.findOne({
-                    attributes: { exclude: ['album_id'] },
-                    where: {
-                        usuario_id: userId,
-                        playlist_id: favoritesPlaylist.id 
-                    }
+            if (!favoritesPlaylist) {
+                favoritesPlaylist = await models.Playlist.create({
+                    nombre: 'Favoritos',
+                    publico: false
                 });
             }
     
-            if (!existingPlaylist) {
-                const newFavoritesPlaylist = await models.Playlist.create({
-                    nombre: 'Favoritos',
-                });
+            const existingPlaylist = await models.UsuarioPlaylist.findOne({
+                attributes: { exclude: ['album_id'] },
+                where: {
+                    usuario_id: userId,
+                    playlist_id: favoritesPlaylist.id 
+                }
+            });
     
+            if (!existingPlaylist) {
                 await models.UsuarioPlaylist.create({
                     usuario_id: userId,
-                    playlist_id: newFavoritesPlaylist.id
+                    playlist_id: favoritesPlaylist.id
                 });
-            } else {
-                favoritesPlaylist = await models.Playlist.findByPk(
-                    existingPlaylist.playlist_id,
-                    { attributes: { exclude: ['usuario_id'] } } 
-                );
             }
     
             await favoritesPlaylist.addCanciones(songId); 
-
+    
             const existingLike = await models.Like.findOne({
                 where: {
                     usuario_id: userId,
                     entidad_id: songId,
                     entidad_tipo: 'Cancion'
                 }
-            })
-
+            });
+    
             if (!existingLike) {
                 await models.Like.create({
                     usuario_id: userId,
                     entidad_id: songId,
                     entidad_tipo: 'Cancion'
-                })
+                });
             }
-
+    
             return { message: "Canción añadida a Favoritos y añadido a la tabla Like." };
         } catch (error) {
             console.error('Error al añadir la canción a Favoritos:', error);

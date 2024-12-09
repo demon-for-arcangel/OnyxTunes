@@ -16,6 +16,7 @@ module.exports = {
       {
         nombre: 'Mi Playlist Favorita',
         descripcion: 'Una lista de mis canciones favoritas.',
+        publico: false,
         createdAt: new Date(),
         updatedAt: new Date()
       }
