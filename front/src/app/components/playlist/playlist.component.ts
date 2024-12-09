@@ -11,11 +11,12 @@ import { AuthService } from '../../services/auth.service';
 import { LikesService } from '../../services/likes.service';
 import { PlayerService } from '../../services/player.service';
 import { Subscription } from 'rxjs';
+import { AccountButtonComponent } from '../utils/account-button/account-button.component';
 
 @Component({
   selector: 'app-playlist',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, PlayerComponent],
+  imports: [CommonModule, SidebarComponent, PlayerComponent, AccountButtonComponent],
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.css',
 })

@@ -15,5 +15,6 @@ export const environment = {
     chatsUrl: '/chats',
     playlistUrl: '/playlist',
     searchUrl: '/search',
-    likesUrl: '/likes'
+    likesUrl: '/likes',
+    profileUrl: '/profile'
 };

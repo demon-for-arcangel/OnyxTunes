@@ -15,6 +15,7 @@ class Server {
     this.apiMail = "/api/mail";
     this.apiChats = "/api/chats";
     this.apiPlaylist = "/api/playlist";
+    this.apiProfile = "/api/profile";
     this.apiAssets = "/api/assets";
     this.apiSearch = "/api/search";
     this.apiSongs = "/api/songs";
@@ -70,6 +71,7 @@ class Server {
     this.app.use(this.apiGeneros, require('../routes/generoRoutes'));
     this.app.use(this.apiPlaylist, require('../routes/PlaylistRoutes'));
     this.app.use(this.apiLikes, require("../routes/likesRoutes"));
+    this.app.use(this.apiProfile, require("../routes/profileRoutes"));
   }
 
   listen() {
