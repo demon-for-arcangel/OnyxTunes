@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/', controlador.index);//funcional
 router.get('/:id', controlador.getSongById);//funcional
-router.post('/new', controlador.createSong);//funcional
+router.post('/new', controlador.createSong, express.static(path.join(__dirname, '../../front/src/assets/uploads')));//funcional
 router.put('/:id', controlador.updateSong);//funcional
 router.delete('/', controlador.deleteSong);//funcional
 router.get('/user/:userId', controlador.getSongByUser);

@@ -1,16 +1,16 @@
 <div class="player-container">
-    <div class="song-title">{{ currentSong?.titulo }}</div>
+    <div class="song-title">{{ playerService.currentSong?.titulo }}</div>
     <div class="progress-container">
-        <span class="duration left">{{ formatTime(currentTime) }}</span>
-        <input type="range" min="0" [max]="duration" [value]="currentTime" (input)="progressSong($event)" class="progress-bar" />
-        <span class="duration right">{{ formatTime(duration) }}</span>
+        <span class="duration left">{{ formatTime(playerService.currentTime) }}</span>
+        <input type="range" min="0" [max]="playerService.duration" [value]="playerService.currentTime" (input)="seekTo($event)" class="progress-bar" />
+        <span class="duration right">{{ formatTime(playerService.duration) }}</span>
     </div>
     <div class="buttons-container">
         <button (click)="previous()" aria-label="Anterior">
             <i class="pi pi-step-backward"></i> 
         </button>
-        <button (click)="isPlaying ? pause() : play()" aria-label="Reproducir/Pausar">
-            <i class="pi" [ngClass]="isPlaying ? 'pi-pause' : 'pi-play'"></i> 
+        <button (click)="togglePlay()" aria-label="Reproducir/Pausar">
+            <i class="pi" [ngClass]="playerService.playing ? 'pi-pause' : 'pi-play'"></i>
         </button>
         <button (click)="next()" aria-label="Siguiente">
             <i class="pi pi-step-forward"></i> 
@@ -23,11 +23,6 @@
             <i class="pi" [ngClass]="isLoop ? 'pi-repeat' : 'pi-repeat-off'"></i>
         </button>
     </div>
-
-    
 </div>
 
-<audio #audioPlayer controls style="display: none;">
-    <source [src]="currentSong?.asset?.path" type="audio/mpeg">
-    Tu navegador no soporta el elemento de audio.
-</audio>
+<audio #audioElement></audio>

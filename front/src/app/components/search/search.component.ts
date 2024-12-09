@@ -7,6 +7,7 @@ import { SearchResults } from '../../interfaces/search-results';
 import { AuthService } from '../../services/auth.service';
 import { PlaylistService } from '../../services/playlist.service';
 import { LikesService } from '../../services/likes.service';
+import { PlayerService } from '../../services/player.service';
 
 @Component({
   selector: 'app-search',
@@ -30,7 +31,8 @@ export class SearchComponent {
   @ViewChild(PlayerComponent) playerComponent!: PlayerComponent;
 
   constructor(private searchService: SearchService, private authService: AuthService, 
-    private playlistService: PlaylistService, private likeService: LikesService) {
+    private playlistService: PlaylistService, private likeService: LikesService,
+    private playerService: PlayerService) {
     this.getUserId();
   }
 
@@ -81,10 +83,8 @@ export class SearchComponent {
     }
   }
 
-  playSong(song: any) {
-    if(this.playerComponent) {
-      this.playerComponent.playSong(song);
-    }
+  playSong(cancion: any) {
+    this.playerService.playSong(cancion);
   }
 
   addToFavorites(song: any) {

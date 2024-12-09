@@ -3,6 +3,7 @@ const cors = require("cors");
 require('dotenv').config();
 const { socketController } = require("../controllers/services/socketController");
 const fileUpload = require('express-fileupload');
+const path = require('path'); 
 
 class Server {
   constructor() {
@@ -51,6 +52,9 @@ class Server {
       credentials: true,
     }));
     this.app.use(express.json());
+    console.log('RUTA', path.join(__dirname, '../../front/src/assets/uploads'));
+    this.app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
+
   }
 
   routes() {
@@ -77,6 +81,8 @@ class Server {
   sockets() {
     this.io.on('connection', (socket) => socketController.onConnect(socket, this.io));
   }
+
+
 }
 
 module.exports = Server;

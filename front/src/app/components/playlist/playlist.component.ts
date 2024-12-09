@@ -9,6 +9,7 @@ import { SongService } from '../../services/song.service';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { LikesService } from '../../services/likes.service';
+import { PlayerService } from '../../services/player.service';
 
 @Component({
   selector: 'app-playlist',
@@ -29,7 +30,7 @@ export class PlaylistComponent {
   
   constructor(private route: ActivatedRoute, private playlistService: PlaylistService, 
     private songService: SongService, private authService: AuthService,
-    private likeService: LikesService) {}
+    private likeService: LikesService, private playerService: PlayerService) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -73,11 +74,7 @@ export class PlaylistComponent {
   }
 
   reproducirCancion(cancion: any) {
-    this.currentSongIndex = this.canciones.findIndex(c => c.id === cancion.id); // Establecer el índice de la canción actual
-    if (this.playerComponent) {
-      this.playerComponent.playSong(cancion);
-      this.addToHistory(cancion.id);
-    }
+    this.playerService.playSong(cancion);
   }
 
   addToHistory(cancionId: number) {
@@ -136,20 +133,16 @@ eliminarCancion(cancionId: number) {
   onSongEnded() {
     this.currentSongIndex++;
   
-    // Si el índice supera el tamaño de la lista de canciones
     if (this.currentSongIndex >= this.canciones.length) {
       if (this.playerComponent.isLoop) {
-        // Reinicia desde la primera canción si el bucle está activado
         this.currentSongIndex = 0;
         const nextSong = this.canciones[this.currentSongIndex];
         this.reproducirCancion(nextSong);
       } else {
-        // Fin de la lista sin bucle
         console.log('Fin de la lista de reproducción');
-        this.currentSongIndex = 0; // Opcional: Reinicia el índice
+        this.currentSongIndex = 0; 
       }
     } else {
-      // Reproduce la siguiente canción en la lista si no se ha llegado al final
       const nextSong = this.canciones[this.currentSongIndex];
       this.reproducirCancion(nextSong);
     }

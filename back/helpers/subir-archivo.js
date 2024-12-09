@@ -14,7 +14,7 @@ const subirArchivo = ( files, extensionesValidas = ['mp3', 'PNG',"JPG",'png','jp
         }
         
         const nombreTemp = uuidv4() + '.' + extension;
-        const uploadPath = path.join( __dirname, '../../front/src/assets/uploads/', carpeta, nombreTemp );
+        const uploadPath = path.join(__dirname, '../public/uploads', carpeta, nombreTemp);
         archivo.mv(uploadPath, (err) => {
             if (err) {
                 reject(err);
