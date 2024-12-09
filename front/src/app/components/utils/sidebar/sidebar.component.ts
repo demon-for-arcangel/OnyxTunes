@@ -4,19 +4,24 @@ import { Playlist } from '../../../interfaces/playlist';
 import { AuthService } from '../../../services/auth.service';
 import { PlaylistService } from '../../../services/playlist.service';
 import { Usuario } from '../../../interfaces/usuario';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CreatePlaylistComponent } from '../../management/create/create-playlist/create-playlist.component';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrl: './sidebar.component.css',
+  providers: [DialogService]
 })
 export class SidebarComponent {
   playlists: Playlist[] = [];
   userId: number | null = null;
+  ref: DynamicDialogRef | undefined;
+  dialog: any;
 
-  constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService) {}
+  constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService, public dialogService: DialogService) {}
   ngOnInit() {
     this.loadUserId();
   }
@@ -30,7 +35,7 @@ export class SidebarComponent {
   }
 
   navigateToPlaylist(playlist: Playlist) {
-    const encodedData = btoa(`${playlist.id}:${playlist.nombre}`); // Codificamos el ID y el nombre
+    const encodedData = btoa(`${playlist.id}:${playlist.nombre}`);
     this.router.navigate([`/playlist/${encodedData}`]);
 }
 
@@ -74,8 +79,27 @@ export class SidebarComponent {
     }
   }
 
-  addPlaylist() {//por hacer
+  addPlaylist() {
     console.log('Añadir playlist');
-    this.router.navigate(['/create-playlist']);
+
+    this.ref = this.dialogService.open(CreatePlaylistComponent, {
+      header: 'Añadir Nueva Playlist',
+      modal: true,
+      width: '70vw',
+      styleClass: 'custom-modal',
+      contentStyle: {
+          'background-color': '#1e1e1e',
+          'color': 'white',
+          'border-radius': '8px',
+          'padding': '20px'
+      },
+      baseZIndex: 10000,
+      style: {
+          'background-color': '#1e1e1e'
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true,
+  });
   }
 }

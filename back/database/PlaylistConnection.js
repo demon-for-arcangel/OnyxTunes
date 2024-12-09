@@ -49,6 +49,7 @@ class PlaylistConnection {
     }
 
     async createPlaylist(data, canciones) {
+        console.log(data);
         try {
             const existingPlaylist = await models.Playlist.findOne({
                 attributes: { exclude: ['usuario_id'] },
@@ -59,6 +60,7 @@ class PlaylistConnection {
                     model: models.Usuario,
                     through: {
                         model: models.UsuarioPlaylist,
+                        attributes: { exclude: ['album_id'] },
                         where: { usuario_id: data.usuario_id } 
                     }
                 }]

@@ -35,14 +35,15 @@ const getPlaylistById = async (req, res) => {
 
 const createPlaylist = async (req, res = response) => {
     try {
-        const { nombre, descripcion, usuario_id, canciones } = req.body;
-        const cancionesArray = canciones ? JSON.parse(canciones) : []; 
+        const { nombre, descripcion, usuario_id, canciones, publico } = req.body;
 
         const newPlaylist = await conx.createPlaylist({
             nombre,
             descripcion,
             usuario_id,
-        }, cancionesArray);
+            canciones,
+            publico
+        });
 
         res.status(201).json(newPlaylist);
     } catch (error) {
