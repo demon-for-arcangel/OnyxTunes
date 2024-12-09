@@ -74,7 +74,13 @@ export class PlaylistComponent {
   }
 
   reproducirCancion(cancion: any) {
-    this.playerService.playSong(cancion);
+    const songIndex = this.canciones.findIndex((s) => s.id === cancion.id); // Encuentra el índice de la canción
+    if (songIndex !== -1) {
+      this.playerService.setQueue(this.canciones); // Establece toda la playlist como cola
+      this.playerService.playFromIndex(songIndex); // Reproduce desde el índice de la canción seleccionada
+    } else {
+      console.error('La canción no se encontró en la playlist.');
+    }
   }
 
   addToHistory(cancionId: number) {
