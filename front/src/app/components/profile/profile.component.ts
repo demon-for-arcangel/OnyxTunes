@@ -16,9 +16,13 @@ export class ProfileComponent {
 
   constructor(private userService: UserService) { }
 
-  /* ngOnInit(): void {
+  ngOnInit(): void {
     this.loadProfileData();
-  } */
+  }
+
+  loadProfileData(){
+    
+  }
 
   /* loadProfileData() {
     this.userService.getMostListenedArtists().subscribe(data => {
