@@ -80,7 +80,7 @@ export class PlayerComponent {
   }
 
   seekTo(event: any) {
-    const time = event.target.value;
+    const time = Number(event.target.value);
     this.playerService.seekTo(time);
   }
 

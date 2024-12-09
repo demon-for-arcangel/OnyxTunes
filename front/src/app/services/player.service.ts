@@ -18,10 +18,13 @@ export class PlayerService {
   constructor() {
     
     this.audioPlayer.addEventListener('timeupdate', () => {
+      console.log('entro')
       this.currentTime = this.audioPlayer.currentTime;
+      console.log('Tiempo actual:', this.currentTime);
     });
 
     this.audioPlayer.addEventListener('loadedmetadata', () => {
+      console.log('entro')
       this.duration = this.audioPlayer.duration;
       console.log('Duración de la canción:', this.duration);
     });
@@ -30,6 +33,8 @@ export class PlayerService {
       this.handleSongEnd();
     });
   }
+
+  
 
   get playing(): boolean {
     return this.isPlaying;
@@ -45,11 +50,29 @@ export class PlayerService {
 
   setAudioElement(audioElement: ElementRef<HTMLAudioElement>): void {
     if (audioElement && audioElement.nativeElement) {
-      this.audioPlayer = audioElement.nativeElement; 
+      this.audioPlayer = audioElement.nativeElement;
+  
+      this.audioPlayer.addEventListener('timeupdate', () => {
+        this.currentTime = this.audioPlayer.currentTime;
+      });
+  
+      this.audioPlayer.addEventListener('loadedmetadata', () => {
+        this.duration = this.audioPlayer.duration;
+        console.log('Duración del audio:', this.duration);
+      });
+  
+      this.audioPlayer.addEventListener('ended', () => {
+        this.handleSongEnd();
+      });
+  
+      this.audioPlayer.addEventListener('error', (event: any) => {
+        console.error('Error en el reproductor de audio:', event.target.error);
+      });
     } else {
       console.error('El elemento de audio no está definido.');
     }
   }
+  
 
   playSong(song: any): void {
     if (!this.audioPlayer) {
@@ -99,7 +122,9 @@ export class PlayerService {
   }
 
   seekTo(time: number): void {
-    this.audioPlayer.currentTime = time;
+    if (!isNaN(time) && time >= 0 && time <= this.audioPlayer.duration) {
+      this.audioPlayer.currentTime = time;
+    }
   }
 
   setQueue(songs: any[]): void {

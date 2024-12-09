@@ -21,7 +21,6 @@ export class ProfileComponent {
   } */
 
   /* loadProfileData() {
-    // Aquí puedes hacer llamadas a tu servicio para obtener los datos
     this.userService.getMostListenedArtists().subscribe(data => {
       this.mostListenedArtists = data;
     });

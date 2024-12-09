@@ -31,7 +31,7 @@ const getSongById = async (req, res) => {
 }
 
 const getSongByUser = async (req, res) => {
-    const userId = req.params.userId; // Suponiendo que el ID del usuario se pasa como parámetro en la URL
+    const userId = req.params.userId; 
 
     try {
         const songs = await conx.getSongByUser(userId);
@@ -45,67 +45,6 @@ const getSongByUser = async (req, res) => {
         res.status(500).json({ msg: "Error al obtener las canciones del usuario" });
     }
 };
-
-/* const createSong = async (req, res) => {
-    try {
-        const { titulo, duracion, likes, reproducciones, album_id, artista_id } = req.body;
-        const generos = req.body.generos || []; // Procesar géneros como array
-
-        console.log('Datos completos recibidos:', req.body);
-        console.log('Generos recibidos:', generos);
-
-        let assetId = null;
-
-        if (req.files && req.files.archivo) {
-            const nombreArchivo = await subirArchivo(req.files, ['mp3'], 'canciones');
-            const newAsset = await models.Asset.create({
-                path: nombreArchivo,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            });
-            assetId = newAsset.id;
-        }
-
-        const newSong = await models.Cancion.create({
-            titulo,
-            duracion,
-            likes: likes || 0,
-            reproducciones: reproducciones || 0,
-            album_id,
-            artista_id,
-            assetId,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        });
-
-        if (Array.isArray(generos) && generos.length > 0) {
-            const generosExistentes = await models.Genero.findAll({
-                where: { id: generos },
-            });
-
-            if (generosExistentes.length !== generos.length) {
-                console.warn(
-                    "Algunos géneros no fueron encontrados en la base de datos. IDs encontrados:",
-                    generosExistentes.map(g => g.id)
-                );
-            }
-
-            await newSong.setGeneros(generosExistentes);
-            console.log("Relaciones con géneros creadas.");
-        }
-
-        return res.status(201).json({
-            message: "Canción creada con éxito",
-            cancion: newSong,
-        });
-    } catch (error) {
-        console.error("Error al crear la canción:", error);
-        return res.status(500).json({
-            message: "Error al guardar la canción en la base de datos",
-            error: error.message,
-        });
-    }
-}; */
 
 const createSong = async (req, res) => {
     try {
