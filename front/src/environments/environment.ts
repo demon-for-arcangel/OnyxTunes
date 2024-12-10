@@ -16,5 +16,6 @@ export const environment = {
     playlistUrl: '/playlist',
     searchUrl: '/search',
     likesUrl: '/likes',
-    profileUrl: '/profile'
+    profileUrl: '/profile',
+    reproduccionesUrl: '/reproducciones'
 };

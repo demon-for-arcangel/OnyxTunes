@@ -21,6 +21,10 @@ export class UserService {
     return this.http.get<Usuario[]>(`${this.url}` + `${this.usersUrl}`);
   }
 
+  indexUsuarios(): Observable<any> {
+    return this.http.get<any>(`${this.url}` + `${this.usersUrl}`);
+  }
+
   getUserById(userId: string): Observable<Usuario> {
     return this.http.get<Usuario>(`${this.url}` + `${this.usersUrl}` + `/${userId}`);
   }

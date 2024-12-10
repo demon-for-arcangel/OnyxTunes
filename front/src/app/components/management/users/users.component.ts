@@ -21,7 +21,8 @@ import { ShowUserComponent } from '../show/show-user/show-user.component';
   providers: [DialogService]
 })
 export class UsersComponent {
-  usuarios: Usuario[] = [];
+  user: Usuario[] = [];
+  usuarios: any;
   filteredUsuarios: Usuario[] = [];
   searchQuery: string = '';
   showFilter: boolean = false;
@@ -47,7 +48,7 @@ export class UsersComponent {
   }
 
   loadUsuarios(): void {
-    this.userService.getUsuarios().subscribe({
+    this.userService.indexUsuarios().subscribe({
       next: (usuarios) => {
         this.originalUsuarios = usuarios;
         this.usuarios = [...usuarios]; 
@@ -59,6 +60,13 @@ export class UsersComponent {
         console.error('Error al cargar usuarios:', error);
       }
     });
+  }
+
+  getRolNombre(usuario: any): string {
+    if (!usuario.Rol) {
+      return 'Sin rol';
+    }
+    return usuario.Rol.nombre ? usuario.Rol.nombre : 'Sin rol';
   }
 
   newUser(){// revisar (crea el usuario bien pero no con el rol que se le pone, lo deja sin rol)
@@ -187,14 +195,14 @@ export class UsersComponent {
       if (confirmed) {
         this.userService.deleteUsuarios([userIds]).subscribe({
           next: () => {
-            this.usuarios = this.usuarios.filter(usuario => usuario.id !== userIds);
+            this.user = this.user.filter(user => user.id !== userIds); 
             this.updatePaginatedUsuarios();
           }, 
           error: (error) => {
             console.error('Error al eliminar usuario:', error);
           }
         });
-      };
+      }
     });
   }
 

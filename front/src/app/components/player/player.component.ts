@@ -28,18 +28,16 @@ export class PlayerComponent {
 
   ngAfterViewInit() {
     if (this.audioElement) {
-      this.playerService.setAudioElement(this.audioElement); // Pasar el ElementRef al servicio
+      this.playerService.setAudioElement(this.audioElement); 
     } else {
       console.error('El elemento de audio no se pudo inicializar.');
     }
   }
 
   ngOnInit() {
-    // Actualizar las propiedades con los valores del servicio
     this.playerService.currentTime = this.playerService.currentTime;
     this.playerService.duration = this.playerService.duration;
 
-    // Actualizar el estado en tiempo real
     setInterval(() => {
       this.playerService.currentTime = this.playerService.currentTime;
       this.playerService.duration = this.playerService.duration;

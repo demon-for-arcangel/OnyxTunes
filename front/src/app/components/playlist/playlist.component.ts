@@ -12,6 +12,7 @@ import { LikesService } from '../../services/likes.service';
 import { PlayerService } from '../../services/player.service';
 import { Subscription } from 'rxjs';
 import { AccountButtonComponent } from '../utils/account-button/account-button.component';
+import { ReproduccionesService } from '../../services/reproducciones.service';
 
 @Component({
   selector: 'app-playlist',
@@ -32,7 +33,8 @@ export class PlaylistComponent {
   
   constructor(private route: ActivatedRoute, private playlistService: PlaylistService, 
     private songService: SongService, private authService: AuthService,
-    private likeService: LikesService, private playerService: PlayerService) {}
+    private likeService: LikesService, private playerService: PlayerService,
+    private reproduccionesService: ReproduccionesService) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -80,6 +82,12 @@ export class PlaylistComponent {
     if (songIndex !== -1) {
       this.playerService.setQueue(this.canciones); 
       this.playerService.playFromIndex(songIndex); 
+
+      this.reproduccionesService.createUpdateReproduccion(this.user.id, cancion.id, 'cancion').subscribe(response => {
+        console.log('Reproducción creada:', response);
+      }, error => {
+        console.error('Error al crear la reproducción:', error);
+      });
     } else {
       console.error('La canción no se encontró en la playlist.');
     }
