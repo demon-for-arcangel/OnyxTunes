@@ -112,7 +112,7 @@ export class UsersComponent {
     this.goToPage(this.currentPage - 1);
   }
 
-  searchUsuarios(): void { //revisar (intentar hacer para que haga la busqueda a partir del tercer caracter que se añada)
+  searchUsuarios(): void { 
     if (this.searchQuery) {
       const allUsuarios = [...this.usuarios]; 
       this.usuarios = allUsuarios.filter(usuario =>
@@ -213,34 +213,29 @@ export class UsersComponent {
 
   applyFilter(): void {
     if (this.filterType === 'todos') {
-      this.usuarios = [...this.originalUsuarios]; 
-      this.currentPage = 1;
-      this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
-      this.updatePaginatedUsuarios();
-      return;
+        this.usuarios = [...this.originalUsuarios]; 
+        this.currentPage = 1;
+        this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
+        this.updatePaginatedUsuarios();
+        return;
     }
-  
+
     const rolMap: { [key: string]: string } = {
-      'administradores': 'administrador',
-      'usuarios': 'usuario',
-      'artistas': 'artista'
+        'administradores': 'Administrador',
+        'usuarios': 'Usuario',
+        'artistas': 'Artista'
     };
-  
+
     const rolBuscado = rolMap[this.filterType];
-  
-    this.usuarios = this.originalUsuarios.filter(usuario =>
-      usuario.Rol?.some(rol => rol.nombre?.toLowerCase() === rolBuscado.toLowerCase())
-    );
-  
+
+    // Filtra los usuarios según el rol usando getRolNombre
+    this.usuarios = this.originalUsuarios.filter(usuario => {
+        const rolNombre = this.getRolNombre(usuario); // Llama a getRolNombre
+        return rolNombre === rolBuscado;
+    });
+
     this.currentPage = 1;
     this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
     this.updatePaginatedUsuarios();
-  }
-
-  getRoles(roles: any[]): string {
-    if (!roles || roles.length === 0) {
-        return 'Sin rol';
-    }
-    return roles.map(role => role.nombre).join(', ');
-  }
+}
 }
