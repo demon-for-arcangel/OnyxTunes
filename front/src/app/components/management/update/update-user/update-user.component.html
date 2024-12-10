@@ -29,31 +29,15 @@
         <div class="form-group">
 
         </div>
-        <div class="roles-container">
-            <div class="available-roles">
-                <h3>Roles Disponibles</h3>
-                <ul>
-                  @for(rol of rolesDisponibles; track rol){
-                    <li>
-                      {{ rol.nombre }}
-                      <button (click)="addRole(rol)" [disabled]="rol.selected">Añadir</button>
-                    </li>
-                  }
-                </ul>
-              </div>
-              
-              <div class="user-roles">
-                <h3>Roles de Usuario</h3>
-                <ul>
-                  @for(rol of selectedRoles; track rol){
-                    <li>
-                      {{ rol.nombre }}
-                      <button (click)="removeRole(rol)">Eliminar</button>
-                    </li>
-                  }
-                </ul>
-              </div>
-        </div>
+        <div class="form-group">
+          <label for="rol">Rol</label>
+          <select class="form-control" id="rol" name="rol" [(ngModel)]="usuario.rol" required>
+              <option value="" disabled selected>Seleccione un rol</option>
+              @for(rol of rolesDisponibles; track rol){
+                <option [value]="rol.id">{{ rol.nombre }}</option>
+              }
+          </select>
+      </div>
     </form>
     <button class="btn btn-primary" (click)="onSubmit()">Actualizar Usuario</button>
 </div>

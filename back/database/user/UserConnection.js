@@ -151,28 +151,6 @@ class UserModel {
         return result;
     }
 
-    async getUserRoles(userId) {
-        try {
-            const user = await models.Usuario.findByPk(userId, {
-                include: [
-                    {
-                        model: models.Rol,
-                        attributes: ['id', 'nombre']
-                    }
-                ]
-            });
-
-            if (!user) {
-                throw new Error('Usuario no encontrado');
-            }
-
-            return user.roles; 
-        } catch (error) {
-            console.error('Error al obtener roles del usuario:', error);
-            throw new Error('Error al obtenr los roles'); 
-        }
-    }
-
     async updatePassword(userId, currentPassword, newPassword, confirmPassword) {
         try {
             const user = await models.Usuario.findByPk(userId);

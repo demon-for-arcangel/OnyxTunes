@@ -91,7 +91,7 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     const userId = req.params.id; 
-    const { nombre, email, fecha_nacimiento, telefono, direccion, genero, activo, password, roles } = req.body; 
+    const { nombre, email, nickname, fecha_nacimiento, direccion, telefono, genero, activo, password, rol } = req.body; 
 
     try {
         const existingUser = await conx.getUserById(userId);
@@ -107,30 +107,18 @@ const updateUser = async (req, res) => {
         const updatedData = {
             nombre: nombre || existingUser.nombre, 
             email: email || existingUser.email, 
+            nickname: nickname || existingUser.nickname,
             fecha_nacimiento: fecha_nacimiento || existingUser.fecha_nacimiento,
-            telefono: telefono || existingUser.telefono,
+            //añadir foto de perfil
             direccion: direccion || existingUser.direccion,
+            telefono: telefono || existingUser.telefono,
             genero: genero || existingUser.genero,
             activo: activo || existingUser.activo,
-            password: hashedPassword || existingUser.password 
+            password: hashedPassword || existingUser.password,
+            rol: rol || existingUser.rol 
         };
 
         const updatedUser = await conx.updateUser(userId, updatedData);
-
-        if (roles) {
-            const currentRoles = await conx.getUserRoles(userId);
-
-            const rolesToRemove = currentRoles.filter(role => !roles.includes(role.id));
-            for (const role of rolesToRemove) {
-                await conx.removeUserRole(userId, role.id);
-            }
-
-            for (const roleId of roles) {
-                if (!currentRoles.some(role => role.id === roleId)) {
-                    await conx.createUserRols(userId, [roleId]);
-                }
-            }
-        }
 
         res.status(200).json({ msg: "Usuario actualizado exitosamente", user: updatedUser });
     } catch (error) {
