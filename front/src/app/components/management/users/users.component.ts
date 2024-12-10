@@ -69,7 +69,7 @@ export class UsersComponent {
     return usuario.Rol.nombre ? usuario.Rol.nombre : 'Sin rol';
   }
 
-  newUser(){// revisar (crea el usuario bien pero no con el rol que se le pone, lo deja sin rol)
+  newUser(){
     this.ref = this.dialogService.open(CreateUserComponent, {
       header: 'Agregar Nuevo Usuario',
       modal: true,
@@ -129,7 +129,6 @@ export class UsersComponent {
 
   showUsuario(usuario: Usuario): void {//revisar
     this.ref = this.dialogService.open(ShowUserComponent, {
-      header: 'Ver Datos del Usuario',
       modal: true,
       width: '70vw',
       styleClass: 'custom-modal',
