@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -26,7 +26,7 @@ export class CreateUserComponent implements OnInit {
   nombre: string = '';
   email: string = '';
   password: string = '';
-  rol: string = '';
+  rol: Rol | null = null;
   roles: Rol[] = [];
   
   errors: any = {};
@@ -40,7 +40,9 @@ export class CreateUserComponent implements OnInit {
 
   loadRoles() {
     this.rolService.getRoles().subscribe((roles) => {
+      console.log(roles)
       this.roles = roles;
+      console.log(this.roles)
     });
   }
 
@@ -79,28 +81,37 @@ export class CreateUserComponent implements OnInit {
 
   onSubmit() {
     if (this.validateForm()) {
-      const userData = {
-        nombre: this.nombre,
-        email: this.email,
-        password: this.password,
-        roles: [this.rol]
-      };
-
-      console.log(userData);
-  
-      this.userService.createUsuario(userData).subscribe({
-        next: (response) => {
-          this.ref.close(response);
-        },
-        error: (error) => {
-          console.error('Error al crear usuario:', error);
-          if (error.error?.errors) {
-            this.errors = error.error.errors;
-          }
+        console.log(this.rol);
+        const rolId = Number(this.rol);
+        if (!this.rol) {
+            console.error('El rol es requerido');
+            return; 
         }
-      });
+        const userData = {
+            nombre: this.nombre,
+            email: this.email,
+            password: this.password,
+            rol: rolId 
+        };
+
+        console.log(userData);
+
+        this.userService.createUsuario(userData).subscribe({
+            next: (response) => {
+                this.ref.close(response);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            },
+            error: (error) => {
+                console.error('Error al crear usuario:', error);
+                if (error.error?.errors) {
+                    this.errors = error.error.errors;
+                }
+            }
+        });
     }
-  }
+}
 
   onCancel() {
     this.ref.close();

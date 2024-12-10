@@ -34,8 +34,8 @@ export class UserService {
     return this.http.get<any>(`${this.url}` + `${this.usersUrl}` + `/found`, { params });
   }
 
-  createUsuario(datosUser: {nombre: string, email: string, password: string, roles: string[]}): Observable<Usuario> {
-    return this.http.post<Usuario>(`${this.url}` + `${this.usersUrl}` + `/new`, datosUser);
+  createUsuario(datosUser: {nombre: string, email: string, password: string, rol: number}): Observable<Usuario> {
+    return this.http.post<Usuario>(`${this.url}` + `${this.usersUrl}` + `/create`, datosUser);
   }
   
   deleteUsuarios(userIds: number[]): Observable<void> {

@@ -228,9 +228,8 @@ export class UsersComponent {
 
     const rolBuscado = rolMap[this.filterType];
 
-    // Filtra los usuarios según el rol usando getRolNombre
     this.usuarios = this.originalUsuarios.filter(usuario => {
-        const rolNombre = this.getRolNombre(usuario); // Llama a getRolNombre
+        const rolNombre = this.getRolNombre(usuario); 
         return rolNombre === rolBuscado;
     });
 
