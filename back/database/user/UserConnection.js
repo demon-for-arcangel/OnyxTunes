@@ -144,10 +144,6 @@ class UserModel {
             throw new Error("No se proporcionaron IDs de usuario para eliminar.");
         }
 
-        await models.RolUsuario.destroy({
-            where: { usuario_id: userIds }
-        });
-
         const result = await models.Usuario.destroy({
             where: { id: userIds }
         });

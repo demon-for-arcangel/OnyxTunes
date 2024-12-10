@@ -196,6 +196,9 @@ export class UsersComponent {
           next: () => {
             this.user = this.user.filter(user => user.id !== userIds); 
             this.updatePaginatedUsuarios();
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
           }, 
           error: (error) => {
             console.error('Error al eliminar usuario:', error);
