@@ -11,19 +11,32 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Usuario, {
+        foreignKey: 'usuario_id',
+      });
+
+      this.belongsTo(models.Cancion, {
+        foreignKey: 'cancion_id',
+      });
+
+      this.belongsTo(models.Playlist, {
+        foreignKey: 'playlist_id',
+      });
+      
+      this.belongsTo(models.Album, {
+        foreignKey: 'album_id',
+      });
     }
   }
   Reproducciones.init({
     usuario_id: DataTypes.INTEGER,
-    cancion_id: DataTypes.INTEGER,
-    playlist_id: DataTypes.INTEGER,
-    album_id: DataTypes.INTEGER,
-    fecha: DataTypes.DATE,
-    duracion: DataTypes.INTEGER
+    entidad_id: DataTypes.INTEGER,
+    entidad_tipo: DataTypes.ENUM('Cancion', 'Playlist', 'Album'),
+    reproducciones: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'reproducciones',
-    tableName:  process.env.TABLA_REPRODUCCIONES,
+    modelName: 'Reproducciones',
+    tableName: process.env.TABLA_REPRODUCCIONES
   });
   return Reproducciones;
 };

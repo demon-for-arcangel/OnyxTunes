@@ -12,19 +12,14 @@ module.exports = {
       usuario_id: {
         type: Sequelize.INTEGER
       },
-      cancion_id: {
+      entidad_id: {
         type: Sequelize.INTEGER
       },
-      playlist_id: {
-        type: Sequelize.INTEGER
+      entidad_tipo: {
+        type: Sequelize.ENUM('Cancion', 'Playlist', 'Album'),
+        allowNull: false,
       },
-      album_id: {
-        type: Sequelize.INTEGER
-      },
-      fecha: {
-        type: Sequelize.DATE
-      },
-      duracion: {
+      reproducciones: {
         type: Sequelize.INTEGER
       },
       createdAt: {
