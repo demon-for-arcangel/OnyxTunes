@@ -3,6 +3,13 @@ const Conexion = require("../database/reproduccionesConnection");
 
 const conx = new Conexion();
 
+/**
+ * Controlador de Reproducciones
+ * @function getReproduccionesByUserId Obtener las reproducciones de un usuario
+ * @function getReproduccionesByEntidad Obtener las reproducciones de una entidad
+ * @function createOrUpdateReproduccion Crear o actualizar una reproduccion
+ * @function getTopReproducciones Obtener las reproducciones mas populares
+ */
 const getReproduccionesByUserId = async (req, res) => {
     const { id } = req.params;
     try {

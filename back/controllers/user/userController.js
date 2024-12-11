@@ -8,6 +8,18 @@ const bcrypt = require("bcrypt");
 
 const conx = new Conexion();
 
+/**
+ * Controlador de Usuarios
+ * @function index Obtener los usuarios
+ * @function indexArtist Obtener los artistas
+ * @function getUserById Obtener un usuario por su id
+ * @function getUserByEmail Obtener un usuario por su email
+ * @function sendMail Enviar un email
+ * @function updateUser Actualizar un usuario
+ * @function deleteUsers Eliminar usuarios
+ * @function getUserByToken Obtener un usuario por su token
+ * @function updatePassword Actualizar la contraseña de un usuario
+ */
 const index = async (req, res) => {
     try{
         const users = await conx.indexUser();
@@ -62,32 +74,6 @@ const getUserByEmail = async (req, res) => {
 };
 
 const sendMail = async (mailOptions) => {} //por hacer
-
-const registerUserByAdmin = async (req, res) => {} //por hacer
-
-const createUser = async (req, res) => {
-    const { nombre, email, password, roles } = req.body; 
-
-    try {
-        const existingUser = await conx.getUserByEmail(email);
-        if (existingUser) {
-            return res.status(400).json({ msg: "El correo ya está en uso" });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = await conx.createUser(nombre, email, hashedPassword);
-
-        if (roles && roles.length > 0) {
-            await conx.createUserRols(newUser.id, roles); 
-        }
-
-        res.status(201).json({ msg: "Usuario creado exitosamente", user: newUser });
-    } catch (error) {
-        console.error("Error al crear usuario", error);
-        res.status(500).json({ msg: "Error al crear usuario" });
-    }
-};
 
 const updateUser = async (req, res) => {
     const userId = req.params.id; 
@@ -178,6 +164,6 @@ const updatePassword = async (req, res) => {
 };
 
 module.exports = {
-    index, indexArtist, getUserById, getUserByEmail, /* createUser, */ sendMail, /* registerUserByAdmin, */ updateUser, deleteUsers, 
+    index, indexArtist, getUserById, getUserByEmail, sendMail, updateUser, deleteUsers, 
     getUserByToken, updatePassword
 }

@@ -8,6 +8,18 @@ const models = require('../models');
 const conx = new Conexion();
 const conxAsset = new ConexionAssets();
 
+/**
+ * Controlador de Playlists
+ * @function index Obtener las playlists
+ * @function getPlaylistById Obtener una playlist por su id
+ * @function createPlaylist Crear una playlist
+ * @function updatePlaylist Actualizar una playlist
+ * @function deletePlaylists Eliminar playlists
+ * @function getUserPlaylists Obtener las playlists de un usuario
+ * @function createPlaylistByUser Crear una playlist por un usuario
+ * @function addToFavorites Añadir una cancion a favoritos al dar like a la cancion
+ * @function deleteSongPlaylist Eliminar una cancion de una playlist
+ */
 const index = async (req, res) => {
     try {
         const playlists = await conx.index();

@@ -1,6 +1,18 @@
 const { Op, Sequelize } = require("sequelize");
 const models = require("../models");
 
+/**
+ * Conexion de Playlist
+ * @function index Obtener las playlists
+ * @function getPlaylistById Obtener una playlist por su id
+ * @function createPlaylist Crear una playlist
+ * @function updatePlaylist Actualizar una playlist
+ * @function deletePlaylists Eliminar playlists
+ * @function getUserPlaylists Obtener las playlists de un usuario
+ * @function createPlaylistByUser Crear una playlist por un usuario
+ * @function addSongToFavorites Añadir una cancion a favoritos
+ * @function deleteSongPlaylist Eliminar una cancion de una playlist
+ */
 class PlaylistConnection {
     async index() {
         try {

@@ -6,6 +6,18 @@ const { subirArchivo } = require("../helpers/subir-archivo.js");
 
 const conexion = new Conexion();
 
+/**
+ * Conexion de Cancion
+ * @function indexSongs Obtener las canciones
+ * @function getSongById Obtener una cancion por su id
+ * @function getSongByTitle Obtener una cancion por su titulo
+ * @function getSongByUser Obtener las canciones de un usuario
+ * @function createSong Crear una cancion
+ * @function updateSong Actualizar una cancion
+ * @function deleteSong Eliminar una cancion
+ * @function addToHistory Añadir una cancion al historial
+ * @function getHistoryByUser Obtener el historial de un usuario
+ */
 class SongModel {
     constructor() {}
 

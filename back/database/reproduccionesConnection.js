@@ -1,6 +1,13 @@
 const { Op, Sequelize } = require("sequelize");
 const models = require("../models");
 
+/**
+ * Conexion de Reproducciones
+ * @function getReproduccionesByUserId Obtener las reproducciones de un usuario
+ * @function getReproduccionesByEntidad Obtener las reproducciones de una entidad
+ * @function createOrUpdateReproduccion Crear o actualizar una reproduccion
+ * @function topReproducciones Obtener las reproducciones mas populares
+ */
 class ReproduccionConnection {
     /**
      * Funcion para obtener todas las reproducciones de un usuario 

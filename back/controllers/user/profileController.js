@@ -8,11 +8,15 @@ const bcrypt = require("bcrypt");
 
 const conx = new Conexion();
 
+/**
+ * Controlador para obtener las playlists publicas de un usuario
+ * @function getPlaylistPublics Obtener las playlists publicas de un usuario
+ */
 const getPlaylistPublics = async (req, res) => {
     try {
         const userId = req.params.userId; 
 
-        const publicPlaylists = await conx.getPlaylistPublics(userId); // Pasa el userId a la función del modelo
+        const publicPlaylists = await conx.getPlaylistPublics(userId);
         return res.status(200).json({
             success: true,
             data: publicPlaylists

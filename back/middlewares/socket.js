@@ -1,6 +1,10 @@
 const {verifyToken} = require("../helpers/jwt");
 const {tokenTypes} = require("../constants/common.constants");
 
+/**
+ * Middleware de autenticacion de socket
+ * @function authMiddleware Middleware de autenticacion de socket
+ */
 const authMiddleware = (socket, next) => {
     const token = socket.handshake.headers.token;
 

@@ -5,6 +5,16 @@ const Conexion = require("./connection.js");
 
 const conexion = new Conexion();
 
+/**
+ * Conexion de Album
+ * @function indexAlbums Obtener los albums
+ * @function getAlbumById Obtener un album por su id
+ * @function getAlbumByTitle Obtener un album por su titulo
+ * @function createAlbum Crear un album
+ * @function updateAlbum Actualizar un album
+ * @function deleteAlbum Eliminar un album
+ * @function getAlbumsByUserId Obtener los albums de un usuario
+ */
 class AlbumModel {
     constructor() {}
 

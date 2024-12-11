@@ -5,6 +5,17 @@ const { subirArchivo } = require('../helpers/subir-archivo');
 
 const conx = new Conexion();
 
+/**
+ * Controlador de Canciones
+ * @function index Obtener las canciones
+ * @function getSongById Obtener una cancion por su id
+ * @function getSongByUser Obtener las canciones de un usuario
+ * @function createSong Crear una cancion
+ * @function updateSong Actualizar una cancion
+ * @function deleteSong Eliminar una cancion
+ * @function addToHistory Añadir una cancion al historial
+ * @function getHistoryByUser Obtener el historial de un usuario
+ */
 const index = async (req, res) => {
     try {
         const songs = await conx.indexSongs();
@@ -56,7 +67,6 @@ const createSong = async (req, res) => {
     }
 };
 
-
   const updateSong = async (req, res) => {
     const songId = req.params.id; 
     const updatedData = req.body;
@@ -76,7 +86,6 @@ const createSong = async (req, res) => {
     }
 };
 
-
 const deleteSong = async (req, res) => {
     const { songsIds } = req.body; 
 
@@ -95,10 +104,10 @@ const deleteSong = async (req, res) => {
 };
 
 const addToHistory = async (req, res) => {
-    const { songId, userId } = req.body; // Asegúrate de que estás recibiendo el userId
+    const { songId, userId } = req.body; 
 
-    console.log('ID de la canción:', songId); // Verifica que el ID de la canción sea correcto
-    console.log('ID del usuario:', userId); // Verifica que el ID del usuario sea correcto
+    console.log('ID de la canción:', songId); 
+    console.log('ID del usuario:', userId); 
 
     if (!songId || !userId) {
         return res.status(400).json({ message: "Faltan datos necesarios" });

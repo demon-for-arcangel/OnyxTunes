@@ -1,6 +1,11 @@
 const { Op } = require("sequelize");
 const models = require("../models");
 
+/**
+ * Conexion de Like
+ * @function getLikesUserId Obtener los likes de un usuario
+ * @function deleteLike Eliminar un like
+ */
 class LikeConnection {
     async getLikesUserId(userId) {
         try {

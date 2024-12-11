@@ -6,6 +6,10 @@ const bcrypt = require('bcrypt');
 
 const conexion = new Conexion();
 
+/**
+ * Conexion de Perfil
+ * @function getPlaylistPublics Obtener las playlists publicas de un usuario
+ */
 class ProfileModel {
     async getPlaylistPublics(userId) {
         try {
@@ -20,7 +24,7 @@ class ProfileModel {
                     model: models.Usuario,
                     through: {
                         model: models.UsuarioPlaylist,
-                        attributes: [] // No necesitamos atributos de la tabla intermedia
+                        attributes: [] 
                     },
                 }]
             });

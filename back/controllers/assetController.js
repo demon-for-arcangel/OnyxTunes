@@ -4,6 +4,15 @@ const path = require('path');
 const AssetsModel = require("../database/AssetConnection");
 const conx = new AssetsModel();
 
+/**
+ * NO IMPLEMENTADO
+ * Controlador de Assets
+ * @function showAssetsUser Obtener los assets de un usuario
+ * @function showAsset Obtener un asset por su id
+ * @function uploadAsset Subir un asset
+ * @function deleteAssetById Eliminar un asset por su id
+ * @function updatePhotoProfile Actualizar la foto de perfil de un usuario
+ */
 const showAssetsUser = async (req, res = response) => {
   try {
     const assets = await conx.getAssetsOfUser(req.params.id);

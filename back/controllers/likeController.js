@@ -3,6 +3,11 @@ const Conexion = require("../database/likeConnection");
 
 const conx = new Conexion();
 
+/**
+ * Controlador de Likes
+ * @function getLikesByUserId Obtener los likes de un usuario
+ * @function deleteLike Eliminar un like
+ */
 const getLikesByUserId = async (req, res) => {
     const { userId } = req.params;
 

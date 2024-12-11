@@ -5,6 +5,13 @@ const Conexion = require("./connection.js");
 
 const conexion = new Conexion();
 
+/**
+ * Conexion de Busqueda
+ * @function searchSongsByTitle Buscar canciones por titulo
+ * @function searchPlaylistsByName Buscar playlists por nombre
+ * @function searchArtistsByName Buscar artistas por nombre
+ * @function searchAlbumsByTitle Buscar albums por titulo
+ */
 class SearchConnection {
     constructor() {}
 

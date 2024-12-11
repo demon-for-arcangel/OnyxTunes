@@ -3,6 +3,10 @@ const { generarJWT, verifyToken, revokeToken } = require("../../helpers/jwt");
 const bcrypt = require('bcrypt');
 const { Usuario } = require('../../models');
 
+/**
+ * NO IMPLEMENTADO
+ * Controlador de los emails
+ */
 let transporter = nodemailer.createTransport({
     service: 'gmail', 
     auth: {
