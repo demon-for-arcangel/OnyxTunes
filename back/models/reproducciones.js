@@ -12,19 +12,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.Usuario, {
-        foreignKey: 'usuario_id',
+        foreignKey: 'entidad_id',
       });
 
       this.belongsTo(models.Cancion, {
-        foreignKey: 'cancion_id',
+        foreignKey: 'entidad_id',
       });
 
       this.belongsTo(models.Playlist, {
-        foreignKey: 'playlist_id',
+        foreignKey: 'entidad_id',
       });
       
       this.belongsTo(models.Album, {
-        foreignKey: 'album_id',
+        foreignKey: 'entidad_id',
       });
     }
   }

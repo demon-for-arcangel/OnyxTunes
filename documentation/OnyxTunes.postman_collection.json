@@ -1,0 +1,939 @@
+{
+	"info": {
+		"_postman_id": "33075517-c2dd-4dd4-bd47-ddb04a9c105d",
+		"name": "OnyxTunes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "31811189"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "Show users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Show Artists",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/users/artists"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By Token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjMsImlhdCI6MTczMzMwNTU1NiwiZXhwIjoxNzMzMzI3MTU2fQ.T7iiOjsagRanE3N7zbo0tyJqRRNIbVybwu3V1KsYOCA",
+								"type": "text"
+							}
+						],
+						"url": "localhost:9292/api/users/Token"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User from Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczMTU4NTMwNywiZXhwIjoxNzMxNjA2OTA3fQ.wa89RHBIL_6mqV1TbZBjGVaFAJB0X0SabBEwZfrJvcg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Carlos Pérez\",\r\n    \"email\": \"juan@example.com\",\r\n    \"password\": \"segura123\",\r\n    \"fecha_nacimiento\": \"1995-06-15\",\r\n    \"direccion\": \"Avenida Central 456\",\r\n    \"telefono\": \"987654321\",\r\n    \"genero\": \"masculino\",\r\n    \"activo\": 0,\r\n    \"rol\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/users/create"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"telefono\": 65512359992,\r\n    \"roles\": [3, 2]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/users/3"
+					},
+					"response": []
+				},
+				{
+					"name": "Show User By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/users/3"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Users",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"userIds\": [23]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9292/api/users/found?email=admin@onyxtunes.com",
+							"host": [
+								"localhost"
+							],
+							"port": "9292",
+							"path": [
+								"api",
+								"users",
+								"found"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "admin@onyxtunes.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currentPassword\": \"hola\",\r\n    \"newPassword\": \"1234\",\r\n    \"confirmPassword\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/users/1/password"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rols",
+			"item": [
+				{
+					"name": "Get Roles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/roles"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rol By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/roles/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Songs",
+			"item": [
+				{
+					"name": "Get Songs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/songs"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Song By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/songs/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Songs",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "titulo",
+									"value": "Cancion nuva",
+									"type": "text"
+								},
+								{
+									"key": "duracion",
+									"value": "230",
+									"type": "text"
+								},
+								{
+									"key": "likes",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "reproducciones",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "album_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "artista_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "generos",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "archivo",
+									"type": "file",
+									"src": "postman-cloud:///1efb3acb-0a0a-46c0-a25a-ceaf41659dfa"
+								}
+							]
+						},
+						"url": "localhost:9292/api/songs/new"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Song",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"hola\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/songs/5"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Songs",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"songsIds\": [2]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/songs"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Song By User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/songs/user/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Song History",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"songId\": 8,\r\n    \"userId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/songs/add/history"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Albums",
+			"item": [
+				{
+					"name": "Get Albums",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/albums"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Album By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/albums/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Album",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"album1\",\r\n    \"artista_id\": 2,\r\n    \"fecha_lanzamiento\": \"2017-10-22\",\r\n    \"likes\": 500\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/albums/new"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Album",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"album1\",\r\n    \"artista_id\": 1,\r\n    \"fecha_lanzamiento\": \"2024-12-01\",\r\n    \"likes\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/albums/5"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Albums",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"albumsIds\": [5]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/albums"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Albums By User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/albums/user/3"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Genero",
+			"item": [
+				{
+					"name": "Get Generos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/generos"
+					},
+					"response": []
+				},
+				{
+					"name": "Genero By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/genero/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Genero",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Rock\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/genero/new"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Genero",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Pop\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/genero/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Genero",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"generosIds\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/genero"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Playlists",
+			"item": [
+				{
+					"name": "Get Playlists",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/playlist"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Playlist By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/playlist/5"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Playlist",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"asdas\",\r\n    \"descripcion\": \"hola\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/playlist/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Playlist",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"playlistIds\": [2]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/playlist"
+					},
+					"response": []
+				},
+				{
+					"name": "Create By User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "   {\r\n       \"nombre\": \"Mi Nueva Playlist\",\r\n       \"descripcion\": \"Descripción de mi nueva playlist\"\r\n   }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/playlist/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Playlist By User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/playlist/user/1"
+					},
+					"response": []
+				},
+				{
+					"name": "like",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"songId\": 4,\r\n    \"userId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/playlist/song/like"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{    \r\n    \"playlistId\": 5,\r\n    \"songId\": 4\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/playlist/song/delete"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Playlist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"playlist\",\r\n    \"descripcion\": \"holaa\",\r\n    \"usuario_id\": 2,\r\n    \"publico\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/playlist/new"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Playlist Public",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Chats",
+			"item": [
+				{
+					"name": "Get Message",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczMzIwODYxOSwiZXhwIjoxNzMzMjMwMjE5fQ.-1KUtWEyttq96k532cFjnpwOiypP8768COAKqGqnU1g",
+								"type": "text"
+							}
+						],
+						"url": "localhost:9292/api/chats/messages/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Chats",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczMzIxODg3MSwiZXhwIjoxNzMzMjQwNDcxfQ.AuIgC6yXJxfR0ozrFSeJePNhKxKV35IlqaVpFkwgahk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"emisorId\": 1, \r\n    \"receptorId\": 2 \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/chats"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Receptores BY EmisorId",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTczMzI0NDU1NywiZXhwIjoxNzMzMjY2MTU3fQ.CbZHNi5ECGYPtTOJmimywTPCW3-d8TshMtxdfgGePVg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:9292/api/chats/receptores/1",
+							"host": [
+								"localhost"
+							],
+							"port": "9292",
+							"path": [
+								"api",
+								"chats",
+								"receptores",
+								"1"
+							],
+							"query": [
+								{
+									"key": "x-token",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Assets",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "upload asset",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "user-id",
+								"value": "3"
+							},
+							{
+								"key": "Content-Type",
+								"value": "multipart/form-data"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "archivo",
+									"type": "file",
+									"src": "postman-cloud:///1efb363b-6fdd-4f40-ada0-058228de3c07"
+								},
+								{
+									"key": "user-id",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": "localhost:9292/api/assets/upload"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Likes",
+			"item": [
+				{
+					"name": "Get Likes By User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/likes/user/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Like",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:9292/api/likes/12"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reproducciones",
+			"item": [
+				{
+					"name": "Create Reproduccion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"usuario_id\": 2,\r\n  \"entidad_id\": 2,\r\n  \"entidad_tipo\": \"Cancion\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/reproducciones"
+					},
+					"response": []
+				},
+				{
+					"name": "Reproducciones de un usuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9292/api/reproducciones/user/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Reproducciones de una cancion",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"tipo\": \"Cancion\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9292/api/reproducciones/music"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Registro",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Marina\",\r\n  \"email\": \"marinalaguna4@gmail.com\",\r\n  \"password\": \"1234\",\r\n  \"fecha_nacimiento\": \"2004-06-22\",  \r\n  \"direccion\": \"direccion1\",\r\n  \"telefono\": 652359399,\r\n  \"genero\": \"Femenino\",\r\n  \"rol\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:9292/api/registro"
+			},
+			"response": []
+		},
+		{
+			"name": "Inicio de Sesión",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"admin@onyxtunes.com\",\r\n    \"password\": \"1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:9292/api/login"
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"newPassword\": \"1234\",\r\n    \"confirmPassword\": \"1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:9292/api/mail/reset/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOnsiaWQiOjN9LCJyb2xlcyI6WyJyZXNldFBhc3N3b3JkIl0sImlhdCI6MTcxMzE2NzQ5MiwiZXhwIjoxNzEzMTg5MDkyfQ.5MSHMaOIBKtzVYGUNbifRECEmiD-rc_d9yw81IvpKFI"
+			},
+			"response": []
+		},
+		{
+			"name": "Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9292/api/search?query=artista",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9292",
+					"path": [
+						"api",
+						"search"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "artista"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

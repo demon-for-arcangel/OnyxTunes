@@ -31,7 +31,6 @@ const getReproduccionesByEntidad = async (req, res) => {
     }
 };
 
-
 const createOrUpdateReproduccion = async (req, res) => {
     const { usuario_id, entidad_id, entidad_tipo } = req.body;
     try {
@@ -47,6 +46,18 @@ const createOrUpdateReproduccion = async (req, res) => {
     }
 };
 
+const getTopReproducciones = async (req, res) => {
+    const { limit } = req.query; 
+    try {
+        const topReproducciones = await conx.topReproducciones(limit ? parseInt(limit) : 10);
+        res.json(topReproducciones);
+    } catch (error) {
+        console.error("Error al obtener las reproducciones más populares:", error);
+        res.status(500).json({ message: 'Error al obtener las reproducciones más populares' });
+    }
+};
+
 module.exports = {
-    getReproduccionesByUserId, getReproduccionesByEntidad, createOrUpdateReproduccion
+    getReproduccionesByUserId, getReproduccionesByEntidad, createOrUpdateReproduccion,
+    getTopReproducciones
 }

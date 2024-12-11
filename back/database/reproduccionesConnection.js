@@ -85,6 +85,97 @@ class ReproduccionConnection {
             throw new Error("Error al crear o actualizar la reproducción");
         }
     }
+
+    /**
+     * Funcion para obtener las canciones, albums y playlists mas populares
+     * añadiendo un atributo en la respuesta llamado total_reproducciones que sera la suma
+     * de las reproducciones de las canciones, albums o playlists
+     * @param {*} limit 
+     * @returns 
+     */
+    async topReproducciones(limit) {
+        try {
+            const canciones = await models.Reproducciones.findAll({
+                where: { entidad_tipo: 'Cancion' },
+                attributes: { exclude: ['cancion_id', 'playlist_id', 'album_id'] }
+            });
+    
+            const albums = await models.Reproducciones.findAll({
+                where: { entidad_tipo: 'Album' },
+                attributes: { exclude: ['cancion_id', 'playlist_id', 'album_id'] }
+            });
+    
+            const playlists = await models.Reproducciones.findAll({
+                include: {
+                    model: models.Playlist,
+                    attributes: { exclude: ['usuario_id'] },
+                    where: { publico: true }
+                },
+                where: {
+                    entidad_tipo: 'Playlist' 
+                },
+                attributes: { exclude: ['cancion_id', 'playlist_id', 'album_id'] }
+            });
+    
+            const cancionesSumadas = {};
+            const albumsSumados = {};
+            const playlistsSumadas = {};
+    
+            for (let i = 0; i < canciones.length; i++) {
+                const cancion = canciones[i];
+                if (!cancionesSumadas[cancion.entidad_id]) {
+                    cancionesSumadas[cancion.entidad_id] = 0;
+                }
+                cancionesSumadas[cancion.entidad_id] += cancion.reproducciones;
+            }
+    
+            for (let i = 0; i < albums.length; i++) {
+                const album = albums[i];
+                if (!albumsSumados[album.entidad_id]) {
+                    albumsSumados[album.entidad_id] = 0;
+                }
+                albumsSumados[album.entidad_id] += album.reproducciones;
+            }
+    
+            for (let i = 0; i < playlists.length; i++) {
+                const playlist = playlists[i];
+                if (!playlistsSumadas[playlist.entidad_id]) {
+                    playlistsSumadas[playlist.entidad_id] = 0;
+                }
+                playlistsSumadas[playlist.entidad_id] += playlist.reproducciones;
+            }
+    
+            const topCanciones = [];
+            for (const id in cancionesSumadas) {
+                topCanciones.push({ entidad_id: id, total_reproducciones: cancionesSumadas[id] });
+            }
+            topCanciones.sort((a, b) => b.total_reproducciones - a.total_reproducciones);
+            topCanciones.splice(limit); 
+    
+            const topAlbums = [];
+            for (const id in albumsSumados) {
+                topAlbums.push({ entidad_id: id, total_reproducciones: albumsSumados[id] });
+            }
+            topAlbums.sort((a, b) => b.total_reproducciones - a.total_reproducciones);
+            topAlbums.splice(limit);
+    
+            const topPlaylists = [];
+            for (const id in playlistsSumadas) {
+                topPlaylists.push({ entidad_id: id, total_reproducciones: playlistsSumadas[id] });
+            }
+            topPlaylists.sort((a, b) => b.total_reproducciones - a.total_reproducciones);
+            topPlaylists.splice(limit);
+    
+            return {
+                canciones: topCanciones,
+                albums: topAlbums,
+                playlists: topPlaylists
+            };
+        } catch (error) {
+            console.error("Error al obtener las reproducciones más populares:", error);
+            throw new Error("Error al obtener las reproducciones más populares");
+        }
+    }
 }
 
 module.exports = ReproduccionConnection;
