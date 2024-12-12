@@ -270,13 +270,12 @@ class SongModel {
         }
     }
 
-
     async addToHistory(songId, userId) {
         try {
             const newEntry = await models.Historial.create({
-                usuario_id: userId, // Asegúrate de que este campo esté presente
+                usuario_id: userId, 
                 cancion_id: songId,
-                fecha_reproduccion: new Date() // O la fecha que desees
+                fecha_reproduccion: new Date() 
             });
             console.log("Nueva entrada en el historial:", newEntry);
             return newEntry;

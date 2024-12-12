@@ -28,6 +28,7 @@ module.exports = {
       {
         id: 3,
         path: 'public/song3.mp3',
+
         createdAt: new Date(),
         updatedAt: new Date()
       }

@@ -5,6 +5,7 @@ const { socketController } = require("../controllers/services/socketController")
 const fileUpload = require('express-fileupload');
 const path = require('path'); 
 
+
 class Server {
   constructor() {
     this.app = express();
@@ -23,7 +24,6 @@ class Server {
     this.apiAlbums = "/api/albums";
     this.apiLikes = "/api/likes";
     this.apiReproducciones = "/api/reproducciones"
-
 
     this.app.use(fileUpload({
       useTempFiles: true,
@@ -74,6 +74,7 @@ class Server {
     this.app.use(this.apiLikes, require("../routes/likesRoutes"));
     this.app.use(this.apiProfile, require("../routes/profileRoutes"));
     this.app.use(this.apiReproducciones, require("../routes/reproduccionesRoutes"));
+
   }
 
   listen() {
@@ -85,8 +86,6 @@ class Server {
   sockets() {
     this.io.on('connection', (socket) => socketController.onConnect(socket, this.io));
   }
-
-
 }
 
 module.exports = Server;
