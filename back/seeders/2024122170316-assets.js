@@ -15,19 +15,20 @@ module.exports = {
     await queryInterface.bulkInsert(process.env.TABLA_ASSET, [
       {
         id: 1,
-        path: 'uploads/canciones/song1.mp3', 
+        path: 'public/song1.mp3', 
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 2,
-        path: 'uploads/canciones/song2.mp3', 
+        path: 'public/song2.mp3', 
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 3,
-        path: 'uploads/canciones/song3.mp3',
+        path: 'public/song3.mp3',
+
         createdAt: new Date(),
         updatedAt: new Date()
       }

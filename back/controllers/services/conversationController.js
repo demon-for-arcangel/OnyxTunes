@@ -1,5 +1,9 @@
 const { v4: getUniqueId } = require('uuid');
 
+/**
+ * NO IMPLEMENTADO
+ * Controlador de las conversaciones de Chat
+ */
 class ConversationController {
     constructor(socket) {
         this.socket = socket; 

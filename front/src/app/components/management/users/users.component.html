@@ -43,7 +43,7 @@
                     <tr>
                         <td>{{ usuario.nombre }}</td>
                         <td>{{ usuario.email }}</td>
-                        <td>{{ usuario.Rol[0].nombre }}</td>
+                        <td>{{ getRolNombre(usuario) }}</td>
                         <td>
                             <button (click)="editUsuario(usuario)">Editar</button>
                             <button (click)="deleteUsuario(usuario.id)">Eliminar</button>

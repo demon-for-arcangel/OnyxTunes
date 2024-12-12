@@ -31,4 +31,8 @@ export class AlbumsService {
   deleteAlbum(id: number): Observable<any> {
     return this.http.delete(`${this.url}` + `${this.albumsUrl}` + `/${id}`);
   }
+
+  getAlbumsByUserId(userId: number): Observable<any> {
+    return this.http.get(`${this.url}` + `${this.albumsUrl}` + `/user/${userId}`);
+  }
 }

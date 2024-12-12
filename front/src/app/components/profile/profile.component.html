@@ -1,23 +1,22 @@
-<!-- <div class="profile-container">
-    <h2>Perfil</h2>
+<div class="profile-container">
+    <app-sidebar></app-sidebar>
+    <main>
+        <app-account-button></app-account-button>
 
-    <h3>Artistas más escuchados:</h3>
-    <ul>
-        <li *ngFor="let artist of mostListenedArtists">{{ artist.nombre }}</li>
-    </ul>
+        <h2>Perfil de Usuario</h2>
 
-    <h3>Canciones más escuchadas:</h3>
-    <ul>
-        <li *ngFor="let song of mostListenedSongs">{{ song.titulo }}</li>
-    </ul>
-
-    <h3>Listas públicas:</h3>
-    <ul>
-        <li *ngFor="let playlist of publicPlaylists">{{ playlist.nombre }}</li>
-    </ul>
-
-    <h3>Seguidores:</h3>
-    <ul>
-        <li *ngFor="let follower of followers">{{ follower.nombre }}</li>
-    </ul>
-</div> -->
+        <h3>Playlists Públicas</h3>
+        @if(playlists.length > 0) {
+            <ul>
+                @for(playlist of playlists; track playlist.id) {
+                    <li>
+                        <h4>{{ playlist.nombre }}</h4>
+                        <p>{{ playlist.descripcion }}</p>
+                    </li>
+                }
+            </ul>
+        }@else {
+            <p>No hay playlists públicas disponibles.</p>
+        }
+    </main>
+</div>

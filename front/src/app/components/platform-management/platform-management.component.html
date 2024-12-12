@@ -6,6 +6,9 @@
   
 <main>
     <div class="platform-management">
+        <button class="back-button" (click)="goBack()">
+            <i class="pi pi-arrow-left"></i> Volver
+        </button>
         <div class="management-sections">
         @if(canAccess('userManagement')){
             <div class="section">

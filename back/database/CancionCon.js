@@ -2,9 +2,22 @@ require("dotenv").config();
 const { Sequelize, Op } = require("sequelize");
 const models = require("../models/index.js");
 const Conexion = require("./connection.js");
+const { subirArchivo } = require("../helpers/subir-archivo.js");
 
 const conexion = new Conexion();
 
+/**
+ * Conexion de Cancion
+ * @function indexSongs Obtener las canciones
+ * @function getSongById Obtener una cancion por su id
+ * @function getSongByTitle Obtener una cancion por su titulo
+ * @function getSongByUser Obtener las canciones de un usuario
+ * @function createSong Crear una cancion
+ * @function updateSong Actualizar una cancion
+ * @function deleteSong Eliminar una cancion
+ * @function addToHistory Añadir una cancion al historial
+ * @function getHistoryByUser Obtener el historial de un usuario
+ */
 class SongModel {
     constructor() {}
 
@@ -147,28 +160,45 @@ class SongModel {
         }
     }
 
-    async createSong(songData) {
+    async createSong(data, files) {
         try {
-            if (!Number.isInteger(songData.duracion)) {
-                throw new Error("La duración debe ser un número entero que represente los segundos.");
+            const { titulo, duracion, likes, reproducciones, album_id, artista_id, generos = [] } = data;
+
+            let assetId = null;
+
+            if (files && files.archivo) {
+                const nombreArchivo = await subirArchivo(files, ['mp3'], 'canciones');
+                const newAsset = await models.Asset.create({
+                    path: nombreArchivo,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                });
+                assetId = newAsset.id;
             }
-    
-            const newSong = await models.Cancion.create(songData);
-            console.log("Nueva canción creada:", newSong);
-    
-            if (songData.generos && Array.isArray(songData.generos) && songData.generos.length > 0) {
-                console.log("Géneros a relacionar:", songData.generos);
-    
-                await newSong.setGeneros(songData.generos);
-                console.log("Relaciones con géneros creadas.");
-            } else {
-                console.warn("No se proporcionaron géneros o el array está vacío.");
+
+            const newSong = await models.Cancion.create({
+                titulo,
+                duracion,
+                likes: likes || 0,
+                reproducciones: reproducciones || 0,
+                album_id,
+                artista_id,
+                assetId,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            });
+
+            if (Array.isArray(generos) && generos.length > 0) {
+                const generosExistentes = await models.Genero.findAll({
+                    where: { id: generos },
+                });
+                await newSong.setGeneros(generosExistentes);
             }
-    
-            return newSong;
+
+            return { message: "Canción creada con éxito", cancion: newSong };
         } catch (error) {
-            console.error("Error al guardar la canción en la base de datos:", error);
-            throw new Error("Error al guardar la canción.");
+            console.error("Error al crear la canción:", error);
+            throw new Error('Error al crear la canción');
         }
     }
     
@@ -237,6 +267,46 @@ class SongModel {
         } catch (error) {
             console.error("Error al eliminar canciones:", error);
             throw new Error("Error al eliminar las canciones.");
+        }
+    }
+
+    async addToHistory(songId, userId) {
+        try {
+            const newEntry = await models.Historial.create({
+                usuario_id: userId, 
+                cancion_id: songId,
+                fecha_reproduccion: new Date() 
+            });
+            console.log("Nueva entrada en el historial:", newEntry);
+            return newEntry;
+        } catch (error) {
+            console.error("Error al agregar al historial:", error);
+            throw new Error("Error al agregar al historial");
+        }
+    }
+
+    async getHistoryByUser(userId) {
+        try {
+            const history = await models.Historial.findAll({
+                where: { usuario_id: userId },
+                include: [
+                    {
+                        model: models.Cancion,
+                        as: 'cancion',
+                        attributes: ['id', 'titulo'] 
+                    },
+                    {
+                        model: models.Usuario,
+                        as: 'usuario',
+                        attributes: ['id', 'nombre'] 
+                    }
+                ],
+                order: [['fecha_reproduccion', 'DESC']] 
+            });
+            return history;
+        } catch (error) {
+            console.error("Error al obtener el historial:", error);
+            throw new Error("Error al obtener el historial");
         }
     }
 }

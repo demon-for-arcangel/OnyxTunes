@@ -1,0 +1,21 @@
+<div class="create-playlist-container">
+    <h2>Crear Playlist</h2>
+    <form (ngSubmit)="createPlaylist()">
+      <div>
+        <label for="nombre">Nombre de la Playlist:</label>
+        <input id="nombre" [(ngModel)]="nombre" name="nombre" required />
+      </div>
+  
+      <div>
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion" [(ngModel)]="descripcion" name="descripcion"></textarea>
+      </div>
+  
+      <div>
+        <label for="publico">¿Es pública?</label>
+        <input type="checkbox" id="publico" [(ngModel)]="publico" name="publico" />
+      </div>
+  
+      <button type="submit">Crear Playlist</button>
+    </form>
+  </div>

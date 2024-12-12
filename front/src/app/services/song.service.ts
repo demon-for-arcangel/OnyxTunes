@@ -37,4 +37,12 @@ export class SongService {
       body: { songsIds: songIds } 
     });
   }
+
+  addToHistory(songId: number, userId: number): Observable<any> {
+    return this.http.post(`${this.url}` + `${this.songsUrl}` + `/add/history`, { songId, userId });
+  }
+
+  getHistoryByUser(userId: number): Observable<any> {
+    return this.http.get(`${this.url}` + `${this.songsUrl}` + `/history/${userId}`);
+  }
 }

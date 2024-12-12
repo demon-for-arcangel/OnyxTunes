@@ -3,6 +3,10 @@ const SearchConnection = require("../database/SearchConnection");
 
 const conx = new SearchConnection();
 
+/**
+ * Controlador de Busqueda
+ * @function searchAll Buscar todas las entidades (canciones, playlists, artistas, albums)
+ */
 const searchAll = async (req = request, res = response) => {
     const { query } = req.query; 
 

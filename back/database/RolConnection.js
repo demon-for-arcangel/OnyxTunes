@@ -5,6 +5,11 @@ const Conexion = require("./connection.js");
 
 const conexion = new Conexion();
 
+/**
+ * Conexion de rol 
+ * @function indexRols Listar todos los roles
+ * @function getRolById Obtener un rol por su id
+ */
 class RolModel {
     constructor() {}
     

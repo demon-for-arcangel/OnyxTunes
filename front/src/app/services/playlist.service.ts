@@ -19,6 +19,23 @@ export class PlaylistService {
   }
 
   getPlaylistById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.url}${this.playlistUrl}/${id}`); // Elimina el espacio adicional
-}
+    return this.http.get<any>(`${this.url}${this.playlistUrl}/${id}`); 
+  }
+
+  addToFavorites(songId: number, userId: number): Observable<any> {
+    return this.http.post<any>(this.url + this.playlistUrl + '/song/like', { songId, userId });
+  }
+
+  createPlaylist(playlistData: { nombre: string; descripcion: string; usuario_id: number; publico: boolean; canciones?: number[] }): Observable<any> {
+    return this.http.post<any>(`${this.url}${this.playlistUrl}/new`, playlistData);
+  }
+
+  deleteSongPlaylist(songId: number, playlistId: number): Observable<any> {
+    return this.http.delete<any>(this.url + this.playlistUrl + '/song/delete', { 
+      body: { 
+        songId, 
+        playlistId 
+      } 
+    });
+  }
 }

@@ -6,9 +6,22 @@ const bcrypt = require('bcrypt');
 
 const conexion = new Conexion();
 
+/**
+ * Conexion de Usuario
+ * @function indexUser Obtener los usuarios
+ * @function indexUser Obtener los usuarios
+ * @function indexArtist Obtener los artistas
+ * @function getUserById Obtener un usuario por su id
+ * @function getUserByEmail Obtener un usuario por su email
+ * @function registerUser Registrar un usuario
+ * @function createUser Crear un usuario
+ * @function updateUser Actualizar un usuario
+ * @function deleteUsers Eliminar usuarios
+ * @function updatePassword Actualizar la contraseña de un usuario
+ * @function createDefaultPlaylist Crear una playlist por defecto para un usuario
+*/
 class UserModel {
     constructor() {}
-
     async indexUser() {
         try {
             const users = await models.Usuario.findAll({
@@ -25,7 +38,6 @@ class UserModel {
             throw new Error('Error al listar los usuarios');
         }
     }
-    
 
     async indexArtist() {
         try {
@@ -144,37 +156,11 @@ class UserModel {
             throw new Error("No se proporcionaron IDs de usuario para eliminar.");
         }
 
-        await models.RolUsuario.destroy({
-            where: { usuario_id: userIds }
-        });
-
         const result = await models.Usuario.destroy({
             where: { id: userIds }
         });
 
         return result;
-    }
-
-    async getUserRoles(userId) {
-        try {
-            const user = await models.Usuario.findByPk(userId, {
-                include: [
-                    {
-                        model: models.Rol,
-                        attributes: ['id', 'nombre']
-                    }
-                ]
-            });
-
-            if (!user) {
-                throw new Error('Usuario no encontrado');
-            }
-
-            return user.roles; 
-        } catch (error) {
-            console.error('Error al obtener roles del usuario:', error);
-            throw new Error('Error al obtenr los roles'); 
-        }
     }
 
     async updatePassword(userId, currentPassword, newPassword, confirmPassword) {

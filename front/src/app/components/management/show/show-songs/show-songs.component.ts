@@ -55,9 +55,5 @@ export class ShowSongsComponent {
         return 'Sin géneros'; 
     }
     return generos.map(genero => genero.nombre).join(', ');
-}
-
-/* getGenerosString(generos: any[]): string {
-    return generos.map(genero => genero.nombre).join(', ');
-  } */
+  }
 }

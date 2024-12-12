@@ -4,6 +4,15 @@ const models = require('../models');
 
 const conx = new Conexion();
 
+/**
+ * Controlador de Albums
+ * @function index Obtener los albums
+ * @function getAlbumById Obtener un album por su id
+ * @function createAlbum Crear un album
+ * @function updateAlbum Actualizar un album
+ * @function deleteAlbum Eliminar un album
+ * @function getAlbumsByUserId Obtener los albums de un usuario
+ */
 const index = async (req, res) => {
     try {
         const albums = await conx.indexAlbums();
@@ -79,7 +88,22 @@ const deleteAlbum = async (req, res) => {
     }
 };
 
+const getAlbumsByUserId = async (req, res) => {
+    const userId = req.params.userId;
+    console.log(userId);
+
+    try {
+        const albums = await conx.getAlbumsByUserId(userId);
+        if (albums.length === 0) {
+            return res.status(404).json({ msg: "No se encontraron álbumes para el usuario." });
+        }
+        res.status(200).json(albums);
+    } catch (error) {
+        console.error("Error al obtener los álbumes por usuario:", error);
+        res.status(500).json({ msg: "Error al obtener los álbumes por usuario." });
+    }
+}
 
 module.exports = {
-    index, getAlbumById, createAlbum, updateAlbum, deleteAlbum
+    index, getAlbumById, createAlbum, updateAlbum, deleteAlbum, getAlbumsByUserId
 }

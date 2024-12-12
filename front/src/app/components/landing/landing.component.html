@@ -15,16 +15,24 @@
         <app-list-artist-landing></app-list-artist-landing>
     </div>
     <div class="section-right">
+        <h2>Canciones populares</h2>
+        <ul>
+            @for(cancion of topCanciones; track cancion){
+                <li><strong>{{ cancion.titulo }}</strong>
+                    <br><p>Total de reproducciones: {{ cancion.total_reproducciones }}</p>
+                </li>
+            }
+        </ul>
         <h2>Álbumes populares</h2>
         <ul>
-            @for(album of albumes; track album){
-                <li>{{ album }}</li>
+            @for(album of topAlbums; track album){
+                <li>{{ album.titulo }} - {{ album.total_reproducciones }}</li>
             }
         </ul>
         <h2>Listas populares</h2>
         <ul>
-            @for(lista of listas; track lista){
-                <li>{{ lista }}</li>
+            @for(lista of topPlaylists; track lista){
+                <li>{{ lista.titulo }} - {{ lista.total_reproducciones }}</li>
             }
         </ul>
     </div>

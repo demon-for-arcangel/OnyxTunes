@@ -1,5 +1,9 @@
 const models = require('../../models/index');
 
+/**
+ * NO IMPLEMENTADO
+ * Controlador de las conexiones de socket
+ */
 class SocketController {
     static io;
     static usersConnected = new Map();

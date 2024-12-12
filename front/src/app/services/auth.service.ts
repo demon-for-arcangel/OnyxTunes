@@ -108,16 +108,6 @@ export class AuthService {
     }
   }
 
-/*   getIdOfToken(): any {
-    try {
-      let token = JSON.parse(localStorage.getItem('user') as string).token.split('.')[1]
-      const idOfToken = JSON.parse(atob(token)).uid;
-      return idOfToken;
-    } catch (error){
-      return null;
-    }
-  } */
-
   isAdmin(): Observable<boolean> {
     let token = localStorage.getItem('user');
     if (!token) {
