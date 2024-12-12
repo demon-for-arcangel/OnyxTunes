@@ -8,6 +8,18 @@ const bcrypt = require("bcrypt");
 
 const conx = new Conexion();
 
+/**
+ * Controlador de Usuarios
+ * @function index Obtener los usuarios
+ * @function indexArtist Obtener los artistas
+ * @function getUserById Obtener un usuario por su id
+ * @function getUserByEmail Obtener un usuario por su email
+ * @function sendMail Enviar un email
+ * @function updateUser Actualizar un usuario
+ * @function deleteUsers Eliminar usuarios
+ * @function getUserByToken Obtener un usuario por su token
+ * @function updatePassword Actualizar la contraseña de un usuario
+ */
 const index = async (req, res) => {
     try{
         const users = await conx.indexUser();
@@ -63,35 +75,9 @@ const getUserByEmail = async (req, res) => {
 
 const sendMail = async (mailOptions) => {} //por hacer
 
-const registerUserByAdmin = async (req, res) => {} //por hacer
-
-const createUser = async (req, res) => {
-    const { nombre, email, password, roles } = req.body; 
-
-    try {
-        const existingUser = await conx.getUserByEmail(email);
-        if (existingUser) {
-            return res.status(400).json({ msg: "El correo ya está en uso" });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = await conx.createUser(nombre, email, hashedPassword);
-
-        if (roles && roles.length > 0) {
-            await conx.createUserRols(newUser.id, roles); 
-        }
-
-        res.status(201).json({ msg: "Usuario creado exitosamente", user: newUser });
-    } catch (error) {
-        console.error("Error al crear usuario", error);
-        res.status(500).json({ msg: "Error al crear usuario" });
-    }
-};
-
 const updateUser = async (req, res) => {
     const userId = req.params.id; 
-    const { nombre, email, fecha_nacimiento, telefono, direccion, genero, activo, password, roles } = req.body; 
+    const { nombre, email, nickname, fecha_nacimiento, direccion, telefono, genero, activo, password, rol } = req.body; 
 
     try {
         const existingUser = await conx.getUserById(userId);
@@ -107,30 +93,18 @@ const updateUser = async (req, res) => {
         const updatedData = {
             nombre: nombre || existingUser.nombre, 
             email: email || existingUser.email, 
+            nickname: nickname || existingUser.nickname,
             fecha_nacimiento: fecha_nacimiento || existingUser.fecha_nacimiento,
-            telefono: telefono || existingUser.telefono,
+            //añadir foto de perfil
             direccion: direccion || existingUser.direccion,
+            telefono: telefono || existingUser.telefono,
             genero: genero || existingUser.genero,
             activo: activo || existingUser.activo,
-            password: hashedPassword || existingUser.password 
+            password: hashedPassword || existingUser.password,
+            rol: rol || existingUser.rol 
         };
 
         const updatedUser = await conx.updateUser(userId, updatedData);
-
-        if (roles) {
-            const currentRoles = await conx.getUserRoles(userId);
-
-            const rolesToRemove = currentRoles.filter(role => !roles.includes(role.id));
-            for (const role of rolesToRemove) {
-                await conx.removeUserRole(userId, role.id);
-            }
-
-            for (const roleId of roles) {
-                if (!currentRoles.some(role => role.id === roleId)) {
-                    await conx.createUserRols(userId, [roleId]);
-                }
-            }
-        }
 
         res.status(200).json({ msg: "Usuario actualizado exitosamente", user: updatedUser });
     } catch (error) {
@@ -190,6 +164,6 @@ const updatePassword = async (req, res) => {
 };
 
 module.exports = {
-    index, indexArtist, getUserById, getUserByEmail, /* createUser, */ sendMail, /* registerUserByAdmin, */ updateUser, deleteUsers, 
+    index, indexArtist, getUserById, getUserByEmail, sendMail, updateUser, deleteUsers, 
     getUserByToken, updatePassword
 }

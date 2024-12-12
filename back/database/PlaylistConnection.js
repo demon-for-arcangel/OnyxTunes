@@ -1,6 +1,18 @@
 const { Op, Sequelize } = require("sequelize");
 const models = require("../models");
 
+/**
+ * Conexion de Playlist
+ * @function index Obtener las playlists
+ * @function getPlaylistById Obtener una playlist por su id
+ * @function createPlaylist Crear una playlist
+ * @function updatePlaylist Actualizar una playlist
+ * @function deletePlaylists Eliminar playlists
+ * @function getUserPlaylists Obtener las playlists de un usuario
+ * @function createPlaylistByUser Crear una playlist por un usuario
+ * @function addSongToFavorites Añadir una cancion a favoritos
+ * @function deleteSongPlaylist Eliminar una cancion de una playlist
+ */
 class PlaylistConnection {
     async index() {
         try {
@@ -28,8 +40,14 @@ class PlaylistConnection {
                         include: [{
                             model: models.Album,
                             attributes: ['id', 'titulo']
+                        },
+                        {
+                            model: models.Asset,
+                            attributes: ['id', 'path'],
+                            as: 'asset'
                         }]
-                    }             
+                    },
+           
                 ]
             });
             if (!playlist) {
@@ -43,6 +61,7 @@ class PlaylistConnection {
     }
 
     async createPlaylist(data, canciones) {
+        console.log(data);
         try {
             const existingPlaylist = await models.Playlist.findOne({
                 attributes: { exclude: ['usuario_id'] },
@@ -53,6 +72,7 @@ class PlaylistConnection {
                     model: models.Usuario,
                     through: {
                         model: models.UsuarioPlaylist,
+                        attributes: { exclude: ['album_id'] },
                         where: { usuario_id: data.usuario_id } 
                     }
                 }]
@@ -180,38 +200,85 @@ class PlaylistConnection {
                 where: { nombre: 'Favoritos' }
             });
     
-            let existingPlaylist;
-    
-            if (favoritesPlaylist) {
-                existingPlaylist = await models.UsuarioPlaylist.findOne({
-                    where: {
-                        usuario_id: userId,
-                        playlist_id: favoritesPlaylist.id 
-                    }
+            if (!favoritesPlaylist) {
+                favoritesPlaylist = await models.Playlist.create({
+                    nombre: 'Favoritos',
+                    publico: false
                 });
             }
     
-            if (!existingPlaylist) {
-                const newFavoritesPlaylist = await models.Playlist.create({
-                    nombre: 'Favoritos',
-                });
+            const existingPlaylist = await models.UsuarioPlaylist.findOne({
+                attributes: { exclude: ['album_id'] },
+                where: {
+                    usuario_id: userId,
+                    playlist_id: favoritesPlaylist.id 
+                }
+            });
     
+            if (!existingPlaylist) {
                 await models.UsuarioPlaylist.create({
                     usuario_id: userId,
-                    playlist_id: newFavoritesPlaylist.id
+                    playlist_id: favoritesPlaylist.id
                 });
-            } else {
-                favoritesPlaylist = await models.Playlist.findByPk(
-                    existingPlaylist.playlist_id,
-                    { attributes: { exclude: ['usuario_id'] } } 
-                );
             }
     
             await favoritesPlaylist.addCanciones(songId); 
-            return { message: "Canción añadida a Favoritos." };
+    
+            const existingLike = await models.Like.findOne({
+                where: {
+                    usuario_id: userId,
+                    entidad_id: songId,
+                    entidad_tipo: 'Cancion'
+                }
+            });
+    
+            if (!existingLike) {
+                await models.Like.create({
+                    usuario_id: userId,
+                    entidad_id: songId,
+                    entidad_tipo: 'Cancion'
+                });
+            }
+    
+            return { message: "Canción añadida a Favoritos y añadido a la tabla Like." };
         } catch (error) {
             console.error('Error al añadir la canción a Favoritos:', error);
             throw new Error("Error al añadir la canción a Favoritos.");
+        }
+    }
+
+    async deleteSongPlaylist(songId, playlistId){
+        console.log(songId, playlistId);
+        try {
+            const playlist = await models.Playlist.findByPk(playlistId, {
+                attributes: { exclude: ['usuario_id'] },
+            });
+            if (!playlist) {
+                throw new Error("Playlist no encontrada");
+            }
+    
+            const songInPlaylist = await models.CancionPlaylist.findOne({
+                where: {
+                    playlist_id: playlistId,
+                    cancion_id: songId
+                }
+            });
+    
+            if (!songInPlaylist) {
+                throw new Error("La canción no está en la playlist");
+            }
+    
+            await models.CancionPlaylist.destroy({
+                where: {
+                    playlist_id: playlistId,
+                    cancion_id: songId
+                }
+            });
+    
+            return { message: "Canción eliminada de la playlist." };
+        } catch (error) {
+            console.error("Error al eliminar la canción de la playlist:", error);
+            throw new Error("Error al eliminar la canción de la playlist.");
         }
     }
 }

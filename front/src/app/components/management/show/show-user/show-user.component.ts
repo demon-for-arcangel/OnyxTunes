@@ -51,8 +51,9 @@ export class ShowUserComponent {
   getUserById(id: string): void {
     this.userService.getUserById(id).subscribe(data => {
         this.usuario = data;
-        this.usuario.activo = this.usuario.activo === 'true' || this.usuario.activo === true; // Convertir a booleano
-        this.rolesString = this.getRoles(this.usuario.roles); // Almacena el resultado en rolesString
+        console.log(this.usuario)
+        this.usuario.activo = this.usuario.activo === 'true' || this.usuario.activo === true; 
+        this.rolesString = this.getRoles(this.usuario.roles); 
     }, error => {
         console.error('Error al obtener el usuario:', error);
     });

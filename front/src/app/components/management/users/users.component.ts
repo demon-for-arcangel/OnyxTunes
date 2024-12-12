@@ -21,7 +21,8 @@ import { ShowUserComponent } from '../show/show-user/show-user.component';
   providers: [DialogService]
 })
 export class UsersComponent {
-  usuarios: Usuario[] = [];
+  user: Usuario[] = [];
+  usuarios: any;
   filteredUsuarios: Usuario[] = [];
   searchQuery: string = '';
   showFilter: boolean = false;
@@ -47,7 +48,7 @@ export class UsersComponent {
   }
 
   loadUsuarios(): void {
-    this.userService.getUsuarios().subscribe({
+    this.userService.indexUsuarios().subscribe({
       next: (usuarios) => {
         this.originalUsuarios = usuarios;
         this.usuarios = [...usuarios]; 
@@ -61,7 +62,14 @@ export class UsersComponent {
     });
   }
 
-  newUser(){// revisar (crea el usuario bien pero no con el rol que se le pone, lo deja sin rol)
+  getRolNombre(usuario: any): string {
+    if (!usuario.Rol) {
+      return 'Sin rol';
+    }
+    return usuario.Rol.nombre ? usuario.Rol.nombre : 'Sin rol';
+  }
+
+  newUser(){
     this.ref = this.dialogService.open(CreateUserComponent, {
       header: 'Agregar Nuevo Usuario',
       modal: true,
@@ -104,7 +112,7 @@ export class UsersComponent {
     this.goToPage(this.currentPage - 1);
   }
 
-  searchUsuarios(): void { //revisar (intentar hacer para que haga la busqueda a partir del tercer caracter que se añada)
+  searchUsuarios(): void { 
     if (this.searchQuery) {
       const allUsuarios = [...this.usuarios]; 
       this.usuarios = allUsuarios.filter(usuario =>
@@ -121,7 +129,6 @@ export class UsersComponent {
 
   showUsuario(usuario: Usuario): void {//revisar
     this.ref = this.dialogService.open(ShowUserComponent, {
-      header: 'Ver Datos del Usuario',
       modal: true,
       width: '70vw',
       styleClass: 'custom-modal',
@@ -187,14 +194,17 @@ export class UsersComponent {
       if (confirmed) {
         this.userService.deleteUsuarios([userIds]).subscribe({
           next: () => {
-            this.usuarios = this.usuarios.filter(usuario => usuario.id !== userIds);
+            this.user = this.user.filter(user => user.id !== userIds); 
             this.updatePaginatedUsuarios();
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
           }, 
           error: (error) => {
             console.error('Error al eliminar usuario:', error);
           }
         });
-      };
+      }
     });
   }
 
@@ -205,34 +215,28 @@ export class UsersComponent {
 
   applyFilter(): void {
     if (this.filterType === 'todos') {
-      this.usuarios = [...this.originalUsuarios]; 
-      this.currentPage = 1;
-      this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
-      this.updatePaginatedUsuarios();
-      return;
+        this.usuarios = [...this.originalUsuarios]; 
+        this.currentPage = 1;
+        this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
+        this.updatePaginatedUsuarios();
+        return;
     }
-  
+
     const rolMap: { [key: string]: string } = {
-      'administradores': 'administrador',
-      'usuarios': 'usuario',
-      'artistas': 'artista'
+        'administradores': 'Administrador',
+        'usuarios': 'Usuario',
+        'artistas': 'Artista'
     };
-  
+
     const rolBuscado = rolMap[this.filterType];
-  
-    this.usuarios = this.originalUsuarios.filter(usuario =>
-      usuario.Rol?.some(rol => rol.nombre?.toLowerCase() === rolBuscado.toLowerCase())
-    );
-  
+
+    this.usuarios = this.originalUsuarios.filter(usuario => {
+        const rolNombre = this.getRolNombre(usuario); 
+        return rolNombre === rolBuscado;
+    });
+
     this.currentPage = 1;
     this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
     this.updatePaginatedUsuarios();
-  }
-
-  getRoles(roles: any[]): string {
-    if (!roles || roles.length === 0) {
-        return 'Sin rol';
-    }
-    return roles.map(role => role.nombre).join(', ');
-  }
+}
 }

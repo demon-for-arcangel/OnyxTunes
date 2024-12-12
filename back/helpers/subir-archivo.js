@@ -1,7 +1,14 @@
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
-
+/**
+ * Subir un archivo
+ * @function subirArchivo Subir un archivo
+ * @param {Object} files Archivo a subir
+ * @param {Array} extensionesValidas Extensiones validas
+ * @param {String} carpeta Carpeta donde se subira el archivo
+ * @returns {Promise<String>} Nombre del archivo subido
+ */
 const subirArchivo = ( files, extensionesValidas = ['mp3', 'PNG',"JPG",'png','jpg','jpeg','gif','tiff','svg','webp'], carpeta = '' ) => {
 
     return new Promise( (resolve, reject) => {
@@ -14,7 +21,7 @@ const subirArchivo = ( files, extensionesValidas = ['mp3', 'PNG',"JPG",'png','jp
         }
         
         const nombreTemp = uuidv4() + '.' + extension;
-        const uploadPath = path.join( __dirname, '../../front/src/assets/uploads/', carpeta, nombreTemp );
+        const uploadPath = path.join(__dirname, '../public/uploads', carpeta, nombreTemp);
         archivo.mv(uploadPath, (err) => {
             if (err) {
                 reject(err);
@@ -24,7 +31,6 @@ const subirArchivo = ( files, extensionesValidas = ['mp3', 'PNG',"JPG",'png','jp
             return nombreTemp;
         });
     });
-
 }
 
 module.exports = {

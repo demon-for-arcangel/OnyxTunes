@@ -1,6 +1,17 @@
 const models = require('../models/index');
 const { Op } = require("sequelize");
 
+/**
+ * Conexion de Mensaje
+ * @function findRecentChatMessages Obtener los mensajes de un chat
+ * @function getReceptoresPorEmisor Obtener los receptores por un emisor
+ * @function pushMessage Pushear un mensaje
+ * @function pushMessageFiles Pushear archivos de un mensaje
+ * @function getUnreadedMessages Obtener los mensajes no leídos
+ * @function markMessageAsReaded Marcar un mensaje como leído
+ * @function getChatsByUserId Obtener los chats de un usuario
+ * @function getChatsGroupedByReceiver Obtener los chats agrupados por receptor
+ */
 class Message {
     static findRecentChatMessages = async (emisor, receptor) => {
         try {

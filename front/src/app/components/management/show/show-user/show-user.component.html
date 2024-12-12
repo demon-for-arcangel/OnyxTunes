@@ -1,5 +1,18 @@
 <div class="form-container">
-    <h2>Actualizar Usuario</h2>
+
+    <div class="profile-container">
+        <div class="form-group">
+            @if(usuario.foto_perfil){
+                <img [src]="usuario.foto_perfil" alt="Foto de Perfil" class="imagen" style="margin-top: 10px; max-width: 200px;">
+            }
+        </div>
+    
+        <div class="form-group">
+            <label for="nickname">Nombre de Usuario</label>
+            <input type="text" class="form-control" id="nickname" name="nickname" [(ngModel)]="usuario.nickname" disabled>
+        </div>
+    </div>
+
     <div class="form-group">
         <label for="nombre">Nombre</label>
         <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="usuario.nombre" disabled>

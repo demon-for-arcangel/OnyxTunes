@@ -1,6 +1,10 @@
 const { faker } = require('@faker-js/faker');
 const bcrypt = require("bcrypt");
 
+/**
+ * Factory de Usuario
+ * @function userFactory Crear usuarios
+ */
 const userFactory = async (num_gen) => {
     let i = 0;
     let arrUsers = [];

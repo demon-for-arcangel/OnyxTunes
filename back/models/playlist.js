@@ -40,7 +40,8 @@ module.exports = (sequelize, DataTypes) => {
   Playlist.init({
     nombre: DataTypes.STRING,
     descripcion: DataTypes.STRING,
-    assetId: DataTypes.INTEGER
+    assetId: DataTypes.INTEGER,
+    publico: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Playlist',

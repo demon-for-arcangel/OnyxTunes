@@ -96,12 +96,12 @@ export class UpdateUserComponent {
       next: (user) => {
         this.usuario = user;
   
-        this.selectedRoles = this.usuario.roles.map((userRole: any) => {
+        /* this.selectedRoles = this.usuario.roles.map((userRole: any) => {
           return {
             id: userRole.RolUsuario.rol_id, 
             nombre: userRole.nombre,      
           };
-        });
+        }); */
     
         this.filterAvailableRoles();
       },

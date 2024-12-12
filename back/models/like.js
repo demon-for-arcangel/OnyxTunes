@@ -18,14 +18,17 @@ module.exports = (sequelize, DataTypes) => {
 
       this.belongsTo(models.Cancion, { 
         foreignKey: 'entidad_id', 
+        as: 'cancion'
       });
 
       this.belongsTo(models.Album, {
-        foreignKey: 'entidad_id'
+        foreignKey: 'entidad_id',
+        as: 'album'
       })
 
       this.belongsTo(models.Playlist, { 
-        foreignKey: 'entidad_id'
+        foreignKey: 'entidad_id',
+        as: 'playlist',
       });
     }
   }

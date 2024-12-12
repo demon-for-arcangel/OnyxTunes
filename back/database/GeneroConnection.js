@@ -1,6 +1,14 @@
 const { Op } = require("sequelize");
 const models = require("../models/index");
 
+/**
+ * Conexion de Genero
+ * @function indexGeneros Obtener los generos
+ * @function getGeneroById Obtener un genero por su id
+ * @function createGenero Crear un genero
+ * @function updateGenero Actualizar un genero
+ * @function deleteGeneros Eliminar generos
+ */
 class GeneroModel {
     constructor() {}
 

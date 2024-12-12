@@ -1,5 +1,10 @@
 const { validationResult } = require('express-validator');
 
+/**
+ * Middleware de validacion de campos
+ * @function validateFilds Middleware de validacion de campos
+ * @function validateTLF Middleware de validacion de telefono
+ */
 const validateFilds = ( req, res, next ) => {
 
     const errors = validationResult(req);

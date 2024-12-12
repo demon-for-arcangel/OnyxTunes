@@ -14,8 +14,14 @@
                         @for (song of results.songs; track song) {
                             <li>
                                 {{ song.titulo }}
+                                <button (click)="playSong(song)">Reproducir</button>
+                                @if(userLikes.includes(song.id)){
+                                    <button (click)="deleteLike(song)">Eliminar Like</button>
+                                }@else {
+                                    <button (click)="addToFavorites(song)">Agregar a Favoritos</button>
+                                }
                             </li>
-                            <button (click)="playSong(song)"></button>
+                            
                         }
                     </ul>
                 }

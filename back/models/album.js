@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     
       this.belongsToMany(models.Usuario, {
         through: models.UsuarioAlbum,
-        foreignKey: 'album_id'
+        foreignKey: 'album_id',
+        otherKey: 'usuario_id'
       });
 
       this.hasMany(models.Like, { 
@@ -31,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   Album.init({
     titulo: DataTypes.STRING,
-    artista_id: DataTypes.INTEGER,
     fecha_lanzamiento: DataTypes.DATE,
   }, {
     sequelize,

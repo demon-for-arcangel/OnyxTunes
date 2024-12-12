@@ -6,6 +6,13 @@ const nodemailer = require('nodemailer');
 
 const conx = new Conexion();
 
+/**
+ * Controlador para la autenticacion de usuarios
+ * 
+ * @function register Registro de un usuario
+ * @function registerByAdmin Registro de un usuario por un administrador
+ * @function login Login de un usuario
+ */
 const register = async (req, res) => {
     const body = req.body;
 

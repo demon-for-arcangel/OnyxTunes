@@ -3,6 +3,7 @@ const cors = require("cors");
 require('dotenv').config();
 const { socketController } = require("../controllers/services/socketController");
 const fileUpload = require('express-fileupload');
+const path = require('path'); 
 
 class Server {
   constructor() {
@@ -14,10 +15,15 @@ class Server {
     this.apiMail = "/api/mail";
     this.apiChats = "/api/chats";
     this.apiPlaylist = "/api/playlist";
+    this.apiProfile = "/api/profile";
     this.apiAssets = "/api/assets";
     this.apiSearch = "/api/search";
     this.apiSongs = "/api/songs";
     this.apiGeneros = "/api/generos";
+    this.apiAlbums = "/api/albums";
+    this.apiLikes = "/api/likes";
+    this.apiReproducciones = "/api/reproducciones"
+
 
     this.app.use(fileUpload({
       useTempFiles: true,
@@ -48,6 +54,9 @@ class Server {
       credentials: true,
     }));
     this.app.use(express.json());
+    console.log('RUTA', path.join(__dirname, '../../front/src/assets/uploads'));
+    this.app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
+
   }
 
   routes() {
@@ -59,10 +68,12 @@ class Server {
     this.app.use(this.apiSearch, require("../routes/searchRoutes"));
     this.app.use(this.apiSongs, require("../routes/cancionRoutes"));
     this.app.use(this.RoutePath, require('../routes/rolRoutes'));
-    this.app.use(this.RoutePath, require('../routes/albumRoutes'));
-    this.app.use(this.RoutePath, require('../routes/cancionRoutes'));
+    this.app.use(this.apiAlbums, require('../routes/albumRoutes'));
     this.app.use(this.apiGeneros, require('../routes/generoRoutes'));
     this.app.use(this.apiPlaylist, require('../routes/PlaylistRoutes'));
+    this.app.use(this.apiLikes, require("../routes/likesRoutes"));
+    this.app.use(this.apiProfile, require("../routes/profileRoutes"));
+    this.app.use(this.apiReproducciones, require("../routes/reproduccionesRoutes"));
   }
 
   listen() {
@@ -74,6 +85,8 @@ class Server {
   sockets() {
     this.io.on('connection', (socket) => socketController.onConnect(socket, this.io));
   }
+
+
 }
 
 module.exports = Server;

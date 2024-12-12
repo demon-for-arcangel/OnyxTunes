@@ -5,6 +5,16 @@ const Conexion = require("./connection.js");
 
 const conexion = new Conexion();
 
+/**
+ * Conexion de Album
+ * @function indexAlbums Obtener los albums
+ * @function getAlbumById Obtener un album por su id
+ * @function getAlbumByTitle Obtener un album por su titulo
+ * @function createAlbum Crear un album
+ * @function updateAlbum Actualizar un album
+ * @function deleteAlbum Eliminar un album
+ * @function getAlbumsByUserId Obtener los albums de un usuario
+ */
 class AlbumModel {
     constructor() {}
 
@@ -109,6 +119,32 @@ class AlbumModel {
             throw new Error("Error al eliminar álbum(es).");
         }
     }    
+
+    async getAlbumsByUserId(userId) {
+        try {
+            const albums = await models.Album.findAll({
+                include: [{
+                    model: models.Usuario,
+                    through: {
+                        where: { usuario_id: userId }
+                    }
+                }]
+            });
+    
+            const filteredAlbums = albums.filter(album => 
+                album.Usuarios.length > 0
+            );
+    
+            if (filteredAlbums.length === 0) {
+                console.log(`No se encontraron álbumes para el usuario con ID: ${userId}`);
+            }
+    
+            return filteredAlbums;
+        } catch (error) {
+            console.error('Error al obtener los álbumes por ID de usuario: ', error);
+            throw new Error('Error al obtener los álbumes por ID de usuario');
+        }
+    }
 }
 
 module.exports = AlbumModel;

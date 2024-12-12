@@ -175,7 +175,7 @@ deleteSongs(id: number) {
     this.albumsService.updateAlbum(album).subscribe(
       (response) => {
         console.log('Álbum editado:', response);
-        this.loadAlbums(); // Recargar los álbumes
+        this.loadAlbums(); 
       },
       (error) => {
         console.error('Error al editar el álbum', error);
