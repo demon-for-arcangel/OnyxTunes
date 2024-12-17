@@ -26,6 +26,7 @@ export class MusicComponent implements OnInit {
   currentAlbumsPage = 1;
   albumsPerPage = 5;
   searchQuery: string = '';
+  mostrarCanciones: boolean = true;
 
   ref: DynamicDialogRef | undefined;
   dialog: any;
@@ -47,8 +48,12 @@ export class MusicComponent implements OnInit {
             console.error('Error al cargar las canciones:', error);
         }
     );
-}
+  }
 
+  view(){
+    this.mostrarCanciones = !this.mostrarCanciones;
+  }
+  
   loadAlbums() {
     this.albumsService.getAlbums().subscribe(
       (data) => {
