@@ -17,5 +17,7 @@ export const environment = {
     searchUrl: '/search',
     likesUrl: '/likes',
     profileUrl: '/profile',
-    reproduccionesUrl: '/reproducciones'
+    reproduccionesUrl: '/reproducciones',
+    sendMail: '/mail/request-reset',
+    resetPassword: '/mail/reset',
 };

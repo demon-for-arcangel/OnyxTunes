@@ -10,7 +10,7 @@ const { Usuario } = require('../../models');
 let transporter = nodemailer.createTransport({
     service: 'gmail', 
     auth: {
-        usuario: process.env.MAIL_USER,
+        user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASSWORD,
     }
 })

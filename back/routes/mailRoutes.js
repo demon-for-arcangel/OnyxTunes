@@ -1,8 +1,8 @@
 const { Router } = require('express');
-const mailController = require('../controllers/services/mailController')
+const mailcontroller = require('../controllers/services/mailController')
 const router = Router();
 
-router.post('/request-reset', mailController.requestPasswordReset);
-router.post('/reset/:token', mailController.resetPassword);
+router.post('/request-reset', mailcontroller.requestPasswordReset);
+router.post('/reset/:token', mailcontroller.resetPassword);
 
-module.exports = router;
+module.exports = router

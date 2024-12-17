@@ -17,7 +17,6 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { MusicArtistComponent } from './components/management/music-artist/music-artist.component';
 import { authGuard } from './guards/auth.guard';
-import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { RequestResetComponent } from './components/resetPassword/request-reset/request-reset.component';
 import { ResetPasswordComponent } from './components/resetPassword/reset-password/reset-password.component';
 
@@ -40,5 +39,5 @@ export const routes: Routes = [
     { path: 'change-password', component: ChangePasswordComponent, canActivate: [authGuard] },
     { path: 'platform/artistManagement', component: MusicArtistComponent, canActivate: [authGuard] },
     { path: 'forgot-password', component: RequestResetComponent },
-    {path: 'reset/:token', component: ResetPasswordComponent },
+    { path: 'reset/:token', component: ResetPasswordComponent },
 ];

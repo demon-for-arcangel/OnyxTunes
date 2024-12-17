@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Errors } from '../../interfaces/errors';
 import { UserService } from '../../services/user.service';
+import { RolService } from '../../services/rol.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ export class LoginComponent {
   password: string = '';
   errors: Errors = {}; 
 
-  constructor(private userService: UserService, private router: Router, private authService: AuthService) {}
+  constructor(private userService: UserService, private router: Router, private authService: AuthService, private rolService: RolService) {}
 
   login() {
     this.errors = {}; 
@@ -62,31 +63,36 @@ export class LoginComponent {
    
 
   handleUserResponse(user: any) {
-    console.log('Respuesta del usuario:', user); 
-
-    if (!user) {
-      console.error('Usuario no definido.');
-      this.errors.login = 'No se pudo obtener el usuario.';
+    console.log('Respuesta del usuario:', user);
+  
+    if (!user || !user.rol) {  // Verificar que el usuario y su rol existan
+      console.error('Usuario o ID de rol no definido.');
+      this.errors.login = 'No se pudo obtener el rol del usuario.';
       return;
     }
-
-    const roles = Array.isArray(user.Rol) ? user.Rol : [user.Rol];
-    console.log('Roles del usuario:', roles);
-
-    if (roles && roles.length > 0 && roles[0].nombre) {
-      const userRole = roles[0].nombre;
-      console.log('Rol del usuario:', userRole);
-
-      if (userRole === 'Usuario') {
-        this.router.navigate(['/home']);
-      } else if (userRole === 'Artista' || userRole === 'Administrador') {
-        this.router.navigate(['/selectAccess']);
+  
+    // Obtener el nombre del rol mediante el servicio
+    const roleId = user.rol;
+    this.rolService.getRolesById(roleId).subscribe({
+      next: (role) => {
+        console.log('Nombre del rol obtenido:', role.nombre);
+  
+        if (role.nombre === 'Usuario') {
+          this.router.navigate(['/home']);
+        } else if (role.nombre === 'Artista' || role.nombre === 'Administrador') {
+          this.router.navigate(['/selectAccess']);
+        } else {
+          console.warn('Rol desconocido:', role.nombre);
+          this.errors.login = 'Rol del usuario no reconocido.';
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener el rol:', err);
+        this.errors.login = 'Error al obtener el rol del usuario.';
       }
-    } else {
-      console.error('El usuario no tiene un rol asociado o Rol es undefined');
-      this.errors.login = 'El usuario no tiene un rol asignado.';
-    }
+    });
   }
+  
 
   handleError(error: any) {
     console.error('Error al obtener el usuario:', error);
