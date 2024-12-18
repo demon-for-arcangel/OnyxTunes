@@ -151,7 +151,7 @@ class UserModel {
         }
     }
 
-    async deleteUsers(userIds) {
+    async deleteUsers(userIds) {//revisar, no elimina las playlist que son exclusivas del usuario
         if (!userIds) {
             throw new Error("No se proporcionaron IDs de usuario para eliminar.");
         }

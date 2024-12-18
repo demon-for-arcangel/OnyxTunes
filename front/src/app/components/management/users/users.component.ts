@@ -140,18 +140,18 @@ export class UsersComponent {
 
   searchUsuarios(): void { 
     if (this.searchQuery) {
-      const allUsuarios = [...this.usuarios]; 
-      this.usuarios = allUsuarios.filter(usuario =>
-        usuario.nombre?.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+        const allUsuarios = [...this.originalUsuarios]; 
+        this.usuarios = allUsuarios.filter(usuario =>
+            usuario.email?.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
     } else {
-      this.loadUsuarios(); 
+        this.loadUsuarios(); 
     }
     
     this.currentPage = 1; 
     this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
     this.updatePaginatedUsuarios();
-  }
+}
 
   showUsuario(usuario: Usuario): void {//revisar
     this.ref = this.dialogService.open(ShowUserComponent, {
