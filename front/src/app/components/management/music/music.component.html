@@ -73,43 +73,43 @@
             </div>
 
             <!-- Tabla de Álbumes -->
-        <div class="albums-section">
-            <h2>Lista de Álbumes</h2>
-            <table class="music-table">
-                <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Artista</th>
-                        <th>Año</th>
-                        <th>Número de Canciones</th>
-                        <th>Género</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for(album of paginatedAlbums; track album){
+            <div class="albums-section">
+                <h2>Lista de Álbumes</h2>
+                <table class="music-table">
+                    <thead>
                         <tr>
-                            <td>{{ album.titulo || 'Sin título' }}</td>
-                            <td>{{ album.artista || 'Sin artista' }}</td>
-                            <td>{{ album.anio || 'Sin año' }}</td>
-                            <td>{{ album.numCanciones || 'Sin número de canciones' }}</td>
-                            <td>{{ album.genero || 'Sin género' }}</td>
-                            <td>
-                                <button (click)="editAlbum(album)">Editar</button>
-                                <button (click)="deleteAlbum(album.id)">Eliminar</button>
-                                <button (click)="showAlbum(album)">Ver Detalles</button>
-                            </td>
+                            <th>Título</th>
+                            <th>Artista</th>
+                            <th>Año</th>
+                            <th>Número de Canciones</th>
+                            <th>Género</th>
+                            <th>Acciones</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-    
-            <div class="pagination-controls">
-                <button (click)="prevAlbumsPage()" [disabled]="currentAlbumsPage === 1">Anterior</button>
-                <span>Página {{ currentAlbumsPage }} de {{ totalAlbumsPages }}</span>
-                <button (click)="nextAlbumsPage()" [disabled]="currentAlbumsPage === totalAlbumsPages">Siguiente</button>
+                    </thead>
+                    <tbody>
+                        @for(album of paginatedAlbums; track album){
+                            <tr>
+                                <td>{{ album.titulo || 'Sin título' }}</td>
+                                <td>{{ album.artista || 'Sin artista' }}</td>
+                                <td>{{ album.anio || 'Sin año' }}</td>
+                                <td>{{ album.numCanciones || 'Sin número de canciones' }}</td>
+                                <td>{{ album.genero || 'Sin género' }}</td>
+                                <td>
+                                    <button (click)="editAlbum(album)">Editar</button>
+                                    <button (click)="deleteAlbum(album.id)">Eliminar</button>
+                                    <button (click)="showAlbum(album)">Ver Detalles</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+        
+                <div class="pagination-controls">
+                    <button (click)="prevAlbumsPage()" [disabled]="currentAlbumsPage === 1">Anterior</button>
+                    <span>Página {{ currentAlbumsPage }} de {{ totalAlbumsPages }}</span>
+                    <button (click)="nextAlbumsPage()" [disabled]="currentAlbumsPage === totalAlbumsPages">Siguiente</button>
+                </div>
             </div>
-        </div>
         }
     </div>
 </main>
