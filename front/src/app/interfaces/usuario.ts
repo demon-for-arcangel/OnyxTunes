@@ -7,6 +7,8 @@ export interface Usuario {
     fecha_nacimiento: string;
     genero: string;
     foto_perfil: string;
+    rol?: number;
+    rolNombre?: string;
 }
 
 export interface Rol {
@@ -23,7 +25,7 @@ export interface UserChat {
     primerApellido?: string;
     segundoApellido?: string;
     nickname?: string; // Esta propiedad es importante para mostrar el apodo
-    foto_perfil?: string; // Esta propiedad es importante para mostrar la imagen
+    foto_perfil?: string;
     lastLogin?: any;
     connected?: boolean;
     createdAt?: string;
@@ -31,5 +33,5 @@ export interface UserChat {
 }
 
 export interface PendingChat extends UserChat {
-    pendingCount: number; // Esta propiedad es importante para contar los mensajes pendientes
+    pendingCount: number;
 }
