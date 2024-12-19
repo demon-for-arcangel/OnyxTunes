@@ -2,9 +2,10 @@
 <div class="form-container">
     <h2>Actualizar Usuario</h2>
     <form>
+      <div class="form">
         <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="usuario.nombre" required>
+          <label for="nombre">Nombre</label>
+          <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="usuario.nombre" required>
         </div>
         <div class="form-group">
             <label for="email">Correo Electrónico</label>
@@ -12,7 +13,7 @@
         </div>
         <div class="form-group">
           <label for="fecha_nacimiento">Fecha de Nacimiento</label>
-          <input type="text" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" [(ngModel)]="usuario.fecha_nacimiento">
+          <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" [(ngModel)]="usuario.fecha_nacimiento">
         </div>
         <div class="form-group">
           <label for="telefono">Telefono</label>
@@ -37,7 +38,9 @@
                 <option [value]="rol.id">{{ rol.nombre }}</option>
               }
           </select>
+        </div>
       </div>
+        
     </form>
     <button class="btn btn-primary" (click)="onSubmit()">Actualizar Usuario</button>
 </div>
