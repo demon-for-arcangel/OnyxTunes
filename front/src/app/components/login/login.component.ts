@@ -16,43 +16,43 @@ import { RolService } from '../../services/rol.service';
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  errors: Errors = {}; 
+  errors: Errors = {};
 
-  constructor(private userService: UserService, private router: Router, private authService: AuthService, private rolService: RolService) {}
+  constructor(private userService: UserService, private router: Router, private authService: AuthService, private rolService: RolService) { }
 
   login() {
-    this.errors = {}; 
-   
+    this.errors = {};
+
     if (!this.email.trim()) {
       this.errors.email = 'El correo electrónico es obligatorio.';
     }
-   
+
     if (!this.password.trim()) {
       this.errors.password = 'La contraseña es obligatoria.';
     }
-   
+
     if (Object.keys(this.errors).length > 0) {
-      return; 
+      return;
     }
     console.log(this.email);
 
     this.authService.login(this.email, this.password).subscribe({
       next: (token) => {
-          console.log('Inicio de sesión exitoso, token:', token);
-          this.getDatos()
+        console.log('Inicio de sesión exitoso, token:', token);
+        this.getDatos()
       },
       error: (err) => {
-          console.error('Error al iniciar sesión:', err.message);
+        console.error('Error al iniciar sesión:', err.message);
       }
-  });
+    });
   }
 
-  getDatos(){
+  getDatos() {
     this.userService.getUserByEmail(this.email).subscribe({
       next: (user) => {
-        console.log('Usuario recibido:', user); 
-        if (user ) {
-          this.handleUserResponse(user); 
+        console.log('Usuario recibido:', user);
+        if (user) {
+          this.handleUserResponse(user);
         } else {
           this.errors.login = 'Credenciales incorrectas.';
         }
@@ -60,23 +60,22 @@ export class LoginComponent {
       error: (error) => this.handleError(error)
     });
   }
-   
+
 
   handleUserResponse(user: any) {
     console.log('Respuesta del usuario:', user);
-  
-    if (!user || !user.rol) {  // Verificar que el usuario y su rol existan
+
+    if (!user || !user.rol) {
       console.error('Usuario o ID de rol no definido.');
       this.errors.login = 'No se pudo obtener el rol del usuario.';
       return;
     }
-  
-    // Obtener el nombre del rol mediante el servicio
+
     const roleId = user.rol;
     this.rolService.getRolesById(roleId).subscribe({
       next: (role) => {
         console.log('Nombre del rol obtenido:', role.nombre);
-  
+
         if (role.nombre === 'Usuario') {
           this.router.navigate(['/home']);
         } else if (role.nombre === 'Artista' || role.nombre === 'Administrador') {
@@ -92,7 +91,6 @@ export class LoginComponent {
       }
     });
   }
-  
 
   handleError(error: any) {
     console.error('Error al obtener el usuario:', error);

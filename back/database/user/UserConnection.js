@@ -151,17 +151,57 @@ class UserModel {
         }
     }
 
-    async deleteUsers(userIds) {
+    async deleteUsers(userIds) {//revisar, no elimina las playlist que son exclusivas del usuario
         if (!userIds) {
             throw new Error("No se proporcionaron IDs de usuario para eliminar.");
         }
 
+        await models.UsuarioPlaylist.destroy({
+            where: {
+                usuario_id: userIds
+            }
+        });
+
+        const playlistsToDelete = await models.UsuarioPlaylist.findAll({
+            where: {
+                usuario_id: userIds
+            },
+            include: {
+                model: models.Playlist,
+                attributes: ['id', 'nombre']
+            }
+        });
+        
+        for (const playlist of playlistsToDelete) {
+            const playlistId = playlist.Playlist.id;
+        
+            const otherUsersCount = await models.UsuarioPlaylist.count({
+                where: {
+                    playlist_id: playlistId,
+                    usuario_id: {
+                        [Op.ne]: userIds 
+                    }
+                }
+            });
+        
+            console.log(`Usuarios restantes en la playlist ${playlistId}: ${otherUsersCount}`);
+        
+            if (otherUsersCount === 0) {
+                await models.Playlist.destroy({
+                    where: { id: playlistId }
+                });
+                console.log(`Playlist con id ${playlistId} eliminada.`);
+            } else {
+                console.log(`La playlist con id ${playlistId} no se elimina porque está asociada a otros usuarios.`);
+            }
+        }
+    
         const result = await models.Usuario.destroy({
             where: { id: userIds }
         });
-
+    
         return result;
-    }
+    }   
 
     async updatePassword(userId, currentPassword, newPassword, confirmPassword) {
         try {

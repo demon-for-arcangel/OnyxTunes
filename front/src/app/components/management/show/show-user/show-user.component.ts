@@ -20,7 +20,7 @@ export class ShowUserComponent {
     nombre: '',
     email: '',
     password: '',
-    roles: [],
+    rol: null,
     fecha_nacimiento: '',
     telefono: '', 
     direccion: '',
@@ -37,32 +37,42 @@ export class ShowUserComponent {
 
   constructor(private userService: UserService, private rolService: RolService, private router: Router, private config: DynamicDialogConfig) {}
 
-  rolesString: string = '';
-
   ngOnInit(): void {
-    this.usuarioId = this.config.data.usuarioId; 
+    this.usuarioId = this.config.data.usuarioId;
     if (this.usuarioId) {
-      this.getUserById(this.usuarioId); 
+      this.getUserById(this.usuarioId);
     } else {
       console.error('No se proporcionó el usuarioId');
     }
   }
 
   getUserById(id: string): void {
-    this.userService.getUserById(id).subscribe(data => {
+    this.userService.getUserById(id).subscribe({
+      next: (data) => {
         this.usuario = data;
-        console.log(this.usuario)
         this.usuario.activo = this.usuario.activo === 'true' || this.usuario.activo === true; 
-        this.rolesString = this.getRoles(this.usuario.roles); 
-    }, error => {
+        this.loadRol(this.usuario.rol); 
+      },
+      error: (error) => {
         console.error('Error al obtener el usuario:', error);
-    });
-}
-
-  getRoles(roles: any[]): string {
-      if (!roles || roles.length === 0) {
-          return 'Sin rol';
       }
-      return roles.map(role => role.nombre).join(', ');
+    });
+  }
+
+  loadRol(rolId: number): void {
+    if (rolId !== undefined && rolId !== null) {
+      this.rolService.getRolesById(rolId).subscribe({
+        next: (rol) => {
+          this.rolUsuario = rol.nombre;
+        },
+        error: (error) => {
+          console.error(`Error al obtener el rol con ID ${rolId}:`, error);
+          this.rolUsuario = 'Rol no encontrado';
+        }
+      });
+    } else {
+      console.error('El usuario no tiene un rol asociado.');
+      this.rolUsuario = 'Sin rol asignado';
+    }
   }
 }

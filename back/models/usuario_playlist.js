@@ -13,13 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.Usuario, {
         foreignKey: 'usuario_id',
-        as: 'usuario' // Alias para la relación
+        as: 'usuario'
       });
 
-      this.belongsTo(models.Album, {
-        foreignKey: 'album_id',
-        as: 'album' // Alias para la relación
-      });
+      this.belongsTo(models.Playlist, {
+        foreignKey: 'playlist_id',
+      })
     }
   }
   UsuarioPlaylist.init({
