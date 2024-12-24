@@ -15,11 +15,10 @@ class ConexionSeguidores {
   /**
    * Obtener los seguidores de un artista
    * @param {number} artistId - ID del artista
-   * @returns {Promise<Array>} Lista de seguidores
    */
   async getFollowers(artistId) {
     try {
-      const followers = await models.Seguidores.findAll({
+      const followers = await models.Seguidor.findAll({
         where: { user_id: artistId },
         include: [
           {
@@ -39,11 +38,10 @@ class ConexionSeguidores {
   /**
    * Obtener a quién sigue un usuario
    * @param {number} userId - ID del usuario
-   * @returns {Promise<Array>} Lista de artistas seguidos
    */
   async getFollowing(userId) {
     try {
-      const following = await models.Seguidores.findAll({
+      const following = await models.Seguidor.findAll({
         where: { seguidor_id: userId },
         include: [
           {
@@ -64,14 +62,32 @@ class ConexionSeguidores {
    * Añadir un seguidor a un artista
    * @param {number} artistId - ID del artista
    * @param {number} followerId - ID del seguidor
-   * @returns {Promise<Object>} Relación creada
+   */
+  /**
+   * Añadir un seguidor a un artista
+   * @param {number} artistaId - ID del artista
+   * @param {number} followerId - ID del seguidor
    */
   async addFollower(artistaId, followerId) {
     try {
-      const newFollower = await models.Seguidores.create({
+      const usuario = await models.Usuario.findByPk(artistaId, {
+        include: [
+          {
+            model: models.Rol,
+            attributes: ["nombre"],
+          },
+        ],
+      });
+
+      if (!usuario || usuario.rol.nombre !== "Artista") {
+        throw new Error("El usuario que intentas seguir no es un artista");
+      }
+
+      const newFollower = await models.Seguidor.create({
         user_id: artistaId,
         seguidor_id: followerId,
       });
+
       return newFollower;
     } catch (error) {
       console.error("Error al añadir un seguidor:", error);
@@ -83,11 +99,10 @@ class ConexionSeguidores {
    * Eliminar un seguidor de un artista
    * @param {number} artistId - ID del artista
    * @param {number} followerId - ID del seguidor
-   * @returns {Promise<number>} Cantidad de filas eliminadas
    */
   async removeFollower(artistId, followerId) {
     try {
-      const result = await models.Seguidores.destroy({
+      const result = await models.Seguidor.destroy({
         where: {
           user_id: artistId,
           seguidor_id: followerId,

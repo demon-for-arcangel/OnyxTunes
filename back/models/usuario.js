@@ -25,9 +25,10 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       this.belongsToMany(models.Usuario, {
-        as: "siguiendo",
-        through: models.Seguidores,
-        foreignKey: "seguidor_id",
+        as: "seguidores", // Alias para la relación de seguidores
+        through: models.Seguidor, // Tabla intermedia
+        foreignKey: "seguidor_id", // Clave foránea en la tabla 'Seguidor' que apunta a quien está siguiendo
+        otherKey: "user_id", // Clave foránea en la tabla 'Seguidor' que apunta al usuario que está siendo seguido
       });
 
       this.belongsToMany(models.Playlist, {
