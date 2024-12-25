@@ -13,9 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "seguidor_id", // Usuario que sigue
         as: "seguidor",
       });
+
       this.belongsTo(models.Usuario, {
-        foreignKey: "user_id", // Usuario que es seguido
-        as: "seguido",
+        foreignKey: "user_id",
+        as: "artista",
       });
     }
   }

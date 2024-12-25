@@ -3,9 +3,9 @@ const controlador = require("../controllers/seguidoresController");
 
 const router = Router();
 
-router.get("/:artistId", controlador.getFollowers);
-router.get("/:userId", controlador.getFollowing);
-router.post("/", controlador.addFollower);
+router.get("/artist/:artistId", controlador.getFollowers); //funcional
+router.get("/user/:userId", controlador.getFollowing); //funcional
+router.post("/", controlador.addFollower); //funcional
 router.delete("/", controlador.removeFollower);
 
 module.exports = router;

@@ -5,8 +5,6 @@ const conx = new ConexionSeguidores();
 
 /**
  * Obtener los seguidores de un artista
- * @param {Request} req - Objeto de solicitud
- * @param {Response} res - Objeto de respuesta
  */
 const getFollowers = async (req, res) => {
   const { artistId } = req.params;
@@ -27,8 +25,6 @@ const getFollowers = async (req, res) => {
 
 /**
  * Obtener a quién sigue un usuario
- * @param {Request} req - Objeto de solicitud
- * @param {Response} res - Objeto de respuesta
  */
 const getFollowing = async (req, res) => {
   const { userId } = req.params;
@@ -51,8 +47,6 @@ const getFollowing = async (req, res) => {
 
 /**
  * Añadir un seguidor a un artista
- * @param {Request} req - Objeto de solicitud
- * @param {Response} res - Objeto de respuesta
  */
 const addFollower = async (req, res) => {
   const { artistaId, followerId } = req.body;
@@ -76,20 +70,18 @@ const addFollower = async (req, res) => {
 
 /**
  * Eliminar un seguidor de un artista
- * @param {Request} req - Objeto de solicitud
- * @param {Response} res - Objeto de respuesta
  */
 const removeFollower = async (req, res) => {
-  const { artistId, followerId } = req.body;
+  const { artistaId, followerId } = req.body;
 
-  if (!artistId || !followerId) {
+  if (!artistaId || !followerId) {
     return res
       .status(400)
       .json({ msg: "Se requieren los IDs del artista y del seguidor." });
   }
 
   try {
-    const result = await conx.removeFollower(artistId, followerId);
+    const result = await conx.removeFollower(artistaId, followerId);
 
     if (result === 0) {
       return res

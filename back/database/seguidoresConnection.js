@@ -14,7 +14,6 @@ class ConexionSeguidores {
 
   /**
    * Obtener los seguidores de un artista
-   * @param {number} artistId - ID del artista
    */
   async getFollowers(artistId) {
     try {
@@ -37,7 +36,6 @@ class ConexionSeguidores {
 
   /**
    * Obtener a quién sigue un usuario
-   * @param {number} userId - ID del usuario
    */
   async getFollowing(userId) {
     try {
@@ -60,13 +58,6 @@ class ConexionSeguidores {
 
   /**
    * Añadir un seguidor a un artista
-   * @param {number} artistId - ID del artista
-   * @param {number} followerId - ID del seguidor
-   */
-  /**
-   * Añadir un seguidor a un artista
-   * @param {number} artistaId - ID del artista
-   * @param {number} followerId - ID del seguidor
    */
   async addFollower(artistaId, followerId) {
     try {
@@ -97,14 +88,12 @@ class ConexionSeguidores {
 
   /**
    * Eliminar un seguidor de un artista
-   * @param {number} artistId - ID del artista
-   * @param {number} followerId - ID del seguidor
    */
-  async removeFollower(artistId, followerId) {
+  async removeFollower(artistaId, followerId) {
     try {
       const result = await models.Seguidor.destroy({
         where: {
-          user_id: artistId,
+          user_id: artistaId,
           seguidor_id: followerId,
         },
       });
