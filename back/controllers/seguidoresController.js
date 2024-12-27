@@ -48,25 +48,24 @@ const getFollowing = async (req, res) => {
 /**
  * Añadir un seguidor a un artista
  */
-const addFollower = async (req, res) => {
-  const { artistaId, followerId } = req.body;
-
-  if (!artistaId || !followerId) {
-    return res
-      .status(400)
-      .json({ msg: "Se requieren los IDs del artista y del seguidor." });
-  }
-
+async function addFollower(req, res) {
   try {
-    const newFollower = await conx.addFollower(artistaId, followerId);
-    res
-      .status(201)
-      .json({ msg: "Seguidor añadido exitosamente.", follower: newFollower });
+    const { artistaId, followerId } = req.body;
+
+    const result = await conx.addFollower(artistaId, followerId);
+
+    if (result.success) {
+      return res
+        .status(200)
+        .json({ message: result.message, data: result.data || null });
+    }
+
+    return res.status(400).json({ message: result.message });
   } catch (error) {
     console.error("Error al añadir el seguidor:", error);
-    res.status(500).json({ msg: "Error al añadir el seguidor." });
+    return res.status(500).json({ message: "Ocurrió un error en el servidor" });
   }
-};
+}
 
 /**
  * Eliminar un seguidor de un artista

@@ -20,7 +20,7 @@ export class MessageInputComponent {
 
   messageInput = new FormControl('');
   filesToSend: File[] = [];
-  maxFileSize = 1024 * 1024; // 1 MB en bytes
+  maxFileSize = 1024 * 1024; 
   maxFileCount = 4;
 
   @Output() onSendMessage = new EventEmitter<SendMessageApiParams>();
@@ -29,7 +29,7 @@ export class MessageInputComponent {
     if (this.filesToSend.length > 0) {
       this.onSendMessage.emit({files: this.filesToSend});
       this.messageInput.setValue('');
-      this.removeFiles(); // Limpiar archivos después de enviar
+      this.removeFiles(); 
     } else if (this.messageInput.value && this.messageInput.value.length > 0) {
       this.onSendMessage.emit({text: this.messageInput.value});
       this.messageInput.setValue('');
@@ -44,7 +44,6 @@ export class MessageInputComponent {
     const input = event.target as HTMLInputElement;
     const files = Array.from(input.files!);
 
-    // Validación de archivos
     const validFiles = this.validateFiles(files);
     if (!validFiles) return;
 

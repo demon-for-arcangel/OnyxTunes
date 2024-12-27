@@ -70,8 +70,22 @@ class ConexionSeguidores {
         ],
       });
 
-      if (!usuario || usuario.rol.nombre !== "Artista") {
-        throw new Error("El usuario que intentas seguir no es un artista");
+      if (!usuario.Rol || usuario.Rol.nombre.toLowerCase() !== "artista") {
+        return {
+          success: false,
+          message: "El usuario que intentas seguir no es un artista",
+        };
+      }
+
+      const existingFollower = await models.Seguidor.findOne({
+        where: {
+          user_id: artistaId,
+          seguidor_id: followerId,
+        },
+      });
+
+      if (existingFollower) {
+        return { success: true, message: "El usuario ya sigue a este artista" };
       }
 
       const newFollower = await models.Seguidor.create({
@@ -79,10 +93,17 @@ class ConexionSeguidores {
         seguidor_id: followerId,
       });
 
-      return newFollower;
+      return {
+        success: true,
+        message: "Seguidor añadido con éxito",
+        data: newFollower,
+      };
     } catch (error) {
       console.error("Error al añadir un seguidor:", error);
-      throw new Error("Error al añadir un seguidor");
+      return {
+        success: false,
+        message: error.message || "Error al añadir un seguidor",
+      };
     }
   }
 
