@@ -47,8 +47,8 @@ export class ArtistDetailComponent {
       this.authService.getUserByToken(token).subscribe({
         next: (response) => {
           this.user = response ?? null;
-          this.loadArtistData(); 
-          this.loadMusicData(); 
+          this.loadArtistData();
+          this.loadMusicData();
         },
         error: (error) => {
           console.error("Error al obtener el usuario:", error);
@@ -56,7 +56,7 @@ export class ArtistDetailComponent {
         },
         complete: () => {
           if (this.user) {
-            this.checkFollowStatus(); 
+            this.checkFollowStatus();
           }
         },
       });
@@ -74,13 +74,22 @@ export class ArtistDetailComponent {
 
     this.seguidoresService.getFollowing(this.user.id).subscribe({
       next: (following) => {
-        this.isFollowing = following.some(
-          (follow: any) => follow.artista.id === this.artistId,
-        );
+        if (Array.isArray(following) && following.length === 0) {
+          this.isFollowing = false;
+        } else {
+          this.isFollowing = following.some(
+            (follow: any) => follow.artista.id === this.artistId,
+          );
+        }
         console.log("Estado de seguimiento actualizado:", this.isFollowing);
       },
       error: (err) => {
-        console.error("Error al verificar artistas seguidos:", err);
+        if (err.status === 404) {
+          console.log("El usuario no sigue a ningún artista.");
+          this.isFollowing = false;
+        } else {
+          console.error("Error al verificar artistas seguidos:", err);
+        }
       },
     });
   }
