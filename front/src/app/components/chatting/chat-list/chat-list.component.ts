@@ -16,12 +16,12 @@ export class ChatListComponent {
   @Input() pending?: Map<number, PendingChat>;
   @Input() notPending?: Map<number, UserChat>;
 
-  receptores: MessageUser[] = []; // Almacena la lista de receptores
+  receptores: MessageUser[] = []; 
 
   constructor(private router: Router, private chatService: ChatService) {}
 
   ngOnInit() {
-    const emisorId = 1; // Reemplaza esto con el ID del emisor actual (por ejemplo, el ID del usuario logueado)
+    const emisorId = 1; 
     this.loadReceptores(emisorId);
   }
 
@@ -29,14 +29,14 @@ export class ChatListComponent {
     this.chatService.getReceptoresPorEmisor(emisorId).subscribe(response => {
       console.log('Respuesta del servidor:', response);
       if (response.success) {
-        this.receptores = response.data.receptoresConInfo; // Asigna la lista de receptores
+        this.receptores = response.data.receptoresConInfo;
         console.log('Receptores:', this.receptores);
       } else {
-        this.receptores = []; // Manejo de error si no hay receptores
+        this.receptores = []; 
       }
     }, error => {
       console.error('Error al cargar receptores:', error);
-      this.receptores = []; // Manejo de error
+      this.receptores = []; 
     });
   }
 

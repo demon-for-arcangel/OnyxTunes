@@ -18,7 +18,7 @@ export class ChatService {
   getMessages = (partnerId: number) => {
     console.log(partnerId)
     const url = `${this.url}${this.chatsUrl}/messages/${partnerId}`;
-    console.log('URL de la solicitud:', url); // Verifica la URL
+    console.log('URL de la solicitud:', url); 
     return this.http.get<ChatMessages>(url);
   }
 
@@ -40,14 +40,14 @@ export class ChatService {
       receptorId: receptorId
     };
 
-    return this.http.post<ChatMessages>(this.url + this.chatsUrl, body); // Cambia a POST y envía el cuerpo
+    return this.http.post<ChatMessages>(this.url + this.chatsUrl, body); 
   }
 
 
   getReceptoresPorEmisor(emisorId: number): Observable<ReceptorResponse> {
-    const token = localStorage.getItem('user'); // Asegúrate de que la clave sea correcta
+    const token = localStorage.getItem('user'); 
     const headers = new HttpHeaders({
-      'x-token': token ? token : '' // Agregar el token al encabezado x-token
+      'x-token': token ? token : '' 
     });
 
     return this.http.get<ReceptorResponse>(`${this.url}${this.chatsUrl}/receptores/${emisorId}`, { headers });
