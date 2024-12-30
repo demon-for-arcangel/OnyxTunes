@@ -34,4 +34,8 @@ export class SeguidoresService {
       body: { artistaId, followerId },
     });
   }
+
+  getTopArtists(limit: number = 10): Observable<any> {
+    return this.http.get(`${this.url}${this.seguidoresUrl}/top?limit=${limit}`);
+  }
 }
