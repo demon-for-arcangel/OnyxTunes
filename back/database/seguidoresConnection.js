@@ -124,6 +124,57 @@ class ConexionSeguidores {
       throw new Error("Error al eliminar un seguidor");
     }
   }
+
+  /**
+   * Obtener los artistas con más seguidores
+   */
+  async getTopArtists(limit = 10) {
+    try {
+      const seguidores = await models.Seguidor.findAll({
+        include: [
+          {
+            model: models.Usuario,
+            as: "artista",
+            attributes: ["id", "nombre", "email"],
+          },
+        ],
+      });
+
+      const followersCount = new Map();
+      seguidores.forEach((seguidor) => {
+        const artistId = seguidor.user_id;
+        followersCount.set(artistId, (followersCount.get(artistId) || 0) + 1);
+      });
+
+      const artistasOrdenados = [];
+      followersCount.forEach((count, artistId) => {
+        artistasOrdenados.push({ artistId, count });
+      });
+
+      artistasOrdenados.sort((a, b) => b.count - a.count);
+      const topArtists = artistasOrdenados.slice(0, limit);
+
+      const artistIds = topArtists.map((artist) => artist.artistId);
+      const artists = await models.Usuario.findAll({
+        where: { id: artistIds },
+        attributes: ["id", "nombre", "email"],
+      });
+
+      const result = artists.map((artist) => {
+        const artistId = artist.id;
+        const artistFollowers = followersCount.get(artistId);
+        return {
+          ...artist.dataValues,
+          followers: artistFollowers,
+        };
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error al obtener los artistas con más seguidores:", error);
+      throw new Error("Error al obtener los artistas con más seguidores");
+    }
+  }
 }
 
 module.exports = ConexionSeguidores;

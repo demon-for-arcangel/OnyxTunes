@@ -95,9 +95,35 @@ const removeFollower = async (req, res) => {
   }
 };
 
+/**
+ * Listar los artistas más famosos por sus seguidores
+ */
+const getTopArtists = async (req, res) => {
+  //probar
+  const { limit } = req.query;
+
+  try {
+    const topArtists = await conx.getTopArtists(limit || 10);
+
+    if (!topArtists || topArtists.length === 0) {
+      return res
+        .status(404)
+        .json({ msg: "No se encontraron artistas con seguidores." });
+    }
+
+    res.status(200).json(topArtists);
+  } catch (error) {
+    console.error("Error al obtener los artistas con más seguidores:", error);
+    res
+      .status(500)
+      .json({ msg: "Error al obtener los artistas con más seguidores." });
+  }
+};
+
 module.exports = {
   getFollowers,
   getFollowing,
   addFollower,
   removeFollower,
+  getTopArtists,
 };
