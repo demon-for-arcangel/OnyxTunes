@@ -149,16 +149,16 @@ button:disabled {
 .form {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px; /* Espaciado entre columnas */
+    gap: 20px; 
 }
 
 .form-group {
-    flex: 1 1 calc(50% - 20px); /* Dos columnas, dejando espacio para el gap */
-    min-width: 200px; /* Ancho mínimo para que no se rompa en pantallas pequeñas */
+    flex: 1 1 calc(50% - 20px); 
+    min-width: 200px;
 }
 
 @media (max-width: 768px) {
     .form-group {
-        flex: 1 1 100%; /* En pantallas pequeñas, una columna */
+        flex: 1 1 100%; 
     }
 }
