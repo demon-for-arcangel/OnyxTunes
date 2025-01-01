@@ -11,92 +11,103 @@
                 <i class="pi pi-arrow-left"></i> Volver
             </button>
             <h1>Gestión de Música</h1>
-        </div>
-    
-        <div class="search-bar">
-            <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar canción o álbum..." (keyup.enter)="searchMusic()"/>
-            <button (click)="newCancion()">
-                <i class="pi pi-plus"></i> Añadir Canción
-            </button>
-            <button (click)="newAlbum()">
-                <i class="pi pi-plus"></i> Añadir Álbum
+            <button (click)="view()">
+                {{ mostrarCanciones ? 'Ver Álbumes' : 'Ver Canciones' }}
             </button>
         </div>
     
-        <div class="songs-section">
-            <h2>Lista de Canciones</h2>
-            <table class="music-table">
-                <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Artista</th>
-                        <th>Álbum</th>
-                        <th>Duración</th>
-                        <th>Género</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for(cancion of paginatedCanciones; track cancion){
-                        <tr>
-                            <td>{{ cancion.titulo || 'Sin título' }}</td>
-                            <td>{{ cancion.artista.nombre || 'Sin artista' }}</td>
-                            <td>{{ cancion.Album?.titulo || 'Sin álbum' }}</td>
-                            <td>{{ formatDuration(cancion.duracion) }}</td>
-                            <td>{{ getGenerosString(cancion.generos) }}</td>
-                            <td>
-                                <button (click)="editCancion(cancion)">Editar</button>
-                                <button (click)="deleteSongs(cancion.id)">Eliminar</button>
-                                <button (click)="showCancion(cancion)">Ver Detalles</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-    
-            <div class="pagination-controls">
-                <button (click)="prevCancionesPage()" [disabled]="currentCancionesPage === 1">Anterior</button>
-                <span>Página {{ currentCancionesPage }} de {{ totalCancionesPages }}</span>
-                <button (click)="nextCancionesPage()" [disabled]="currentCancionesPage === totalCancionesPages">Siguiente</button>
+        @if(mostrarCanciones) {
+            <div class="search-bar"><!-- por hacer -->
+                <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar canción..." (keyup.enter)="searchMusic()"/>
+                <button (click)="newCancion()">
+                    <i class="pi pi-plus"></i> Añadir Canción
+                </button>
             </div>
-        </div>
-    
-        <div class="albums-section">
-            <h2>Lista de Álbumes</h2>
-            <table class="music-table">
-                <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Artista</th>
-                        <th>Año</th>
-                        <th>Número de Canciones</th>
-                        <th>Género</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for(album of paginatedAlbums; track album){
+
+            <div class="songs-section">
+                <h2>Lista de Canciones</h2>
+                <table class="music-table">
+                    <thead>
                         <tr>
-                            <td>{{ album.titulo || 'Sin título' }}</td>
-                            <td>{{ album.artista || 'Sin artista' }}</td>
-                            <td>{{ album.anio || 'Sin año' }}</td>
-                            <td>{{ album.numCanciones || 'Sin número de canciones' }}</td>
-                            <td>{{ album.genero || 'Sin género' }}</td>
-                            <td>
-                                <button (click)="editAlbum(album)">Editar</button>
-                                <button (click)="deleteAlbum(album.id)">Eliminar</button>
-                                <button (click)="showAlbum(album)">Ver Detalles</button>
-                            </td>
+                            <th>Título</th>
+                            <th>Artista</th>
+                            <th>Álbum</th>
+                            <th>Duración</th>
+                            <th>Género</th>
+                            <th>Acciones</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-    
-            <div class="pagination-controls">
-                <button (click)="prevAlbumsPage()" [disabled]="currentAlbumsPage === 1">Anterior</button>
-                <span>Página {{ currentAlbumsPage }} de {{ totalAlbumsPages }}</span>
-                <button (click)="nextAlbumsPage()" [disabled]="currentAlbumsPage === totalAlbumsPages">Siguiente</button>
+                    </thead>
+                    <tbody>
+                        @for(cancion of paginatedCanciones; track cancion){
+                            <tr>
+                                <td>{{ cancion.titulo || 'Sin título' }}</td>
+                                <td>{{ cancion.artista.nombre || 'Sin artista' }}</td>
+                                <td>{{ cancion.Album?.titulo || 'Sin álbum' }}</td>
+                                <td>{{ formatDuration(cancion.duracion) }}</td>
+                                <td>{{ getGenerosString(cancion.generos) }}</td>
+                                <td>
+                                    <button (click)="editCancion(cancion)">Editar</button>
+                                    <button (click)="deleteSongs(cancion.id)">Eliminar</button>
+                                    <button (click)="showCancion(cancion)">Ver Detalles</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+        
+                <div class="pagination-controls">
+                    <button (click)="prevCancionesPage()" [disabled]="currentCancionesPage === 1">Anterior</button>
+                    <span>Página {{ currentCancionesPage }} de {{ totalCancionesPages }}</span>
+                    <button (click)="nextCancionesPage()" [disabled]="currentCancionesPage === totalCancionesPages">Siguiente</button>
+                </div>
             </div>
-        </div>
+        }
+    
+        @if(!mostrarCanciones) {
+            <div class="search-bar"><!-- por hacer -->
+                <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar álbum..." (keyup.enter)="searchMusic()"/>
+                <button (click)="newAlbum()">
+                    <i class="pi pi-plus"></i> Añadir Álbum
+                </button>
+            </div>
+
+            <div class="albums-section">
+                <h2>Lista de Álbumes</h2>
+                <table class="music-table">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Artista</th>
+                            <th>Año</th>
+                            <th>Número de Canciones</th>
+                            <th>Género</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(album of paginatedAlbums; track album){
+                            <tr>
+                                <td>{{ album.titulo || 'Sin título' }}</td>
+                                <td>{{ album.artista || 'Sin artista' }}</td>
+                                <td>{{ album.anio || 'Sin año' }}</td>
+                                <td>{{ album.numCanciones || 'Sin número de canciones' }}</td>
+                                <td>{{ album.genero || 'Sin género' }}</td>
+                                <td>
+                                    <button (click)="editAlbum(album)">Editar</button>
+                                    <button (click)="deleteAlbum(album.id)">Eliminar</button>
+                                    <button (click)="showAlbum(album)">Ver Detalles</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+        
+                <div class="pagination-controls">
+                    <button (click)="prevAlbumsPage()" [disabled]="currentAlbumsPage === 1">Anterior</button>
+                    <span>Página {{ currentAlbumsPage }} de {{ totalAlbumsPages }}</span>
+                    <button (click)="nextAlbumsPage()" [disabled]="currentAlbumsPage === totalAlbumsPages">Siguiente</button>
+                </div>
+            </div>
+        }
     </div>
 </main>

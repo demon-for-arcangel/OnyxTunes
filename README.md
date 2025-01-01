@@ -52,7 +52,7 @@ En caso de que tengamos ya la base de datos montada y necesitemos refrescarla us
 Para instalar el proyecto seguiremos los siguientes pasos:
 - Añadiremos el archivo `.env` en el directorio `back`. El .env será una copia del .env.example en el que solo tendremos que añadir los datos que nos requieran.
 
-- Necesitaremos crear una base de datos llama `heartconnect`
+- Necesitaremos crear una base de datos llama `onyxtunes`
 
 - Con una terminal nos iremos al directorio back: `cd back`, ejecutaremos el comando `npm update` esto lo que hara es instalar todas las dependencias necesarias del proyecto. Seguidamente podremos ejecutar el comando `npm run deploy-db` para ejecutar las migrations y los seeders. Para arrancar el servidor del back ejecutaremos `nodemon`.
 
@@ -71,7 +71,6 @@ A continuación, se enumeran las principales librerías y dependencias utilizada
 
 - **Frontend (Angular 18)**:
   - Angular CLI
-  - RxJS (para la gestión de estados reactivos)
   - Angular Material (para la interfaz de usuario)
   - HttpClient (para la comunicación con el backend)
 

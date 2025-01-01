@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Errors } from '../../interfaces/errors';
 import { UserService } from '../../services/user.service';
+import { RolService } from '../../services/rol.service';
 
 @Component({
   selector: 'app-login',
@@ -15,43 +16,43 @@ import { UserService } from '../../services/user.service';
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  errors: Errors = {}; 
+  errors: Errors = {};
 
-  constructor(private userService: UserService, private router: Router, private authService: AuthService) {}
+  constructor(private userService: UserService, private router: Router, private authService: AuthService, private rolService: RolService) { }
 
   login() {
-    this.errors = {}; 
-   
+    this.errors = {};
+
     if (!this.email.trim()) {
       this.errors.email = 'El correo electrónico es obligatorio.';
     }
-   
+
     if (!this.password.trim()) {
       this.errors.password = 'La contraseña es obligatoria.';
     }
-   
+
     if (Object.keys(this.errors).length > 0) {
-      return; 
+      return;
     }
     console.log(this.email);
 
     this.authService.login(this.email, this.password).subscribe({
       next: (token) => {
-          console.log('Inicio de sesión exitoso, token:', token);
-          this.getDatos()
+        console.log('Inicio de sesión exitoso, token:', token);
+        this.getDatos()
       },
       error: (err) => {
-          console.error('Error al iniciar sesión:', err.message);
+        console.error('Error al iniciar sesión:', err.message);
       }
-  });
+    });
   }
 
-  getDatos(){
+  getDatos() {
     this.userService.getUserByEmail(this.email).subscribe({
       next: (user) => {
-        console.log('Usuario recibido:', user); 
-        if (user ) {
-          this.handleUserResponse(user); 
+        console.log('Usuario recibido:', user);
+        if (user) {
+          this.handleUserResponse(user);
         } else {
           this.errors.login = 'Credenciales incorrectas.';
         }
@@ -59,33 +60,36 @@ export class LoginComponent {
       error: (error) => this.handleError(error)
     });
   }
-   
+
 
   handleUserResponse(user: any) {
-    console.log('Respuesta del usuario:', user); 
+    console.log('Respuesta del usuario:', user);
 
-    if (!user) {
-      console.error('Usuario no definido.');
-      this.errors.login = 'No se pudo obtener el usuario.';
+    if (!user || !user.rol) {
+      console.error('Usuario o ID de rol no definido.');
+      this.errors.login = 'No se pudo obtener el rol del usuario.';
       return;
     }
 
-    const roles = Array.isArray(user.Rol) ? user.Rol : [user.Rol];
-    console.log('Roles del usuario:', roles);
+    const roleId = user.rol;
+    this.rolService.getRolesById(roleId).subscribe({
+      next: (role) => {
+        console.log('Nombre del rol obtenido:', role.nombre);
 
-    if (roles && roles.length > 0 && roles[0].nombre) {
-      const userRole = roles[0].nombre;
-      console.log('Rol del usuario:', userRole);
-
-      if (userRole === 'Usuario') {
-        this.router.navigate(['/home']);
-      } else if (userRole === 'Artista' || userRole === 'Administrador') {
-        this.router.navigate(['/selectAccess']);
+        if (role.nombre === 'Usuario') {
+          this.router.navigate(['/home']);
+        } else if (role.nombre === 'Artista' || role.nombre === 'Administrador') {
+          this.router.navigate(['/selectAccess']);
+        } else {
+          console.warn('Rol desconocido:', role.nombre);
+          this.errors.login = 'Rol del usuario no reconocido.';
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener el rol:', err);
+        this.errors.login = 'Error al obtener el rol del usuario.';
       }
-    } else {
-      console.error('El usuario no tiene un rol asociado o Rol es undefined');
-      this.errors.login = 'El usuario no tiene un rol asignado.';
-    }
+    });
   }
 
   handleError(error: any) {

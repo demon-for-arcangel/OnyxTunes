@@ -129,3 +129,30 @@ select {
     border-radius: 4px;
     border: 1px solid #333;
 }
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pagination-controls button {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination-controls button[disabled] {
+    background-color: #555; 
+    cursor: not-allowed;
+}
+
+.pagination-controls button:hover:not([disabled]) {
+    background-color: #005bb5; 
+}

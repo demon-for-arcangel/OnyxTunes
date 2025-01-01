@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { SearchService } from '../../services/search.service';
 import { FormsModule } from '@angular/forms';
+import { PlayerService } from '../../services/player.service';
 
 @Component({
   selector: 'app-player',
@@ -11,63 +12,81 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './player.component.css'
 })
 export class PlayerComponent {
+  audioPlayerSrc: string = '';
   isPlaying: boolean = false;
   isRandom: boolean = false;
   isLoop: boolean = false;
   currentSong: any = null;
-  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+  currentTime: number = 0;
+  duration: number = 0;
+  private progressInterval: any;
 
-  constructor() {  }
+  @ViewChild('audioElement') audioElement!: ElementRef<HTMLAudioElement>;
+  @Output() songEnded = new EventEmitter<void>();
 
-  ngOnInit() { }
+  constructor(public playerService: PlayerService) {}
+
+  ngAfterViewInit() {
+    if (this.audioElement) {
+      this.playerService.setAudioElement(this.audioElement); 
+    } else {
+      console.error('El elemento de audio no se pudo inicializar.');
+    }
+  }
+
+  ngOnInit() {
+    this.playerService.currentTime = this.playerService.currentTime;
+    this.playerService.duration = this.playerService.duration;
+
+    setInterval(() => {
+      this.playerService.currentTime = this.playerService.currentTime;
+      this.playerService.duration = this.playerService.duration;
+    }, 1000);
+  }
 
   playSong(song: any) {
     this.currentSong = song; 
     console.log('Canción seleccionada:', this.currentSong);
 
-    if (this.audioPlayer && this.currentSong) {
-        this.audioPlayer.nativeElement.src = `assets/uploads/canciones/${this.currentSong.asset.path}`;
-        this.audioPlayer.nativeElement.play().then(() => {
-            this.isPlaying = true;
-        }).catch(error => {
-            console.error('Error al reproducir:', error);
-        });
+    if (this.audioElement) {
+        this.playerService.playSong(this.currentSong);
     } else {
-        console.error('audioPlayer o currentSong no están definidos');
+        console.error('Elemento de audio no encontrado');
     }
   }
 
-  play() {
-    if (this.currentSong) {
-      this.audioPlayer.nativeElement.play();
-      this.isPlaying = true;
+  formatTime(time: number): string {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  }
+
+  togglePlay() {
+    if (this.playerService.playing) {
+      this.playerService.pause();
+    } else {
+      this.playerService.play();
     }
-  }
-
-  pause() {
-    if (this.audioPlayer) {
-      this.audioPlayer.nativeElement.pause(); 
-      this.isPlaying = false; 
-    }
-  }
-
-  next() {
-    console.log('Siguiente canción');
-    
-  }
-
-  previous() {
-    console.log('Canción anterior');
-    
   }
 
   toggleRandom() {
-    this.isRandom = !this.isRandom; 
-    console.log(`Aleatorio: ${this.isRandom}`);
+    this.playerService.toggleRandom();
   }
 
   toggleLoop() {
-    this.isLoop = !this.isLoop; 
-    console.log(`Bucle: ${this.isLoop}`);
+    this.playerService.toggleLoop();
+  }
+
+  seekTo(event: any) {
+    const time = Number(event.target.value);
+    this.playerService.seekTo(time);
+  }
+
+  next() {
+    this.playerService.next();
+  }
+
+  previous() {
+    this.playerService.previous();
   }
 }

@@ -4,44 +4,73 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormsModule } from '@angular/forms';
 import { GeneroService } from '../../../../services/genero.service';
 import { UserService } from '../../../../services/user.service';
+import { AlbumsService } from '../../../../services/albums.service';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-create-songs',
   standalone: true,
   imports: [FormsModule],
   templateUrl: './create-songs.component.html',
-  styleUrl: './create-songs.component.css'
+  styleUrls: ['./create-songs.component.css']
 })
 export class CreateSongsComponent {
   nuevaCancion: any = {
     titulo: '',
     artista: '',
     artista_id: 0,
-    album: '',
+    album: '', 
     duracion: 0,
     generos: []
   };
+
+  mostrarCrearAlbum: boolean = false; 
 
   generosDisponibles: any[] = [];
   generosSeleccionados: any[] = [];
   artistasDisponibles: any[] = [];
   artistasFiltrados: any[] = [];
+  albumsDisponibles: any[] = [];
   horas: number = 0;
   minutos: number = 0;
   segundos: number = 0;
   showArtistas: boolean = false;
-  selectedFile: File | null = null; 
+  selectedFile: File | null = null;
+  user: any;
 
-  constructor(
-    private cancionesService: SongService,
-    private generosService: GeneroService,
-    private usuarioService: UserService,
-    public ref: DynamicDialogRef
-  ) {}
+  constructor(private cancionesService: SongService, private generosService: GeneroService, private usuarioService: UserService, 
+    public ref: DynamicDialogRef, private albumsService: AlbumsService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadGeneros(); 
     this.loadArtistas(); 
+    this.getUserId();
+  }
+
+
+  mostrarBoton() {
+    this.mostrarCrearAlbum = true;
+  }
+
+  ocultarBoton() {
+    this.mostrarCrearAlbum = false;
+  }
+
+  getUserId() {
+    const token = localStorage.getItem('user'); 
+    if (token) {
+      this.authService.getUserByToken(token).subscribe(
+        response => {
+          this.user = response; 
+          if (this.user && this.user.id) {
+            this.loadAlbumsByUserId(this.user.id); 
+          }
+        },
+        error => {
+          console.error('Error al obtener el usuario:', error);
+        }
+      );
+    }
   }
 
   onFileSelected(event: Event) {
@@ -73,18 +102,30 @@ export class CreateSongsComponent {
     );
   }
 
+  loadAlbumsByUserId(userId: number) {
+    this.albumsService.getAlbumsByUserId(userId).subscribe(
+      (data) => {
+        this.albumsDisponibles = data; 
+        console.log('Álbumes disponibles:', this.albumsDisponibles);
+      },
+      (error) => {
+        console.error('Error al cargar los álbumes:', error);
+      }
+    );
+  }
+
   loadArtistas() {
     this.usuarioService.getArtists().subscribe(
         (data) => {
             this.artistasDisponibles = data; 
             this.artistasFiltrados = data; 
-            console.log('Artistas disponibles:', this.artistasDisponibles); // Verifica los datos
+            console.log('Artistas disponibles:', this.artistasDisponibles);
         },
         (error) => {
             console.error('Error al cargar los artistas:', error);
         }
     );
-}
+  }
 
   filterArtistas(event: any) {
     const query = event.target.value.toLowerCase();
@@ -105,12 +146,13 @@ export class CreateSongsComponent {
   }
 
   selectArtista(artista: any) {
-    console.log('Artista seleccionado:', artista); // Verifica que el artista tenga un ID
-    this.nuevaCancion.artista = artista.nombre; // Almacenar el nombre del artista para mostrar
-    this.nuevaCancion.artista_id = artista.id; // Almacenar el ID del artista para enviar
-    console.log('ID del artista asignado:', this.nuevaCancion.artista_id); // Verifica el ID asignado
+    console.log('Artista seleccionado:', artista);
+    this.nuevaCancion.artista = artista.nombre; 
+    this.nuevaCancion.artista_id = artista.id; 
+    console.log('ID del artista asignado:', this.nuevaCancion.artista_id); 
     this.showArtistas = false; 
 }
+
   toggleGenre(genre: any) {
     const index = this.generosSeleccionados.indexOf(genre);
     if (index === -1) {
@@ -129,18 +171,22 @@ export class CreateSongsComponent {
     this.nuevaCancion.generos = this.generosSeleccionados.map(g => g.id); 
 
     console.log('Datos de la canción a crear:', this.nuevaCancion); 
+    console.log('ID del álbum antes de enviar:', this.nuevaCancion.album); 
+    console.log('Géneros antes de enviar:', JSON.stringify(this.nuevaCancion.generos));
 
     if (!this.nuevaCancion.artista_id) {
-        console.error('Error: artista_id no está definido');
-        return; 
+      console.error('Error: artista_id no está definido');
+      return; 
     }
 
     const formData = new FormData();
     formData.append('titulo', this.nuevaCancion.titulo);
     formData.append('artista_id', this.nuevaCancion.artista_id.toString()); 
-    formData.append('album', this.nuevaCancion.album);
+    formData.append('album_id', this.nuevaCancion.album.toString()); 
     formData.append('duracion', this.nuevaCancion.duracion.toString());
-    formData.append('generos', JSON.stringify(this.nuevaCancion.generos)); 
+    this.nuevaCancion.generos.forEach((genero: any) => {
+      formData.append('generos', genero.toString());
+    });
 
     if (this.selectedFile) {
         formData.append('archivo', this.selectedFile); 
@@ -148,12 +194,16 @@ export class CreateSongsComponent {
 
     this.cancionesService.createCancion(formData).subscribe(
         (response) => {
-            console.log('Canción añadida:', response);
-            this.ref.close(); 
+          console.log('Canción añadida:', response);
+          this.ref.close(); 
         },
         (error) => {
-            console.error('Error al añadir la canción', error);
+          console.error('Error al añadir la canción', error);
         }
     );
-}
+  }
+
+  crearAlbum() {
+    console.log('Crear álbum');
+  }
 }

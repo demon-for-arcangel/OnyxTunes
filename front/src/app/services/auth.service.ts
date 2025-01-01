@@ -20,7 +20,7 @@ export class AuthService {
   login(email: string, password: string): Observable<any> {
     return this.http.post<{ token: string }>(`${this.url}/login`, { email, password }).pipe(
         map(response => {
-            const token = response.token; // Asegúrate de que el servidor envía este campo
+            const token = response.token; 
             if (token) {
                 localStorage.setItem('user', JSON.stringify({ token }));
                 console.log('Token guardado en localStorage:', token);
@@ -107,16 +107,6 @@ export class AuthService {
       return null;
     }
   }
-
-/*   getIdOfToken(): any {
-    try {
-      let token = JSON.parse(localStorage.getItem('user') as string).token.split('.')[1]
-      const idOfToken = JSON.parse(atob(token)).uid;
-      return idOfToken;
-    } catch (error){
-      return null;
-    }
-  } */
 
   isAdmin(): Observable<boolean> {
     let token = localStorage.getItem('user');

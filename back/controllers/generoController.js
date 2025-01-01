@@ -4,6 +4,14 @@ const models = require('../models');
 
 const conx = new Conexion();
 
+/**
+ * Controlador de Generos
+ * @function getGeneros Obtener los generos
+ * @function getGeneroById Obtener un genero por su id
+ * @function createGenero Crear un genero
+ * @function updateGenero Actualizar un genero
+ * @function deleteGeneros Eliminar generos
+ */
 const getGeneros = async (req, res) => {
     try {
         const generos = await conx.indexGeneros();

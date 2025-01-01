@@ -3,6 +3,11 @@ const Conexion = require("../database/RolConnection");
 
 const conx = new Conexion();
 
+/**
+ * Controlador de Roles
+ * @function getRoles Obtener los roles
+ * @function getRolById Obtener un rol por su id
+ */
 const getRoles = async (req, res) => {
     try {
         const roles = await conx.indexRols();

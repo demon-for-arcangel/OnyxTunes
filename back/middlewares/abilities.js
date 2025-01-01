@@ -2,6 +2,14 @@ const jwt = require("jsonwebtoken");
 const Conexion = require("../database/user/UserConnection");
 const conx = new Conexion();
 
+/**
+ * Middleware de estado de usuario
+ * @function statusUser Middleware de estado de usuario
+ * @function checkToken Middleware de verificacion de token
+ * @function tokenCanAdmin Middleware de verificacion de token para admin
+ * @function tokenCanUser Middleware de verificacion de token para user
+ * @function userExist Middleware de verificacion de usuario existente
+ */
 const statusUser = (req, res, next) => {
     conx
       .getUserByEmail(req.body.email)

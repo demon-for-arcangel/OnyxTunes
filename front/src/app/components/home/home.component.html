@@ -5,17 +5,7 @@
         <h1>Escuchado recientemente</h1>
         <h2>Especialmente para ti</h2> <!-- lista de reproduccion con canciones recomendadas y canciones que te gustan -->
         <h2>Nueva música</h2> <!-- listas de reproduccion con cancionens recomendadas 100% -->
-        <ul>
-            @for(album of albumes; track album){
-                <li>{{ album }}</li>
-            }
-        </ul>
-        <h2>Listas populares</h2>
-        <ul>
-            @for(lista of listas; track lista){
-                <li>{{ lista }}</li>
-            }
-        </ul>
+        
         <app-player></app-player>
     </main>
 </div>

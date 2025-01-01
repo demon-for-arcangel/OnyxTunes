@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
 import { UpdateUserComponent } from '../update/update-user/update-user.component';
 import { ShowUserComponent } from '../show/show-user/show-user.component';
+import { RolService } from '../../../services/rol.service';
 
 @Component({
   selector: 'app-users',
@@ -21,7 +22,8 @@ import { ShowUserComponent } from '../show/show-user/show-user.component';
   providers: [DialogService]
 })
 export class UsersComponent {
-  usuarios: Usuario[] = [];
+  user: Usuario[] = [];
+  usuarios: any;
   filteredUsuarios: Usuario[] = [];
   searchQuery: string = '';
   showFilter: boolean = false;
@@ -36,7 +38,7 @@ export class UsersComponent {
   ref: DynamicDialogRef | undefined;
   dialog: any;
 
-  constructor(private userService: UserService, public dialogService: DialogService, private router: Router) {}
+  constructor(private userService: UserService, public dialogService: DialogService, private router: Router, private rolService: RolService) {}
 
   ngOnInit(): void {
     this.loadUsuarios();
@@ -47,21 +49,53 @@ export class UsersComponent {
   }
 
   loadUsuarios(): void {
-    this.userService.getUsuarios().subscribe({
+    this.userService.indexUsuarios().subscribe({
       next: (usuarios) => {
-        this.originalUsuarios = usuarios;
-        this.usuarios = [...usuarios]; 
+        const usuariosConRoles = usuarios.map((usuario: Usuario) => {
+          const rolId = usuario.rol;
+          if (rolId !== undefined) { 
+            this.rolService.getRolesById(rolId).subscribe({
+              next: (rol) => {
+                usuario.rolNombre = rol.nombre;
+              },
+              error: (error) => console.error(`Error al cargar el rol para el usuario ${usuario.id}:`, error),
+            });
+          } else {
+            console.error(`El usuario ${usuario.id} no tiene rol asignado.`);
+          }
+          return usuario;
+        });
+        this.originalUsuarios = usuariosConRoles;
+        this.usuarios = [...usuariosConRoles];
         this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
         this.updatePaginatedUsuarios();
-        console.log(this.usuarios);
       },
-      error: (error) => {
-        console.error('Error al cargar usuarios:', error);
-      }
+      error: (error) => console.error('Error al cargar usuarios:', error),
     });
   }
+  
 
-  newUser(){// revisar (crea el usuario bien pero no con el rol que se le pone, lo deja sin rol)
+  getRolNombre(rolId: number): string | undefined {
+    if (!rolId) {
+      console.error('El usuario no tiene un rol asociado.');
+      return undefined;
+    }
+  
+    let rolNombre: string | undefined;
+    this.rolService.getRolesById(rolId).subscribe({
+      next: (rol) => {
+        rolNombre = rol.nombre; 
+      },
+      error: (error) => {
+        console.error('Error al obtener el rol:', error);
+      }
+    });
+  
+    return rolNombre;
+  }
+  
+
+  newUser(){
     this.ref = this.dialogService.open(CreateUserComponent, {
       header: 'Agregar Nuevo Usuario',
       modal: true,
@@ -104,24 +138,23 @@ export class UsersComponent {
     this.goToPage(this.currentPage - 1);
   }
 
-  searchUsuarios(): void { //revisar (intentar hacer para que haga la busqueda a partir del tercer caracter que se añada)
+  searchUsuarios(): void { 
     if (this.searchQuery) {
-      const allUsuarios = [...this.usuarios]; 
-      this.usuarios = allUsuarios.filter(usuario =>
-        usuario.nombre?.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+        const allUsuarios = [...this.originalUsuarios]; 
+        this.usuarios = allUsuarios.filter(usuario =>
+            usuario.email?.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
     } else {
-      this.loadUsuarios(); 
+        this.loadUsuarios(); 
     }
     
     this.currentPage = 1; 
     this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
     this.updatePaginatedUsuarios();
-  }
+}
 
   showUsuario(usuario: Usuario): void {//revisar
     this.ref = this.dialogService.open(ShowUserComponent, {
-      header: 'Ver Datos del Usuario',
       modal: true,
       width: '70vw',
       styleClass: 'custom-modal',
@@ -187,14 +220,17 @@ export class UsersComponent {
       if (confirmed) {
         this.userService.deleteUsuarios([userIds]).subscribe({
           next: () => {
-            this.usuarios = this.usuarios.filter(usuario => usuario.id !== userIds);
+            this.user = this.user.filter(user => user.id !== userIds); 
             this.updatePaginatedUsuarios();
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
           }, 
           error: (error) => {
             console.error('Error al eliminar usuario:', error);
           }
         });
-      };
+      }
     });
   }
 
@@ -205,34 +241,20 @@ export class UsersComponent {
 
   applyFilter(): void {
     if (this.filterType === 'todos') {
-      this.usuarios = [...this.originalUsuarios]; 
-      this.currentPage = 1;
-      this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
-      this.updatePaginatedUsuarios();
-      return;
+      this.usuarios = [...this.originalUsuarios];
+    } else {
+      const rolMap: { [key: string]: string } = {
+        'administradores': 'Administrador',
+        'usuarios': 'Usuario',
+        'artistas': 'Artista'
+      };
+  
+      const rolBuscado = rolMap[this.filterType];
+      this.usuarios = this.originalUsuarios.filter(usuario => usuario.rolNombre === rolBuscado);
     }
-  
-    const rolMap: { [key: string]: string } = {
-      'administradores': 'administrador',
-      'usuarios': 'usuario',
-      'artistas': 'artista'
-    };
-  
-    const rolBuscado = rolMap[this.filterType];
-  
-    this.usuarios = this.originalUsuarios.filter(usuario =>
-      usuario.Rol?.some(rol => rol.nombre?.toLowerCase() === rolBuscado.toLowerCase())
-    );
   
     this.currentPage = 1;
     this.totalPages = Math.ceil(this.usuarios.length / this.maxItems);
     this.updatePaginatedUsuarios();
-  }
-
-  getRoles(roles: any[]): string {
-    if (!roles || roles.length === 0) {
-        return 'Sin rol';
-    }
-    return roles.map(role => role.nombre).join(', ');
   }
 }

@@ -8,6 +8,18 @@ const models = require('../models');
 const conx = new Conexion();
 const conxAsset = new ConexionAssets();
 
+/**
+ * Controlador de Playlists
+ * @function index Obtener las playlists
+ * @function getPlaylistById Obtener una playlist por su id
+ * @function createPlaylist Crear una playlist
+ * @function updatePlaylist Actualizar una playlist
+ * @function deletePlaylists Eliminar playlists
+ * @function getUserPlaylists Obtener las playlists de un usuario
+ * @function createPlaylistByUser Crear una playlist por un usuario
+ * @function addToFavorites Añadir una cancion a favoritos al dar like a la cancion
+ * @function deleteSongPlaylist Eliminar una cancion de una playlist
+ */
 const index = async (req, res) => {
     try {
         const playlists = await conx.index();
@@ -35,14 +47,15 @@ const getPlaylistById = async (req, res) => {
 
 const createPlaylist = async (req, res = response) => {
     try {
-        const { nombre, descripcion, usuario_id, canciones } = req.body;
-        const cancionesArray = canciones ? JSON.parse(canciones) : []; 
+        const { nombre, descripcion, usuario_id, canciones, publico } = req.body;
 
         const newPlaylist = await conx.createPlaylist({
             nombre,
             descripcion,
             usuario_id,
-        }, cancionesArray);
+            canciones,
+            publico
+        });
 
         res.status(201).json(newPlaylist);
     } catch (error) {
@@ -79,8 +92,6 @@ const deletePlaylists = async (req, res) => {
         res.status(500).json({ msg: "Error al eliminar las playlists." });
     }
 };
-
-
 
 const getUserPlaylists = async (req, res) => {
     const { userId } = req.params; 
@@ -123,7 +134,19 @@ const addToFavorites = async (req, res) => {
     }
 };
 
+const deleteSongPlaylist = async (req, res) => {
+    const { playlistId, songId } = req.body;
+
+    try {
+        const result = await conx.deleteSongPlaylist(songId, playlistId);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error("Error al eliminar la canción de la playlist:", error);
+        res.status(500).json({ msg: "Error al eliminar la canción de la playlist." });
+    }
+};
+
 module.exports = {
     index, getPlaylistById, createPlaylist, updatePlaylist, deletePlaylists, 
-    getUserPlaylists, createPlaylistByUser, addToFavorites
+    getUserPlaylists, createPlaylistByUser, addToFavorites, deleteSongPlaylist
 };

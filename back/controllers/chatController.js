@@ -3,6 +3,14 @@ const { uploadFiles } = require("../helpers/cloudinary");
 const UserQuery = require("../database/user/UserConnection");
 const Message = require("../database/Message");
 
+/**
+ * NO IMPLEMENTADO
+ * Controlador de Chats
+ * @function getMessages Obtener los mensajes de un chat
+ * @function getChats Obtener los chats de un usuario
+ * @function getReceptoresPorEmisor Obtener los receptores por un emisor
+ * @function uploadMessageImages Subir imagenes de un mensaje
+ */
 class ChatController {
     static getMessages = async (req, res) => {
         try {

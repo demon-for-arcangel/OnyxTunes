@@ -5,6 +5,19 @@ const Conexion = require("./connection.js");
 
 const conexion = new Conexion();
 
+/**
+ * Conexion de Asset
+ * @function getAssetById Obtener un asset por su id
+ * @function saveAsset Guardar un asset
+ * @function deleteAssetById Eliminar un asset por su id
+ * @function getAssetsByArrIds Obtener los assets por un array de ids
+ * @function deleteAssetById Eliminar un asset por su id
+ * @function addAsset Subir un asset
+ * @function updateUserProfilePhoto Actualizar la foto de perfil de un usuario
+ * @function associateAssetWithUser Asociar un asset a un usuario
+ * @function getAssetsOfUser Obtener los assets de un usuario
+ * @function saveAssetOfUser Guardar un asset de un usuario
+ */
 class AssetsModel {
   constructor() {}
 

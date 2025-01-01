@@ -34,15 +34,15 @@ export class HomeComponent {
   }
 
   navigateToPlaylist(playlist: Playlist) {
-    const playlistName = encodeURIComponent(playlist.nombre); // Codifica el nombre para la URL
-    this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]); // Navega usando el ID y el nombre
+    const playlistName = encodeURIComponent(playlist.nombre); 
+    this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]); 
   }
 
   navigateToSearch() {
     this.router.navigate(['/search']);
   }
 
-  toggleMenu() {
+  menu() {
     this.menuOpen = !this.menuOpen;
   }
 
@@ -51,7 +51,7 @@ export class HomeComponent {
     this.router.navigate([`/${route}`]);
   }
   
-  searchArtists() {
+  searchArtists() {//por hacer
     console.log('Buscando:', this.searchTerm);
   }
 
@@ -94,4 +94,8 @@ export class HomeComponent {
     }
   }
 
+
+  crearPlaylist(){//por hacer
+
+  }
 }

@@ -6,9 +6,22 @@ const bcrypt = require('bcrypt');
 
 const conexion = new Conexion();
 
+/**
+ * Conexion de Usuario
+ * @function indexUser Obtener los usuarios
+ * @function indexUser Obtener los usuarios
+ * @function indexArtist Obtener los artistas
+ * @function getUserById Obtener un usuario por su id
+ * @function getUserByEmail Obtener un usuario por su email
+ * @function registerUser Registrar un usuario
+ * @function createUser Crear un usuario
+ * @function updateUser Actualizar un usuario
+ * @function deleteUsers Eliminar usuarios
+ * @function updatePassword Actualizar la contraseña de un usuario
+ * @function createDefaultPlaylist Crear una playlist por defecto para un usuario
+*/
 class UserModel {
     constructor() {}
-
     async indexUser() {
         try {
             const users = await models.Usuario.findAll({
@@ -25,7 +38,6 @@ class UserModel {
             throw new Error('Error al listar los usuarios');
         }
     }
-    
 
     async indexArtist() {
         try {
@@ -139,43 +151,57 @@ class UserModel {
         }
     }
 
-    async deleteUsers(userIds) {
+    async deleteUsers(userIds) {//revisar, no elimina las playlist que son exclusivas del usuario
         if (!userIds) {
             throw new Error("No se proporcionaron IDs de usuario para eliminar.");
         }
 
-        await models.RolUsuario.destroy({
-            where: { usuario_id: userIds }
+        await models.UsuarioPlaylist.destroy({
+            where: {
+                usuario_id: userIds
+            }
         });
 
+        const playlistsToDelete = await models.UsuarioPlaylist.findAll({
+            where: {
+                usuario_id: userIds
+            },
+            include: {
+                model: models.Playlist,
+                attributes: ['id', 'nombre']
+            }
+        });
+        
+        for (const playlist of playlistsToDelete) {
+            const playlistId = playlist.Playlist.id;
+        
+            const otherUsersCount = await models.UsuarioPlaylist.count({
+                where: {
+                    playlist_id: playlistId,
+                    usuario_id: {
+                        [Op.ne]: userIds 
+                    }
+                }
+            });
+        
+            console.log(`Usuarios restantes en la playlist ${playlistId}: ${otherUsersCount}`);
+        
+            if (otherUsersCount === 0) {
+                await models.Playlist.destroy({
+                    where: { id: playlistId }
+                });
+                console.log(`Playlist con id ${playlistId} eliminada.`);
+            } else {
+                console.log(`La playlist con id ${playlistId} no se elimina porque está asociada a otros usuarios.`);
+            }
+        }
+    
         const result = await models.Usuario.destroy({
             where: { id: userIds }
         });
-
+    
         return result;
-    }
-
-    async getUserRoles(userId) {
-        try {
-            const user = await models.Usuario.findByPk(userId, {
-                include: [
-                    {
-                        model: models.Rol,
-                        attributes: ['id', 'nombre']
-                    }
-                ]
-            });
-
-            if (!user) {
-                throw new Error('Usuario no encontrado');
-            }
-
-            return user.roles; 
-        } catch (error) {
-            console.error('Error al obtener roles del usuario:', error);
-            throw new Error('Error al obtenr los roles'); 
-        }
-    }
+    }   
 
     async updatePassword(userId, currentPassword, newPassword, confirmPassword) {
         try {

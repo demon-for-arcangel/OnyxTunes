@@ -14,8 +14,9 @@ module.exports = {
     */
     await queryInterface.bulkInsert(process.env.TABLA_PLAYLIST, [
       {
-        nombre: 'Mi Playlist Favorita',
+        nombre: 'Favoritos',
         descripcion: 'Una lista de mis canciones favoritas.',
+        publico: false,
         createdAt: new Date(),
         updatedAt: new Date()
       }
