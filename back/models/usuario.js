@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.Rol, {
-        foreignKey: "id",
+        foreignKey: "rol",
       });
 
       this.belongsToMany(models.Cancion, {
@@ -25,10 +25,10 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       this.belongsToMany(models.Usuario, {
-        as: "seguidores", 
-        through: models.Seguidor, 
-        foreignKey: "seguidor_id", 
-        otherKey: "user_id", 
+        as: "seguidores",
+        through: models.Seguidor,
+        foreignKey: "seguidor_id",
+        otherKey: "user_id",
       });
 
       this.belongsToMany(models.Playlist, {
