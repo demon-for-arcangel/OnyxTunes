@@ -1,17 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { PendingChat, UserChat } from '../../../interfaces/usuario';
-import { SocketService } from '../../../services/socket.service';
-import { Router } from '@angular/router';
-import { UserService } from '../../../services/user.service';
-import { ChatService } from '../../../services/chat.service';
-import { NewMessageArgs } from '../../../interfaces/message';
+import { Component, OnInit } from "@angular/core";
+import { PendingChat, UserChat } from "../../../interfaces/usuario";
+import { Router } from "@angular/router";
+import { UserService } from "../../../services/user.service";
+import { ChatService } from "../../../services/chat.service";
+import { NewMessageArgs } from "../../../interfaces/message";
 
 @Component({
-  selector: 'app-chat-pending',
+  selector: "app-chat-pending",
   standalone: true,
   imports: [],
-  templateUrl: './chat-pending.component.html',
-  styleUrls: ['./chat-pending.component.css']
+  templateUrl: "./chat-pending.component.html",
+  styleUrls: ["./chat-pending.component.css"],
 })
 export class ChatPendingComponent implements OnInit {
   pending = new Map<number, PendingChat>();
@@ -20,14 +19,14 @@ export class ChatPendingComponent implements OnInit {
   constructor(
     private userService: UserService,
     private router: Router,
-    private socketService: SocketService,
-    private chatService: ChatService
+    private chatService: ChatService,
   ) {}
 
   ngOnInit() {
     this.loadPendingChats();
 
-    this.socketService.listenNewMessages((args: NewMessageArgs) => {
+    // Escuchar nuevos mensajes
+    this.chatService.listenNewMessages((args: NewMessageArgs) => {
       const pendingUser = this.pending.get(args.from);
       const notPendingUser = this.notPending.get(args.from);
 
@@ -42,17 +41,20 @@ export class ChatPendingComponent implements OnInit {
   }
 
   private loadPendingChats() {
-    this.chatService.getPendingChats().subscribe(body => {
-      body.data.chats.notPending.forEach((user) => {
-        this.notPending.set(user.id!, user!);
-      });
+    this.chatService.getPendingChats().subscribe(
+      (body) => {
+        body.data.chats.notPending.forEach((user) => {
+          this.notPending.set(user.id!, user!);
+        });
 
-      body.data.chats.pending.forEach((user) => {
-        this.pending.set(user.id!, user!);
-      });
-    }, error => {
-      console.error('Error al cargar los chats pendientes:', error);
-    });
+        body.data.chats.pending.forEach((user) => {
+          this.pending.set(user.id!, user!);
+        });
+      },
+      (error) => {
+        console.error("Error al cargar los chats pendientes:", error);
+      },
+    );
   }
 
   private switchToPending(user: UserChat) {
@@ -66,9 +68,13 @@ export class ChatPendingComponent implements OnInit {
   }
 
   private getNewSender(args: NewMessageArgs) {
-    this.userService.getUserById(args.from).subscribe(body => {
+    this.userService.getUserById(args.from).subscribe((body) => {
       const pendingUser: PendingChat = { ...body, pendingCount: 1 };
       this.pending.set(body.data.query.id!, pendingUser);
     });
+  }
+
+  goToChat(user: PendingChat | UserChat) {
+    this.router.navigate(["chat", { id: user.id }]);
   }
 }
