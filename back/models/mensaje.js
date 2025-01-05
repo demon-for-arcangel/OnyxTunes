@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Mensaje extends Model {
     /**
@@ -12,33 +10,36 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.Usuario, {
-        targetKey: 'id',
-        foreignKey: 'emisor',
-        as: 'emisorUsuario',
-      })
+        targetKey: "id",
+        foreignKey: "emisor",
+        as: "emisorUsuario",
+      });
 
       this.belongsTo(models.Usuario, {
-        foreignKey: 'receptor',
-        as: 'receptorUsuario',
-      })
+        foreignKey: "receptor",
+        as: "receptorUsuario",
+      });
 
       this.hasMany(models.Asset, {
-        foreignKey: 'asset_id', 
-        as: 'files', 
+        foreignKey: "id",
+        as: "files",
       });
     }
   }
-  Mensaje.init({
-    emisor: DataTypes.INTEGER,
-    receptor: DataTypes.INTEGER,
-    texto: DataTypes.STRING,
-    leido: DataTypes.BOOLEAN,
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE
-  }, {
-    sequelize,
-    modelName: 'Mensaje',
-    tableName: process.env.TABLA_MENSAJE
-  });
+  Mensaje.init(
+    {
+      emisor: DataTypes.INTEGER,
+      receptor: DataTypes.INTEGER,
+      texto: DataTypes.STRING,
+      leido: DataTypes.BOOLEAN,
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE,
+    },
+    {
+      sequelize,
+      modelName: "Mensaje",
+      tableName: process.env.TABLA_MENSAJE,
+    },
+  );
   return Mensaje;
 };

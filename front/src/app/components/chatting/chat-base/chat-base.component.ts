@@ -1,17 +1,23 @@
-import { Component } from '@angular/core';
-import { ChatComponent } from '../chat/chat.component';
-import { ChatListComponent } from '../chat-list/chat-list.component';
-import { PendingChat } from '../../../interfaces/usuario';
-import { UserChat } from '../../../interfaces/usuario';
+import { Component, OnInit } from "@angular/core";
+import { ChatComponent } from "../chat/chat.component";
+import { ChatListComponent } from "../chat-list/chat-list.component";
+import { PendingChat } from "../../../interfaces/usuario";
+import { UserChat } from "../../../interfaces/usuario";
+import { ChatService } from "../../../services/chat.service";
 
 @Component({
-  selector: 'app-chat-base',
+  selector: "app-chat-base",
   standalone: true,
   imports: [ChatComponent, ChatListComponent],
-  templateUrl: './chat-base.component.html',
-  styleUrl: './chat-base.component.css'
+  templateUrl: "./chat-base.component.html",
+  styleUrls: ["./chat-base.component.css"],
 })
-export class ChatBaseComponent {
-  pending: Map<number, PendingChat> = new Map<number, PendingChat>();
-  notPending: Map<number, UserChat> = new Map<number, UserChat>();
+export class ChatBaseComponent implements OnInit {
+  constructor(private chatService: ChatService) {}
+
+  ngOnInit() {
+    this.chatService.listenForChats((chat) => {
+      console.log("Nuevo chat recibido:", chat);
+    });
+  }
 }

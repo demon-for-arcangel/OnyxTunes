@@ -1,0 +1,35 @@
+.chat-container {
+  display: flex;
+  flex-direction: column; /* Asegura que los mensajes se apilen verticalmente */
+  gap: 10px; /* Espacio entre los mensajes */
+  max-height: 400px; /* Altura máxima del contenedor */
+  overflow-y: auto; /* Barra de desplazamiento cuando el contenido excede la altura */
+  padding-right: 10px; /* Espacio para que la barra de desplazamiento no se solape con los mensajes */
+  flex-grow: 1; /* Asegura que ocupe todo el espacio disponible en su contenedor */
+}
+
+.message-container {
+  display: flex;
+  justify-content: flex-start; /* Alinea los mensajes a la izquierda por defecto */
+}
+
+.sent-container {
+  justify-content: flex-end; /* Alinea los mensajes enviados a la derecha */
+}
+
+.message {
+  max-width: 70%; /* Limita el ancho de los mensajes */
+  padding: 10px;
+  border-radius: 5px;
+  word-wrap: break-word; /* Para que el texto largo se ajuste */
+}
+
+.sent-message {
+  background-color: #d1e7dd; /* Color de fondo para los mensajes enviados */
+  align-self: flex-end; /* Alinea el mensaje al final (derecha) */
+}
+
+.received-message {
+  background-color: #f8d7da; /* Color de fondo para los mensajes recibidos */
+  align-self: flex-start; /* Alinea el mensaje al inicio (izquierda) */
+}
