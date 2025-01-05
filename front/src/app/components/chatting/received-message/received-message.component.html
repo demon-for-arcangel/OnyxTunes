@@ -4,7 +4,7 @@
       <span class="font-bold">{{user?.nickname}}</span>
       <div class="flex items-center space-x-2 rtl:space-x-reverse">
         <span class="text-sm font-semibold text-gray-900 dark:text-white"></span>
-        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{message!.created_at | date}}</span>
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{message!.createdAt | date}}</span>
       </div>
       <div class="content">
         @if (message.texto !== "") {
@@ -12,7 +12,7 @@
         } @else if (message!.files) {
           <div class="grid">
             @for (file of message.files; track $index) {
-              <img class="object-cover h-48 w-48 rounded-lg" src="{{file.file_link}}" alt="message_image">
+              <img class="object-cover h-48 w-48 rounded-lg" src="{{file.path}}" alt="message_image">
             }
           </div>
         }

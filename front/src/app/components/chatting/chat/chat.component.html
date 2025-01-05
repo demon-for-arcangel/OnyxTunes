@@ -1,11 +1,27 @@
 <section>
-  <div id="menu">
-      <div>
-          <button class="px-3" routerLink="/pending-chats"><i></i></button>
-          <img [src]="partner?.foto_perfil" alt="{{partner?.nickname}}" />
-      </div>
-      <span>{{partner?.nickname}}</span>
-  </div>
-  <app-message id="messages" [messages]="messages" [partner]="partner" [self]="self"></app-message>
-  <app-message-input id="chatInput" (onSendMessage)="handleNewMessage($event)"></app-message-input>
+  <!-- Mostrar los mensajes -->
+
+  @if (partner) {
+    @for (message of messages.values(); track message) {
+      <app-message
+        [message]="message"
+        [partner]="partner"
+        [self]="self"
+      ></app-message>
+    }
+
+    <!-- Indicador de 'escribiendo...' -->
+    @if (partnerTyping) {
+      <div>Escribiendo...</div>
+    }
+
+    <app-message-input
+      id="chatInput"
+      (onSendMessage)="handleNewMessage($event)"
+      (onTyping)="handleTyping($event)"
+    >
+    </app-message-input>
+  } @else {
+    <p>No hay mensajes, abra un chat</p>
+  }
 </section>
