@@ -1,17 +1,17 @@
 section {
   display: flex;
   flex-direction: column;
-  height: 100vh; 
+  height: 100vh;
   background-color: #f9f9f9;
-  font-family: Arial, sans-serif; 
+  font-family: Arial, sans-serif;
 }
 
 #menu {
   display: flex;
   align-items: center;
   padding: 10px;
-  background-color: #007bff; 
-  color: white; 
+  background-color: #007bff;
+  color: white;
 }
 
 #menu div {
@@ -28,60 +28,60 @@ section {
 }
 
 #menu button:hover {
-  opacity: 0.8; 
+  opacity: 0.8;
 }
 
 #menu span {
   font-weight: bold;
-  font-size: 1.2em; 
+  font-size: 1.2em;
 }
 
 #messages {
-  flex: 1; 
-  overflow-y: auto; 
+  flex: 1;
+  overflow-y: auto;
   padding: 10px;
-  background-color: #ffffff; 
-  border-top: 1px solid #e0e0e0; 
+  background-color: #ffffff;
+  border-top: 1px solid #e0e0e0;
 }
 
 .message {
   margin-bottom: 10px;
   padding: 10px;
-  border-radius: 5px; 
+  border-radius: 5px;
 }
 
 .message.self {
-  background-color: #d1e7dd; 
+  background-color: #d1e7dd;
   align-self: flex-end;
 }
 
 .message.partner {
-  background-color: #f8d7da; 
-  align-self: flex-start; 
+  background-color: #f8d7da;
+  align-self: flex-start;
 }
 
 #chatInput {
   padding: 10px;
-  border-top: 1px solid #e0e0e0; 
-  background-color: #f1f1f1; 
+  border-top: 1px solid #e0e0e0;
+  background-color: #f1f1f1;
 }
 
 input[type="text"] {
-  width: 100%; 
+  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 5px; 
+  border-radius: 5px;
 }
 
 button[type="submit"] {
-  background-color: #007bff; 
-  color: white; 
-  border: none; 
-  border-radius: 5px; 
-  padding: 10px 15px; 
-  cursor: pointer; 
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
 }
 
 button[type="submit"]:hover {
-  background-color: #0056b3; 
+  background-color: #0056b3;
 }
