@@ -1,113 +1,178 @@
-const { findRecentChatMessages } = require("../database/Message");
-const { uploadFiles } = require("../helpers/cloudinary");
-const UserQuery = require("../database/user/UserConnection");
-const Message = require("../database/Message");
+const { Op } = require("sequelize");
+const models = require("../models");
+const { uploadFiles } = require("../helpers/cloudinary"); // Ajusta según tu configuración para subir archivos
 
-/**
- * NO IMPLEMENTADO
- * Controlador de Chats
- * @function getMessages Obtener los mensajes de un chat
- * @function getChats Obtener los chats de un usuario
- * @function getReceptoresPorEmisor Obtener los receptores por un emisor
- * @function uploadMessageImages Subir imagenes de un mensaje
- */
 class ChatController {
-    static getMessages = async (req, res) => {
-        try {
-            const receptorId = req.params.receptor; 
-            console.log('payload = ',req.userId); 
-            const emisorId = req.userId;
-            console.log('emisorId = ',emisorId);
-            console.log('receptorId = ',receptorId);
+  // Obtener todos los mensajes entre dos usuarios
+  static async obtenerMensajes(req, res) {
+    try {
+      const { emisorId, receptorId } = req.params;
 
-            if (!receptorId || !emisorId) {
-                return res.status(400).json({
-                    message: 'ID de emisor o receptor no proporcionado.'
-                });
-            }
+      if (!emisorId || !receptorId) {
+        return res
+          .status(400)
+          .json({ message: "Emisor o receptor no proporcionado" });
+      }
 
-            const result = await findRecentChatMessages(emisorId, receptorId);
-    
-            if (!result.success) {
-                return res.status(404).json({
-                    message: 'No se encontraron mensajes.',
-                });
-            }
-    
-            return res.status(200).json({
-                message: result.message,
-                data: {
-                    emisorUser: result.data.emisorUser,
-                    receptorUser: result.data.receptorUser,
-                    messages: result.data.messages 
-                }
-            });
-        } catch (error) {
-            console.error('Error en getMessages:', error);
-            return res.status(500).json({
-                executed: false,
-                error: error.message
-            });
-        }
+      const mensajes = await models.Mensaje.findAll({
+        where: {
+          [Op.or]: [
+            { emisor: emisorId, receptor: receptorId },
+            { emisor: receptorId, receptor: emisorId },
+          ],
+        },
+        include: [
+          {
+            model: models.Usuario,
+            as: "emisorUsuario",
+            attributes: ["id", "nombre", "email"],
+          },
+          {
+            model: models.Usuario,
+            as: "receptorUsuario",
+            attributes: ["id", "nombre", "email"],
+          },
+          {
+            model: models.Asset,
+            as: "files",
+            attributes: ["path"],
+          },
+        ],
+        order: [["createdAt", "ASC"]],
+      });
+
+      return res.status(200).json({
+        success: true,
+        mensajes: mensajes,
+      });
+    } catch (error) {
+      console.error("Error al obtener mensajes:", error);
+      return res.status(500).json({ success: false, message: error.message });
     }
+  }
 
-    static async getChats(req, res) {
-        const userId = req.userId; 
+  // Enviar un mensaje
+  static async enviarMensaje(req, res) {
+    try {
+      const { emisorId, receptorId, texto } = req.body;
 
-        try {
-            const chats = await Message.getChatsGroupedByReceiver(userId);
+      if (!texto) {
+        return res
+          .status(400)
+          .json({ message: "El contenido del mensaje es obligatorio" });
+      }
 
-            return res.status(200).json({
-                executed: true,
-                message: "Se han obtenido la lista de chats correctamente",
-                chats: chats
-            });
-        } catch (error) {
-            console.error('Error en getChats:', error);
-            return res.status(500).json({
-                executed: false,
-                error: error.message
-            });
-        }
+      const nuevoMensaje = await models.Mensaje.create({
+        emisor: emisorId,
+        receptor: receptorId,
+        texto: texto,
+        leido: false,
+      });
+
+      return res.status(201).json({
+        success: true,
+        message: "Mensaje enviado exitosamente",
+        data: nuevoMensaje,
+      });
+    } catch (error) {
+      console.error("Error al enviar mensaje:", error);
+      return res.status(500).json({ success: false, message: error.message });
     }
+  }
 
-    static getReceptoresPorEmisor = async (req, res) => {
-        const emisorId = req.params.emisorId; 
-    
-        try {
-            const receptores = await Message.getReceptoresPorEmisor(emisorId);
+  // Marcar mensaje como leído
+  static async marcarComoLeido(req, res) {
+    try {
+      const { mensajeId } = req.body;
 
-            return res.status(200).json({
-                executed: true,
-                message: "Se han obtenido los receptores correctamente",
-                data: receptores
-            });
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({ executed: false, message: 'Error al obtener los receptores.' });
-        }
-    };
+      const mensaje = await models.Mensaje.findByPk(mensajeId);
+      if (!mensaje) {
+        return res.status(404).json({ message: "Mensaje no encontrado" });
+      }
 
-    static uploadMessageImages = async (req, res) => {
-        try {
-            const filesUploaded = await uploadFiles(req.files, { fileExtension: ['jpg', 'png', 'jpeg'], dir: 'chat_images', numberLimit: 4 });
-            const filesToSend = [];
+      mensaje.leido = true;
+      await mensaje.save();
 
-            filesUploaded.forEach((file) => {
-                filesToSend.push(file.secure_url);
-            });
-
-            return res.status(200).json({
-                executed: true,
-                files: filesToSend
-            });
-        } catch (e) {
-            return res.status(500).json({
-                executed: false,
-                error: e.message
-            });
-        }
+      return res
+        .status(200)
+        .json({ success: true, message: "Mensaje marcado como leído" });
+    } catch (error) {
+      console.error("Error al marcar como leído:", error);
+      return res.status(500).json({ success: false, message: error.message });
     }
+  }
+
+  // Subir archivos relacionados con un mensaje
+  static async subirArchivosMensaje(req, res) {
+    try {
+      const filesSubidos = await uploadFiles(req.files, {
+        fileExtension: ["jpg", "png", "jpeg"],
+        dir: "chat_images",
+        numberLimit: 4,
+      });
+      const archivosParaEnviar = [];
+
+      filesSubidos.forEach((file) => {
+        archivosParaEnviar.push(file.secure_url);
+      });
+
+      return res.status(200).json({
+        executed: true,
+        files: archivosParaEnviar,
+      });
+    } catch (e) {
+      return res.status(500).json({ executed: false, error: e.message });
+    }
+  }
+
+  static async obtenerChats(req, res) {
+    const { usuarioId } = req.params;
+
+    try {
+      const mensajes = await models.Mensaje.findAll({
+        where: {
+          [Op.or]: [{ emisor: usuarioId }, { receptor: usuarioId }],
+        },
+        include: [
+          {
+            model: models.Usuario,
+            as: "emisorUsuario", // Usa el alias correcto según tu modelo
+            attributes: ["id", "nombre", "foto_perfil"],
+          },
+          {
+            model: models.Usuario,
+            as: "receptorUsuario", // Usa el alias correcto según tu modelo
+            attributes: ["id", "nombre", "foto_perfil"],
+          },
+        ],
+      });
+
+      // Filtrar usuarios únicos con los que el usuario ha tenido interacción
+      const uniqueChats = [];
+      const seenUsers = new Set();
+
+      mensajes.forEach((mensaje) => {
+        const otherUser =
+          mensaje.emisor === parseInt(usuarioId)
+            ? mensaje.receptorUsuario
+            : mensaje.emisorUsuario;
+
+        if (!seenUsers.has(otherUser.id)) {
+          seenUsers.add(otherUser.id);
+          uniqueChats.push(otherUser);
+        }
+      });
+
+      return res.status(200).json({ success: true, chats: uniqueChats });
+    } catch (error) {
+      console.error("Error al obtener los chats:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Error al obtener los chats.",
+        error: error.message,
+      });
+    }
+  }
 }
 
 module.exports = ChatController;

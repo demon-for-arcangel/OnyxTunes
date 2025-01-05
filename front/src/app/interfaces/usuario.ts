@@ -2,6 +2,7 @@ export interface Usuario {
   id: number;
   Rol: Rol[];
   nombre: string;
+  nickname: string;
   email: string;
   password: string;
   fecha_nacimiento: string;
@@ -10,6 +11,7 @@ export interface Usuario {
   foto?: string;
   rol?: number;
   rolNombre?: string;
+  connected: boolean;
 }
 
 export interface Rol {
@@ -25,12 +27,13 @@ export interface UserChat {
   nombre?: string;
   primerApellido?: string;
   segundoApellido?: string;
-  nickname?: string; 
+  nickname?: string;
   foto_perfil?: string;
   lastLogin?: any;
   connected?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  estado?: string;
 }
 
 export interface PendingChat extends UserChat {
