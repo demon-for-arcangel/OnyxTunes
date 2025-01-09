@@ -67,9 +67,6 @@ export class CreateSongsComponent {
       this.authService.getUserByToken(token).subscribe(
         (response) => {
           this.user = response;
-          if (this.user && this.user.id) {
-            this.loadAlbumsByUserId(this.user.id);
-          }
         },
         (error) => {
           console.error("Error al obtener el usuario:", error);
@@ -107,14 +104,17 @@ export class CreateSongsComponent {
     );
   }
 
-  loadAlbumsByUserId(userId: number) {
-    this.albumsService.getAlbumsByUserId(userId).subscribe(
+  loadAlbumsByArtistId(artistId: number) {
+    this.albumsService.getAlbumsByUserId(artistId).subscribe(
       (data) => {
         this.albumsDisponibles = data;
-        console.log("Álbumes disponibles:", this.albumsDisponibles);
+        console.log(
+          "Álbumes disponibles para el artista:",
+          this.albumsDisponibles,
+        );
       },
       (error) => {
-        console.error("Error al cargar los álbumes:", error);
+        console.error("Error al cargar los álbumes del artista:", error);
       },
     );
   }
@@ -156,6 +156,8 @@ export class CreateSongsComponent {
     this.nuevaCancion.artista = artista.nombre;
     this.nuevaCancion.artista_id = artista.id;
     console.log("ID del artista asignado:", this.nuevaCancion.artista_id);
+
+    this.loadAlbumsByArtistId(artista.id);
     this.showArtistas = false;
   }
 
