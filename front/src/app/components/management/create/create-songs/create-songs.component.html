@@ -1,62 +1,90 @@
 <div class="create-song-details">
-    <h2>Añadir Nueva Canción</h2>
+  <h2>Añadir Nueva Canción</h2>
 
-    <label for="titulo">Título:</label>
-    <input id="titulo" type="text" [(ngModel)]="nuevaCancion.titulo" required />
+  <label for="titulo">Título:</label>
+  <input id="titulo" type="text" [(ngModel)]="nuevaCancion.titulo" required />
 
-    <label for="artista">Artista:</label>
-    <input 
-        id="artista" 
-        type="text" 
-        [(ngModel)]="nuevaCancion.artista" 
-        (input)="filterArtistas($event)"
-        (focus)="onFocus()"
-        (blur)="onBlur()" 
-        required 
-        placeholder="Escribe el nombre del artista" 
+  <label for="artista">Artista:</label>
+  <input
+    id="artista"
+    type="text"
+    [(ngModel)]="nuevaCancion.artista"
+    (input)="filterArtistas($event)"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+    required
+    placeholder="Escribe el nombre del artista"
+  />
+  @if (showArtistas && artistasFiltrados.length > 0) {
+    <ul>
+      @for (artista of artistasFiltrados; track artista) {
+        <li (click)="selectArtista(artista)">
+          {{ artista.nombre }}
+        </li>
+      }
+    </ul>
+  }
+
+  <label for="album">Álbum:</label>
+  <select id="album" [(ngModel)]="nuevaCancion.album" required>
+    @if (albumsDisponibles.length === 0) {
+      <option disabled>No hay albumes disponibles</option>
+    }
+    @for (album of albumsDisponibles; track album) {
+      <option [value]="album.id">{{ album.titulo }}</option>
+    }
+  </select>
+
+  <label>Duración:</label>
+  <div class="duracion-container">
+    <input
+      type="number"
+      [(ngModel)]="horas"
+      placeholder="Horas"
+      min="0"
+      disabled
     />
-    @if (showArtistas && artistasFiltrados.length > 0) {
-        <ul>
-            @for (artista of artistasFiltrados; track artista) {
-                <li (click)="selectArtista(artista)">
-                    {{ artista.nombre }}
-                </li>
-            }
-        </ul>
+    <input
+      type="number"
+      [(ngModel)]="minutos"
+      placeholder="Minutos"
+      min="0"
+      max="59"
+      disabled
+    />
+    <input
+      type="number"
+      [(ngModel)]="segundos"
+      placeholder="Segundos"
+      min="0"
+      max="59"
+      disabled
+    />
+  </div>
+
+  <label for="generos">Géneros</label>
+  <div class="genero-container">
+    @for (genero of generosDisponibles; track genero) {
+      <div class="genero-item">
+        <input
+          type="checkbox"
+          [value]="genero"
+          (change)="toggleGenre(genero)"
+          [checked]="generosSeleccionados.includes(genero)"
+        />
+        {{ genero.nombre }}
+      </div>
     }
+  </div>
 
-    @if (mostrarCrearAlbum) {
-        <button (click)="crearAlbum()">Crear Nuevo Álbum</button>
-    }
-    <label for="album">Álbum:</label>
-    <select id="album" [(ngModel)]="nuevaCancion.album" (focus)="mostrarBoton()" (blur)="ocultarBoton()" required >
-        @for (album of albumsDisponibles; track album) {
-            <option [value]="album.id">{{ album.titulo }}</option>
-        }
-    </select>
+  <label for="archivo">Subir Archivo:</label>
+  <input
+    id="archivo"
+    type="file"
+    (change)="onFileSelected($event)"
+    accept=".mp3,.wav,.ogg"
+  />
 
-    <label>Duración:</label>
-    <div class="duracion-container">
-        <input type="number" [(ngModel)]="horas" placeholder="Horas" min="0" disabled/>
-        <input type="number" [(ngModel)]="minutos" placeholder="Minutos" min="0" max="59" disabled/>
-        <input type="number" [(ngModel)]="segundos" placeholder="Segundos" min="0" max="59" disabled/>
-    </div>
-
-    <label for="generos">Géneros</label>
-    <div class="genero-container">
-        @for (genero of generosDisponibles; track genero) {
-            <div class="genero-item">
-                <input type="checkbox" 
-                [value]="genero" (change)="toggleGenre(genero)" 
-                [checked]="generosSeleccionados.includes(genero)"/>
-                {{genero.nombre}}
-            </div>
-        }
-    </div>
-
-    <label for="archivo">Subir Archivo:</label>
-    <input id="archivo" type="file" (change)="onFileSelected($event)" accept=".mp3,.wav,.ogg" />
-
-    <button (click)="crearCancion()">Crear Canción</button>
-    <button class="cancel" (click)="ref.close()">Cancelar</button>
+  <button (click)="crearCancion()">Crear Canción</button>
+  <button class="cancel" (click)="ref.close()">Cancelar</button>
 </div>

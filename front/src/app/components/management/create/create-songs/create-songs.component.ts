@@ -24,8 +24,6 @@ export class CreateSongsComponent {
     generos: [],
   };
 
-  mostrarCrearAlbum: boolean = false;
-
   generosDisponibles: any[] = [];
   generosSeleccionados: any[] = [];
   artistasDisponibles: any[] = [];
@@ -51,14 +49,6 @@ export class CreateSongsComponent {
     this.loadGeneros();
     this.loadArtistas();
     this.getUserId();
-  }
-
-  mostrarBoton() {
-    this.mostrarCrearAlbum = true;
-  }
-
-  ocultarBoton() {
-    this.mostrarCrearAlbum = false;
   }
 
   getUserId() {
@@ -106,12 +96,17 @@ export class CreateSongsComponent {
 
   loadAlbumsByArtistId(artistId: number) {
     this.albumsService.getAlbumsByUserId(artistId).subscribe(
-      (data) => {
-        this.albumsDisponibles = data;
-        console.log(
-          "Álbumes disponibles para el artista:",
-          this.albumsDisponibles,
-        );
+      (response) => {
+        if (response && response.albums) {
+          this.albumsDisponibles = response.albums;
+          console.log(
+            "Álbumes disponibles para el artista:",
+            this.albumsDisponibles,
+          );
+        } else {
+          this.albumsDisponibles = [];
+          console.warn("No se encontraron álbumes para este artista.");
+        }
       },
       (error) => {
         console.error("Error al cargar los álbumes del artista:", error);
