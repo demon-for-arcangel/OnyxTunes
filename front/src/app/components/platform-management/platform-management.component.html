@@ -1,45 +1,61 @@
 <header>
-    <div class="header-content">
-        <img src="assets/images/onyxtunes.jpeg" alt="OnyxTunes Logo" class="logo" />
-    </div>
+  <div class="header-content">
+    <img src="assets/images/onyxtunes.jpeg" alt="OnyxTunes Logo" class="logo" />
+  </div>
 </header>
-  
+
 <main>
-    <div class="platform-management">
-        <button class="back-button" (click)="goBack()">
-            <i class="pi pi-arrow-left"></i> Volver
-        </button>
-        <div class="management-sections">
-        @if(canAccess('userManagement')){
-            <div class="section">
-                <button (click)="navigateTo('userManagement')">
-                    <img src="assets/images/gestion-de-usuarios.jpg" class="image">
-                    <div class="overlay">
-                        <h2>Gestión de Usuarios</h2>
-                        <p>Administrar Usuarios</p>
-                    </div>
-                </button>
+  <div class="platform-management">
+    <button class="back-button" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i> Volver
+    </button>
+    <div class="management-sections">
+      @if (canAccess("userManagement")) {
+        <div class="section">
+          <button (click)="navigateTo('userManagement')">
+            <img src="assets/images/gestion-de-usuarios.jpg" class="image" />
+            <div class="overlay">
+              <h2>Gestión de Usuarios</h2>
+              <p>Administrar Usuarios</p>
             </div>
-        }
-        @if(canAccess('musicManagement')){
-            <div class="section">
-                <button (click)="navigateTo('musicManagement')">
-                    <img src="assets/images/gestion-de-albumes.jpg" class="image">
-                    <div class="overlay">
-                        <h2>Gestión de Música</h2>
-                        <p>Administrar Música</p>
-                    </div>
-                </button>
-            </div>
-        } 
-        @if(canAccess('artistManagement')) {
-            <h1>Gestion de la Música</h1>
-            <div class="section">
-                <button (click)="navigateTo('artistManagement')">
-                    <img src="assets/images/gestion-de-albumes.jpg" class="image-artist" [ngStyle]="{ width: '40%', height: 'auto' }">
-                </button>
-            </div>
-        }
+          </button>
         </div>
+      }
+      @if (canAccess("musicManagement")) {
+        <div class="section">
+          <button (click)="navigateTo('musicManagement')">
+            <img src="assets/images/gestion-de-albumes.jpg" class="image" />
+            <div class="overlay">
+              <h2>Gestión de Música</h2>
+              <p>Administrar Música</p>
+            </div>
+          </button>
+        </div>
+      }
+      @if (canAccess("artistManagement")) {
+        <h1>Gestion de la Música</h1>
+        <div class="section">
+          <button (click)="navigateTo('artistManagement')">
+            <img
+              src="assets/images/gestion-de-albumes.jpg"
+              class="image-artist"
+              [ngStyle]="{ width: '40%', height: 'auto' }"
+            />
+          </button>
+        </div>
+      }
+      @if (canAccess("genresManagement")) {
+        <h1>Gestion de la Música</h1>
+        <div class="section">
+          <button (click)="navigateTo('artistManagement')">
+            <img
+              src="assets/images/gestion-de-albumes.jpg"
+              class="image-artist"
+              [ngStyle]="{ width: '40%', height: 'auto' }"
+            />
+          </button>
+        </div>
+      }
     </div>
+  </div>
 </main>

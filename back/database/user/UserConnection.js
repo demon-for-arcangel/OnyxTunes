@@ -2,7 +2,7 @@ require("dotenv").config();
 const { Sequelize, Op } = require("sequelize");
 const models = require("../../models");
 const Conexion = require("../connection.js");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const conexion = new Conexion();
 
@@ -19,251 +19,262 @@ const conexion = new Conexion();
  * @function deleteUsers Eliminar usuarios
  * @function updatePassword Actualizar la contraseña de un usuario
  * @function createDefaultPlaylist Crear una playlist por defecto para un usuario
-*/
+ */
 class UserModel {
-    constructor() {}
-    async indexUser() {
-        try {
-            const users = await models.Usuario.findAll({
-                include: [
-                    {
-                        model: models.Rol,
-                        attributes: ['nombre']  
-                    }
-                ]
-            });
-            return users;
-        } catch (error) {
-            console.error('Error al mostrar la lista de usuarios: ', error);
-            throw new Error('Error al listar los usuarios');
-        }
+  constructor() {}
+  async indexUser() {
+    try {
+      const users = await models.Usuario.findAll({
+        include: [
+          {
+            model: models.Rol,
+            attributes: ["nombre"],
+          },
+        ],
+      });
+      return users;
+    } catch (error) {
+      console.error("Error al mostrar la lista de usuarios: ", error);
+      throw new Error("Error al listar los usuarios");
+    }
+  }
+
+  async indexArtist() {
+    try {
+      const artists = await models.Usuario.findAll({
+        include: [
+          {
+            model: models.Rol,
+            where: { nombre: "Artista" }, // Asegúrate de usar Op.eq para mayor claridad
+            attributes: ["nombre"],
+          },
+        ],
+      });
+
+      console.log(artists);
+
+      return artists;
+    } catch (error) {
+      console.error("Error al mostrar la lista de artistas:", error);
+      throw new Error("Error al listar los artistas");
+    }
+  }
+
+  async getUserById(id) {
+    try {
+      const user = await models.Usuario.findByPk(id, {
+        include: [
+          {
+            model: models.Rol,
+            attributes: ["nombre"],
+          },
+        ],
+      });
+
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+
+      return user;
+    } catch (error) {
+      console.error("Error al mostrar el usuario: ", error);
+      throw new Error("Error al buscar el usuario por su Id");
+    }
+  }
+
+  async getUserByEmail(email) {
+    try {
+      let user = await models.Usuario.findOne({
+        where: {
+          email: email,
+        },
+        include: [
+          {
+            model: models.Rol,
+            attributes: ["nombre"],
+            required: false,
+          },
+        ],
+      });
+
+      return user;
+    } catch (error) {
+      console.error("Error al buscar el usuario por el email:", error);
+      throw new Error("Error al buscar el usuario por el email");
+    }
+  }
+
+  async registerUser(userData) {
+    try {
+      if (!userData) {
+        throw new Error("Datos de usuario inválidos");
+      }
+
+      const newUser = await models.Usuario.create(userData);
+
+      if (!newUser) {
+        throw new Error("No se pudo crear el usuario");
+      }
+
+      return newUser;
+    } catch (error) {
+      console.error("Error al registrar un nuevo usuario:", error);
+      throw new Error("Error al registrar al usuario");
+    }
+  }
+
+  async createUser(nombre, email, hashedPassword, arrRolesName = []) {
+    try {
+      const newUser = await models.Usuario.create({
+        nombre,
+        email,
+        password: hashedPassword,
+        rol,
+      });
+
+      return newUser;
+    } catch (error) {
+      console.error("Error al crear el usuario:", error);
+      throw new Error("Error al crear usuario");
+    }
+  }
+
+  updateUser = async (userId, newData) => {
+    try {
+      const user = await models.Usuario.findByPk(userId);
+      if (!user) {
+        throw new Error("Usuario no encontrado.");
+      }
+
+      const updated = await user.update(newData);
+      return updated;
+    } catch (error) {
+      console.error("Error al actualizar el usuario: ", error);
+      throw new Error("Erro al actualizar");
+    }
+  };
+
+  async deleteUsers(userIds) {
+    //revisar, no elimina las playlist que son exclusivas del usuario
+    if (!userIds) {
+      throw new Error("No se proporcionaron IDs de usuario para eliminar.");
     }
 
-    async indexArtist() {
-        try {
-            const artists = await models.Usuario.findAll({
-                include: [
-                    {
-                        model: models.Rol,
-                        where: { nombre: 'Artista' }, 
-                    }
-                ]
-            });
-            
-            return artists;
-        } catch (error) {
-            console.error('Error al mostrar la lista de artistas:', error);
-            throw new Error('Error al listar los artistas');
-        }
-    }
+    await models.UsuarioPlaylist.destroy({
+      where: {
+        usuario_id: userIds,
+      },
+    });
 
-    async getUserById(id) {
-        try {
-            const user = await models.Usuario.findByPk(id, {
-                include: [
-                    {
-                        model: models.Rol,
-                        attributes: ['nombre']
-                    }
-                ]
-            });
-    
-            if (!user) {
-                throw new Error('Usuario no encontrado');
-            }
-    
-            return user;
-        } catch (error) {
-            console.error('Error al mostrar el usuario: ', error);
-            throw new Error('Error al buscar el usuario por su Id');
-        }
-    }
-    
-    async getUserByEmail(email) {
-        try {
-            let user = await models.Usuario.findOne({
-                where: {
-                    email: email 
-                },
-                include: [
-                    {
-                        model: models.Rol,
-                        attributes: ['nombre'],
-                        required: false 
-                    }
-                ]
-            });
-    
-            return user;
-        } catch (error) {
-            console.error('Error al buscar el usuario por el email:', error);
-            throw new Error('Error al buscar el usuario por el email');
-        }
-    }
-  
-    async registerUser(userData) {
-        try {
-            if (!userData) {
-                throw new Error('Datos de usuario inválidos');
-            }
-        
-            const newUser = await models.Usuario.create(userData);
-        
-            if (!newUser) {
-                throw new Error('No se pudo crear el usuario');
-            }
-        
-            return newUser;
-        } catch (error) {
-            console.error('Error al registrar un nuevo usuario:', error);
-            throw new Error('Error al registrar al usuario');
-        }
-    }
+    const playlistsToDelete = await models.UsuarioPlaylist.findAll({
+      where: {
+        usuario_id: userIds,
+      },
+      include: {
+        model: models.Playlist,
+        attributes: ["id", "nombre"],
+      },
+    });
 
-    async createUser(nombre, email, hashedPassword, arrRolesName = []) {
-        try {
-            const newUser = await models.Usuario.create({
-                nombre,
-                email,
-                password: hashedPassword,
-                rol
-            });
-    
-            return newUser;
-        } catch (error) {
-            console.error('Error al crear el usuario:', error);
-            throw new Error('Error al crear usuario');
-        }
-    }   
+    for (const playlist of playlistsToDelete) {
+      const playlistId = playlist.Playlist.id;
 
-    updateUser = async (userId, newData) => {
-        try {
-            const user = await models.Usuario.findByPk(userId);
-            if (!user) {
-                throw new Error('Usuario no encontrado.');
-            }
-      
-            const updated = await user.update(newData);
-            return updated;
-          }catch (error) {
-            console.error('Error al actualizar el usuario: ', error);
-            throw new Error('Erro al actualizar');
-        }
-    }
+      const otherUsersCount = await models.UsuarioPlaylist.count({
+        where: {
+          playlist_id: playlistId,
+          usuario_id: {
+            [Op.ne]: userIds,
+          },
+        },
+      });
 
-    async deleteUsers(userIds) {//revisar, no elimina las playlist que son exclusivas del usuario
-        if (!userIds) {
-            throw new Error("No se proporcionaron IDs de usuario para eliminar.");
-        }
+      console.log(
+        `Usuarios restantes en la playlist ${playlistId}: ${otherUsersCount}`,
+      );
 
-        await models.UsuarioPlaylist.destroy({
-            where: {
-                usuario_id: userIds
-            }
+      if (otherUsersCount === 0) {
+        await models.Playlist.destroy({
+          where: { id: playlistId },
         });
-
-        const playlistsToDelete = await models.UsuarioPlaylist.findAll({
-            where: {
-                usuario_id: userIds
-            },
-            include: {
-                model: models.Playlist,
-                attributes: ['id', 'nombre']
-            }
-        });
-        
-        for (const playlist of playlistsToDelete) {
-            const playlistId = playlist.Playlist.id;
-        
-            const otherUsersCount = await models.UsuarioPlaylist.count({
-                where: {
-                    playlist_id: playlistId,
-                    usuario_id: {
-                        [Op.ne]: userIds 
-                    }
-                }
-            });
-        
-            console.log(`Usuarios restantes en la playlist ${playlistId}: ${otherUsersCount}`);
-        
-            if (otherUsersCount === 0) {
-                await models.Playlist.destroy({
-                    where: { id: playlistId }
-                });
-                console.log(`Playlist con id ${playlistId} eliminada.`);
-            } else {
-                console.log(`La playlist con id ${playlistId} no se elimina porque está asociada a otros usuarios.`);
-            }
-        }
-    
-        const result = await models.Usuario.destroy({
-            where: { id: userIds }
-        });
-    
-        return result;
-    }   
-
-    async updatePassword(userId, currentPassword, newPassword, confirmPassword) {
-        try {
-            const user = await models.Usuario.findByPk(userId);
-            if (!user) {
-                throw new Error('Usuario no encontrado.');
-            }
-    
-            const isMatch = await bcrypt.compare(currentPassword, user.password);
-            if (!isMatch) {
-                throw new Error('La contraseña actual es incorrecta.');
-            }
-    
-            if (newPassword !== confirmPassword) {
-                throw new Error('La nueva contraseña y la confirmación no coinciden.');
-            }
-    
-            const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-    
-            user.password = hashedNewPassword;
-            await user.save();
-    
-            return { message: 'Contraseña actualizada con éxito.' };
-        } catch (error) {
-            console.error('Error al actualizar la contraseña: ', error);
-            throw new Error('Error al actualizar la contraseña');
-        }
+        console.log(`Playlist con id ${playlistId} eliminada.`);
+      } else {
+        console.log(
+          `La playlist con id ${playlistId} no se elimina porque está asociada a otros usuarios.`,
+        );
+      }
     }
 
-    async createDefaultPlaylist(userId) {
-        try {
-            const existingPlaylist = await models.Playlist.findOne({
-                where: {
-                    nombre: 'Favoritos'
-                },
-                attributes: { exclude: ['usuario_id'] },
-            });
-    
-            let playlistId;
-    
-            if (!existingPlaylist) {
-                const newPlaylist = await models.Playlist.create({
-                    nombre: 'Favoritos'
-                });
-                playlistId = newPlaylist.id;
-                console.log('Lista de reproducción "Favoritos" creada.');
-            } else {
-                playlistId = existingPlaylist.id;
-                console.log('La lista de reproducción "Favoritos" ya existe.');
-            }
-    
-            await models.UsuarioPlaylist.create({
-                usuario_id: userId,
-                playlist_id: playlistId
-            });
-    
-            console.log('Lista de reproducción "Favoritos" asociada al usuario.');
-        } catch (error) {
-            console.error('Error al crear o asociar la lista de reproducción "Favoritos":', error);
-            throw new Error('Error al crear o asociar la lista de reproducción');
-        }
+    const result = await models.Usuario.destroy({
+      where: { id: userIds },
+    });
+
+    return result;
+  }
+
+  async updatePassword(userId, currentPassword, newPassword, confirmPassword) {
+    try {
+      const user = await models.Usuario.findByPk(userId);
+      if (!user) {
+        throw new Error("Usuario no encontrado.");
+      }
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        throw new Error("La contraseña actual es incorrecta.");
+      }
+
+      if (newPassword !== confirmPassword) {
+        throw new Error("La nueva contraseña y la confirmación no coinciden.");
+      }
+
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+      user.password = hashedNewPassword;
+      await user.save();
+
+      return { message: "Contraseña actualizada con éxito." };
+    } catch (error) {
+      console.error("Error al actualizar la contraseña: ", error);
+      throw new Error("Error al actualizar la contraseña");
     }
+  }
+
+  async createDefaultPlaylist(userId) {
+    try {
+      const existingPlaylist = await models.Playlist.findOne({
+        where: {
+          nombre: "Favoritos",
+        },
+        attributes: { exclude: ["usuario_id"] },
+      });
+
+      let playlistId;
+
+      if (!existingPlaylist) {
+        const newPlaylist = await models.Playlist.create({
+          nombre: "Favoritos",
+        });
+        playlistId = newPlaylist.id;
+        console.log('Lista de reproducción "Favoritos" creada.');
+      } else {
+        playlistId = existingPlaylist.id;
+        console.log('La lista de reproducción "Favoritos" ya existe.');
+      }
+
+      await models.UsuarioPlaylist.create({
+        usuario_id: userId,
+        playlist_id: playlistId,
+      });
+
+      console.log('Lista de reproducción "Favoritos" asociada al usuario.');
+    } catch (error) {
+      console.error(
+        'Error al crear o asociar la lista de reproducción "Favoritos":',
+        error,
+      );
+      throw new Error("Error al crear o asociar la lista de reproducción");
+    }
+  }
 }
 
 module.exports = UserModel;
