@@ -1,41 +1,43 @@
-<div class="artist-container" *ngIf="artist">
-  <app-sidebar></app-sidebar>
-
-  <main>
-    <div class="artist-info">
-      <img [src]="artist.foto" alt="{{ artist.nombre }}" />
-      <h1>{{ artist.nombre }}</h1>
-    </div>
-    <button class="follow-button" (click)="toggleFollowArtist()">
-      {{ isFollowing ? "Siguiendo" : "Seguir" }}
-    </button>
-    <button class="play-all-button" (click)="playAllSongs()">
-      Reproducir todo
-    </button>
-    <div class="songs">
-      <h2>Populares</h2>
-      <ul>
-        @for (song of songs; track song) {
-          <li>
-            {{ song.titulo }}
-            <button (click)="playSong(song)">Reproducir</button>
-          </li>
-        }
-      </ul>
-      <button (click)="showAllSongs()">Mostrar más</button>
-    </div>
-
-    <div class="albums">
-      <h2>Álbumes</h2>
-      <ul>
-        @for (album of albums; track album) {
-          <li *ngFor="let album of albums">
-            {{ album.titulo }}
-          </li>
-        }
-      </ul>
-    </div>
-  </main>
-
-  <app-player></app-player>
-</div>
+@if (artist) {
+  <div class="artist-container">
+    <app-sidebar></app-sidebar>
+  
+    <main>
+      <div class="artist-info">
+        <img [src]="artist.foto" alt="{{ artist.nombre }}" />
+        <h1>{{ artist.nombre }}</h1>
+      </div>
+      <button class="follow-button" (click)="toggleFollowArtist()">
+        {{ isFollowing ? "Siguiendo" : "Seguir" }}
+      </button>
+      <button class="play-all-button" (click)="playAllSongs()">
+        Reproducir todo
+      </button>
+      <div class="songs">
+        <h2>Populares</h2>
+        <ul>
+          @for (song of songs; track song) {
+            <li>
+              {{ song.titulo }}
+              <button (click)="playSong(song)">Reproducir</button>
+            </li>
+          }
+        </ul>
+        <button (click)="showAllSongs()">Mostrar más</button>
+      </div>
+  
+      <div class="albums">
+        <h2>Álbumes</h2>
+        <ul>
+          @for (album of albums; track album) {
+            <li>
+              {{ album.titulo }}
+            </li>
+          }
+        </ul>
+      </div>
+    </main>
+  
+    <app-player></app-player>
+  </div>  
+}

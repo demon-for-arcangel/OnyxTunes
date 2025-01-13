@@ -1,1 +1,51 @@
-<p>genres works!</p>
+<header>
+    <div class="header-content">
+        <img src="assets/images/onyxtunes.jpeg" alt="OnyxTunes Logo" class="logo" />
+    </div>
+</header>
+
+<main>
+    <div class="genre-management">
+        <div class="header-container">
+            <button class="back-button" (click)="goBack()">
+                <i class="pi pi-arrow-left"></i> Volver
+            </button>
+            <h1>Gestión de Géneros</h1>
+        </div>
+        <div class="search-bar">
+            <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar género..." (keyup.enter)="searchGenres()"/>
+            <button (click)="newGenre()">
+                <i class="pi pi-plus">
+                    Añadir Género
+                </i>
+            </button>
+        </div>
+        
+        <table class="genre-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="body-table">
+                @for(genre of paginatedGenres; track genre) {
+                    <tr>
+                        <td>{{ genre.nombre }}</td>
+                        <td>
+                            <button (click)="editGenre(genre)">Editar</button>
+                            <button (click)="deleteGenre(genre.id)">Eliminar</button>
+                            <button (click)="showGenre(genre)">Ver Datos</button>
+                        </td>
+                    </tr>    
+                }
+            </tbody>
+        </table>
+    
+        <div class="pagination-controls">
+            <button (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+            <span>Página {{ currentPage }} de {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+        </div>
+    </div>
+</main>

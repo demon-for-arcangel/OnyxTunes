@@ -45,14 +45,15 @@
         </div>
       }
       @if (canAccess("genresManagement")) {
-        <h1>Gestion de la Música</h1>
         <div class="section">
-          <button (click)="navigateTo('artistManagement')">
-            <img
-              src="assets/images/gestion-de-albumes.jpg"
-              class="image-artist"
-              [ngStyle]="{ width: '40%', height: 'auto' }"
+          <button (click)="navigateTo('genreManagement')">
+            <img src="assets/images/gestion-de-generos.jpg"
+              class="image"
             />
+            <div class="overlay">
+              <h2>Gestión de Generos</h2>
+              <p>Administrar los distintos tipos musicales existentes.</p>
+            </div>
           </button>
         </div>
       }
