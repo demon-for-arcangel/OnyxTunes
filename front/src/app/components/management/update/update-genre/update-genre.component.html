@@ -1,1 +1,17 @@
-<p>update-genre works!</p>
+<form (ngSubmit)="onSubmit()" class="form-container">
+    <div class="form-field">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" [(ngModel)]="nombre" name="nombre" placeholder="Ingrese el nombre del género">
+
+        @if (errors.nombre) {
+            <div class="error-message">
+                {{ errors.nombre }}
+            </div>
+        }
+    </div>
+
+    <div class="button-container">
+        <button type="button" class="cancel-button" (click)="onCancel()">Cancelar</button>
+        <button type="submit" class="save-button">Guardar</button>
+    </div>
+</form>
