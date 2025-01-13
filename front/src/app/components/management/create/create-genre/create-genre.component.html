@@ -1,1 +1,17 @@
-<p>create-genre works!</p>
+<form (ngSubmit)="onSubmit()" class="form-container">
+    <div class="form-field">
+    <label for="nombre">Nombre</label>
+    <input id="nombre" [(ngModel)]="nombre" name="nombre" placeholder="Ingrese el nombre del género">
+
+    <div *ngIf="errors.nombre" class="error-message">
+        {{ errors.nombre }}
+    </div>
+    </div>
+
+    <div class="button-container">
+    <button pButton type="button" label="Cancelar" class="p-button-secondary" (click)="onCancel()">
+    </button>
+    <button pButton type="submit" label="Guardar">
+    </button>
+    </div>
+</form>

@@ -21,8 +21,8 @@ export class GeneroService {
     return this.http.get<Genre>(`${this.url}${this.generosUrl}/${generoId}`);
   }
 
-  createGenero(genero: Genre): Observable<Genre> {
-    return this.http.post<Genre>(`${this.url}${this.generosUrl}`, genero);
+  createGenero(genero: { nombre: string }): Observable<Genre> {
+    return this.http.post<Genre>(`${this.url}${this.generosUrl}/new`, genero);
   }
 
   updateGenero(generoId: number, updatedData: Genre): Observable<Genre> {

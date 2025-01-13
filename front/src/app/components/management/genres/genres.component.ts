@@ -5,7 +5,6 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Router } from '@angular/router';
 import { GeneroService } from '../../../services/genero.service';
 import { CreateGenreComponent } from '../create/create-genre/create-genre.component';
-import { ShowGenreComponent } from '../show/show-genre/show-genre.component';
 import { UpdateGenreComponent } from '../update/update-genre/update-genre.component';
 import { FormsModule } from '@angular/forms';
 
@@ -111,30 +110,6 @@ export class GenresComponent {
     this.currentPage = 1; 
     this.totalPages = Math.ceil(this.genres.length / this.maxItems);
     this.updatePaginatedGenres();
-  }
-
-  showGenre(genre: Genre): void {
-    this.ref = this.dialogService.open(ShowGenreComponent, {
-      modal: true,
-      width: '70vw',
-      styleClass: 'custom-modal',
-      contentStyle: {
-        'background-color': '#1e1e1e',
-        'color': 'white',
-        'border-radius': '8px',
-        'padding': '20px'
-      },
-      baseZIndex: 10000,
-      style: {
-        'background-color': '#1e1e1e'
-      },
-      showHeader: true,
-      closable: true,
-      closeOnEscape: true,
-      data: {
-        genreId: genre.id
-      }
-    });
   }
 
   editGenre(genre: Genre): void {
