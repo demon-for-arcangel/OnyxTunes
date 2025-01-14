@@ -61,18 +61,33 @@ class GeneroModel {
 
     async deleteGeneros(generosIds) {
         try {
+            const cancionesConGenero = await models.Cancion.findAll({
+                include: [{
+                    model: models.Genero,
+                    as: 'generos',
+                    where: {
+                        id: {
+                            [Op.in]: generosIds
+                        }
+                    }
+                }]
+            });
+
+            if (cancionesConGenero.length > 0) {
+                return { success: false, message: 'No se puede eliminar el género porque está asociado a una o más canciones.' };
+            }
+
             const result = await models.Genero.destroy({
                 where: {
                     id: {
-                        [Op.in]: generosIds, 
-                    },
-                },
+                        [Op.in]: generosIds
+                    }
+                }
             });
-
-            return result;
+            return { success: true, result };
         } catch (error) {
-            console.error("Error al eliminar los géneros:", error);
-            throw new Error("Error al eliminar los géneros.");
+            console.error('Error al eliminar los géneros: ', error);
+            throw error;
         }
     }
 }

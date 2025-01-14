@@ -68,21 +68,15 @@ const updateGenero = async (req, res) => {
 };
 
 const deleteGeneros = async (req, res) => {
-    const { generosIds } = req.body;
-
     try {
-        if (!Array.isArray(generosIds) || generosIds.length === 0) {
-            return res.status(400).json({ msg: "No se proporcionaron IDs de géneros para eliminar." });
-        }
-
-        const result = await conx.deleteGeneros(generosIds);
-
-        res.status(200).json({ 
-            msg: `${result} géneros eliminados exitosamente.` 
-        });
+      const result = await conx.deleteGeneros(req.body.generosIds);
+      if (!result.success) {
+        return res.status(400).json({ msg: result.message });
+      }
+      res.status(200).json({ msg: `${result.result} géneros eliminados exitosamente.` });
     } catch (error) {
-        console.error("Error al eliminar los géneros:", error);
-        res.status(500).json({ msg: "Error al eliminar los géneros." });
+      console.error("Error al eliminar los géneros:", error);
+      res.status(500).json({ msg: "Error al eliminar los géneros." });
     }
 };
 
