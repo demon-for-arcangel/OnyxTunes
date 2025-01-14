@@ -24,7 +24,12 @@ class GeneroModel {
 
     async getGeneroById(id) {
         try {
-            const genero = await models.Genero.findByPk(id);
+            const genero = await models.Genero.findByPk(id, {
+                include: [{
+                    model: models.Cancion,
+                    as: 'canciones'
+                }]
+            });
             if (!genero) {
                 throw new Error('Género no encontrado');
             }

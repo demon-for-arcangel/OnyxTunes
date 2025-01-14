@@ -136,35 +136,47 @@ export class GenresComponent {
   }
 
   deleteGenre(genreId: number): void {
-    this.ref = this.dialogService.open(DeleteConfirmationComponent, {
-      header: 'Confirmar Eliminación',
-      width: '400px',
-      modal: true,
-      styleClass: 'custom-modal',
-      contentStyle: {
-        'background-color': '#1e1e1e',
-        'color': 'white',
-        'padding': '20px'
-      },
-      data: {
-        genreId: genreId
-      }
-    });
+    // Validar si el género tiene canciones asociadas antes de mostrar el diálogo de confirmación
+    this.genreService.getGeneroById(genreId).subscribe({
+      next: (genre) => {
+        if (genre.canciones && genre.canciones.length > 0) {
+          alert('No se puede eliminar el género porque está asociado a una o más canciones.');
+        } else {
+          this.ref = this.dialogService.open(DeleteConfirmationComponent, {
+            header: 'Confirmar Eliminación',
+            width: '400px',
+            modal: true,
+            styleClass: 'custom-modal',
+            contentStyle: {
+              'background-color': '#1e1e1e',
+              'color': 'white',
+              'padding': '20px'
+            },
+            data: {
+              genreId: genreId
+            }
+          });
   
-    this.ref.onClose.subscribe((confirmed: boolean) => {
-      if (confirmed) {
-        this.genreService.deleteGeneros([genreId]).subscribe({
-          next: () => {
-            this.genres = this.genres.filter(genre => genre.id !== genreId); 
-            this.updatePaginatedGenres();
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          }, 
-          error: (error) => {
-            console.error('Error al eliminar género:', error);
-          }
-        });
+          this.ref.onClose.subscribe((confirmed: boolean) => {
+            if (confirmed) {
+              this.genreService.deleteGeneros([genreId]).subscribe({
+                next: () => {
+                  this.genres = this.genres.filter(genre => genre.id !== genreId); 
+                  this.updatePaginatedGenres();
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 1000);
+                }, 
+                error: (error) => {
+                  console.error('Error al eliminar género:', error);
+                }
+              });
+            }
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error al validar género:', error);
       }
     });
   }

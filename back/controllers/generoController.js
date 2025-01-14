@@ -24,18 +24,18 @@ const getGeneros = async (req, res) => {
 
 const getGeneroById = async (req, res) => {
     const generoId = req.params.id;
-
+  
     try {
-        const genero = await conx.getGeneroById(generoId);
-
-        if (!genero) {
-            return res.status(404).json({ msg: "Género no encontrado" });
-        }
-
-        res.status(200).json(genero);
+      const genero = await conx.getGeneroById(generoId);
+  
+      if (!genero) {
+        return res.status(404).json({ msg: "Género no encontrado" });
+      }
+  
+      res.status(200).json(genero);
     } catch (error) {
-        console.error('Error al obtener el género:', error);
-        res.status(500).json({ msg: "Error al obtener el género" });
+      console.error('Error al obtener el género:', error);
+      res.status(500).json({ msg: "Error al obtener el género" });
     }
 };
 
