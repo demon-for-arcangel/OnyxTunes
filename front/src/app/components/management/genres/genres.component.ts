@@ -7,6 +7,7 @@ import { GeneroService } from '../../../services/genero.service';
 import { CreateGenreComponent } from '../create/create-genre/create-genre.component';
 import { UpdateGenreComponent } from '../update/update-genre/update-genre.component';
 import { FormsModule } from '@angular/forms';
+import { ErrorDialogComponent } from '../../utils/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-genres',
@@ -136,11 +137,23 @@ export class GenresComponent {
   }
 
   deleteGenre(genreId: number): void {
-    // Validar si el género tiene canciones asociadas antes de mostrar el diálogo de confirmación
     this.genreService.getGeneroById(genreId).subscribe({
       next: (genre) => {
         if (genre.canciones && genre.canciones.length > 0) {
-          alert('No se puede eliminar el género porque está asociado a una o más canciones.');
+          this.dialogService.open(ErrorDialogComponent, {
+            header: 'Error',
+            width: '400px',
+            modal: true,
+            styleClass: 'custom-modal',
+            contentStyle: {
+              'background-color': '#1e1e1e',
+              'color': 'white',
+              'padding': '20px'
+            },
+            data: {
+              message: 'No se puede eliminar el género porque está asociado a una o más canciones.'
+            }
+          });
         } else {
           this.ref = this.dialogService.open(DeleteConfirmationComponent, {
             header: 'Confirmar Eliminación',
