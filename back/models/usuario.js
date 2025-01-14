@@ -50,6 +50,16 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "receptor",
         as: "mensajesRecibidos",
       });
+
+      this.hasMany(models.Preferences, {
+        foreignKey: "usuario_id",
+      });
+
+      this.belongsToMany(models.Preferences, {
+        through: models.UsuarioPreferences,
+        foreignKey: "usuario_id",
+        otherKey: "preference_id"
+      });
     }
   }
   Usuario.init(
