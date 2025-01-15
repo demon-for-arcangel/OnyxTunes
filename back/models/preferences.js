@@ -14,6 +14,14 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.Usuario, { 
         foreignKey: 'usuario_id' 
       });
+
+      this.belongsTo(models.Usuario, {
+        foreignKey: 'entidad_id',
+      });
+
+      this.belongsTo(models.Genero, {
+        foreignKey: 'entidad_id',
+      });
     }
   }
   Preferences.init({
