@@ -46,7 +46,11 @@ const createPreference = async (req, res) => {
     res.status(201).json({ msg: "Preferencia creada con éxito", preference: newPreference });
   } catch (error) {
     console.error('Error al crear la preferencia:', error);
-    res.status(500).json({ msg: error.message });
+    if (error.message === 'El usuario ya tiene una preferencia de este tipo') {
+      res.status(400).json({ msg: error.message });
+    } else {
+      res.status(500).json({ msg: "Error al crear la preferencia" });
+    }
   }
 };
 

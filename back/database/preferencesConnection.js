@@ -37,7 +37,6 @@ class PreferencesModel {
 
     async createPreference(preferenceData) {
         try {
-            // Verificar si el usuario ya tiene una preferencia del mismo tipo
             const existingPreference = await models.Preferences.findOne({
                 where: {
                     usuario_id: preferenceData.usuario_id,
