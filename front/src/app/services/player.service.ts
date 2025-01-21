@@ -182,7 +182,6 @@ export class PlayerService {
       }
     }
   }
-  
 
   playFromIndex(index: number): void {
     this.currentIndex = index; 
