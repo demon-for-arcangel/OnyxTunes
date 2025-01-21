@@ -94,7 +94,7 @@ export class PlayerService {
   
     console.log('Ruta de la canción:', song.asset.path);  
     this.currentSong = song;
-    this.audioPlayer.src = `${environment.assetsUrl}${song.asset.path}`;
+    this.audioPlayer.src = `${song.asset.path}`;
     console.log('Ruta completa de la canción:', this.audioPlayer.src);  
     this.audioPlayer.load();
     this.audioPlayer.play().then(() => {

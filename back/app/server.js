@@ -29,10 +29,11 @@ class Server {
 
     this.app.use(
       fileUpload({
-        useTempFiles: true,
-        tempFileDir: "/tmp/",
-        createParentPath: true,
-      }),
+        useTempFiles: true, 
+        tempFileDir: '/tmp/', 
+        limits: { fileSize: 50 * 1024 * 1024 }, 
+        debug: true, 
+      })
     );
 
     this.server = require("http").createServer(this.app);
