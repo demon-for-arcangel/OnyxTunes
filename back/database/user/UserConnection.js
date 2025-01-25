@@ -111,11 +111,6 @@ class UserModel {
         throw new Error("Datos de usuario inválidos");
       }
 
-      if (filePath) {
-        const uploadResult = await uploadImage(filePath, "OnyxTunes/Profiles");
-        userData.foto_perfil = uploadResult.secure_url;
-      }
-
       const newUser = await models.Usuario.create(userData);
 
       if (!newUser) {

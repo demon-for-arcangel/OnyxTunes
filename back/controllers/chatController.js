@@ -1,6 +1,5 @@
 const { Op } = require("sequelize");
 const models = require("../models");
-const { uploadFiles } = require("../helpers/cloudinary"); // Ajusta según tu configuración para subir archivos
 
 class ChatController {
   // Obtener todos los mensajes entre dos usuarios

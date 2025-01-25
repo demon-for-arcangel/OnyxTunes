@@ -169,10 +169,3 @@ module.exports = {
     index, indexArtist, getUserById, getUserByEmail, sendMail, updateUser, deleteUsers, 
     getUserByToken, updatePassword
 }
-
-
-
-
-
-
-
