@@ -77,7 +77,8 @@ const sendMail = async (mailOptions) => {} //por hacer
 
 const updateUser = async (req, res) => {
     const userId = req.params.id; 
-    const { nombre, email, nickname, fecha_nacimiento, direccion, telefono, genero, activo, password, rol } = req.body; 
+    const { nombre, email, nickname, fecha_nacimiento, foto_perfil, direccion, telefono, genero, activo, password, rol } = req.body; 
+    const files = req.files; 
 
     try {
         const existingUser = await conx.getUserById(userId);
@@ -95,7 +96,7 @@ const updateUser = async (req, res) => {
             email: email || existingUser.email, 
             nickname: nickname || existingUser.nickname,
             fecha_nacimiento: fecha_nacimiento || existingUser.fecha_nacimiento,
-            //añadir foto de perfil
+            foto_perfil: foto_perfil,
             direccion: direccion || existingUser.direccion,
             telefono: telefono || existingUser.telefono,
             genero: genero || existingUser.genero,
@@ -104,7 +105,7 @@ const updateUser = async (req, res) => {
             rol: rol || existingUser.rol 
         };
 
-        const updatedUser = await conx.updateUser(userId, updatedData);
+        const updatedUser = await conx.updateUser(userId, updatedData, files);
 
         res.status(200).json({ msg: "Usuario actualizado exitosamente", user: updatedUser });
     } catch (error) {
@@ -112,6 +113,7 @@ const updateUser = async (req, res) => {
         res.status(500).json({ msg: "Error al actualizar usuario" });
     }
 };
+
 
 const deleteUsers = async (req, res) => {
     const userIds = req.body.userIds;
