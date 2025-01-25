@@ -4,7 +4,7 @@ const models = require("../models/index.js");
 const Conexion = require("./connection.js");
 /* const { subirArchivo } = require("../helpers/subir-archivo.js");
  */
-const { uploadFileToS3 } = require("../helpers/upload-file-aws.js");
+const { uploadAudioToS3 } = require("../helpers/upload-file-aws.js");
 
 const conexion = new Conexion();
 
@@ -188,7 +188,7 @@ class SongModel {
                 const bucketName = process.env.AWS_BUCKET;
                 const folder = "canciones";
                 const filename = `${folder}/${Date.now()}_${file.name}`;
-                const fileUrl = await uploadFileToS3(filename, bucketName, file.data);
+                const fileUrl = await uploadAudioToS3(filename, bucketName, file.data);
     
                 const newAsset = await models.Asset.create({
                     path: fileUrl,

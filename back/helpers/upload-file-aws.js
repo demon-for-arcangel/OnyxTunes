@@ -1,7 +1,10 @@
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 
-async function uploadFileToS3(key, bucket, fileData) {
+/**
+ * Funcion para subir un archivo de audio a S3
+ */
+async function uploadAudioToS3(key, bucket, fileData) {
     const params = {
         Bucket: bucket,
         Key: key,
@@ -19,4 +22,28 @@ async function uploadFileToS3(key, bucket, fileData) {
     }
 }
 
-module.exports = { uploadFileToS3 };
+/**
+ * Subir una imagen a S3
+ */
+async function uploadImageToS3 (filename, bucketName, fileData) {
+    const s3 = new AWS.S3();
+    const params = {
+        Bucket: bucketName,
+        Key: filename,
+        Body: fileData,
+        ContentType: "image/jpeg",
+    };
+
+    return new Promise((resolve, reject) => {
+        s3.upload(params, (err, data) => {
+            if (err) {
+                console.error("Error al subir la imagen a S3:", err);
+                reject(new Error("Error al subir la imagen."));
+            } else {
+                resolve(data.Location);
+            }
+        });
+    });
+};
+
+module.exports = { uploadAudioToS3, uploadImageToS3 };
