@@ -147,24 +147,20 @@ class UserModel {
 
   async updateUser(userId, updatedData, files) {
     try {
-        // Buscar al usuario por ID
         const user = await models.Usuario.findByPk(userId);
         if (!user) {
             throw new Error("Usuario no encontrado.");
         }
 
-        let assetPath = user.foto_perfil; // Ruta existente de la imagen de perfil
+        let assetPath = user.foto_perfil; 
 
-        // Si se proporciona un archivo para la foto de perfil
         if (files && files.foto_perfil) {
             const file = files.foto_perfil;
 
-            // Validar que sea un archivo de imagen
             if (!file.mimetype.startsWith("image/")) {
                 throw new Error("Archivo inválido: debe ser una imagen válida.");
             }
 
-            // Leer el contenido del archivo si es necesario
             if (!file.data || file.data.length === 0) {
                 const tempFilePath = file.tempFilePath;
                 if (!tempFilePath) {
@@ -174,14 +170,12 @@ class UserModel {
                 file.data = fs.readFileSync(tempFilePath);
             }
 
-            // Subir la nueva imagen a S3
             const bucketName = process.env.AWS_BUCKET;
             const folder = "fotos_perfil";
             const filename = `${folder}/${Date.now()}_${file.name}`;
             assetPath = await uploadImageToS3(filename, bucketName, file.data);
         }
 
-        // Actualizar los datos del usuario en la base de datos
         const updatedUser = await user.update({
             ...updatedData,
             foto_perfil: assetPath,

@@ -78,7 +78,7 @@ const sendMail = async (mailOptions) => {} //por hacer
 const updateUser = async (req, res) => {
     const userId = req.params.id; 
     const { nombre, email, nickname, fecha_nacimiento, foto_perfil, direccion, telefono, genero, activo, password, rol } = req.body; 
-    const files = req.files; // Asegúrate de que req.files esté definido
+    const files = req.files; 
 
     try {
         const existingUser = await conx.getUserById(userId);
