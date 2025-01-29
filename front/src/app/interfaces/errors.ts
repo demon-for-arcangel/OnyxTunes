@@ -8,4 +8,5 @@ export interface Errors {
     telefono?: string;
     genero?: string;
     login?: string;
+    foto_perfil?: string;
 }
