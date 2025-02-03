@@ -77,18 +77,13 @@ const sendMail = async (mailOptions) => {} //por hacer
 
 const updateUser = async (req, res) => {
     const userId = req.params.id; 
-    const { nombre, email, nickname, fecha_nacimiento, foto_perfil, direccion, telefono, genero, activo, password, rol } = req.body; 
+    const { nombre, email, nickname, fecha_nacimiento, foto_perfil, direccion, telefono, genero, activo, rol } = req.body; 
     const files = req.files; 
 
     try {
         const existingUser = await conx.getUserById(userId);
         if (!existingUser) {
             return res.status(404).json({ msg: "Usuario no encontrado" });
-        }
-
-        let hashedPassword;
-        if (password) {
-            hashedPassword = await bcrypt.hash(password, 10);
         }
 
         const updatedData = {
@@ -101,7 +96,6 @@ const updateUser = async (req, res) => {
             telefono: telefono || existingUser.telefono,
             genero: genero || existingUser.genero,
             activo: activo || existingUser.activo,
-            password: hashedPassword || existingUser.password,
             rol: rol || existingUser.rol 
         };
 
