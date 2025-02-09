@@ -108,9 +108,6 @@ class PlaylistConnection {
 
     async updatePlaylist(playlistId, newData, files) {
         try {
-          console.log("Iniciando updatePlaylist, playlistId:", playlistId);
-          console.log("Files recibidos:", files);
-    
           const playlist = await models.Playlist.findByPk(playlistId, {
             attributes: { exclude: ['usuario_id'] },
             include: [{ model: models.Like }]
@@ -123,7 +120,6 @@ class PlaylistConnection {
     
           if (files && files.imagen) {
             const file = files.imagen;
-            console.log("Objeto file recibido:", file);
     
             if (!file.data || file.data.length === 0) {
               const tempFilePath = file.tempFilePath;
@@ -135,18 +131,15 @@ class PlaylistConnection {
             }
     
             const bucketName = process.env.AWS_BUCKET;
-            console.log("Bucket name:", bucketName);
     
             const folder = "imagenes_playlist";
             const filename = `${folder}/${Date.now()}_${file.name}`;
     
             const assetPath = await uploadImageToS3(filename, bucketName, file.data);
-            console.log("URL retornada de S3:", assetPath);
     
             const assetRecord = await models.Asset.create({
               path: assetPath,
             });
-            console.log("Registro creado en Asset:", assetRecord);
     
             assetId = assetRecord.id;
           }
@@ -155,14 +148,12 @@ class PlaylistConnection {
             ...newData,
             assetId: assetId
           });
-          console.log("Playlist actualizada:", updatedPlaylist);
     
           return {
             message: "Playlist actualizada con éxito.",
             playlist: updatedPlaylist,
           };
         } catch (error) {
-          console.error("Error al actualizar la playlist:", error);
           throw new Error("Error al actualizar la playlist");
         }
       }
