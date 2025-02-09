@@ -1,5 +1,6 @@
 const { Op, Sequelize } = require("sequelize");
 const models = require("../models");
+const { uploadImageToS3 } = require("../helpers/upload-file-aws.js");
 
 /**
  * Conexion de Playlist
@@ -105,22 +106,66 @@ class PlaylistConnection {
         }
     }
 
-    async updatePlaylist(playlistId, newData) {
+    async updatePlaylist(playlistId, newData, files) {
         try {
-            const playlist = await models.Playlist.findByPk(playlistId, {
-                attributes: { exclude: ['usuario_id'] },
-                include: [{ model: models.Like }] 
-            });
-            if (!playlist) {
-                throw new Error("Playlist no encontrada");
+          console.log("Iniciando updatePlaylist, playlistId:", playlistId);
+          console.log("Files recibidos:", files);
+    
+          const playlist = await models.Playlist.findByPk(playlistId, {
+            attributes: { exclude: ['usuario_id'] },
+            include: [{ model: models.Like }]
+          });
+          if (!playlist) {
+            throw new Error("Playlist no encontrada");
+          }
+    
+          let assetId = playlist.assetId;
+    
+          if (files && files.imagen) {
+            const file = files.imagen;
+            console.log("Objeto file recibido:", file);
+    
+            if (!file.data || file.data.length === 0) {
+              const tempFilePath = file.tempFilePath;
+              if (!tempFilePath) {
+                throw new Error("Archivo inválido: No se pudo leer el contenido del archivo.");
+              }
+              const fs = require("fs");
+              file.data = fs.readFileSync(tempFilePath);
             }
-            const updatedPlaylist = await playlist.update(newData);
-            return updatedPlaylist;
+    
+            const bucketName = process.env.AWS_BUCKET;
+            console.log("Bucket name:", bucketName);
+    
+            const folder = "imagenes_playlist";
+            const filename = `${folder}/${Date.now()}_${file.name}`;
+    
+            const assetPath = await uploadImageToS3(filename, bucketName, file.data);
+            console.log("URL retornada de S3:", assetPath);
+    
+            const assetRecord = await models.Asset.create({
+              path: assetPath,
+            });
+            console.log("Registro creado en Asset:", assetRecord);
+    
+            assetId = assetRecord.id;
+          }
+    
+          const updatedPlaylist = await playlist.update({
+            ...newData,
+            assetId: assetId
+          });
+          console.log("Playlist actualizada:", updatedPlaylist);
+    
+          return {
+            message: "Playlist actualizada con éxito.",
+            playlist: updatedPlaylist,
+          };
         } catch (error) {
-            console.error("Error al actualizar la playlist:", error);
-            throw new Error("Error al actualizar la playlist");
+          console.error("Error al actualizar la playlist:", error);
+          throw new Error("Error al actualizar la playlist");
         }
-    }
+      }
 
     async deletePlaylists(playlistIds) {
         try {

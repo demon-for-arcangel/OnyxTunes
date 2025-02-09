@@ -19,7 +19,12 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Cancion, {
         foreignKey: 'assetId',
         as: 'canciones',
-      })
+      });
+
+      this.hasOne(models.Playlist, { 
+        foreignKey: 'assetId', 
+        as: 'playlist' 
+      });
     }
   }
   Asset.init({
