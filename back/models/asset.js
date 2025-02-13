@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Asset.init({
-    path: DataTypes.STRING,
+    path: DataTypes.TEXT,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
   }, {

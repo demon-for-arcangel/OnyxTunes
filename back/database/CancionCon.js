@@ -2,9 +2,13 @@ require("dotenv").config();
 const { Sequelize, Op } = require("sequelize");
 const models = require("../models/index.js");
 const Conexion = require("./connection.js");
-/* const { subirArchivo } = require("../helpers/subir-archivo.js");
- */
-const { uploadAudioToS3 } = require("../helpers/upload-file-aws.js");
+// Usar para subir archivos en
+//const { subirArchivo } = require("../helpers/subir-archivo.js");
+
+// Usar para subir archivos a AWS S3
+// const { uploadAudioToS3 } = require("../helpers/upload-file-aws.js");
+const { uploadAudioToS3 } = require("../helpers/upload-file-minio.js")
+const crypto = require('crypto');
 
 const conexion = new Conexion();
 
@@ -162,6 +166,8 @@ class SongModel {
         }
     }
 
+    // Para cuando se usa AWS S3
+/*  
     async createSong(data, files) {
         try {
             const { titulo, duracion, likes, reproducciones, album_id, artista_id, generos = [] } = data;
@@ -224,8 +230,77 @@ class SongModel {
             throw new Error("Error al crear la canción");
         }
     }
+     */
+
+    // Para cuando se usa MinIO+
+    async createSong(data, files) {
+        try {
+            const { titulo, duracion, likes, reproducciones, album_id, artista_id, generos = [] } = data;
     
-       
+            let assetId = null;
+    
+            if (files && files.archivo) {
+                const file = files.archivo;
+    
+                if (!file.mimetype.startsWith("audio/")) {
+                    throw new Error("Archivo inválido: debe ser un archivo de audio válido.");
+                }
+    
+                if (!file.data || file.data.length === 0) {
+                    const tempFilePath = file.tempFilePath;
+                    if (!tempFilePath) {
+                        throw new Error("Archivo inválido: No se pudo leer el contenido del archivo.");
+                    }
+    
+                    const fs = require('fs');
+                    file.data = fs.readFileSync(tempFilePath);
+                }
+    
+                const bucketName = process.env.AWS_BUCKET;
+                const folder = "canciones";
+    
+                const originalFileName = file.name;
+    
+                const filename = `${folder}/${originalFileName}`;
+    
+                const fileUrl = await uploadAudioToS3(filename, bucketName, file.data);
+    
+                const newAsset = await models.Asset.create({
+                    path: fileUrl,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                });
+    
+                assetId = newAsset.id;
+            }
+    
+            const newSong = await models.Cancion.create({
+                titulo,
+                duracion,
+                likes: likes || 0,
+                reproducciones: reproducciones || 0,
+                album_id: album_id || null,
+                artista_id,
+                assetId,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            });
+    
+            if (Array.isArray(generos) && generos.length > 0) {
+                const generosExistentes = await models.Genero.findAll({
+                    where: { id: generos },
+                });
+                await newSong.setGeneros(generosExistentes);
+            }
+    
+            return { message: "Canción creada con éxito", cancion: newSong };
+        } catch (error) {
+            console.error("Error al crear la canción:", error.message);
+            throw new Error("Error al crear la canción");
+        }
+    }
+    
+    
 
     async updateSong(songId, updatedData) {
         try {
@@ -336,3 +411,9 @@ class SongModel {
 }
 
 module.exports = SongModel;
+
+
+function generateShortFileName(fileName) {
+    const hash = crypto.createHash('md5').update(fileName + Date.now()).digest('hex');
+    return hash.slice(0, 10); // Tomamos solo los primeros 10 caracteres del hash
+}
