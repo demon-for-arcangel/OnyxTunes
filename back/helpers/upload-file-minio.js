@@ -39,7 +39,7 @@ async function uploadImageToS3(filename, bucketName, file) {
   return new Promise((resolve, reject) => {
       const fileName = `${Date.now()}_${file.name}`;
 
-      minioClient.putObject(bucketName, fileName, file.data, file.size, { 'Content-Type': file.mimetype }, (err, etag) => {
+      minioClient.putObject(bucketName, filename, Buffer.from(file), (err, etag) => {
           if (err) {
               console.error("Error al subir la imagen a MinIO:", err);
               return reject(new Error("Error al subir la imagen."));
@@ -50,7 +50,7 @@ async function uploadImageToS3(filename, bucketName, file) {
                   console.error("Error al generar la URL presignada para la imagen:", err);
                   return reject(new Error("Error al generar URL"));
               }
-              resolve({ url, fileName });
+              resolve(url);
           });
       });
   });

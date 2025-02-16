@@ -168,15 +168,15 @@ class UserModel {
 
             const bucketName = process.env.MINIO_BUCKET;
             const folder = "fotos_perfil";
+            
             const filename = `${folder}/${Date.now()}_${file.name}`;
 
-            assetPath = await uploadImageToS3(filename, bucketName, file);  
-            console.log("Foto de perfil subida a MinIO:", assetPath);
+            assetPath = await uploadImageToS3(filename, bucketName, file.data);  
         }
 
         const updatedUser = await user.update({
           ...updatedData,
-          foto_perfil: assetPath.url
+          foto_perfil: assetPath
         });
 
         return {
