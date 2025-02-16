@@ -32,7 +32,7 @@ class Server {
         useTempFiles: true, 
         tempFileDir: '/tmp/', 
         limits: { fileSize: 50 * 1024 * 1024 }, 
-        debug: true, 
+        debug: false, 
       })
     );
 

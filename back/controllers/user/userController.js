@@ -100,7 +100,6 @@ const updateUser = async (req, res) => {
         };
 
         const updatedUser = await conx.updateUser(userId, updatedData, files);
-
         res.status(200).json({ msg: "Usuario actualizado exitosamente", user: updatedUser });
     } catch (error) {
         console.error("Error al actualizar usuario", error);

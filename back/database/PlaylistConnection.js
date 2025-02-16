@@ -1,6 +1,7 @@
 const { Op, Sequelize } = require("sequelize");
 const models = require("../models");
-const { uploadImageToS3 } = require("../helpers/upload-file-aws.js");
+//const { uploadImageToS3 } = require("../helpers/upload-file-aws.js");
+const { uploadImageToS3 } = require("../helpers/upload-file-minio.js")
 
 /**
  * Conexion de Playlist

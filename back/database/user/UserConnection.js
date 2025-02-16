@@ -3,7 +3,10 @@ const { Sequelize, Op } = require("sequelize");
 const models = require("../../models");
 const Conexion = require("../connection.js");
 const bcrypt = require("bcrypt");
-const { uploadImageToS3 } = require("../../helpers/upload-file-aws.js");
+const fs = require('fs');
+
+//const { uploadImageToS3 } = require("../../helpers/upload-file-aws.js");
+const { uploadImageToS3 } = require("../../helpers/upload-file-minio.js");
 
 const conexion = new Conexion();
 
@@ -149,31 +152,31 @@ class UserModel {
 
         let assetPath = user.foto_perfil; 
 
-        if (files && files.foto_perfil) {
-            const file = files.foto_perfil;
-
+        if (files && files.imageni) {
+            const file = files.imageni;
             if (!file.mimetype.startsWith("image/")) {
-                throw new Error("Archivo inválido: debe ser una imagen válida.");
+                throw new Error("Archivo inválido: debe ser una imagen.");
             }
 
             if (!file.data || file.data.length === 0) {
                 const tempFilePath = file.tempFilePath;
                 if (!tempFilePath) {
-                    throw new Error("Archivo inválido: No se pudo leer el contenido del archivo.");
+                    throw new Error("Archivo inválido: No se pudo leer el contenido.");
                 }
-                const fs = require("fs");
-                file.data = fs.readFileSync(tempFilePath);
+                file.data = fs.readFileSync(tempFilePath); 
             }
 
-            const bucketName = process.env.AWS_BUCKET;
+            const bucketName = process.env.MINIO_BUCKET;
             const folder = "fotos_perfil";
             const filename = `${folder}/${Date.now()}_${file.name}`;
-            assetPath = await uploadImageToS3(filename, bucketName, file.data);
+
+            assetPath = await uploadImageToS3(filename, bucketName, file);  
+            console.log("Foto de perfil subida a MinIO:", assetPath);
         }
 
         const updatedUser = await user.update({
-            ...updatedData,
-            foto_perfil: assetPath,
+          ...updatedData,
+          foto_perfil: assetPath.url
         });
 
         return {

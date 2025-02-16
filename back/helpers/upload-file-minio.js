@@ -35,22 +35,24 @@ async function uploadAudioToS3(key, bucket, fileData) {
 /**
  * Función para subir una imagen a MinIO.
 */
-async function uploadImageToS3(filename, bucketName, fileData) {
+async function uploadImageToS3(filename, bucketName, file) {
   return new Promise((resolve, reject) => {
-    minioClient.putObject(bucketName, filename, fileData, { 'Content-Type': 'image/jpeg' }, (err, etag) => {
-      if (err) {
-        console.error("Error al subir la imagen a MinIO:", err);
-        return reject(new Error("Error al subir la imagen."));
-      }
-      minioClient.presignedUrl('GET', bucketName, filename, 86400, (err, url) => {
-        if (err) {
-          console.error("Error al generar la URL presignada para la imagen:", err);
-          return reject(new Error("Error al generar URL"));
-        }
-        console.log("Imagen subida exitosamente a MinIO:", url);
-        resolve(url);
+      const fileName = `${Date.now()}_${file.name}`;
+
+      minioClient.putObject(bucketName, fileName, file.data, file.size, { 'Content-Type': file.mimetype }, (err, etag) => {
+          if (err) {
+              console.error("Error al subir la imagen a MinIO:", err);
+              return reject(new Error("Error al subir la imagen."));
+          }
+
+          minioClient.presignedUrl('GET', bucketName, fileName, 24 * 60 * 60, (err, url) => {
+              if (err) {
+                  console.error("Error al generar la URL presignada para la imagen:", err);
+                  return reject(new Error("Error al generar URL"));
+              }
+              resolve({ url, fileName });
+          });
       });
-    });
   });
 }
 
