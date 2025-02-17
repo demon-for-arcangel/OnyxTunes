@@ -4,8 +4,6 @@ const models = require("../../models");
 const Conexion = require("../connection.js");
 const bcrypt = require("bcrypt");
 const fs = require('fs');
-
-//const { uploadImageToS3 } = require("../../helpers/upload-file-aws.js");
 const { uploadImageToS3 } = require("../../helpers/upload-file-minio.js");
 
 const conexion = new Conexion();

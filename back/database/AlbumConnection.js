@@ -2,6 +2,8 @@ require("dotenv").config();
 const { Sequelize, Op } = require("sequelize");
 const models = require("../models");
 const Conexion = require("./connection.js");
+const fs = require('fs');
+const { uploadImageToS3 } = require("../helpers/upload-file-minio.js");
 
 const conexion = new Conexion();
 
@@ -76,21 +78,52 @@ class AlbumModel {
         }
     }
 
-    async updateAlbum(albumId, newData) {
+    async updateAlbum(albumId, updatedData, files) {
         try {
-            const album = await models.Album.findByPk(albumId); 
+            const album = await models.Album.findByPk(albumId);
             if (!album) {
-                throw new Error('Álbum no encontrado');
+                throw new Error("Álbum no encontrado.");
             }
-            const updatedAlbum = await album.update(newData, {
-                include: [{ model: models.Like }]
-            }); 
-            return updatedAlbum;
+    
+            let portadaPath = album.portadaURL; 
+    
+            if (files && files.portada) {
+                const file = files.portada;
+    
+                if (!file.mimetype.startsWith("image/")) {
+                    throw new Error("Archivo inválido: debe ser una imagen.");
+                }
+    
+                if (!file.data || file.data.length === 0) {
+                    const tempFilePath = file.tempFilePath;
+                    if (!tempFilePath) {
+                        throw new Error("Archivo inválido: No se pudo leer el contenido.");
+                    }
+                    file.data = fs.readFileSync(tempFilePath);
+                }
+    
+                const bucketName = process.env.MINIO_BUCKET;
+                const folder = "portadas_album";
+    
+                const filename = `${folder}/${Date.now()}_${file.name}`;
+    
+                portadaPath = await uploadImageToS3(filename, bucketName, file.data);
+            }
+    
+            const updatedAlbum = await album.update({
+                ...updatedData,
+                portadaURL: portadaPath, 
+            });
+    
+            return {
+                message: "Álbum actualizado con éxito.",
+                album: updatedAlbum,
+            };
         } catch (error) {
-            console.error('Error al actualizar el álbum', error);
-            throw new Error('Error al actualizar el álbum');
+            console.error("Error al actualizar el álbum:", error.message);
+            throw new Error("Error al actualizar el álbum.");
         }
-    }    
+    }
 
     async deleteAlbum(albumsIds) {
         try {

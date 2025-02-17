@@ -33,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
   Album.init({
     titulo: DataTypes.STRING,
     fecha_lanzamiento: DataTypes.DATE,
+    portadaURL: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'Album',

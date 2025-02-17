@@ -62,9 +62,11 @@ const createAlbum = async (req, res) => {
 const updateAlbum = async (req, res) => {
   const albumId = req.params.id;
   const newData = req.body;
+  const files = req.files;
 
+  console.log("📁 Portada recibida en el controlador:", files);
   try {
-    const updatedAlbum = await conx.updateAlbum(albumId, newData);
+    const updatedAlbum = await conx.updateAlbum(albumId, newData, files);
     res
       .status(200)
       .json({ msg: "Álbum actualizado exitosamente", album: updatedAlbum });
