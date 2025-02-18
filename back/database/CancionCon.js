@@ -7,7 +7,7 @@ const Conexion = require("./connection.js");
 
 // Usar para subir archivos a AWS S3
 // const { uploadAudioToS3 } = require("../helpers/upload-file-aws.js");
-const { uploadAudioToS3 } = require("../helpers/upload-file-minio.js")
+const { uploadAudioToS3, uploadImageToS3 } = require("../helpers/upload-file-minio.js")
 const crypto = require('crypto');
 
 const conexion = new Conexion();
@@ -258,7 +258,7 @@ class SongModel {
                 const originalFileName = file.name;
                 const filename = `${folder}/${originalFileName}`;
     
-                const fileUrl = await uploadAudioToS3(filename, bucketName, file.data);
+                const fileUrl = await uploadImageToS3(filename, bucketName, file.data);
     
                 updatedData.portadaURL = fileUrl;
             }

@@ -109,55 +109,50 @@ class PlaylistConnection {
 
     async updatePlaylist(playlistId, newData, files) {
         try {
-          const playlist = await models.Playlist.findByPk(playlistId, {
-            attributes: { exclude: ['usuario_id'] },
-            include: [{ model: models.Like }]
-          });
-          if (!playlist) {
-            throw new Error("Playlist no encontrada");
-          }
-    
-          let assetId = playlist.assetId;
-    
-          if (files && files.imagen) {
-            const file = files.imagen;
-    
-            if (!file.data || file.data.length === 0) {
-              const tempFilePath = file.tempFilePath;
-              if (!tempFilePath) {
-                throw new Error("Archivo inválido: No se pudo leer el contenido del archivo.");
-              }
-              const fs = require("fs");
-              file.data = fs.readFileSync(tempFilePath);
-            }
-    
-            const bucketName = process.env.AWS_BUCKET;
-    
-            const folder = "imagenes_playlist";
-            const filename = `${folder}/${Date.now()}_${file.name}`;
-    
-            const assetPath = await uploadImageToS3(filename, bucketName, file.data);
-    
-            const assetRecord = await models.Asset.create({
-              path: assetPath,
+            console.log("Iniciando actualización de la playlist con ID:", playlistId);
+            
+            const playlist = await models.Playlist.findByPk(playlistId, {
+                attributes: { exclude: ['usuario_id'] },
+                include: [{ model: models.Like }]
             });
     
-            assetId = assetRecord.id;
-          }
+            if (!playlist) {
+                console.error("Error: Playlist no encontrada.");
+                throw new Error("Playlist no encontrada");
+            }
     
-          const updatedPlaylist = await playlist.update({
-            ...newData,
-            assetId: assetId
-          });
+            console.log("Playlist encontrada:", playlist.dataValues);
+            console.log(files.portada)
     
-          return {
-            message: "Playlist actualizada con éxito.",
-            playlist: updatedPlaylist,
-          };
+            let portadaUrl = playlist.portadaURL; 
+            console.log("URL actual de la portada:", portadaUrl);
+    
+            if (files && files.portada) {
+                const file = files.portada;
+                if (!file.mimetype.startsWith("image/")) {
+                    throw new Error("Archivo inválido: debe ser una imagen.");
+                }
+    
+                const bucketName = process.env.MINIO_BUCKET;
+                const folder = "portadas_playlists"; 
+    
+                const originalFileName = file.name;
+                const filename = `${folder}/${originalFileName}`;
+    
+                const fileUrl = await uploadImageToS3(filename, bucketName, file.data);
+
+                newData.portadaURL = fileUrl;
+            }
+        
+            const updatedPlaylist = await playlist.update(newData);
+    
+            return updatedPlaylist;
         } catch (error) {
-          throw new Error("Error al actualizar la playlist");
+            console.error("Error al actualizar la playlist:", error);
+            throw new Error("Error al actualizar la playlist.");
         }
-      }
+    }
+    
 
     async deletePlaylists(playlistIds) {
         try {
