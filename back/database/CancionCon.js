@@ -235,7 +235,6 @@ class SongModel {
 
     async updateSong(songId, updatedData, files) {
         try {
-            // Obtener la canción a actualizar
             const song = await models.Cancion.findByPk(songId, {
                 include: [{ model: models.Like }]
             });
@@ -244,30 +243,24 @@ class SongModel {
                 throw new Error('Canción no encontrada');
             }
     
-            // Si hay un archivo de portada en los archivos subidos
             if (files && files.portada) {
                 const file = files.portada;
     
-                // Verificar si el archivo es una imagen
                 if (!file.mimetype.startsWith("image/")) {
                     throw new Error("Archivo inválido: debe ser una imagen.");
                 }
     
-                // Subir la imagen a MinIO (o S3, según el caso)
                 const bucketName = process.env.MINIO_BUCKET;
-                const folder = "portadas"; // Puedes definir una carpeta específica para portadas
+                const folder = "portadas"; 
     
                 const originalFileName = file.name;
                 const filename = `${folder}/${originalFileName}`;
     
-                // Usar la función de subida de imágenes (puede ser uploadImageToS3 o uploadImageToMinIO)
                 const fileUrl = await uploadAudioToS3(filename, bucketName, file.data);
     
-                // Actualizar la URL de la portada en la canción
                 updatedData.portadaURL = fileUrl;
             }
     
-            // Actualizar la canción con los nuevos datos
             const updatedSong = await song.update(updatedData);
     
             return updatedSong;
