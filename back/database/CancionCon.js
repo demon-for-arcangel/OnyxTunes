@@ -238,6 +238,8 @@ class SongModel {
             const song = await models.Cancion.findByPk(songId, {
                 include: [{ model: models.Like }]
             });
+            console.log(song)
+            console.log(files)
     
             if (!song) {
                 throw new Error('Canción no encontrada');
@@ -251,7 +253,7 @@ class SongModel {
                 }
     
                 const bucketName = process.env.MINIO_BUCKET;
-                const folder = "portadas"; 
+                const folder = "portadas_canciones"; 
     
                 const originalFileName = file.name;
                 const filename = `${folder}/${originalFileName}`;
@@ -260,6 +262,7 @@ class SongModel {
     
                 updatedData.portadaURL = fileUrl;
             }
+            console.log("updatedData después de la actualización:", updatedData);
     
             const updatedSong = await song.update(updatedData);
     
