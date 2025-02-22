@@ -169,7 +169,7 @@ class UserModel {
             
             const filename = `${folder}/${Date.now()}_${file.name}`;
 
-            assetPath = await uploadImageToS3(filename, bucketName, file.data);  
+            assetPath = await uploadImageToS3(bucketName, filename);  
         }
 
         const updatedUser = await user.update({

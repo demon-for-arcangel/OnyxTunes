@@ -107,7 +107,7 @@ class AlbumModel {
     
                 const filename = `${folder}/${Date.now()}_${file.name}`;
     
-                portadaPath = await uploadImageToS3(filename, bucketName, file.data);
+                portadaPath = await uploadImageToS3(bucketName, filename);
             }
     
             const updatedAlbum = await album.update({

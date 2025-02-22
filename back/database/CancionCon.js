@@ -2,13 +2,11 @@ require("dotenv").config();
 const { Sequelize, Op } = require("sequelize");
 const models = require("../models/index.js");
 const Conexion = require("./connection.js");
-// Usar para subir archivos en
+// Usar para subir archivos en local
 //const { subirArchivo } = require("../helpers/subir-archivo.js");
-
-// Usar para subir archivos a AWS S3
-// const { uploadAudioToS3 } = require("../helpers/upload-file-aws.js");
 const { uploadAudioToS3, uploadImageToS3 } = require("../helpers/upload-file-minio.js")
 const crypto = require('crypto');
+const fs = require("fs");
 
 const conexion = new Conexion();
 
@@ -238,8 +236,8 @@ class SongModel {
             const song = await models.Cancion.findByPk(songId, {
                 include: [{ model: models.Like }]
             });
-            console.log(song)
-            console.log(files)
+
+            let portadaPath = song.portadaURL;
     
             if (!song) {
                 throw new Error('Canción no encontrada');
@@ -251,22 +249,34 @@ class SongModel {
                 if (!file.mimetype.startsWith("image/")) {
                     throw new Error("Archivo inválido: debe ser una imagen.");
                 }
+
+                if (!file.data || file.data.length === 0) {
+                    const tempFilePath = file.tempFilePath;
+                    if (!tempFilePath) {
+                        throw new Error("Archivo inválido: No se pudo leer el contenido.");
+                    }
+                    file.data = fs.readFileSync(tempFilePath);
+                }
     
                 const bucketName = process.env.MINIO_BUCKET;
                 const folder = "portadas_canciones"; 
+                console.log(file.name)
+                console.log(file)
     
-                const originalFileName = file.name;
-                const filename = `${folder}/${originalFileName}`;
+                const filename = `${folder}/${Date.now()}_${file.name}`;
     
-                const fileUrl = await uploadImageToS3(filename, bucketName, file.data);
-    
-                updatedData.portadaURL = fileUrl;
+                portadaPath = await uploadImageToS3(bucketName, filename);
             }
-            console.log("updatedData después de la actualización:", updatedData);
     
-            const updatedSong = await song.update(updatedData);
+            const updatedSong = await song.update({
+                ...updatedData,
+                portadaURL: portadaPath,
+            });
     
-            return updatedSong;
+            return {
+                message: "Canción actualizada con éxito.",
+                cancion: updatedSong
+            };
         } catch (error) {
             console.error('Error al actualizar la canción:', error);
             throw new Error('Error al actualizar la canción');
@@ -365,9 +375,3 @@ class SongModel {
 }
 
 module.exports = SongModel;
-
-
-function generateShortFileName(fileName) {
-    const hash = crypto.createHash('md5').update(fileName + Date.now()).digest('hex');
-    return hash.slice(0, 10); // Tomamos solo los primeros 10 caracteres del hash
-}
