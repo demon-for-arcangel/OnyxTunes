@@ -111,7 +111,7 @@ export class SettingsComponent {
     formData.append('telefono', this.user.telefono);
 
     if (this.selectedFile) {
-      formData.append('foto_perfil', this.selectedFile, this.selectedFile.name);
+      formData.append('imagen', this.selectedFile, this.selectedFile.name);
     }
 
     this.userService.updateUser(this.user.id, formData).subscribe(
