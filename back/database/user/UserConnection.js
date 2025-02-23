@@ -147,11 +147,12 @@ class UserModel {
         if (!user) {
             throw new Error("Usuario no encontrado.");
         }
+        console.log("archivo", files)
 
         let assetPath = user.foto_perfil; 
 
-        if (files && files.imageni) {
-            const file = files.imageni;
+        if (files && files.imagen) {
+            const file = files.imagen;
             if (!file.mimetype.startsWith("image/")) {
                 throw new Error("Archivo inválido: debe ser una imagen.");
             }
