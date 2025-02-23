@@ -56,16 +56,29 @@ class Server {
   middlewares() {
     this.app.use(
       cors({
-        origin: process.env.FRONT_URL,
-        credentials: true,
+        origin: process.env.FRONT_URL || "http://localhost:4200", 
+        methods: "GET, POST, PUT, DELETE, OPTIONS",
+        allowedHeaders: ["Content-Type", "Authorization", "x-token"], 
+        exposedHeaders: ["x-token"],
+        credentials: true, 
       }),
     );
     this.app.use(express.json());
-    console.log("RUTA", path.join(__dirname, "../../front/src/assets/uploads"));
+
     this.app.use(
       "/uploads",
       express.static(path.join(__dirname, "../public/uploads")),
     );
+
+    this.app.use((req, res, next) => {
+      res.header("Access-Control-Allow-Origin", process.env.FRONT_URL || "http://localhost:4200");
+      res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+      res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, x-token");
+      res.header("Access-Control-Expose-Headers", "x-token"); 
+      res.header("Cross-Origin-Resource-Policy", "cross-origin"); // Para evitar bloqueos de imágenes
+      next();
+    });
+  
   }
 
   routes() {

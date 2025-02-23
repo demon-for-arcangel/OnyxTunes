@@ -265,7 +265,7 @@ class SongModel {
     
                 const filename = `${folder}/${Date.now()}_${file.name}`;
     
-                portadaPath = await uploadImageToS3(bucketName, filename);
+                portadaPath = await uploadImageToS3(bucketName, filename, file.data);
             }
     
             const updatedSong = await song.update({

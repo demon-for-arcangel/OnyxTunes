@@ -147,9 +147,9 @@ class UserModel {
         if (!user) {
             throw new Error("Usuario no encontrado.");
         }
-        console.log("archivo", files)
+        console.log("archivo", files);
 
-        let assetPath = user.foto_perfil; 
+        let assetPath = user.foto_perfil;
 
         if (files && files.imagen) {
             const file = files.imagen;
@@ -157,25 +157,26 @@ class UserModel {
                 throw new Error("Archivo inválido: debe ser una imagen.");
             }
 
+            console.log("data", file.data);
+
             if (!file.data || file.data.length === 0) {
-                const tempFilePath = file.tempFilePath;
-                if (!tempFilePath) {
-                    throw new Error("Archivo inválido: No se pudo leer el contenido.");
-                }
-                file.data = fs.readFileSync(tempFilePath); 
+              const tempFilePath = file.tempFilePath;
+              if (!tempFilePath) {
+                throw new Error("Archivo inválido: No se pudo leer el contenido.");
+              }
+              file.data = fs.readFileSync(tempFilePath);
             }
 
             const bucketName = process.env.MINIO_BUCKET;
             const folder = "fotos_perfil";
-            
             const filename = `${folder}/${Date.now()}_${file.name}`;
 
-            assetPath = await uploadImageToS3(bucketName, filename);  
+            assetPath = await uploadImageToS3(bucketName, filename, file.data); 
         }
 
         const updatedUser = await user.update({
-          ...updatedData,
-          foto_perfil: assetPath
+            ...updatedData,
+            foto_perfil: assetPath
         });
 
         return {
@@ -187,6 +188,7 @@ class UserModel {
         throw new Error("Error al actualizar el usuario.");
     }
 }
+
 
   async deleteUsers(userIds) {
     //revisar, no elimina las playlist que son exclusivas del usuario

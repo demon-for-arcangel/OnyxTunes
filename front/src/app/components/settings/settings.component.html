@@ -4,12 +4,15 @@
         <h2>Configuración</h2>
         <form (ngSubmit)="saveChanges()">
             <div class="profile-photo-container">
-                <img [src]="user.foto_perfil" alt="Foto de perfil" />
-                @if(errorMessages) {
-                    @if(errorMessages.foto_perfil) {
-                        <p class="error">{{ errorMessages.foto_perfil }}</p>
+                @if(user.foto_perfil) {
+                    <img [src]="user.foto_perfil" alt="Foto de perfil" />
+                    @if(errorMessages) {
+                        @if(errorMessages.foto_perfil) {
+                            <p class="error">{{ errorMessages.foto_perfil }}</p>
+                        }
                     }
                 }
+                
                 <div>
                     <label for="fileInput" class="upload-label">Cambiar la foto de perfil</label>
                     <input

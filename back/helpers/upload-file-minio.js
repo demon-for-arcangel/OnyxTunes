@@ -1,4 +1,5 @@
 const Minio = require('minio');
+const mime = require('mime-types');
 
 const minioClient = new Minio.Client({
   endPoint: process.env.MINIO_ENDPOINT,        
@@ -19,14 +20,18 @@ async function uploadAudioToS3(key, bucket, fileData) {
                 return reject(new Error("Error al subir el archivo"));
             }
 
-            minioClient.presignedUrl('GET', bucket, key, 24*60*60, (err, url) => {
+            /* minioClient.presignedUrl('GET', bucket, key, 24*60*60, (err, url) => {
                 if (err) {
                     console.error("Error al generar la URL presignada:", err);
                     return reject(new Error("No se pudo generar la URL"));
                 }
                 console.log("URL presignada generada:", url);
                 resolve(url); 
-            });
+            }); */
+
+            const url = `http://${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${bucket}/${key}`;
+            console.log("URL generada:", url);
+            resolve(url);
         });
     });
 }
@@ -35,21 +40,26 @@ async function uploadAudioToS3(key, bucket, fileData) {
 /**
  * Función para subir una imagen a MinIO.
 */
-async function uploadImageToS3(bucketName, file) {
+async function uploadImageToS3(bucketName, fileName, fileData) {
     return new Promise((resolve, reject) => {
         console.log("Subiendo imagen a MinIO...");
         console.log("Bucket:", bucketName);
-        console.log("Nombre del archivo original:", file); // Verifica si file tiene un nombre
+        console.log("Archivo:", fileName); 
 
-        if (!file) {
-            console.error("Error: El archivo no tiene un nombre válido.");
-            return reject(new Error("El archivo no tiene un nombre válido."));
+        if (!fileData) {
+            console.error("Error: El archivo no tiene un buffer válido.");
+            return reject(new Error("El archivo no tiene datos válidos."));
         }
 
-        const fileName = `${file}`;
-        console.log("Nombre final del archivo en MinIO:", fileName);
+        const contentType = mime.lookup(fileName);
+        if (!contentType) {
+            console.error("No se pudo determinar el Content-Type.");
+            return reject(new Error("No se pudo determinar el tipo de contenido del archivo."));
+        }
 
-        minioClient.putObject(bucketName, fileName, Buffer.from(file), (err, etag) => {
+        console.log("Content-Type detectado:", contentType);
+
+        minioClient.putObject(bucketName, fileName, fileData, { 'Content-Type': contentType }, (err, etag) => {
             if (err) {
                 console.error("Error al subir la imagen a MinIO:", err);
                 return reject(new Error("Error al subir la imagen."));
@@ -57,16 +67,12 @@ async function uploadImageToS3(bucketName, file) {
 
             console.log("Imagen subida con éxito. ETag:", etag);
 
-            minioClient.presignedUrl('GET', bucketName, fileName, 24 * 60 * 60, (err, url) => {
-                if (err) {
-                    console.error("Error al generar la URL presignada para la imagen:", err);
-                    return reject(new Error("Error al generar URL"));
-                }
-                console.log("URL presignada generada:", url);
-                resolve(url);
-            });
+            const url = `http://${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${bucketName}/${fileName}`;
+            console.log("URL generada:", url);
+            resolve(url);
         });
     });
 }
+
 
 module.exports = { uploadAudioToS3, uploadImageToS3 };

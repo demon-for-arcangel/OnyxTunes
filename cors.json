@@ -1,0 +1,9 @@
+[
+    {
+        "AllowedOrigins": ["http://localhost:4200"],  // Reemplaza con la URL de tu frontend si es diferente
+        "AllowedMethods": ["GET", "POST", "PUT"],  // Métodos HTTP permitidos
+        "AllowedHeaders": ["*"],  // Permite todos los encabezados
+        "ExposedHeaders": ["x-amz-request-id", "x-amz-id-2"],  // Encabezados expuestos
+        "MaxAgeSeconds": 3000  // El tiempo en que los navegadores pueden almacenar esta configuración en caché
+    }
+]

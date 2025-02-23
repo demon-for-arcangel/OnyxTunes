@@ -141,7 +141,7 @@ class PlaylistConnection {
     
                 const filename = `${folder}/${Date.now()}_${file.name}`;
     
-                portadaUrl = await uploadImageToS3(bucketName, filename);;
+                portadaUrl = await uploadImageToS3(bucketName, filename, file.data);;
             }
         
             const updatedPlaylist = await playlist.update({
