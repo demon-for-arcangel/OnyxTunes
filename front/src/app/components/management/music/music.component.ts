@@ -117,7 +117,7 @@ export class MusicComponent implements OnInit {
         },
         baseZIndex: 10000,
         style: {
-            'background-color': '#1e1e1e'
+          'background-color': '#1e1e1e'
         },
         showHeader: true,
         closable: true,

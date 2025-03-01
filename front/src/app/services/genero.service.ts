@@ -15,4 +15,10 @@ export class GeneroService {
   getGeneros(): Observable<any> {
     return this.http.get(`${this.url}` + `${this.generosUrl}`);
   }
+
+  deleteGenero(genresIds: number[]): Observable<void> { //revisar la url
+    return this.http.delete<void>(`${this.url}` + `${this.generosUrl}`, { 
+      body: { songsIds: genresIds } 
+    });
+  }
 }

@@ -24,14 +24,14 @@ header {
     z-index: 100;
   }
 
-.login-container {
+/* .login-container {
     max-width: 400px; 
     margin: 50px auto; 
     padding: 20px; 
     background-color: #ffffff;
     border-radius: 8px; 
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .music-management {
     padding: 20px;
@@ -60,10 +60,10 @@ header {
     background-color: #b71c1c;
 }
 
-.music-management h1 {
+/* .music-management h1 {
     font-size: 24px;
     margin-bottom: 20px;
-}
+} */
 
 .search-bar {
     display: flex;
