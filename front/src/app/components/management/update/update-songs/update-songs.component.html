@@ -2,6 +2,14 @@
     <h2>Actualizar Canción</h2>
     <form (ngSubmit)="onSubmit()">
         <div>
+            <label for="portada">Portada:</label>
+            <input id="portada" type="file" (change)="onFileSelected($event)" accept="image/*" />
+        </div>
+        @if(cancion.portada){
+            <img [src]="cancion.portada" alt="Portada de la canción" with="200"/>
+        }
+
+        <div>
             <label for="titulo">Título:</label>
             <input type="text" id="titulo" [(ngModel)]="cancion.titulo" name="titulo" required />
         </div>
