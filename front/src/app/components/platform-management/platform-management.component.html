@@ -33,26 +33,30 @@
         </div>
       }
       @if (canAccess("artistManagement")) {
-        <h1>Gestion de la Música</h1>
         <div class="section">
           <button (click)="navigateTo('artistManagement')">
             <img
               src="assets/images/gestion-de-albumes.jpg"
-              class="image-artist"
-              [ngStyle]="{ width: '40%', height: 'auto' }"
+              class="image"
             />
+            <div class="overlay">
+              <h2>Gestion de la Música</h2>
+              <p>Administrar Mi Música</p>
+            </div>
           </button>
         </div>
       }
       @if (canAccess("genresManagement")) {
-        <h1>Gestion de la Música</h1>
         <div class="section">
           <button (click)="navigateTo('artistManagement')">
             <img
               src="assets/images/gestion-de-albumes.jpg"
-              class="image-artist"
-              [ngStyle]="{ width: '40%', height: 'auto' }"
+              class="image"
             />
+            <div class="overlay">
+              <h2>Gestion de Generos Musicales</h2>
+              <p>Administrar Generos Disponibles para las Canciones</p>
+            </div>
           </button>
         </div>
       }
