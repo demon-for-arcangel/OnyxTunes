@@ -6,6 +6,7 @@ import { GeneroService } from '../../../services/genero.service';
 import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
 import { CreateGenresComponent } from '../create/create-genres/create-genres.component';
 import { UpdateGenresComponent } from '../update/update-genres/update-genres.component';
+import { ShowGenresComponent } from '../show/show-genres/show-genres.component';
 
 @Component({
   selector: 'app-genres',
@@ -95,7 +96,7 @@ export class GenresComponent {
     })
   }
 
-  deleteGenero(id: number) { //no se manda los ids
+  deleteGenero(id: number) {
     console.log(id)
     this.ref = this.dialogService.open(DeleteConfirmationComponent, {
           header: 'Confirmar Eliminación',
@@ -127,7 +128,31 @@ export class GenresComponent {
     });
   }
 
-  showGenero(id: number) {  }
+  showGenero(genero: any) { 
+    console.log("Genero seleccionado:", genero);
+    this.ref = this.dialogService.open(ShowGenresComponent, {
+      header: 'Información del Genero',
+      modal: true,
+      width: '70vw',
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e',
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true,
+      data: {
+        generoId: genero.id
+      }
+    });
+   }
 
   view() {
     this.mostrarGeneros = !this.mostrarGeneros;
