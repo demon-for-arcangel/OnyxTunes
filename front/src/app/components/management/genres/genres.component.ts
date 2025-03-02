@@ -95,7 +95,8 @@ export class GenresComponent {
     })
   }
 
-  deleteGenero(id: number) {
+  deleteGenero(id: number) { //no se manda los ids
+    console.log(id)
     this.ref = this.dialogService.open(DeleteConfirmationComponent, {
           header: 'Confirmar Eliminación',
           width: '400px',

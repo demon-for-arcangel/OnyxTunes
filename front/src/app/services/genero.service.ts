@@ -29,9 +29,9 @@ export class GeneroService {
     }`, formData);
   }
 
-  deleteGenero(genresIds: number[]): Observable<void> { //revisar la url
+  deleteGenero(genresIds: number[]): Observable<void> {
     return this.http.delete<void>(`${this.url}` + `${this.generosUrl}`, { 
-      body: { songsIds: genresIds } 
+      body: { generosIds: genresIds }
     });
   }
 }
