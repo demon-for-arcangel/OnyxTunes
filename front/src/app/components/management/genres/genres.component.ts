@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { GeneroService } from '../../../services/genero.service';
 import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
+import { CreateGenresComponent } from '../create/create-genres/create-genres.component';
 
 @Component({
   selector: 'app-genres',
@@ -43,7 +44,29 @@ export class GenresComponent {
   }
 
   newGenero() {
+    this.ref = this.dialogService.open(CreateGenresComponent, {
+      header: 'Crear Nuevo Genero',
+      modal: true,
+      width: '70vw',
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e',
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true,
+    });
 
+    this.ref.onClose.subscribe(() => {
+      this.loadGeneros();
+    })
   }
 
   editGenero(genero: any) {
@@ -108,8 +131,8 @@ export class GenresComponent {
   }
 
   nextGenresPage() {
-    if (this.currentGenerosPage > 1) {
-      this.currentGenerosPage--;
+    if (this.currentGenerosPage < this.totalGenerosPages) {
+      this.currentGenerosPage++;
     }
   }
 

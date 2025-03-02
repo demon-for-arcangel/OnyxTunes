@@ -16,6 +16,10 @@ export class GeneroService {
     return this.http.get(`${this.url}` + `${this.generosUrl}`);
   }
 
+  createGenero(formData: FormData): Observable<any> {
+    return this.http.post(`${this.url}` + `${this.generosUrl}` + `/new`, formData);
+  }
+
   deleteGenero(genresIds: number[]): Observable<void> { //revisar la url
     return this.http.delete<void>(`${this.url}` + `${this.generosUrl}`, { 
       body: { songsIds: genresIds } 
