@@ -5,6 +5,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { GeneroService } from '../../../services/genero.service';
 import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
 import { CreateGenresComponent } from '../create/create-genres/create-genres.component';
+import { UpdateGenresComponent } from '../update/update-genres/update-genres.component';
 
 @Component({
   selector: 'app-genres',
@@ -70,7 +71,28 @@ export class GenresComponent {
   }
 
   editGenero(genero: any) {
-
+    this.ref = this.dialogService.open(UpdateGenresComponent, {
+      header: 'Editar Genero',
+      modal: true,
+      width: '70vw',
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e',
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true,
+      data: {
+        generoId: genero.id
+      }
+    })
   }
 
   deleteGenero(id: number) {

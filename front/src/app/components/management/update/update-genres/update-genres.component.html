@@ -1,1 +1,12 @@
-<p>update-genres works!</p>
+<div class="update-genres">
+
+    <h2>Actualizar Géneros</h2>
+
+    <form (ngSubmit)="onSubmit()">
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" [(ngModel)]="genero.nombre" name="nombre" required />
+        </div>
+        <button type="submit">Actualizar Género</button>
+    </form>
+</div>
