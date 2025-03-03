@@ -24,8 +24,8 @@ export class AlbumsService {
     return this.http.post(`${this.url}` + `${this.albumsUrl}` + `/new`, cancion);
   }
 
-  updateAlbum(cancion: any): Observable<any> {
-    return this.http.put(`${this.url}` + `${this.albumsUrl}` + `/${cancion.id}`, cancion);
+  updateAlbum(id: number, cancion: any): Observable<any> {
+    return this.http.put(`${this.url}` + `${this.albumsUrl}` + `/${id}`, cancion);
   }
 
   deleteAlbum(id: number): Observable<any> {

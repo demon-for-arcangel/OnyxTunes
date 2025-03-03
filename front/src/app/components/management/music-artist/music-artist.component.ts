@@ -204,7 +204,7 @@ deleteSongs(ids: number[]): void {
   }
 
   editAlbum(album: any) {
-    this.albumsService.updateAlbum(album).subscribe(
+    this.albumsService.updateAlbum(album.id, album).subscribe(
       (response) => {
         console.log('Álbum editado:', response);
         this.loadAlbums(); 

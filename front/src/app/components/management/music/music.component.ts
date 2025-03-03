@@ -8,6 +8,7 @@ import { ShowSongsComponent } from '../show/show-songs/show-songs.component';
 import { CreateSongsComponent } from '../create/create-songs/create-songs.component';
 import { UpdateSongsComponent } from '../update/update-songs/update-songs.component';
 import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
+import { UpdateAlbumsComponent } from '../update/update-albums/update-albums.component';
 
 @Component({
   selector: 'app-music',
@@ -58,6 +59,8 @@ export class MusicComponent implements OnInit {
     this.albumsService.getAlbums().subscribe(
       (data) => {
         this.albums = data;
+        console.log('Albums cargadas:', this.albums);
+
       },
       (error) => {
         console.error('Error al cargar los álbumes', error);
@@ -177,15 +180,32 @@ deleteSongs(id: number) {
   }
 
   editAlbum(album: any) {
-    this.albumsService.updateAlbum(album).subscribe(
-      (response) => {
-        console.log('Álbum editado:', response);
-        this.loadAlbums(); 
+    this.ref = this.dialogService.open(UpdateAlbumsComponent, {
+      header: 'Editar Canción',
+      modal: true,
+      width: '70vw',
+      styleClass: 'custom-modal',
+      contentStyle: {
+          'background-color': '#1e1e1e',
+          'color': 'white',
+          'border-radius': '8px',
+          'padding': '20px'
       },
-      (error) => {
-        console.error('Error al editar el álbum', error);
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e'
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true,
+      data: {
+        albumId: album.id
       }
-    );
+    });
+
+    this.ref.onClose.subscribe(() => {
+        this.loadCanciones(); 
+    });
   }
 
   deleteAlbum(id: number) {

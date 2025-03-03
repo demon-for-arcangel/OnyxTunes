@@ -90,10 +90,10 @@
                         @for(album of paginatedAlbums; track album){
                             <tr>
                                 <td>{{ album.titulo || 'Sin título' }}</td>
-                                <td>{{ album.artista || 'Sin artista' }}</td>
-                                <td>{{ album.anio || 'Sin año' }}</td>
-                                <td>{{ album.numCanciones || 'Sin número de canciones' }}</td>
-                                <td>{{ album.genero || 'Sin género' }}</td>
+                                <td>{{ album.artista || 'Sin artista' }}</td><!-- sacar los artistas de las canciones que componen el album -->
+                                <td>{{ album.fecha_lanzamiento || 'Sin año' }}</td>
+                                <td>{{ album.numCanciones || 'Sin número de canciones' }}</td> <!-- numero de canciones (suma) -->
+                                <td>{{ album.genero || 'Sin género' }}</td> <!-- sacar el genero que más se repita entre las canciones que contienen el album -->
                                 <td>
                                     <button (click)="editAlbum(album)">Editar</button>
                                     <button (click)="deleteAlbum(album.id)">Eliminar</button>
