@@ -64,7 +64,6 @@ const updateAlbum = async (req, res) => {
   const newData = req.body;
   const files = req.files;
 
-  console.log("📁 Portada recibida en el controlador:", files);
   try {
     const updatedAlbum = await conx.updateAlbum(albumId, newData, files);
     res

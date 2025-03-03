@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
           entidad_tipo: 'Album' 
         }
       });
+
+      this.hasMany(models.Cancion, { 
+        foreignKey: "album_id" 
+      });
     }
   }
   Album.init({

@@ -23,9 +23,32 @@ class AlbumModel {
     async indexAlbums() {
         try {
             const albums = await models.Album.findAll({
-                include: [{ model: models.Like }]
+                include: [
+                    { model: models.Like },
+                    {
+                        model: models.Cancion, 
+                        include: [
+                            {
+                                model: models.Usuario, 
+                                as: "artista",
+                            },
+                            {
+                                model: models.Genero,
+                                as: "generos",
+                            }
+                        ]
+                    }
+                ]
             });
-            return albums;
+
+            const albumsTotal = albums.map(album => {
+                return {
+                    ...album.toJSON(),
+                    totalCanciones: album.Cancions ? album.Cancions.length : 0
+                };
+            });
+    
+            return albumsTotal;
         } catch (error) {
             console.error('Error al mostrar la lista de los Albums: ', error);
             throw new Error('Error al mostrar la lista de albums');
@@ -34,19 +57,45 @@ class AlbumModel {
 
     async getAlbumById(id) {
         try {
-            console.log(id)
+            console.log(id);
             const album = await models.Album.findByPk(id, {
-                include: [{ model: models.Like }]
+                include: [
+                    {
+                        model: models.Like
+                    },
+                    {
+                        model: models.Cancion, 
+                        include: [
+                            {
+                                model: models.Usuario, 
+                                as: "artista",
+                            },
+                            {
+                                model: models.Genero, 
+                                as: "generos",
+                            }
+                        ]
+                    }
+                ]
             });
+    
             if (!album) {
-                throw new Error('Album no encontrado');
+                throw new Error('Álbum no encontrado');
             }
-            return album;
+    
+            // Contar la cantidad de canciones en el álbum
+            const totalCanciones = album.Cancions ? album.Cancions.length : 0;
+    
+            return {
+                album,
+                totalCanciones
+            };
         } catch (error) {
-            console.error('Error al mostrar el album: ', error);
-            throw new Error('Error al mostrar el album');
+            console.error('Error al mostrar el álbum: ', error);
+            throw new Error('Error al mostrar el álbum');
         }
     }
+    
 
     async getAlbumByTitle(titulo) {
         try {
