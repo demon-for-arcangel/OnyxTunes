@@ -80,6 +80,26 @@ export class MusicComponent implements OnInit {
     return generos.map(genero => genero.nombre).join(', ');
   }
 
+  getGenerosAlbums(album: any): string {
+    if (!album.Cancions || album.Cancions.length === 0) {
+        return 'Sin género';
+    }
+
+    const genreCount: Record<string, number> = {};
+
+    album.Cancions.forEach((cancion: any) => {
+        cancion.generos.forEach((genero: any) => {
+            const genreName = genero.nombre; // Accede al nombre del género
+            genreCount[genreName] = (genreCount[genreName] || 0) + 1;
+        });
+    });
+
+    const dominantGenre = Object.keys(genreCount).reduce((a, b) => genreCount[a] > genreCount[b] ? a : b, '');
+
+    return dominantGenre || 'Sin género';
+}
+
+
   newCancion() {
     this.ref = this.dialogService.open(CreateSongsComponent, {
         header: 'Añadir Nueva Canción',

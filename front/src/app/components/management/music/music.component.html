@@ -1,6 +1,6 @@
 <header>
     <div class="header-content">
-        <img src="assets/images/onyxtunes.jpeg" alt="OnyxTunes Logo" class="logo" />
+        <img src="assets/images/onyxtunes.jpg" alt="OnyxTunes Logo" class="logo" />
     </div>
 </header>
 
@@ -90,10 +90,10 @@
                         @for(album of paginatedAlbums; track album){
                             <tr>
                                 <td>{{ album.titulo || 'Sin título' }}</td>
-                                <td>{{ album.artista || 'Sin artista' }}</td><!-- sacar los artistas de las canciones que componen el album -->
+                                <td>{{ album.Cancions.length > 0 ? album.Cancions[0].artista.nombre : 'Sin artista' }}</td>
                                 <td>{{ album.fecha_lanzamiento || 'Sin año' }}</td>
-                                <td>{{ album.numCanciones || 'Sin número de canciones' }}</td> <!-- numero de canciones (suma) -->
-                                <td>{{ album.genero || 'Sin género' }}</td> <!-- sacar el genero que más se repita entre las canciones que contienen el album -->
+                                <td>{{ album.totalCanciones || 'Sin número de canciones' }}</td>
+                                <td>{{ getGenerosAlbums(album) }}</td>
                                 <td>
                                     <button (click)="editAlbum(album)">Editar</button>
                                     <button (click)="deleteAlbum(album.id)">Eliminar</button>
