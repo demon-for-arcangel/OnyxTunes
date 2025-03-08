@@ -28,21 +28,35 @@ export class UpdateAlbumsComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.albumId = this.config.data.albumId;
-    this.loadAlbum();
+    if (this.config.data && this.config.data.albumId) {
+      this.albumId = this.config.data.albumId;
+      console.log(this.albumId)
+      this.loadAlbum();
+    } else {
+      console.error("No se encontró albumId en DynamicDialogConfig");
+    }
   }
+  
 
   loadAlbum(): void {
     this.albumService.getAlbumById(this.albumId).subscribe(
       (data) => {
-        this.album = data;
-        this.album.portadaURL = data.portadaURL || '';
+        if (data.album) {
+          console.log(data.album);
+          this.album = data.album; // Acceder al objeto correcto dentro de la respuesta
+          this.album.portadaURL = data.album.portadaURL || '';
+          if (this.album.fecha_lanzamiento) {
+            this.album.fecha_lanzamiento = this.formatDate(this.album.fecha_lanzamiento);
+          }
+        } else {
+          console.error('La respuesta no contiene la estructura esperada:', data);
+        }
       },
       (error) => {
         console.error('Error al cargar el álbum:', error);
       }
     );
-  }
+  }  
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
@@ -68,5 +82,9 @@ export class UpdateAlbumsComponent implements OnInit{
         console.error('Error al actualizar el álbum:', error);
       }
     );
+  }
+
+  formatDate(dateString: string): string {
+    return dateString.split('T')[0]; // Extrae solo la parte de la fecha
   }
 }
