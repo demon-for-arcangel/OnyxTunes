@@ -43,7 +43,7 @@ export class UpdateAlbumsComponent implements OnInit{
       (data) => {
         if (data.album) {
           console.log(data.album);
-          this.album = data.album; // Acceder al objeto correcto dentro de la respuesta
+          this.album = data.album;
           this.album.portadaURL = data.album.portadaURL || '';
           if (this.album.fecha_lanzamiento) {
             this.album.fecha_lanzamiento = this.formatDate(this.album.fecha_lanzamiento);
@@ -85,6 +85,6 @@ export class UpdateAlbumsComponent implements OnInit{
   }
 
   formatDate(dateString: string): string {
-    return dateString.split('T')[0]; // Extrae solo la parte de la fecha
+    return dateString.split('T')[0];
   }
 }
