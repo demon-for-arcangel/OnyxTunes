@@ -40,12 +40,24 @@ html, body {
     --color-sidebar: #000000;
   
     /* Colores de acento */
-    --color-accent: #e51d36;
-    --color-accent-hover: #f02e46;
+    --color-neutro: #555;
     --color-success: #1db954;
     --color-error: #e51d36;
     --color-warning: #f59b23;
-  
+
+    /* Colores de botones */
+    --color-btn-red: #B22222;
+    --hover-btn-red: #660000;
+    --color-btn-gray: #E0E0E0;
+    --hover-btn-gray: #FFFFFF;
+    --color-btn-green: #008000;
+    --hover-btn-green: #32CD32; /* o #66CDAA */
+    --color-btn-orange: #FF8C00;
+    --hover-btn-orange: #FFB347;
+    --view-toggle-color: #8A2BE2;
+    --view-toggle-hover: #6C1CBF;
+
+
     /* Sombras */
     --shadow-elevation-low: 0 2px 4px rgba(0, 0, 0, 0.3);
     --shadow-elevation-medium: 0 4px 8px rgba(0, 0, 0, 0.4);

@@ -9,6 +9,7 @@ import { CreateSongsComponent } from '../create/create-songs/create-songs.compon
 import { UpdateSongsComponent } from '../update/update-songs/update-songs.component';
 import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
 import { UpdateAlbumsComponent } from '../update/update-albums/update-albums.component';
+import { ShowAlbumsComponent } from '../show/show-albums/show-albums.component';
 
 @Component({
   selector: 'app-music',
@@ -229,15 +230,34 @@ deleteSongs(id: number) {
   }
 
   deleteAlbum(id: number) {
-    this.albumsService.deleteAlbum(id).subscribe(
-      (response) => {
-        this.albums = this.albums.filter((a) => a.id !== id);
-        console.log('Álbum eliminado:', id);
+    this.ref = this.dialogService.open(DeleteConfirmationComponent, {
+      header: 'Confirmar Eliminación',
+      width: '400px',
+      modal: true,
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'padding': '20px'
       },
-      (error) => {
-        console.error('Error al eliminar el álbum', error);
+      data: {
+        songsIds: [id]
       }
-    );
+    });
+
+    this.ref.onClose.subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.albumsService.deleteAlbum(id).subscribe(
+          (response) => {
+            this.albums = this.albums.filter((a) => a.id !== id);
+            console.log('Álbum eliminado:', id);
+          },
+          (error) => {
+            console.error('Error al eliminar el álbum', error);
+          }
+        );
+      }
+    }); 
   }
 
   searchMusic() {
@@ -319,5 +339,27 @@ deleteSongs(id: number) {
 
   showAlbum(album: any) {
     console.log('Ver detalles de álbum:', album);
+    this.ref = this.dialogService.open(ShowAlbumsComponent, {
+      header: 'Ver Datos del Album',
+      modal: true,
+      width: '70vw',
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e'
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true,
+      data: {
+        albumId: album.id
+      }
+    });
   }
 }

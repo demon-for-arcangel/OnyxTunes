@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AlbumsService } from '../../../../services/albums.service';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-show-albums',
@@ -13,7 +14,7 @@ export class ShowAlbumsComponent {
   albumId!: number;
   album: any;
 
-  constructor(private albumService: AlbumsService, private config: DynamicDialogConfig) {}
+  constructor(private albumService: AlbumsService, private config: DynamicDialogConfig, private router: Router) {}
 
   ngOnInit(): void {
     this.albumId = this.config.data.albumId;
@@ -28,15 +29,19 @@ export class ShowAlbumsComponent {
   loadAlbumDetails(): void {
     this.albumService.getAlbumById(this.albumId).subscribe({
       next: (data) => {
-        this.album = data;
+        this.album = data.album;
         console.log(this.album);
-        if (!this.album.canciones) {
-          this.album.canciones = [];
+        if (!this.album.Cancions) {
+          this.album.Cancions = [];
         }
       },
       error: (error) => {
         console.error('Error al cargar los detalles del álbum:', error);
       }
     });
+  }
+
+  verCanciones(): void {
+    this.router.navigate(['/album', this.albumId, 'canciones']);
   }
 }

@@ -11,7 +11,7 @@
                 <i class="pi pi-arrow-left"></i> Volver
             </button>
             <h1>Gestión de Música</h1>
-            <button (click)="view()">
+            <button (click)="view()" class="btn-selector">
                 {{ mostrarCanciones ? 'Ver Álbumes' : 'Ver Canciones' }}
             </button>
         </div>
@@ -47,9 +47,9 @@
                                 <td>{{ formatDuration(cancion.duracion) }}</td>
                                 <td>{{ getGenerosString(cancion.generos) }}</td>
                                 <td>
-                                    <button (click)="editCancion(cancion)">Editar</button>
-                                    <button (click)="deleteSongs(cancion.id)">Eliminar</button>
-                                    <button (click)="showCancion(cancion)">Ver Detalles</button>
+                                    <button (click)="editCancion(cancion)" class="btn-edit">Editar</button>
+                                    <button (click)="deleteSongs(cancion.id)" class="btn-delete">Eliminar</button>
+                                    <button (click)="showCancion(cancion)" class="btn-show">Ver Detalles</button>
                                 </td>
                             </tr>
                         }
@@ -96,7 +96,7 @@
                                 <td>{{ getGenerosAlbums(album) }}</td>
                                 <td>
                                     <button (click)="editAlbum(album)">Editar</button>
-                                    <button (click)="deleteAlbum(album.id)">Eliminar</button>
+                                    <button (click)="deleteAlbum(album.id)" class="btn-delete">Eliminar</button>
                                     <button (click)="showAlbum(album)">Ver Detalles</button>
                                 </td>
                             </tr>
