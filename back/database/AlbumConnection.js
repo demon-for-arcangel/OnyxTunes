@@ -83,7 +83,6 @@ class AlbumModel {
                 throw new Error('Álbum no encontrado');
             }
     
-            // Contar la cantidad de canciones en el álbum
             const totalCanciones = album.Cancions ? album.Cancions.length : 0;
     
             return {
@@ -176,31 +175,32 @@ class AlbumModel {
 
     async deleteAlbum(albumsIds) {
         try {
-            const albumsToDelete = await models.Album.findAll({
+            // Paso 1: Eliminar las relaciones dependientes en `usuario_album`
+            await models.UsuarioAlbum.destroy({
                 where: {
-                    id: albumsIds
-                },
-                include: [{ model: models.Like }]
+                    album_id: albumsIds, // Relaciona el álbum con las dependencias
+                }
             });
     
-            if (albumsToDelete.length !== albumsIds.length) {
-                throw new Error("Algunos álbumes no fueron encontrados.");
-            }
+            console.log(`Relaciones eliminadas para álbumes: ${albumsIds}`);
     
+            // Paso 2: Eliminar los álbumes
             const result = await models.Album.destroy({
                 where: {
                     id: albumsIds
                 }
             });
     
+            console.log(`Álbum(es) eliminados: ${result}`);
+    
             return {
-                msg: `Se eliminaron ${result} álbum(es) exitosamente.`
+                msg: `Se eliminaron ${result} álbum(es) exitosamente.`,
             };
         } catch (error) {
-            console.error("Error al eliminar álbumes:", error);
-            throw new Error("Error al eliminar álbum(es).");
+            console.error("Error al eliminar álbum(es):", error);
+            throw new Error("Error al eliminar álbum(es). Verifica las relaciones y los permisos.");
         }
-    }    
+    }       
 
     async getAlbumsByUserId(userId) {
         try {

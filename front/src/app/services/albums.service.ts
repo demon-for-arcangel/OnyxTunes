@@ -28,8 +28,10 @@ export class AlbumsService {
     return this.http.put(`${this.url}` + `${this.albumsUrl}` + `/${id}`, cancion);
   }
 
-  deleteAlbum(id: number): Observable<any> {
-    return this.http.delete(`${this.url}` + `${this.albumsUrl}` + `/${id}`);
+  deleteAlbum(ids: number[]): Observable<void> {
+    return this.http.delete<void>(`${this.url}` + `${this.albumsUrl}`, { 
+      body: { albumsIds: ids } 
+    });
   }
 
   getAlbumsByUserId(userId: number): Observable<any> {

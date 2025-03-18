@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SongService } from '../../../services/song.service';
@@ -10,6 +10,7 @@ import { UpdateSongsComponent } from '../update/update-songs/update-songs.compon
 import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
 import { UpdateAlbumsComponent } from '../update/update-albums/update-albums.component';
 import { ShowAlbumsComponent } from '../show/show-albums/show-albums.component';
+import WaveSurfer from 'wavesurfer.js';
 
 @Component({
   selector: 'app-music',
@@ -30,6 +31,7 @@ export class MusicComponent implements OnInit {
   searchQuery: string = '';
   mostrarCanciones: boolean = true;
 
+  wavesurferInstances: { [key: number]: any } = {};
   ref: DynamicDialogRef | undefined;
   dialog: any;
 
@@ -45,11 +47,52 @@ export class MusicComponent implements OnInit {
         (data) => {
             this.canciones = data; 
             console.log('Canciones cargadas:', this.canciones);
+            this.canciones.forEach(cancion => this.createWaveform(cancion));
         },
         (error) => {
             console.error('Error al cargar las canciones:', error);
         }
     );
+  }
+
+  createWaveform(cancion: any) {
+    console.log('Entro a crear waveform para:', cancion.titulo);
+  
+    const containerId = `waveform-${cancion.id}`;
+    console.log('Contenedor esperado:', containerId);
+  
+    setTimeout(() => {
+      const container = document.getElementById(containerId);
+      if (!container) {
+        console.error(`Contenedor no encontrado para: ${containerId}`);
+        return;
+      }
+  
+      console.log(`Creando wavesurfer en contenedor: ${containerId}`);
+      this.wavesurferInstances[cancion.id] = WaveSurfer.create({
+        container: `#${containerId}`,
+        waveColor: '#d9dcff',
+        progressColor: '#e51d36',
+        height: 50,
+        barWidth: 2,
+        normalize: true,
+      });
+  
+      console.log('Cargando archivo de audio:', cancion.asset.path);
+      this.wavesurferInstances[cancion.id].load(cancion.asset.path);
+    }, 100);
+  }
+  
+
+  togglePlay(cancionId: number) {
+    const wavesurfer = this.wavesurferInstances[cancionId];
+    if (wavesurfer) {
+      if (wavesurfer.isPlaying()) {
+        wavesurfer.pause();
+      } else {
+        wavesurfer.play();
+      }
+    }
   }
 
   view(){
@@ -90,7 +133,7 @@ export class MusicComponent implements OnInit {
 
     album.Cancions.forEach((cancion: any) => {
         cancion.generos.forEach((genero: any) => {
-            const genreName = genero.nombre; // Accede al nombre del género
+            const genreName = genero.nombre;
             genreCount[genreName] = (genreCount[genreName] || 0) + 1;
         });
     });
@@ -240,17 +283,17 @@ deleteSongs(id: number) {
         'color': 'white',
         'padding': '20px'
       },
-      data: {
+      data: { 
         songsIds: [id]
       }
     });
 
     this.ref.onClose.subscribe((confirmed: boolean) => {
       if (confirmed) {
-        this.albumsService.deleteAlbum(id).subscribe(
+        this.albumsService.deleteAlbum([id]).subscribe(
           (response) => {
             this.albums = this.albums.filter((a) => a.id !== id);
-            console.log('Álbum eliminado:', id);
+            console.log('Álbum eliminado:', response);
           },
           (error) => {
             console.error('Error al eliminar el álbum', error);

@@ -34,8 +34,8 @@
                             <th>Artista</th>
                             <th>Álbum</th>
                             <th>Duración</th>
-                            <th>Género</th>
-                            <th>Acciones</th>
+<!--                             <th>Género</th>
+ -->                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,9 +44,17 @@
                                 <td>{{ cancion.titulo || 'Sin título' }}</td>
                                 <td>{{ cancion.artista.nombre || 'Sin artista' }}</td>
                                 <td>{{ cancion.Album?.titulo || 'Sin álbum' }}</td>
-                                <td>{{ formatDuration(cancion.duracion) }}</td>
-                                <td>{{ getGenerosString(cancion.generos) }}</td>
-                                <td>
+<!--                                 <td>{{ formatDuration(cancion.duracion) }}</td>
+ -->                                <td>
+                                    <div>
+                                        <!-- {{ formatDuration(cancion.duracion) }} -->
+                                        <div id="waveform-{{ cancion.id }}"></div>
+
+                                        <button (click)="togglePlay(cancion.id)">Reproducir</button>
+                                    </div>
+                                </td>
+<!--                                 <td>{{ getGenerosString(cancion.generos) }}</td>
+ -->                                <td>
                                     <button (click)="editCancion(cancion)" class="btn-edit">Editar</button>
                                     <button (click)="deleteSongs(cancion.id)" class="btn-delete">Eliminar</button>
                                     <button (click)="showCancion(cancion)" class="btn-show">Ver Detalles</button>
@@ -95,9 +103,9 @@
                                 <td>{{ album.totalCanciones || 'Sin número de canciones' }}</td>
                                 <td>{{ getGenerosAlbums(album) }}</td>
                                 <td>
-                                    <button (click)="editAlbum(album)">Editar</button>
+                                    <button (click)="editAlbum(album)" class="btn-edit">Editar</button>
                                     <button (click)="deleteAlbum(album.id)" class="btn-delete">Eliminar</button>
-                                    <button (click)="showAlbum(album)">Ver Detalles</button>
+                                    <button (click)="showAlbum(album)" class="btn-show">Ver Detalles</button>
                                 </td>
                             </tr>
                         }

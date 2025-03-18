@@ -216,7 +216,7 @@ deleteSongs(ids: number[]): void {
   }
 
   deleteAlbum(id: number) {
-    this.albumsService.deleteAlbum(id).subscribe(
+    this.albumsService.deleteAlbum([id]).subscribe(
       (response) => {
         this.albums = this.albums.filter((a) => a.id !== id);
         console.log('Álbum eliminado:', id);
