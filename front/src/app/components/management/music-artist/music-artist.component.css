@@ -56,7 +56,7 @@ header {
 
 .back-button {
     padding: 8px 16px;
-    background-color: #0073e6; 
+    background-color: var(--color-neutro); 
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -65,8 +65,28 @@ header {
     gap: 8px;
 }
 
-.back-button:hover {
-    background-color: #005bb5; 
+.btn-delete {
+    background-color: var(--color-btn-red);
+    color: black;
+}
+.btn-delete:hover {
+    background-color: var(--hover-btn-red);
+}
+
+.btn-edit {
+    background-color: var(--color-btn-orange);
+    color: black;
+}
+.btn-edit:hover {
+    background-color: var(--hover-btn-orange);
+}
+
+.btn-show {
+    background-color: var(--color-btn-gray);
+    color: black;
+}
+.btn-show:hover {
+    background-color: var(--hover-btn-gray);
 }
 
 .music-management h1 {
@@ -95,7 +115,7 @@ header {
 
 .search-bar button {
     padding: 8px 16px;
-    background-color: #0073e6; 
+    background-color: var(--color-btn-green); 
     color: white;
     border: none;
     cursor: pointer;
@@ -103,20 +123,23 @@ header {
 }
 
 .search-bar button:hover {
-    background-color: #005bb5;
+    background-color: var(--hover-btn-green);
 }
 
 .music-table {
+    background-color: var(--color-surface);
     width: 100%;
     border-collapse: collapse;
-    color: black;
     margin-bottom: 20px;
 }
 
 .music-table th, .music-table td {
     padding: 10px;
-    border: 1px solid #ddd;
     text-align: left;
+}
+
+tbody {
+    background-color: var(--color-surface-light);
 }
 
 .pagination-controls {
@@ -151,14 +174,9 @@ button {
     padding: 5px 10px;
     font-size: 14px;
     cursor: pointer;
-    background-color: #0073e6;
     color: white;
     border: none;
     border-radius: 4px;
-}
-
-button:hover {
-    background-color: #005bb5; 
 }
 
 .filter-container {
@@ -203,4 +221,15 @@ select option {
     color: #666;
     text-align: center;
     margin: 20px 0;
+}
+
+.btn-selector {
+    background: linear-gradient(45deg, #e51d36, #1e1e1e);
+    color: white;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-selector:hover {
+    background: linear-gradient(45deg, #1e1e1e, #e51d36);
+    transform: scale(1.05);
 }
