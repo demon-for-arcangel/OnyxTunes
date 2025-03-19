@@ -35,11 +35,34 @@ export class MusicComponent implements OnInit {
   ref: DynamicDialogRef | undefined;
   dialog: any;
 
+  createdWaveforms: { [key: number]: boolean } = {};
+
   constructor(private router: Router, private cancionesService: SongService, public dialogService: DialogService, private albumsService: AlbumsService) { }
 
   ngOnInit() {
     this.loadCanciones();
     this.loadAlbums();
+  }
+
+  /* ngAfterViewChecked() {
+    this.canciones.forEach((cancion) => {
+        const containerId = `waveform-${cancion.id}`;
+        const container = document.getElementById(containerId);
+
+        // Solo intenta crear el waveform si aún no está creado y el contenedor existe
+        if (container && !this.createdWaveforms[cancion.id]) {
+            this.createWaveform(cancion);
+            this.createdWaveforms[cancion.id] = true; // Marca como creado
+        }
+    });
+  } */
+
+    ngAfterViewChecked() {
+      this.canciones.forEach((cancion) => {
+          if (!this.wavesurferInstances[cancion.id]) {
+              this.createWaveform(cancion);
+          }
+      });
   }
 
   loadCanciones() {
@@ -56,32 +79,49 @@ export class MusicComponent implements OnInit {
   }
 
   createWaveform(cancion: any) {
-    console.log('Entro a crear waveform para:', cancion.titulo);
-  
     const containerId = `waveform-${cancion.id}`;
-    console.log('Contenedor esperado:', containerId);
-  
-    setTimeout(() => {
-      const container = document.getElementById(containerId);
-      if (!container) {
-        console.error(`Contenedor no encontrado para: ${containerId}`);
+    const container = document.getElementById(containerId);
+
+    if (!container) {
+        console.warn(`Contenedor no encontrado para: ${containerId}`);
         return;
-      }
-  
-      console.log(`Creando wavesurfer en contenedor: ${containerId}`);
-      this.wavesurferInstances[cancion.id] = WaveSurfer.create({
+    }
+
+    if (this.wavesurferInstances[cancion.id]) {
+        console.log(`WaveSurfer ya existe para: ${containerId}`);
+        return; // Si ya existe una instancia, no la recrees
+    }
+
+    console.log(`Creando wavesurfer en contenedor: ${containerId}`);
+    this.wavesurferInstances[cancion.id] = WaveSurfer.create({
         container: `#${containerId}`,
         waveColor: '#d9dcff',
         progressColor: '#e51d36',
         height: 50,
         barWidth: 2,
         normalize: true,
-      });
-  
-      console.log('Cargando archivo de audio:', cancion.asset.path);
-      this.wavesurferInstances[cancion.id].load(cancion.asset.path);
-    }, 100);
-  }
+    });
+
+    console.log('Cargando archivo de audio:', cancion.asset?.path);
+    this.wavesurferInstances[cancion.id].load(cancion.asset?.path);
+}
+
+handlePageChange() {
+  // Elimina las ondas de las canciones que ya no están visibles
+  const currentPageIds = this.paginatedCanciones.map((c) => c.id);
+
+  Object.keys(this.wavesurferInstances).forEach((id) => {
+      if (!currentPageIds.includes(Number(id))) {
+          console.log(`Destruyendo instancia de WaveSurfer para: ${id}`);
+          this.wavesurferInstances[Number(id)].destroy();
+          delete this.wavesurferInstances[Number(id)];
+      }
+  });
+
+  // Crea las ondas para las nuevas canciones visibles
+  this.paginatedCanciones.forEach((cancion) => this.createWaveform(cancion));
+}
+
   
 
   togglePlay(cancionId: number) {
@@ -345,12 +385,14 @@ deleteSongs(id: number) {
   prevCancionesPage() {
     if (this.currentCancionesPage > 1) {
       this.currentCancionesPage--;
+      this.handlePageChange();
     }
   }
 
   nextCancionesPage() {
     if (this.currentCancionesPage < this.totalCancionesPages) {
       this.currentCancionesPage++;
+      this.handlePageChange();
     }
   }
 

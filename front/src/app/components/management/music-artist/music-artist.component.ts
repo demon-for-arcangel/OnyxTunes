@@ -61,11 +61,20 @@ export class MusicArtistComponent {
                 const userId = this.user.id; 
                 this.cancionesService.getCancionesByUser(userId).subscribe(
                     (data) => {
-                        this.canciones = data; 
-                        console.log('Canciones cargadas:', this.canciones);
+                        if (data && data.length > 0) {
+                            this.canciones = data; 
+                        } else if (data.msg) {
+                            console.log(data.msg); 
+                            this.canciones = []; 
+                        } else {
+                          this.canciones = [];
+                          console.log("No se encontraron canciones."); 
+                        }
                     },
                     (err) => {
                         console.error('Error al cargar las canciones:', err);
+                        this.canciones = [];
+                        this.searchQuery = "Hubo un error al cargar las canciones.";
                     }
                 );
             } else {
@@ -79,6 +88,7 @@ export class MusicArtistComponent {
         }
     );
 }
+
 
   loadAlbums() {
     this.albumsService.getAlbums().subscribe(

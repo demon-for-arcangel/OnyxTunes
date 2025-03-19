@@ -25,41 +25,48 @@
             </div>
 
             <div class="songs-section">
-                <h2>Lista de Canciones</h2>
-                <table class="music-table">
-                    <thead>
-                        <tr>
-                            <th>Título</th>
-                            <th>Artista</th>
-                            <th>Álbum</th>
-                            <th>Duración</th>
-                            <th>Género</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for(cancion of paginatedCanciones; track cancion){
+                @if (canciones.length === 0) {
+                    <div>
+                        <p class="empty-message">Todavía no tiene subida ninguna canción.</p>
+                    </div>
+                }@else {
+                    <h2>Lista de Canciones</h2>
+                    <table class="music-table">
+                        <thead>
                             <tr>
-                                <td>{{ cancion.titulo || 'Sin título' }}</td>
-                                <td>{{ cancion.artista.nombre || 'Sin artista' }}</td>
-                                <td>{{ cancion.Album?.titulo || 'Sin álbum' }}</td>
-                                <td>{{ formatDuration(cancion.duracion) }}</td>
-                                <td>{{ getGenerosString(cancion.generos) }}</td>
-                                <td>
-                                    <button (click)="editCancion(cancion)">Editar</button>
-                                    <button (click)="deleteSongs(cancion.id)">Eliminar</button>
-                                    <button (click)="showCancion(cancion)">Ver Detalles</button>
-                                </td>
+                                <th>Título</th>
+                                <th>Artista</th>
+                                <th>Álbum</th>
+                                <th>Duración</th>
+                                <th>Género</th>
+                                <th>Acciones</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
-        
-                <div class="pagination-controls">
-                    <button (click)="prevCancionesPage()" [disabled]="currentCancionesPage === 1">Anterior</button>
-                    <span>Página {{ currentCancionesPage }} de {{ totalCancionesPages }}</span>
-                    <button (click)="nextCancionesPage()" [disabled]="currentCancionesPage === totalCancionesPages">Siguiente</button>
-                </div>
+                        </thead>
+                        <tbody>
+                            @for(cancion of paginatedCanciones; track cancion){
+                                <tr>
+                                    <td>{{ cancion.titulo || 'Sin título' }}</td>
+                                    <td>{{ cancion.artista.nombre || 'Sin artista' }}</td>
+                                    <td>{{ cancion.Album?.titulo || 'Sin álbum' }}</td>
+                                    <td>{{ formatDuration(cancion.duracion) }}</td>
+                                    <td>{{ getGenerosString(cancion.generos) }}</td>
+                                    <td>
+                                        <button (click)="editCancion(cancion)">Editar</button>
+                                        <button (click)="deleteSongs(cancion.id)">Eliminar</button>
+                                        <button (click)="showCancion(cancion)">Ver Detalles</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+            
+                    <div class="pagination-controls">
+                        <button (click)="prevCancionesPage()" [disabled]="currentCancionesPage === 1">Anterior</button>
+                        <span>Página {{ currentCancionesPage }} de {{ totalCancionesPages }}</span>
+                        <button (click)="nextCancionesPage()" [disabled]="currentCancionesPage === totalCancionesPages">Siguiente</button>
+                    </div>
+                }
+
             </div>
         }
     

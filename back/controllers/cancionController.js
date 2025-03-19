@@ -47,8 +47,9 @@ const getSongByUser = async (req, res) => {
         const songs = await conx.getSongByUser(userId);
 
         if (!songs || songs.length === 0) {
-            return res.status(404).json({ msg: "No se encontraron canciones para este usuario." });
+            return res.status(200).json({ msg: "Todavía no tiene subida ninguna canción." });
         }
+        
         res.status(200).json(songs);
     } catch (error) {
         console.error('Error al obtener las canciones del usuario:', error);
