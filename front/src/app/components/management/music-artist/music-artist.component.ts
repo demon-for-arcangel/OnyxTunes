@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { Usuario } from '../../../interfaces/usuario';
 import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
+import WaveSurfer from 'wavesurfer.js';
 
 @Component({
   selector: 'app-music-artist',
@@ -33,8 +34,11 @@ export class MusicArtistComponent {
   searchQuery: string = '';
   mostrarCanciones: boolean = true;
 
+  wavesurferInstances: { [key: number]: any } = {};
   ref: DynamicDialogRef | undefined;
   dialog: any;
+
+  createdWaveforms: { [key: number]: boolean } = {};
 
   constructor(private router: Router, private authService: AuthService, private cancionesService: SongService, public dialogService: DialogService, private albumsService: AlbumsService) { }
 
@@ -42,53 +46,116 @@ export class MusicArtistComponent {
     this.loadCanciones();
     this.loadAlbums();
   }
+
+  ngAfterViewChecked() {
+    this.canciones.forEach((cancion) => {
+      if (!this.wavesurferInstances[cancion.id]) {
+        this.createWaveform(cancion);
+      }
+    });
+  }
+
   view(){
     this.mostrarCanciones = !this.mostrarCanciones;
   }
 
   loadCanciones() {
-    const tokenObject = localStorage.getItem('user'); 
-    if (!tokenObject) {
-        console.error('Token no encontrado, redirigiendo a login');
-        this.router.navigate(['/login']);
+      const tokenObject = localStorage.getItem('user'); 
+      if (!tokenObject) {
+          console.error('Token no encontrado, redirigiendo a login');
+          this.router.navigate(['/login']);
+          return;
+      }
+
+      this.authService.getUserByToken(tokenObject).subscribe(
+          (usuario: Usuario | undefined) => {
+              if (usuario) {
+                  this.user = usuario; 
+                  const userId = this.user.id; 
+                  this.cancionesService.getCancionesByUser(userId).subscribe(
+                      (data) => {
+                          if (data && data.length > 0) {
+                              this.canciones = data; 
+                          } else if (data.msg) {
+                              console.log(data.msg); 
+                              this.canciones = []; 
+                          } else {
+                            this.canciones = [];
+                            console.log("No se encontraron canciones."); 
+                          }
+                      },
+                      (err) => {
+                          console.error('Error al cargar las canciones:', err);
+                          this.canciones = [];
+                          this.searchQuery = "Hubo un error al cargar las canciones.";
+                      }
+                  );
+              } else {
+                  console.error('Usuario no encontrado en el token');
+                  this.router.navigate(['/login']);
+              }
+          },
+          (err) => { 
+              console.error('Error al obtener el usuario desde el token:', err);
+              this.router.navigate(['/login']);
+          }
+      );
+  }
+
+  createWaveform(cancion: any) {
+    const containerId = `waveform-${cancion.id}`;
+    const container = document.getElementById(containerId);
+
+    if (!container) {
+        console.warn(`Contenedor no encontrado para: ${containerId}`);
         return;
     }
 
-    this.authService.getUserByToken(tokenObject).subscribe(
-        (usuario: Usuario | undefined) => {
-            if (usuario) {
-                this.user = usuario; 
-                const userId = this.user.id; 
-                this.cancionesService.getCancionesByUser(userId).subscribe(
-                    (data) => {
-                        if (data && data.length > 0) {
-                            this.canciones = data; 
-                        } else if (data.msg) {
-                            console.log(data.msg); 
-                            this.canciones = []; 
-                        } else {
-                          this.canciones = [];
-                          console.log("No se encontraron canciones."); 
-                        }
-                    },
-                    (err) => {
-                        console.error('Error al cargar las canciones:', err);
-                        this.canciones = [];
-                        this.searchQuery = "Hubo un error al cargar las canciones.";
-                    }
-                );
-            } else {
-                console.error('Usuario no encontrado en el token');
-                this.router.navigate(['/login']);
-            }
-        },
-        (err) => { 
-            console.error('Error al obtener el usuario desde el token:', err);
-            this.router.navigate(['/login']);
-        }
-    );
-}
+    if (this.wavesurferInstances[cancion.id]) {
+        console.log(`WaveSurfer ya existe para: ${containerId}`);
+        return; // Si ya existe una instancia, no la recrees
+    }
 
+    console.log(`Creando wavesurfer en contenedor: ${containerId}`);
+    this.wavesurferInstances[cancion.id] = WaveSurfer.create({
+        container: `#${containerId}`,
+        waveColor: '#d9dcff',
+        progressColor: '#e51d36',
+        height: 50,
+        barWidth: 2,
+        normalize: true,
+    });
+
+    console.log('Cargando archivo de audio:', cancion.asset?.path);
+    this.wavesurferInstances[cancion.id].load(cancion.asset?.path);
+  }
+
+  handlePageChange() {
+    // Elimina las ondas de las canciones que ya no están visibles
+    const currentPageIds = this.paginatedCanciones.map((c) => c.id);
+
+    Object.keys(this.wavesurferInstances).forEach((id) => {
+        if (!currentPageIds.includes(Number(id))) {
+            console.log(`Destruyendo instancia de WaveSurfer para: ${id}`);
+            this.wavesurferInstances[Number(id)].destroy();
+            delete this.wavesurferInstances[Number(id)];
+        }
+    });
+
+    // Crea las ondas para las nuevas canciones visibles
+    this.paginatedCanciones.forEach((cancion) => this.createWaveform(cancion));
+  }
+
+  togglePlay(cancionId: number) {
+    const wavesurfer = this.wavesurferInstances[cancionId];
+    if (wavesurfer) {
+      if (wavesurfer.isPlaying()) {
+        wavesurfer.pause();
+      } else {
+        wavesurfer.play();
+      }
+    }
+  }
 
   loadAlbums() {
     this.albumsService.getAlbums().subscribe(

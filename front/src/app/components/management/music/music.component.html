@@ -45,14 +45,14 @@
                                 <td>{{ cancion.artista.nombre || 'Sin artista' }}</td>
                                 <td>{{ cancion.Album?.titulo || 'Sin álbum' }}</td>
 <!--                                 <td>{{ formatDuration(cancion.duracion) }}</td>
- -->                                <td>
+-->                             <td>
                                     <div>
                                         <div id="waveform-{{ cancion.id }}"></div>
                                         <button (click)="togglePlay(cancion.id)">Reproducir</button>
                                     </div>
                                 </td>
 <!--                                 <td>{{ getGenerosString(cancion.generos) }}</td>
- -->                                <td>
+ -->                            <td>
                                     <button (click)="editCancion(cancion)" class="btn-edit">Editar</button>
                                     <button (click)="deleteSongs(cancion.id)" class="btn-delete">Eliminar</button>
                                     <button (click)="showCancion(cancion)" class="btn-show">Ver Detalles</button>

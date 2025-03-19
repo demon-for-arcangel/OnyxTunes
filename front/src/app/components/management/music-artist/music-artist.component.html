@@ -38,7 +38,7 @@
                                 <th>Artista</th>
                                 <th>Álbum</th>
                                 <th>Duración</th>
-                                <th>Género</th>
+                                <!-- <th>Género</th> -->
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -48,8 +48,14 @@
                                     <td>{{ cancion.titulo || 'Sin título' }}</td>
                                     <td>{{ cancion.artista.nombre || 'Sin artista' }}</td>
                                     <td>{{ cancion.Album?.titulo || 'Sin álbum' }}</td>
-                                    <td>{{ formatDuration(cancion.duracion) }}</td>
-                                    <td>{{ getGenerosString(cancion.generos) }}</td>
+                                    <!-- <td>{{ formatDuration(cancion.duracion) }}</td> -->
+                                    <td>
+                                        <div>
+                                            <div id="waveform-{{ cancion.id }}"></div>
+                                            <button (click)="togglePlay(cancion.id)">Reproducir</button>
+                                        </div>
+                                    </td>
+                                    <!-- <td>{{ getGenerosString(cancion.generos) }}</td> -->
                                     <td>
                                         <button (click)="editCancion(cancion)" class="btn-edit">Editar</button>
                                         <button (click)="deleteSongs(cancion.id)" class="btn-delete">Eliminar</button>
@@ -100,9 +106,9 @@
                                 <td>{{ album.numCanciones || 'Sin número de canciones' }}</td>
                                 <td>{{ album.genero || 'Sin género' }}</td>
                                 <td>
-                                    <button (click)="editAlbum(album)">Editar</button>
-                                    <button (click)="deleteAlbum(album.id)">Eliminar</button>
-                                    <button (click)="showAlbum(album)">Ver Detalles</button>
+                                    <button (click)="editAlbum(album)" class="btn-edit">Editar</button>
+                                    <button (click)="deleteAlbum(album.id)" class="btn-delete">Eliminar</button>
+                                    <button (click)="showAlbum(album)" class="btn-show">Ver Detalles</button>
                                 </td>
                             </tr>
                         }

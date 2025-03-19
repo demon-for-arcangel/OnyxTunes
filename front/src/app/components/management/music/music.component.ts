@@ -44,25 +44,12 @@ export class MusicComponent implements OnInit {
     this.loadAlbums();
   }
 
-  /* ngAfterViewChecked() {
+  ngAfterViewChecked() {
     this.canciones.forEach((cancion) => {
-        const containerId = `waveform-${cancion.id}`;
-        const container = document.getElementById(containerId);
-
-        // Solo intenta crear el waveform si aún no está creado y el contenedor existe
-        if (container && !this.createdWaveforms[cancion.id]) {
-            this.createWaveform(cancion);
-            this.createdWaveforms[cancion.id] = true; // Marca como creado
-        }
+      if (!this.wavesurferInstances[cancion.id]) {
+        this.createWaveform(cancion);
+      }
     });
-  } */
-
-    ngAfterViewChecked() {
-      this.canciones.forEach((cancion) => {
-          if (!this.wavesurferInstances[cancion.id]) {
-              this.createWaveform(cancion);
-          }
-      });
   }
 
   loadCanciones() {
@@ -104,25 +91,23 @@ export class MusicComponent implements OnInit {
 
     console.log('Cargando archivo de audio:', cancion.asset?.path);
     this.wavesurferInstances[cancion.id].load(cancion.asset?.path);
-}
+  }
 
-handlePageChange() {
-  // Elimina las ondas de las canciones que ya no están visibles
-  const currentPageIds = this.paginatedCanciones.map((c) => c.id);
+  handlePageChange() {
+    // Elimina las ondas de las canciones que ya no están visibles
+    const currentPageIds = this.paginatedCanciones.map((c) => c.id);
 
-  Object.keys(this.wavesurferInstances).forEach((id) => {
-      if (!currentPageIds.includes(Number(id))) {
-          console.log(`Destruyendo instancia de WaveSurfer para: ${id}`);
-          this.wavesurferInstances[Number(id)].destroy();
-          delete this.wavesurferInstances[Number(id)];
-      }
-  });
+    Object.keys(this.wavesurferInstances).forEach((id) => {
+        if (!currentPageIds.includes(Number(id))) {
+            console.log(`Destruyendo instancia de WaveSurfer para: ${id}`);
+            this.wavesurferInstances[Number(id)].destroy();
+            delete this.wavesurferInstances[Number(id)];
+        }
+    });
 
-  // Crea las ondas para las nuevas canciones visibles
-  this.paginatedCanciones.forEach((cancion) => this.createWaveform(cancion));
-}
-
-  
+    // Crea las ondas para las nuevas canciones visibles
+    this.paginatedCanciones.forEach((cancion) => this.createWaveform(cancion));
+  }
 
   togglePlay(cancionId: number) {
     const wavesurfer = this.wavesurferInstances[cancionId];
