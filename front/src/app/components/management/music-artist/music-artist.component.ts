@@ -131,7 +131,6 @@ export class MusicArtistComponent {
   }
 
   handlePageChange() {
-    // Elimina las ondas de las canciones que ya no están visibles
     const currentPageIds = this.paginatedCanciones.map((c) => c.id);
 
     Object.keys(this.wavesurferInstances).forEach((id) => {
@@ -142,7 +141,6 @@ export class MusicArtistComponent {
         }
     });
 
-    // Crea las ondas para las nuevas canciones visibles
     this.paginatedCanciones.forEach((cancion) => this.createWaveform(cancion));
   }
 
