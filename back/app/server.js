@@ -26,6 +26,7 @@ class Server {
     this.apiLikes = "/api/likes";
     this.apiReproducciones = "/api/reproducciones";
     this.apiSeguidores = "/api/seguidores";
+    this.apiRecommend = "/api/recomendaciones"
 
     this.app.use(
       fileUpload({
@@ -75,7 +76,7 @@ class Server {
       res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
       res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, x-token");
       res.header("Access-Control-Expose-Headers", "x-token"); 
-      res.header("Cross-Origin-Resource-Policy", "cross-origin"); // Para evitar bloqueos de imágenes
+      res.header("Cross-Origin-Resource-Policy", "cross-origin");
       next();
     });
   
@@ -95,6 +96,7 @@ class Server {
     this.app.use(this.apiPlaylist, require("../routes/PlaylistRoutes"));
     this.app.use(this.apiLikes, require("../routes/likesRoutes"));
     this.app.use(this.apiProfile, require("../routes/profileRoutes"));
+    this.app.use(this.apiRecommend, require("../routes/recommendRoutes"))
     this.app.use(
       this.apiReproducciones,
       require("../routes/reproduccionesRoutes"),

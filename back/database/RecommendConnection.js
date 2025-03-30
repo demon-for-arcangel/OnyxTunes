@@ -9,39 +9,48 @@ const models = require("../models");
 class RecommendConnection {
   /**
    * Generar una lista diaria de recomendaciones basada en historial, likes y géneros.
-   * @param {number} userId ID del usuario.
-   * @returns {Promise<any[]>} Lista de canciones recomendadas.
    */
   static async generateDailyRecommendations(userId) {
     try {
-      // Obtener historial del usuario
+      const userExists = await models.Usuario.findByPk(userId);
+      if (!userExists) {
+        console.warn(`El usuario con ID ${userId} no existe.`);
+        return [];
+      }
+  
       const userHistory = await models.Historial.findAll({
         where: { usuarioId: userId },
-        include: [{ model: models.Cancion, as: "cancion" }],
+        include: [
+          {
+            model: models.Cancion,
+            as: "cancion",
+            include: [
+              {
+                model: models.Genero,
+                through: { model: models.GeneroCancion },
+                as: "generos",
+              },
+            ],
+          },
+        ],
       });
-
-      // Obtener likes del usuario
-      const userLikes = await models.Like.findAll({
-        where: { usuarioId: userId },
-        include: [{ model: models.Cancion, as: "cancion" }],
-      });
-
-      // Obtener géneros más escuchados
+  
       const genreCounts = userHistory.reduce((acc, entry) => {
-        const genreId = entry.cancion.generoId;
-        acc[genreId] = (acc[genreId] || 0) + 1;
+        const generos = entry.cancion?.generos || [];
+        generos.forEach((genero) => {
+          acc[genero.id] = (acc[genero.id] || 0) + 1;
+        });
         return acc;
       }, {});
-
+  
       const topGenres = Object.entries(genreCounts)
         .sort(([, countA], [, countB]) => countB - countA)
         .slice(0, 3)
-        .map(([genreId]) => genreId);
-
-      // Canciones más reproducidas por el usuario en el último mes
+        .map(([genreId]) => parseInt(genreId));
+  
       const lastMonth = new Date();
       lastMonth.setMonth(lastMonth.getMonth() - 1);
-
+  
       const frequentlyPlayed = await models.Historial.findAll({
         where: {
           usuarioId: userId,
@@ -56,49 +65,102 @@ class RecommendConnection {
         include: [{ model: models.Cancion, as: "cancion" }],
         limit: 10,
       });
-
-      // Filtrar canciones que no estén en likes
+  
+      const userLikes = await models.Like.findAll({
+        where: { usuarioId: userId },
+        include: [{ model: models.Cancion, as: "cancion" }],
+      });
       const likedSongIds = userLikes.map((like) => like.cancionId);
+  
       const recommendedSongs = await models.Cancion.findAll({
         where: {
           id: {
             [Op.notIn]: likedSongIds,
           },
-          [Op.or]: [
-            { generoId: { [Op.in]: topGenres } },
-            { id: { [Op.in]: userHistory.map((entry) => entry.cancionId) } },
-          ],
         },
+        include: [
+          {
+            model: models.Genero,
+            through: { model: models.GeneroCancion },
+            as: "generos",
+            where: { id: { [Op.in]: topGenres } },
+          },
+        ],
         limit: 20,
       });
-
-      // Mezclar canciones frecuentes y basadas en género
+  
       const dailyRecommendations = [
         ...frequentlyPlayed.map((entry) => entry.cancion),
         ...recommendedSongs,
       ];
-
-      return dailyRecommendations.slice(0, 20); // Máximo 20 recomendaciones diarias
+  
+      return dailyRecommendations.slice(0, 20);
     } catch (error) {
       console.error("Error al generar recomendaciones diarias:", error);
+  
+      const fallbackSongs = await models.Cancion.findAll({
+        order: Sequelize.literal("RAND()"),
+        limit: 20,
+      });
+      return fallbackSongs;
+    }
+  }
+
+  static async getOrCreatePlaylist(userId) {
+    try {
+      let playlist = await models.Playlist.findOne({
+        where: {
+          usuarioId: userId,
+          nombre: "Canciones Recomendadas de Hoy",
+        },
+      });
+  
+      if (!playlist) {
+        console.log("Creando la playlist 'Canciones Recomendadas de Hoy'...");
+        playlist = await models.Playlist.create({
+          usuarioId: userId,
+          nombre: "Canciones Recomendadas de Hoy",
+          descripcion: "Playlist generada automáticamente con las canciones recomendadas para el día.",
+          fechaCreacion: new Date(),
+        });
+      }
+  
+      return playlist;
+    } catch (error) {
+      console.error("Error al verificar o crear la playlist:", error);
+      throw error;
+    }
+  }
+
+  static async addSongsToPlaylist(playlistId, songIds) {
+    try {
+      const playlistEntries = songIds.map((cancionId) => ({
+        playlistId,
+        cancionId,
+        fechaAgregado: new Date(),
+      }));
+  
+      await models.CancionPlaylist.bulkCreate(playlistEntries, {
+        ignoreDuplicates: true, 
+      });
+  
+      console.log("Canciones añadidas a la playlist.");
+    } catch (error) {
+      console.error("Error al añadir canciones a la playlist:", error);
       throw error;
     }
   }
 
   /**
    * Recomendar una canción en cada inicio de sesión basada en géneros más escuchados.
-   * @param {number} userId ID del usuario.
-   * @returns {Promise<any>} Una canción recomendada.
    */
   static async recommendOnLogin(userId) {
     try {
-      // Obtener historial del usuario
       const userHistory = await models.Historial.findAll({
         where: { usuarioId: userId },
         include: [{ model: models.Cancion, as: "cancion" }],
       });
 
-      // Obtener géneros más escuchados
       const genreCounts = userHistory.reduce((acc, entry) => {
         const genreId = entry.cancion.generoId;
         acc[genreId] = (acc[genreId] || 0) + 1;
@@ -110,10 +172,9 @@ class RecommendConnection {
       )[0]?.[0];
 
       if (!topGenre) {
-        return null; // No hay suficientes datos para recomendar
+        return null; 
       }
 
-      // Seleccionar una canción aleatoria del género más escuchado
       const songRecommendation = await models.Cancion.findOne({
         where: {
           generoId: topGenre,
