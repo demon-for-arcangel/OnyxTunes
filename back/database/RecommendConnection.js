@@ -19,69 +19,61 @@ class RecommendConnection {
       }
   
       const userHistory = await models.Historial.findAll({
-        where: { usuarioId: userId },
-        include: [
-          {
-            model: models.Cancion,
-            as: "cancion",
-            include: [
-              {
-                model: models.Genero,
-                through: { model: models.GeneroCancion },
-                as: "generos",
-              },
-            ],
-          },
-        ],
+        where: { usuario_id: userId },
       });
   
-      const genreCounts = userHistory.reduce((acc, entry) => {
-        const generos = entry.cancion?.generos || [];
-        generos.forEach((genero) => {
-          acc[genero.id] = (acc[genero.id] || 0) + 1;
+      if (userHistory.length === 0) {
+        console.warn("El historial del usuario está vacío. Generando canciones aleatorias.");
+        const randomSongs = await models.Cancion.findAll({
+          order: Sequelize.literal("RAND()"),
+          limit: 20,
         });
-        return acc;
-      }, {});
+        return randomSongs;
+      }
+  
+      const historySongIds = userHistory.map((entry) => entry.cancion_id);
+  
+      const genresFromHistory = await models.GeneroCancion.findAll({
+        where: { cancion_id: { [Op.in]: historySongIds } },
+      });
+  
+      if (genresFromHistory.length === 0) {
+        console.warn("No se encontraron géneros en el historial del usuario.");
+      }
+  
+      const genreCounts = {};
+      genresFromHistory.forEach((entry) => {
+        genreCounts[entry.genero_id] = (genreCounts[entry.genero_id] || 0) + 1;
+      });
   
       const topGenres = Object.entries(genreCounts)
         .sort(([, countA], [, countB]) => countB - countA)
         .slice(0, 3)
         .map(([genreId]) => parseInt(genreId));
   
-      const lastMonth = new Date();
-      lastMonth.setMonth(lastMonth.getMonth() - 1);
-  
-      const frequentlyPlayed = await models.Historial.findAll({
-        where: {
-          usuarioId: userId,
-          createdAt: { [Op.gte]: lastMonth },
-        },
-        attributes: [
-          "cancionId",
-          [Sequelize.fn("COUNT", Sequelize.col("cancionId")), "playCount"],
-        ],
-        group: ["cancionId"],
-        order: [[Sequelize.literal("playCount"), "DESC"]],
-        include: [{ model: models.Cancion, as: "cancion" }],
-        limit: 10,
-      });
+      if (topGenres.length === 0) {
+        console.warn("No se encontraron géneros principales. Generando canciones aleatorias.");
+        const randomSongs = await models.Cancion.findAll({
+          order: Sequelize.literal("RAND()"),
+          limit: 20,
+        });
+        return randomSongs;
+      }
   
       const userLikes = await models.Like.findAll({
-        where: { usuarioId: userId },
-        include: [{ model: models.Cancion, as: "cancion" }],
+        where: { usuario_id: userId },
       });
-      const likedSongIds = userLikes.map((like) => like.cancionId);
+  
+      const likedSongIds = userLikes.map((like) => like.cancion_id);
   
       const recommendedSongs = await models.Cancion.findAll({
         where: {
-          id: {
-            [Op.notIn]: likedSongIds,
-          },
+          id: { [Op.notIn]: likedSongIds },
         },
         include: [
           {
             model: models.Genero,
-            through: { model: models.GeneroCancion },
+            through: models.GeneroCancion,
             as: "generos",
             where: { id: { [Op.in]: topGenres } },
           },
@@ -89,12 +81,27 @@ class RecommendConnection {
         limit: 20,
       });
   
+      const frequentlyPlayedIds = userHistory
+        .reduce((counts, entry) => {
+          counts[entry.cancion_id] = (counts[entry.cancion_id] || 0) + 1;
+          return counts;
+        }, {});
+  
+      const frequentlyPlayed = Object.entries(frequentlyPlayedIds)
+        .sort(([, countA], [, countB]) => countB - countA)
+        .slice(0, 10)
+        .map(([songId]) => parseInt(songId));
+  
+      const frequentlyPlayedSongs = await models.Cancion.findAll({
+        where: { id: { [Op.in]: frequentlyPlayed } },
+      });
+  
       const dailyRecommendations = [
-        ...frequentlyPlayed.map((entry) => entry.cancion),
+        ...frequentlyPlayedSongs,
         ...recommendedSongs,
       ];
   
-      return dailyRecommendations.slice(0, 20);
+      return dailyRecommendations.slice(0, 20); 
     } catch (error) {
       console.error("Error al generar recomendaciones diarias:", error);
   
@@ -105,6 +112,7 @@ class RecommendConnection {
       return fallbackSongs;
     }
   }
+
 
   static async getOrCreatePlaylist(userId) {
     try {
@@ -157,7 +165,7 @@ class RecommendConnection {
   static async recommendOnLogin(userId) {
     try {
       const userHistory = await models.Historial.findAll({
-        where: { usuarioId: userId },
+        where: { usuario_id: userId },
         include: [{ model: models.Cancion, as: "cancion" }],
       });
 
