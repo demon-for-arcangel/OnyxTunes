@@ -28,6 +28,11 @@ class RecommendConnection {
           order: Sequelize.literal("RAND()"),
           limit: 20,
         });
+  
+        const songIds = randomSongs.map((song) => song.dataValues.id);
+        console.log("IDs de canciones procesados:", songIds);
+        await this.addSongsToPlaylist(userId, songIds);
+
         return randomSongs;
       }
   
@@ -36,10 +41,6 @@ class RecommendConnection {
       const genresFromHistory = await models.GeneroCancion.findAll({
         where: { cancion_id: { [Op.in]: historySongIds } },
       });
-  
-      if (genresFromHistory.length === 0) {
-        console.warn("No se encontraron géneros en el historial del usuario.");
-      }
   
       const genreCounts = {};
       genresFromHistory.forEach((entry) => {
@@ -50,15 +51,6 @@ class RecommendConnection {
         .sort(([, countA], [, countB]) => countB - countA)
         .slice(0, 3)
         .map(([genreId]) => parseInt(genreId));
-  
-      if (topGenres.length === 0) {
-        console.warn("No se encontraron géneros principales. Generando canciones aleatorias.");
-        const randomSongs = await models.Cancion.findAll({
-          order: Sequelize.literal("RAND()"),
-          limit: 20,
-        });
-        return randomSongs;
-      }
   
       const userLikes = await models.Like.findAll({
         where: { usuario_id: userId },
@@ -101,6 +93,11 @@ class RecommendConnection {
         ...recommendedSongs,
       ];
   
+      const finalSongIds = dailyRecommendations.map((song) => song.id);
+  
+      await this.addSongsToPlaylist(userId, finalSongIds);
++      console.log("Llamada realizada a addSongsToPlaylist con IDs:", finalSongIds)
+  
       return dailyRecommendations.slice(0, 20); 
     } catch (error) {
       console.error("Error al generar recomendaciones diarias:", error);
@@ -109,50 +106,87 @@ class RecommendConnection {
         order: Sequelize.literal("RAND()"),
         limit: 20,
       });
+  
+      await this.addSongsToPlaylist(userId, fallbackSongs.map((song) => song.id));
       return fallbackSongs;
     }
   }
 
-
   static async getOrCreatePlaylist(userId) {
+    console.log("Entrando en getOrCreatePlaylist para el usuario:", userId);
     try {
       let playlist = await models.Playlist.findOne({
-        where: {
-          usuarioId: userId,
-          nombre: "Canciones Recomendadas de Hoy",
-        },
+        include: [
+          {
+            model: models.Usuario,
+            where: { id: userId },
+            through: { model: models.UsuarioPlaylist },
+          },
+        ],
+        where: { nombre: "Recomendación Diaria" },
       });
   
       if (!playlist) {
-        console.log("Creando la playlist 'Canciones Recomendadas de Hoy'...");
+        console.log(`Creando la playlist 'Recomendación Diaria' para el usuario con ID ${userId}.`);
         playlist = await models.Playlist.create({
-          usuarioId: userId,
-          nombre: "Canciones Recomendadas de Hoy",
+          nombre: "Recomendación Diaria",
           descripcion: "Playlist generada automáticamente con las canciones recomendadas para el día.",
           fechaCreacion: new Date(),
         });
+  
+        await models.UsuarioPlaylist.create({
+          usuario_id: userId,
+          playlist_id: playlist.id,
+        });
       }
   
+      if (!playlist || !playlist.id) {
+        throw new Error("No se pudo obtener un ID válido para la playlist.");
+      }
+  
+      console.log("Playlist creada/obtenida con ID:", playlist.id);
       return playlist;
     } catch (error) {
       console.error("Error al verificar o crear la playlist:", error);
       throw error;
     }
   }
-
-  static async addSongsToPlaylist(playlistId, songIds) {
+  
+  static async addSongsToPlaylist(userId, songIds) {
+    console.log("Entrando en addSongsToPlaylist", userId);
     try {
-      const playlistEntries = songIds.map((cancionId) => ({
-        playlistId,
-        cancionId,
-        fechaAgregado: new Date(),
-      }));
+      const playlist = await this.getOrCreatePlaylist(userId);
   
-      await models.CancionPlaylist.bulkCreate(playlistEntries, {
-        ignoreDuplicates: true, 
-      });
+      if (!playlist || !playlist.id) {
+        throw new Error("No se pudo obtener o crear la playlist. Playlist ID es inválido.");
+      }
   
-      console.log("Canciones añadidas a la playlist.");
+      if (!songIds || songIds.length === 0) {
+        console.warn("La lista de canciones está vacía. No se añadirá nada a la playlist.");
+        return;
+      }
+  
+      const validSongIds = songIds.filter((id) => id !== null && id !== undefined);
+  
+      if (validSongIds.length === 0) {
+        console.warn("No hay canciones válidas para añadir a la playlist.");
+        return;
+      }
+  
+      for (const cancionId of validSongIds) {
+        try {
+          await models.PlaylistCancion.create({
+            playlist_id: playlist.id,
+            cancion_id: cancionId,
+            fechaAgregado: new Date(),
+          });
+          console.log(`Canción ${cancionId} añadida a la playlist ${playlist.id}`);
+        } catch (error) {
+          console.error(`Error al añadir la canción ${cancionId} a la playlist:`, error);
+        }
+      }
+  
+      console.log("Canciones añadidas a la playlist 'Recomendación Diaria'.");
     } catch (error) {
       console.error("Error al añadir canciones a la playlist:", error);
       throw error;
