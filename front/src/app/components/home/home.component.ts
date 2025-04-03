@@ -25,6 +25,8 @@ import { AccountButtonComponent } from "../utils/account-button/account-button.c
 })
 export class HomeComponent {
   searchTerm: string = "";
+  especialPlaylists: Playlist[] = [];
+  userPlaylists: Playlist[] = []; 
   playlists: Playlist[] = [];
   userId: number | null = null;
   menuOpen: boolean = false;
@@ -85,11 +87,15 @@ export class HomeComponent {
                 console.log(response);
                 if (response.success) {
                   this.playlists = response.data;
-                } else {
-                  console.error(
-                    "Error al obtener las playlists:",
-                    response.message,
+            
+                  this.especialPlaylists = this.playlists.filter((playlist) =>
+                    playlist.nombre.includes("Recomendación Diaria"),
                   );
+                  this.userPlaylists = this.playlists.filter((playlist) =>
+                    !playlist.nombre.includes("Recomendación Diaria"),
+                  );
+                } else {
+                  console.error("Error al obtener las playlists:", response.message);
                 }
               },
               (error) => {
