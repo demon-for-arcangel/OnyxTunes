@@ -7,14 +7,13 @@
 app-sidebar {
     width: 450px; 
     background-color: var(--color-sidebar);
-    color: #ecf0f1; 
     padding: 20px; 
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
 }
 
 main {
     flex: 1; 
-    background-color: #ecf0f1; 
-    padding: 20px; 
+/*     background-color: #ecf0f1; 
+ */    padding: 20px; 
     overflow-y: auto;
 }
