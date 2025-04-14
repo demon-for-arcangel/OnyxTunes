@@ -6,6 +6,6 @@ const controlador = require("../controllers/recommendController");
 router.get("/daily/:userId", controlador.getDailyRecommendations);
 
 // Ruta para obtener una recomendación de canción al inicio de sesión
-router.get("/login/:userId", controlador.getRecommendationOnLogin);
+router.get("/login/:userId", controlador.getRecommendationOnLogin);//por hacer
 
 module.exports = router;

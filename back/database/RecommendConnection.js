@@ -203,6 +203,13 @@ class RecommendConnection {
         include: [{ model: models.Cancion, as: "cancion" }],
       });
 
+      if (!userHistory.length) {
+        const randomRecommendation = await models.Cancion.findOne({
+          order: Sequelize.literal("RAND()"),
+        });
+        return randomRecommendation;
+      }
+
       const genreCounts = userHistory.reduce((acc, entry) => {
         const genreId = entry.cancion.generoId;
         acc[genreId] = (acc[genreId] || 0) + 1;
