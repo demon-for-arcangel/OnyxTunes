@@ -2,9 +2,9 @@
     <app-sidebar></app-sidebar>
     <main>
         <app-account-button></app-account-button>
-        <h1>Escuchado recientemente</h1>
+        <h1>Escuchado recientemente</h1> <!-- canciones sueltas y playlist que han sido escuchadas por ultima vez -->
         <h2>Especialmente para ti</h2> <!-- lista de reproduccion con canciones recomendadas y canciones que te gustan -->
-        <h2>Especialmente para ti</h2>
+        <!-- añadir canciones sueltas para meter mas recomendaciones (no importa si estas canciones ya fueron recomendadas en la playlist)-->
         @if (especialPlaylists.length > 0) {
             <div>
                 @for (playlist  of especialPlaylists; track playlist) {
@@ -20,7 +20,7 @@
             </div>
         }
 
-        <h2>Nueva música</h2> <!-- listas de reproduccion con cancionens recomendadas 100% -->
+        <h2>Nueva música</h2> <!-- canciones nuevas que se han subido en el mes a la plataforma, intentar que salga dependiendo del usuario como si fuera una recomendación -->
         
         <app-player></app-player>
     </main>
