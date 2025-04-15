@@ -23,7 +23,7 @@ import { RecommendedSongComponent } from "../recommended-song/recommended-song.c
     SidebarComponent,
     PlayerComponent,
     AccountButtonComponent,
-    DialogModule
+    DialogModule, RecommendedSongComponent
   ],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.css",
@@ -40,7 +40,6 @@ export class HomeComponent {
   albumes: string[] = ["album1", "album 2", "album 3", "album 4"];
   listas: string[] = ["lista 1", "lista 2", "lista 3", "lista 4"];
   recommendedSong: any = null;
-  displayPopup: boolean = false;
 
   dialogRef!: DynamicDialogRef;
 
@@ -87,7 +86,7 @@ export class HomeComponent {
           if (usuario?.id) {
             this.userId = usuario.id;
             console.log(this.userId);
-            this.fetchRecommendationOnLogin(this.userId);
+            this.RecommendationOnLogin(this.userId);
 
             this.playlistService.getUserPlaylists(this.userId).subscribe(
               (response) => {
@@ -128,18 +127,18 @@ export class HomeComponent {
     //por hacer
   }
 
-  fetchRecommendationOnLogin(userId: number) {
+  RecommendationOnLogin(userId: number) {
     this.recommendationService.getRecommendationOnLogin(userId.toString()).subscribe((response) => {
       if (response.ok && response.songRecommendation) {
         this.recommendedSong = response.songRecommendation;
-        this.openRecommendationPopup();
+        this.open();
       } else {
         console.error("No se pudo obtener una recomendación:", response.msg);
       }
     });
   }
 
-  openRecommendationPopup() {
+  open() {
     if (!this.recommendedSong) {
       console.error("No hay canción recomendada para mostrar.");
       return;
@@ -163,15 +162,10 @@ export class HomeComponent {
       data: { recommendedSong: this.recommendedSong },
     });
 
-    // Cierra automáticamente el pop-up después de 10 segundos
     setTimeout(() => {
       if (this.dialogRef) {
         this.dialogRef.close();
       }
     }, 10000);
-  }
-
-  closePopup() {
-    this.displayPopup = false;
   }
 }
