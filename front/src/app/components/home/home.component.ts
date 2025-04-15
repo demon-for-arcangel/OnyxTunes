@@ -11,8 +11,9 @@ import { PlaylistComponent } from "../playlist/playlist.component";
 import { PlayerComponent } from "../player/player.component";
 import { AccountButtonComponent } from "../utils/account-button/account-button.component";
 import { RecommendationService } from "../../services/recommendation.service";
-import { DialogService } from "primeng/dynamicdialog";
+import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { DialogModule } from "primeng/dialog";
+import { RecommendedSongComponent } from "../recommended-song/recommended-song.component";
 
 @Component({
   selector: "app-home",
@@ -40,6 +41,8 @@ export class HomeComponent {
   listas: string[] = ["lista 1", "lista 2", "lista 3", "lista 4"];
   recommendedSong: any = null;
   displayPopup: boolean = false;
+
+  dialogRef!: DynamicDialogRef;
 
   constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService, private usuarioService: UserService, private recommendationService: RecommendationService, private dialogService: DialogService) {}
 
@@ -84,6 +87,8 @@ export class HomeComponent {
           if (usuario?.id) {
             this.userId = usuario.id;
             console.log(this.userId);
+            this.fetchRecommendationOnLogin(this.userId);
+
             this.playlistService.getUserPlaylists(this.userId).subscribe(
               (response) => {
                 console.log(response);
@@ -96,7 +101,6 @@ export class HomeComponent {
                   this.userPlaylists = this.playlists.filter((playlist) =>
                     !playlist.nombre.includes("Recomendación Diaria"),
                   );
-                  this.checkDailyRecommendation();
                 } else {
                   console.error("Error al obtener las playlists:", response.message);
                 }
@@ -124,46 +128,47 @@ export class HomeComponent {
     //por hacer
   }
 
+  fetchRecommendationOnLogin(userId: number) {
+    this.recommendationService.getRecommendationOnLogin(userId.toString()).subscribe((response) => {
+      if (response.ok && response.songRecommendation) {
+        this.recommendedSong = response.songRecommendation;
+        this.openRecommendationPopup();
+      } else {
+        console.error("No se pudo obtener una recomendación:", response.msg);
+      }
+    });
+  }
+
   openRecommendationPopup() {
     if (!this.recommendedSong) {
       console.error("No hay canción recomendada para mostrar.");
       return;
     }
-  
-    this.dialogService.open(HomeComponent, {
+
+    this.dialogRef = this.dialogService.open(RecommendedSongComponent, {
       header: "Tu recomendación del día",
-      width: "50vw",
-      styleClass: "custom-dialog",
-      closable: true,
-      contentStyle: { "text-align": "center" },
-      data: {
-        recommendedSong: this.recommendedSong, // Pasa la canción recomendada
+      width: "40vw",
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
       },
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e',
+      },
+      closable: false,
+      data: { recommendedSong: this.recommendedSong },
     });
-  }
 
-  checkDailyRecommendation() {
-    this.fetchRecommendationOnLogin(); // Directamente llama a `fetchRecommendationOnLogin` para pedir al servidor la recomendación
-  }
-
-  fetchRecommendationOnLogin() {
-    if (!this.userId) {
-      console.error("Error: userId no está definido.");
-      return;
-    }
-  
-    this.recommendationService.getRecommendationOnLogin(this.userId.toString()).subscribe(
-      (response) => {
-        if (response.ok && response.songRecommendation) {
-          this.recommendedSong = response.songRecommendation; // Recibe la recomendación directamente del servidor
-        } else {
-          console.error("No se pudo obtener una recomendación:", response.msg);
-        }
-      },
-      (error) => {
-        console.error("Error en la solicitud de recomendación:", error);
+    // Cierra automáticamente el pop-up después de 10 segundos
+    setTimeout(() => {
+      if (this.dialogRef) {
+        this.dialogRef.close();
       }
-    );
+    }, 10000);
   }
 
   closePopup() {
