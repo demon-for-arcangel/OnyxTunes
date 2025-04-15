@@ -22,6 +22,25 @@
 
         <h2>Nueva música</h2> <!-- canciones nuevas que se han subido en el mes a la plataforma, intentar que salga dependiendo del usuario como si fuera una recomendación -->
         
+        <h2>Recomendación del día</h2>
+        @if (recommendedSong) {
+            <div>
+                <p><strong>{{ recommendedSong.titulo }}</strong> - {{ recommendedSong.artista }}</p>
+                <button (click)="openRecommendationPopup()">Mostrar más detalles</button>
+              </div>
+              
+        }
+        
+        <p-dialog [(visible)]="displayPopup" modal="true" header="Recomendación del día">
+            @if (recommendedSong) {
+                <div>
+                    <p><strong>{{ recommendedSong.titulo }}</strong> - {{ recommendedSong.artista }}</p>
+                    <p><strong>Duración:</strong> {{ recommendedSong.duracion }}</p>
+                </div>
+            }
+
+            <button pButton type="button" (click)="closePopup()" label="Cerrar"></button>
+          </p-dialog>
         <app-player></app-player>
     </main>
 </div>

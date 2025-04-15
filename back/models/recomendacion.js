@@ -11,12 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Usuario, {
+        foreignKey: 'usuario_id',
+      });
+      this.belongsTo(models.Cancion, {
+        foreignKey: 'cancion_id',
+        as: 'Cancion',
+      })
     }
   }
   Recomendacion.init({
     usuario_id: DataTypes.INTEGER,
     cancion_id: DataTypes.INTEGER,
-    fecha_recomendacion: DataTypes.DATE
+    fecha_recomendacion: DataTypes.DATE,
+    habilitada: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Recomendacion',

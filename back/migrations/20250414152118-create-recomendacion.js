@@ -1,8 +1,11 @@
 'use strict';
+
+const { DataTypes } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Recomendacions', {
+    await queryInterface.createTable(process.env.TABLA_RECOMENDACIONES, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -22,13 +25,18 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: process.env.TABLA_CANCION, //revisar si esta bien puesto
+            tableName: process.env.TABLA_CANCION,
           },
           key: 'id',
         },
       },
       fecha_recomendacion: {
         type: Sequelize.DATE
+      },
+      habilitada: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true, 
       },
       createdAt: {
         allowNull: false,
@@ -41,6 +49,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Recomendacions');
+    await queryInterface.dropTable(process.env.TABLA_RECOMENDACIONES);
   }
 };
