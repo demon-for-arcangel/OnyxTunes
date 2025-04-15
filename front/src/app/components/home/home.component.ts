@@ -143,41 +143,27 @@ export class HomeComponent {
   }
 
   checkDailyRecommendation() {
-    const lastRecommendationDate = localStorage.getItem("lastRecommendationDate");
-    const today = new Date().toISOString().slice(0, 10);
-  
-    // Si la recomendación ya fue generada hoy
-    if (lastRecommendationDate === today) {
-      console.log("Cargando recomendación existente para hoy.");
-      const storedRecommendation = localStorage.getItem("recommendedSong");
-      if (storedRecommendation) {
-        this.recommendedSong = JSON.parse(storedRecommendation); // Recupera la recomendación guardada
-      }
-      return; // No solicita una nueva recomendación
-    }
-  
-    // Si no hay recomendación para hoy, genera una nueva
-    this.fetchRecommendationOnLogin();
+    this.fetchRecommendationOnLogin(); // Directamente llama a `fetchRecommendationOnLogin` para pedir al servidor la recomendación
   }
 
   fetchRecommendationOnLogin() {
     if (!this.userId) {
-      console.error("Errorç: userId no está definido");
+      console.error("Error: userId no está definido.");
       return;
     }
+  
     this.recommendationService.getRecommendationOnLogin(this.userId.toString()).subscribe(
       (response) => {
         if (response.ok && response.songRecommendation) {
-          this.recommendedSong = response.songRecommendation;
-          localStorage.setItem("lastRecommendationDate", new Date().toISOString().slice(0, 10));
+          this.recommendedSong = response.songRecommendation; // Recibe la recomendación directamente del servidor
         } else {
           console.error("No se pudo obtener una recomendación:", response.msg);
         }
       },
       (error) => {
-        console.error("Error en la solicitud de recomendación:", error)
+        console.error("Error en la solicitud de recomendación:", error);
       }
-    )
+    );
   }
 
   closePopup() {

@@ -13,6 +13,6 @@ export class RecommendationService {
   //recommendationUrl = environment.recomendationsUrl
 
   getRecommendationOnLogin(userId: string): Observable<any> {
-    return this.http.get<any>(`${this.url}` + `/recomendaciones/login/${userId}`);
+    return this.http.get<any>(`${this.url}/recomendaciones/login/${userId}`);
   }
 }

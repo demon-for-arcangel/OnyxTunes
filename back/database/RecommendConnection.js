@@ -198,30 +198,27 @@ class RecommendConnection {
    */
   static async recommendOnLogin(userId) {
     try {
-      // Verificar si el usuario tiene activadas las recomendaciones
       const userPreference = await models.Recomendacion.findOne({
         where: { usuario_id: userId },
       });
   
       if (userPreference && !userPreference.habilitada) {
         console.log("El usuario ha deshabilitado las recomendaciones.");
-        return null; // No generar una nueva recomendación
+        return null;
       }
   
       const userHistory = await models.Historial.findAll({
         where: { usuario_id: userId },
-        include: [{ model: models.Cancion, as: "cancion" }],
+        include: [{ model: models.Cancion, as: "cancion" }], 
       });
   
       let songRecommendation;
   
       if (!userHistory.length) {
-        // Si no hay historial, elegir una canción aleatoria
         songRecommendation = await models.Cancion.findOne({
           order: Sequelize.literal("RAND()"),
         });
       } else {
-        // Contar géneros más escuchados por el usuario
         const genreCounts = userHistory.reduce((acc, entry) => {
           const genreId = entry.cancion?.generoId;
           if (genreId) {
@@ -238,7 +235,6 @@ class RecommendConnection {
           return null;
         }
   
-        // Buscar una canción recomendada basada en el género más escuchado
         songRecommendation = await models.Cancion.findOne({
           where: {
             generoId: topGenre,
@@ -254,15 +250,19 @@ class RecommendConnection {
         return null;
       }
   
-      // Guardar la recomendación en la base de datos
-      await models.Recomendacion.create({
+      const newRecommendation = await models.Recomendacion.create({
         usuario_id: userId,
         cancion_id: songRecommendation.id,
         fecha_recomendacion: new Date(),
-        habilitada: true, // Guardar como habilitada por defecto
+        habilitada: true,
       });
   
-      return songRecommendation;
+      const recommendationWithSong = await models.Recomendacion.findOne({
+        where: { id: newRecommendation.id },
+        include: [{ model: models.Cancion, as: "cancion" }], 
+      });
+  
+      return recommendationWithSong.cancion;
     } catch (error) {
       console.error("Error al recomendar una canción en inicio de sesión:", error);
       throw error;

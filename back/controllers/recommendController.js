@@ -37,8 +37,6 @@ class RecommendController {
 
   /**
    * Recomendar una canción en el inicio de sesión.
-   * @param {request} req - Objeto de solicitud HTTP.
-   * @param {response} res - Objeto de respuesta HTTP.
    */
   static async getRecommendationOnLogin(req, res) {
     try {
@@ -51,28 +49,26 @@ class RecommendController {
         });
       }
   
-      // Obtener la fecha actual
       const today = new Date();
-      today.setHours(0, 0, 0, 0); // Establecer hora en 00:00:00 para comparar solo la fecha
+      today.setHours(0, 0, 0, 0);
   
-      // Buscar si ya existe una recomendación para hoy
       const existingRecommendation = await models.Recomendacion.findOne({
         where: {
           usuario_id: userId,
         },
         include: [{ model: models.Cancion, as: "Cancion" }],
-        order: [["fecha_recomendacion", "DESC"]], // Obtener la última recomendación
+        order: [["fecha_recomendacion", "DESC"]], 
       });
+
+      console.log("Recomendación existente:", existingRecommendation);
   
-      // Comprobar si la última recomendación es de hoy
       if (existingRecommendation && new Date(existingRecommendation.fecha_recomendacion).setHours(0, 0, 0, 0) === today.getTime()) {
         return res.status(200).json({
           ok: true,
-          songRecommendation: existingRecommendation.cancion,
+          songRecommendation: existingRecommendation.Cancion.dataValues,
         });
       }
   
-      // Generar una nueva recomendación si no hay una previa para hoy
       const songRecommendation = await conx.recommendOnLogin(userId);
   
       if (!songRecommendation) {
@@ -82,7 +78,6 @@ class RecommendController {
         });
       }
   
-      // Guardar la recomendación en la base de datos
       await models.Recomendacion.create({
         usuario_id: userId,
         cancion_id: songRecommendation.id,
