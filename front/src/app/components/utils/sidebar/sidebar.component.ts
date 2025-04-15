@@ -55,9 +55,11 @@ export class SidebarComponent {
               this.userId = usuario.id
               console.log(this.userId)
               this.playlistService.getUserPlaylists(this.userId).subscribe(response => {
-                console.log(response)
+                console.log(response);
                 if (response.success) {
-                  this.playlists = response.data;
+                  this.playlists = response.data.filter((playlist: Playlist) =>
+                    !playlist.nombre.includes("Recomendación Diaria")
+                  );
                 } else {
                   console.error('Error al obtener las playlists:', response.message);
                 }

@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
     album_id: DataTypes.INTEGER,
     artista_id: DataTypes.INTEGER,
     assetId: DataTypes.INTEGER,
-
+    portadaURL: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'Cancion',

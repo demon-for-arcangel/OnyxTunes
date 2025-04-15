@@ -10,6 +10,9 @@ import { SidebarComponent } from "../utils/sidebar/sidebar.component";
 import { PlaylistComponent } from "../playlist/playlist.component";
 import { PlayerComponent } from "../player/player.component";
 import { AccountButtonComponent } from "../utils/account-button/account-button.component";
+import { RecommendationService } from "../../services/recommendation.service";
+import { DialogService } from "primeng/dynamicdialog";
+import { DialogModule } from "primeng/dialog";
 
 @Component({
   selector: "app-home",
@@ -19,25 +22,26 @@ import { AccountButtonComponent } from "../utils/account-button/account-button.c
     SidebarComponent,
     PlayerComponent,
     AccountButtonComponent,
+    DialogModule
   ],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.css",
+  providers: [DialogService]
 })
 export class HomeComponent {
   searchTerm: string = "";
+  especialPlaylists: Playlist[] = [];
+  userPlaylists: Playlist[] = []; 
   playlists: Playlist[] = [];
   userId: number | null = null;
   menuOpen: boolean = false;
   artists: string[] = ["Artista 1", "Artista 2", "Artista 3", "Artista 4"];
   albumes: string[] = ["album1", "album 2", "album 3", "album 4"];
   listas: string[] = ["lista 1", "lista 2", "lista 3", "lista 4"];
+  recommendedSong: any = null;
+  displayPopup: boolean = false;
 
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private playlistService: PlaylistService,
-    private usuarioService: UserService,
-  ) {}
+  constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService, private usuarioService: UserService, private recommendationService: RecommendationService, private dialogService: DialogService) {}
 
   ngOnInit() {
     this.loadUserId();
@@ -85,11 +89,16 @@ export class HomeComponent {
                 console.log(response);
                 if (response.success) {
                   this.playlists = response.data;
-                } else {
-                  console.error(
-                    "Error al obtener las playlists:",
-                    response.message,
+            
+                  this.especialPlaylists = this.playlists.filter((playlist) =>
+                    playlist.nombre.includes("Recomendación Diaria"),
                   );
+                  this.userPlaylists = this.playlists.filter((playlist) =>
+                    !playlist.nombre.includes("Recomendación Diaria"),
+                  );
+                  this.checkDailyRecommendation();
+                } else {
+                  console.error("Error al obtener las playlists:", response.message);
                 }
               },
               (error) => {
@@ -113,5 +122,51 @@ export class HomeComponent {
 
   crearPlaylist() {
     //por hacer
+  }
+
+  openRecommendationPopup() {
+    if (!this.recommendedSong) {
+      console.error("No hay canción recomendada para mostrar.");
+      return;
+    }
+  
+    this.dialogService.open(HomeComponent, {
+      header: "Tu recomendación del día",
+      width: "50vw",
+      styleClass: "custom-dialog",
+      closable: true,
+      contentStyle: { "text-align": "center" },
+      data: {
+        recommendedSong: this.recommendedSong, // Pasa la canción recomendada
+      },
+    });
+  }
+
+  checkDailyRecommendation() {
+    this.fetchRecommendationOnLogin(); // Directamente llama a `fetchRecommendationOnLogin` para pedir al servidor la recomendación
+  }
+
+  fetchRecommendationOnLogin() {
+    if (!this.userId) {
+      console.error("Error: userId no está definido.");
+      return;
+    }
+  
+    this.recommendationService.getRecommendationOnLogin(this.userId.toString()).subscribe(
+      (response) => {
+        if (response.ok && response.songRecommendation) {
+          this.recommendedSong = response.songRecommendation; // Recibe la recomendación directamente del servidor
+        } else {
+          console.error("No se pudo obtener una recomendación:", response.msg);
+        }
+      },
+      (error) => {
+        console.error("Error en la solicitud de recomendación:", error);
+      }
+    );
+  }
+
+  closePopup() {
+    this.displayPopup = false;
   }
 }

@@ -2,6 +2,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+/*     console.log("Tabla Asset:", process.env.TABLA_ASSET); // Verifica que se imprime correctamente
+ */
     await queryInterface.createTable(process.env.TABLA_ASSET, {
       id: {
         allowNull: false,
@@ -10,8 +12,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       path: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.TEXT,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

@@ -16,6 +16,7 @@ export class SettingsComponent {
   user: any = {}; 
   errorMessages: Errors = {};
   successMessage: string = '';
+  selectedFile: File | null = null;
 
   constructor(private authService: AuthService, private userService: UserService) { }
 
@@ -26,6 +27,7 @@ export class SettingsComponent {
   loadUserData() {
     this.authService.getUserByToken(localStorage.getItem('user')).subscribe(data => {
       this.user = data; 
+      console.log(this.user)
       if (this.user.fecha_nacimiento) {
         this.user.fecha_nacimiento = this.formatDate(this.user.fecha_nacimiento);
       }
@@ -33,6 +35,19 @@ export class SettingsComponent {
       console.error('Error al cargar los datos del usuario:', error);
     });
   }
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+  
+    if (file) {
+      console.log("Archivo seleccionado:", file);
+      this.selectedFile = file;
+      this.user.foto_perfil = URL.createObjectURL(file); 
+    } else {
+      console.error("No se seleccionó ningún archivo.");
+    }
+  }
+  
 
   validateEmail(email: string): boolean {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
@@ -52,7 +67,7 @@ export class SettingsComponent {
     const day = String(date.getDate()).padStart(2, '0'); 
 
     return `${year}-${month}-${day}`; 
-}
+  }
 
   saveChanges() {
     this.errorMessages = {}; 
@@ -76,7 +91,6 @@ export class SettingsComponent {
     } else {
       this.user.fecha_nacimiento = this.formatDate(this.user.fecha_nacimiento); 
     }
-
     if (!this.user.telefono) {
       this.errorMessages.telefono = 'El número de teléfono es obligatorio.';
     } else if (!this.validatePhoneNumber(this.user.telefono)) {
@@ -88,12 +102,24 @@ export class SettingsComponent {
       return;
     }
 
-    this.userService.updateUser(this.user.id, this.user).subscribe(
-      response => {
+    const formData = new FormData();
+    formData.append('nombre', this.user.nombre);
+    formData.append('nickname', this.user.nickname);
+    formData.append('email', this.user.email);
+    formData.append('genero', this.user.genero);
+    formData.append('fecha_nacimiento', this.user.fecha_nacimiento);
+    formData.append('telefono', this.user.telefono);
+
+    if (this.selectedFile) {
+      formData.append('imagen', this.selectedFile, this.selectedFile.name);
+    }
+
+    this.userService.updateUser(this.user.id, formData).subscribe(
+      (response) => {
         console.log('Usuario actualizado:', response);
         this.successMessage = 'Actualizado correctamente.';
       },
-      error => {
+      (error) => {
         console.error('Error al actualizar el usuario:', error);
       }
     );

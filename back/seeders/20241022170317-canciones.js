@@ -18,7 +18,8 @@ module.exports = {
       duracion: 120,
       reproducciones: 30,
       album_id: 1,    
-      artista_id: 1,  
+      artista_id: 1, 
+      portadaURL: 'https://via.placeholder.com/150', 
       createdAt: new Date(),
       updatedAt: new Date()
     },
@@ -28,6 +29,7 @@ module.exports = {
       reproducciones: 7321,
       album_id: 1,    
       artista_id: 2,    
+      portadaURL: 'https://via.placeholder.com/150',
       createdAt: new Date(),
       updatedAt: new Date()
     },
@@ -37,6 +39,7 @@ module.exports = {
       reproducciones: 18000,
       album_id: 2,    
       artista_id: 1,  
+      portadaURL: 'https://via.placeholder.com/150',
       createdAt: new Date(),
       updatedAt: new Date()
     },
@@ -46,6 +49,7 @@ module.exports = {
       reproducciones: 11855,
       album_id: 2,    
       artista_id: 2,  
+      portadaURL: 'https://via.placeholder.com/150',
       createdAt: new Date(),
       updatedAt: new Date()
     }

@@ -75,7 +75,7 @@ const deleteGeneros = async (req, res) => {
             return res.status(400).json({ msg: "No se proporcionaron IDs de géneros para eliminar." });
         }
 
-        const result = await generoConnection.deleteGeneros(generosIds);
+        const result = await conx.deleteGeneros(generosIds);
 
         res.status(200).json({ 
             msg: `${result} géneros eliminados exitosamente.` 

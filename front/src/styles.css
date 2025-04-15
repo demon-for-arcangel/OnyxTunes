@@ -1,18 +1,7 @@
-/* @import "./theme.css"; */
-/* @import 'quill/dist/quill.snow.css';
-
-@import '@fortawesome/fontawesome-free/css/all.min.css'; */
 @import '../node_modules/primeicons/primeicons.css';
-/* :root {
-    display: flex;
-    flex-direction: column;
-    background-color: black;
-}
 
 
- */
-
- html, body {
+html, body {
     min-height: 100vh; 
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -37,3 +26,87 @@
     font-size: 1.2rem ;
     font-weight: 500 ;
 }
+
+:root {
+    /* Colores principales */
+    --color-background: #121212;
+    --color-surface: #181818;
+    --color-surface-light: #282828;
+    --color-primary: #e51d36;
+    --color-primary-hover: #f02e46;
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #b3b3b3;
+    --color-text-disabled: #727272;
+    --color-sidebar: #000000;
+  
+    /* Colores de acento */
+    --color-neutro: #555;
+    --color-success: #1db954;
+    --color-error: #e51d36;
+    --color-warning: #f59b23;
+
+    /* Colores de botones */
+    --color-btn-red: #B22222;
+    --hover-btn-red: #660000;
+    --color-btn-gray: #E0E0E0;
+    --hover-btn-gray: #FFFFFF;
+    --color-btn-green: #008000;
+    --hover-btn-green: #32CD32; /* o #66CDAA */
+    --color-btn-orange: #FF8C00;
+    --hover-btn-orange: #FFB347;
+    --view-toggle-color: #8A2BE2;
+    --view-toggle-hover: #6C1CBF;
+
+
+    /* Sombras */
+    --shadow-elevation-low: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-elevation-medium: 0 4px 8px rgba(0, 0, 0, 0.4);
+    --shadow-elevation-high: 0 8px 16px rgba(0, 0, 0, 0.5);
+  }
+  
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: "Montserrat", "Roboto", sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Estilos para scrollbars personalizados */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--color-background);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-surface-light);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-disabled);
+  }
+  
+  /* Clases de utilidad para colores */
+  .text-primary {
+    color: var(--color-text-primary);
+  }
+  .text-secondary {
+    color: var(--color-text-secondary);
+  }
+  .text-accent {
+    color: var(--color-accent);
+  }
+  .bg-surface {
+    background-color: var(--color-surface);
+  }
+  .bg-surface-light {
+    background-color: var(--color-surface-light);
+  }
+  .bg-accent {
+    background-color: var(--color-accent);
+  }
+  

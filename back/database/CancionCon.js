@@ -2,9 +2,11 @@ require("dotenv").config();
 const { Sequelize, Op } = require("sequelize");
 const models = require("../models/index.js");
 const Conexion = require("./connection.js");
-/* const { subirArchivo } = require("../helpers/subir-archivo.js");
- */
-const { uploadAudioToS3 } = require("../helpers/upload-file-aws.js");
+// Usar para subir archivos en local
+//const { subirArchivo } = require("../helpers/subir-archivo.js");
+const { uploadAudioToS3, uploadImageToS3 } = require("../helpers/upload-file-minio.js")
+const crypto = require('crypto');
+const fs = require("fs");
 
 const conexion = new Conexion();
 
@@ -187,7 +189,11 @@ class SongModel {
     
                 const bucketName = process.env.AWS_BUCKET;
                 const folder = "canciones";
-                const filename = `${folder}/${Date.now()}_${file.name}`;
+    
+                const originalFileName = file.name;
+    
+                const filename = `${folder}/${originalFileName}`;
+    
                 const fileUrl = await uploadAudioToS3(filename, bucketName, file.data);
     
                 const newAsset = await models.Asset.create({
@@ -224,25 +230,58 @@ class SongModel {
             throw new Error("Error al crear la canción");
         }
     }
-    
-       
 
-    async updateSong(songId, updatedData) {
+    async updateSong(songId, updatedData, files) {
         try {
             const song = await models.Cancion.findByPk(songId, {
                 include: [{ model: models.Like }]
             });
+
+            let portadaPath = song.portadaURL;
+    
             if (!song) {
                 throw new Error('Canción no encontrada');
             }
-            
-            const updatedSong = await song.update(updatedData);
-            return updatedSong;
+    
+            if (files && files.portada) {
+                const file = files.portada;
+    
+                if (!file.mimetype.startsWith("image/")) {
+                    throw new Error("Archivo inválido: debe ser una imagen.");
+                }
+
+                if (!file.data || file.data.length === 0) {
+                    const tempFilePath = file.tempFilePath;
+                    if (!tempFilePath) {
+                        throw new Error("Archivo inválido: No se pudo leer el contenido.");
+                    }
+                    file.data = fs.readFileSync(tempFilePath);
+                }
+    
+                const bucketName = process.env.MINIO_BUCKET;
+                const folder = "portadas_canciones"; 
+                console.log(file.name)
+                console.log(file)
+    
+                const filename = `${folder}/${Date.now()}_${file.name}`;
+    
+                portadaPath = await uploadImageToS3(bucketName, filename, file.data);
+            }
+    
+            const updatedSong = await song.update({
+                ...updatedData,
+                portadaURL: portadaPath,
+            });
+    
+            return {
+                message: "Canción actualizada con éxito.",
+                cancion: updatedSong
+            };
         } catch (error) {
             console.error('Error al actualizar la canción:', error);
             throw new Error('Error al actualizar la canción');
         }
-    }
+    }    
      
     async deleteSong(songsIds) { //mirar para incluir los assets
         try {

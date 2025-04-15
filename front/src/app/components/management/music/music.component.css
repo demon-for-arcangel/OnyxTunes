@@ -1,12 +1,20 @@
 header {
-    background-color: #2c3e50; 
-    color: #ecf0f1; 
+    background: linear-gradient(90deg, #1e1e1e, #e51d36);
+    background-size: 200% 200%;
+    animation: gradientAnimation 30s infinite;    
+    color: #ecf0f1;
     padding: 15px 20px;
     display: flex;
     height: 65px;
-    justify-content: space-between; 
-    align-items: center; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); 
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .header-content {
@@ -22,15 +30,7 @@ header {
     left: 10px;  
     top: 10px;   
     z-index: 100;
-  }
-
-.login-container {
-    max-width: 400px; 
-    margin: 50px auto; 
-    padding: 20px; 
-    background-color: #ffffff;
-    border-radius: 8px; 
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 90px;
 }
 
 .music-management {
@@ -47,7 +47,7 @@ header {
 
 .back-button {
     padding: 8px 16px;
-    background-color: #d32f2f; 
+    background-color: var(--color-neutro); 
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -56,13 +56,28 @@ header {
     gap: 8px;
 }
 
-.back-button:hover {
-    background-color: #b71c1c;
+.btn-delete {
+    background-color: var(--color-btn-red);
+    color: black;
+}
+.btn-delete:hover {
+    background-color: var(--hover-btn-red);
 }
 
-.music-management h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
+.btn-edit {
+    background-color: var(--color-btn-orange);
+    color: black;
+}
+.btn-edit:hover {
+    background-color: var(--hover-btn-orange);
+}
+
+.btn-show {
+    background-color: var(--color-btn-gray);
+    color: black;
+}
+.btn-show:hover {
+    background-color: var(--hover-btn-gray);
 }
 
 .search-bar {
@@ -86,28 +101,31 @@ header {
 
 .search-bar button {
     padding: 8px 16px;
-    background-color: #d32f2f; 
-    color: white;
+    background-color: var(--color-btn-green);
+    color: black; 
     border: none;
     cursor: pointer;
     border-radius: 4px;
 }
 
 .search-bar button:hover {
-    background-color: #b71c1c; 
+    background-color: var(--hover-btn-green); 
 }
 
 .music-table {
+    background-color: var(--color-surface);
     width: 100%;
     border-collapse: collapse;
-    color: black;
     margin-bottom: 20px;
 }
 
 .music-table th, .music-table td {
     padding: 10px;
-    border: 1px solid #ddd;
     text-align: left;
+}
+
+tbody {
+    background-color: var(--color-surface-light);
 }
 
 .pagination-controls {
@@ -148,10 +166,6 @@ button {
     border-radius: 4px;
 }
 
-button:hover {
-    background-color: #005bb5; 
-}
-
 .filter-container {
     margin: 1rem 0;
 }
@@ -187,4 +201,15 @@ select option {
 
 .music-actions button:hover {
     background-color: #005bb5; 
+}
+
+.btn-selector {
+    background: linear-gradient(45deg, #e51d36, #1e1e1e);
+    color: white;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-selector:hover {
+    background: linear-gradient(45deg, #1e1e1e, #e51d36);
+    transform: scale(1.05);
 }
