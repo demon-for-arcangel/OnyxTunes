@@ -1,0 +1,149 @@
+header {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 15px 20px;
+    display: flex;
+    height: 65px;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); 
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: auto;
+}
+
+.logo {
+    height: 70px;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    z-index: 100;
+}
+
+.genres-management {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.back-button:hover {
+    background-color: #b71c1c;
+}
+
+.search-bar {
+    display: flex;
+    margin-bottom: 20px;
+    gap: 10px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-bar input {
+    background-color: var(--color-surface-light);
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 28px;
+    width: 400px;
+    border: 1px solid #ddd;
+}
+
+.search-bar button {
+    padding: 8px 16px;
+    background-color: #d32f2f; 
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.search-bar button:hover {
+    background-color: #b71c1c; 
+}
+
+.genres-table {
+    background-color: var(--color-surface);
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.genres-table th, .genres-table td {
+    padding: 10px;
+    text-align: left;
+}
+
+tbody {
+    background-color: var(--color-surface-light);
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pagination-controls button {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination-controls button[disabled] {
+    background-color: #555; 
+    cursor: not-allowed;
+}
+
+.pagination-controls button:hover:not([disabled]) {
+    background-color: #005bb5; 
+}
+
+button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #005bb5; 
+}
+
+.filter-container {
+    margin: 1rem 0;
+}
+
+select {
+    padding: 0.5rem;
+    border-radius: 4px;
+    background-color: #1e1e1e;
+    color: white;
+    border: 1px solid #333;
+}
+
+select option {
+    background-color: #1e1e1e;
+    color: white;
+}

@@ -17,6 +17,7 @@ module.exports = {
         nombre: 'Favoritos',
         descripcion: 'Una lista de mis canciones favoritas.',
         publico: false,
+        portadaURL: 'https://via.placeholder.com/150',
         createdAt: new Date(),
         updatedAt: new Date()
       }

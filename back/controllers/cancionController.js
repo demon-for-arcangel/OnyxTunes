@@ -47,8 +47,9 @@ const getSongByUser = async (req, res) => {
         const songs = await conx.getSongByUser(userId);
 
         if (!songs || songs.length === 0) {
-            return res.status(404).json({ msg: "No se encontraron canciones para este usuario." });
+            return res.status(200).json({ msg: "Todavía no tiene subida ninguna canción." });
         }
+        
         res.status(200).json(songs);
     } catch (error) {
         console.error('Error al obtener las canciones del usuario:', error);
@@ -66,9 +67,10 @@ const createSong = async (req, res) => {
     }
 };
 
-  const updateSong = async (req, res) => {
+const updateSong = async (req, res) => {
     const songId = req.params.id; 
     const updatedData = req.body;
+    const files = req.files; 
 
     try {
         const existingSong = await conx.getSongById(songId);
@@ -76,7 +78,7 @@ const createSong = async (req, res) => {
             return res.status(404).json({ msg: "Canción no encontrada" });
         }
 
-        const updatedSong = await conx.updateSong(songId, updatedData);
+        const updatedSong = await conx.updateSong(songId, updatedData, files); 
 
         res.status(200).json({ msg: "Canción actualizada exitosamente", song: updatedSong });
     } catch (error) {
@@ -84,6 +86,7 @@ const createSong = async (req, res) => {
         res.status(500).json({ msg: "Error al actualizar la canción" });
     }
 };
+
 
 const deleteSong = async (req, res) => {
     const { songsIds } = req.body; 

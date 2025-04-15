@@ -31,6 +31,9 @@ module.exports = {
       publico: {
         type: DataTypes.BOOLEAN
       },
+      portadaURL: {
+        type: Sequelize.TEXT
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

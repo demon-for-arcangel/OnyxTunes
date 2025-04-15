@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SongService } from '../../../services/song.service';
@@ -8,6 +8,9 @@ import { ShowSongsComponent } from '../show/show-songs/show-songs.component';
 import { CreateSongsComponent } from '../create/create-songs/create-songs.component';
 import { UpdateSongsComponent } from '../update/update-songs/update-songs.component';
 import { DeleteConfirmationComponent } from '../../utils/delete-confirmation/delete-confirmation.component';
+import { UpdateAlbumsComponent } from '../update/update-albums/update-albums.component';
+import { ShowAlbumsComponent } from '../show/show-albums/show-albums.component';
+import WaveSurfer from 'wavesurfer.js';
 
 @Component({
   selector: 'app-music',
@@ -28,8 +31,11 @@ export class MusicComponent implements OnInit {
   searchQuery: string = '';
   mostrarCanciones: boolean = true;
 
+  wavesurferInstances: { [key: number]: any } = {};
   ref: DynamicDialogRef | undefined;
   dialog: any;
+
+  createdWaveforms: { [key: number]: boolean } = {};
 
   constructor(private router: Router, private cancionesService: SongService, public dialogService: DialogService, private albumsService: AlbumsService) { }
 
@@ -38,16 +44,80 @@ export class MusicComponent implements OnInit {
     this.loadAlbums();
   }
 
+  ngAfterViewChecked() {
+    this.canciones.forEach((cancion) => {
+      if (!this.wavesurferInstances[cancion.id]) {
+        this.createWaveform(cancion);
+      }
+    });
+  }
+
   loadCanciones() {
     this.cancionesService.getCanciones().subscribe(
         (data) => {
             this.canciones = data; 
             console.log('Canciones cargadas:', this.canciones);
+            this.canciones.forEach(cancion => this.createWaveform(cancion));
         },
         (error) => {
             console.error('Error al cargar las canciones:', error);
         }
     );
+  }
+
+  createWaveform(cancion: any) {
+    const containerId = `waveform-${cancion.id}`;
+    const container = document.getElementById(containerId);
+
+    if (!container) {
+        console.warn(`Contenedor no encontrado para: ${containerId}`);
+        return;
+    }
+
+    if (this.wavesurferInstances[cancion.id]) {
+        console.log(`WaveSurfer ya existe para: ${containerId}`);
+        return; // Si ya existe una instancia, no la recrees
+    }
+
+    console.log(`Creando wavesurfer en contenedor: ${containerId}`);
+    this.wavesurferInstances[cancion.id] = WaveSurfer.create({
+        container: `#${containerId}`,
+        waveColor: '#d9dcff',
+        progressColor: '#e51d36',
+        height: 50,
+        barWidth: 2,
+        normalize: true,
+    });
+
+    console.log('Cargando archivo de audio:', cancion.asset?.path);
+    this.wavesurferInstances[cancion.id].load(cancion.asset?.path);
+  }
+
+  handlePageChange() {
+    // Elimina las ondas de las canciones que ya no están visibles
+    const currentPageIds = this.paginatedCanciones.map((c) => c.id);
+
+    Object.keys(this.wavesurferInstances).forEach((id) => {
+        if (!currentPageIds.includes(Number(id))) {
+            console.log(`Destruyendo instancia de WaveSurfer para: ${id}`);
+            this.wavesurferInstances[Number(id)].destroy();
+            delete this.wavesurferInstances[Number(id)];
+        }
+    });
+
+    // Crea las ondas para las nuevas canciones visibles
+    this.paginatedCanciones.forEach((cancion) => this.createWaveform(cancion));
+  }
+
+  togglePlay(cancionId: number) {
+    const wavesurfer = this.wavesurferInstances[cancionId];
+    if (wavesurfer) {
+      if (wavesurfer.isPlaying()) {
+        wavesurfer.pause();
+      } else {
+        wavesurfer.play();
+      }
+    }
   }
 
   view(){
@@ -58,6 +128,8 @@ export class MusicComponent implements OnInit {
     this.albumsService.getAlbums().subscribe(
       (data) => {
         this.albums = data;
+        console.log('Albums cargadas:', this.albums);
+
       },
       (error) => {
         console.error('Error al cargar los álbumes', error);
@@ -76,6 +148,26 @@ export class MusicComponent implements OnInit {
   getGenerosString(generos: any[]): string {
     return generos.map(genero => genero.nombre).join(', ');
   }
+
+  getGenerosAlbums(album: any): string {
+    if (!album.Cancions || album.Cancions.length === 0) {
+        return 'Sin género';
+    }
+
+    const genreCount: Record<string, number> = {};
+
+    album.Cancions.forEach((cancion: any) => {
+        cancion.generos.forEach((genero: any) => {
+            const genreName = genero.nombre;
+            genreCount[genreName] = (genreCount[genreName] || 0) + 1;
+        });
+    });
+
+    const dominantGenre = Object.keys(genreCount).reduce((a, b) => genreCount[a] > genreCount[b] ? a : b, '');
+
+    return dominantGenre || 'Sin género';
+}
+
 
   newCancion() {
     this.ref = this.dialogService.open(CreateSongsComponent, {
@@ -117,7 +209,7 @@ export class MusicComponent implements OnInit {
         },
         baseZIndex: 10000,
         style: {
-            'background-color': '#1e1e1e'
+          'background-color': '#1e1e1e'
         },
         showHeader: true,
         closable: true,
@@ -177,27 +269,63 @@ deleteSongs(id: number) {
   }
 
   editAlbum(album: any) {
-    this.albumsService.updateAlbum(album).subscribe(
-      (response) => {
-        console.log('Álbum editado:', response);
-        this.loadAlbums(); 
+    this.ref = this.dialogService.open(UpdateAlbumsComponent, {
+      header: 'Editar Canción',
+      modal: true,
+      width: '70vw',
+      styleClass: 'custom-modal',
+      contentStyle: {
+          'background-color': '#1e1e1e',
+          'color': 'white',
+          'border-radius': '8px',
+          'padding': '20px'
       },
-      (error) => {
-        console.error('Error al editar el álbum', error);
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e'
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true,
+      data: {
+        albumId: album.id
       }
-    );
+    });
+
+    this.ref.onClose.subscribe(() => {
+        this.loadCanciones(); 
+    });
   }
 
   deleteAlbum(id: number) {
-    this.albumsService.deleteAlbum(id).subscribe(
-      (response) => {
-        this.albums = this.albums.filter((a) => a.id !== id);
-        console.log('Álbum eliminado:', id);
+    this.ref = this.dialogService.open(DeleteConfirmationComponent, {
+      header: 'Confirmar Eliminación',
+      width: '400px',
+      modal: true,
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'padding': '20px'
       },
-      (error) => {
-        console.error('Error al eliminar el álbum', error);
+      data: { 
+        songsIds: [id]
       }
-    );
+    });
+
+    this.ref.onClose.subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.albumsService.deleteAlbum([id]).subscribe(
+          (response) => {
+            this.albums = this.albums.filter((a) => a.id !== id);
+            console.log('Álbum eliminado:', response);
+          },
+          (error) => {
+            console.error('Error al eliminar el álbum', error);
+          }
+        );
+      }
+    }); 
   }
 
   searchMusic() {
@@ -242,12 +370,14 @@ deleteSongs(id: number) {
   prevCancionesPage() {
     if (this.currentCancionesPage > 1) {
       this.currentCancionesPage--;
+      this.handlePageChange();
     }
   }
 
   nextCancionesPage() {
     if (this.currentCancionesPage < this.totalCancionesPages) {
       this.currentCancionesPage++;
+      this.handlePageChange();
     }
   }
 
@@ -279,5 +409,27 @@ deleteSongs(id: number) {
 
   showAlbum(album: any) {
     console.log('Ver detalles de álbum:', album);
+    this.ref = this.dialogService.open(ShowAlbumsComponent, {
+      header: 'Ver Datos del Album',
+      modal: true,
+      width: '70vw',
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e'
+      },
+      showHeader: true,
+      closable: true,
+      closeOnEscape: true,
+      data: {
+        albumId: album.id
+      }
+    });
   }
 }

@@ -15,4 +15,23 @@ export class GeneroService {
   getGeneros(): Observable<any> {
     return this.http.get(`${this.url}` + `${this.generosUrl}`);
   }
+
+  getGeneroById(generoId: number): Observable<any> {
+    return this.http.get(`${this.url}` + `${this.generosUrl}` + `/${generoId}`);
+  }
+
+  createGenero(formData: FormData): Observable<any> {
+    return this.http.post(`${this.url}` + `${this.generosUrl}` + `/new`, formData);
+  }
+
+  updateGenero(formData: FormData, generoId: number): Observable<any> {
+    return this.http.put(`${this.url}` + `${this.generosUrl}` + `/${generoId
+    }`, formData);
+  }
+
+  deleteGenero(genresIds: number[]): Observable<void> {
+    return this.http.delete<void>(`${this.url}` + `${this.generosUrl}`, { 
+      body: { generosIds: genresIds }
+    });
+  }
 }

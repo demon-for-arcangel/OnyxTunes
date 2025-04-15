@@ -94,19 +94,18 @@ header {
 }
 
 .user-table {
+    background-color: var(--color-surface);
     width: 100%;
     border-collapse: collapse;
-    color: black;
 }
 
 .user-table th, .user-table td {
     padding: 10px;
-    border: 1px solid #ddd;
     text-align: left;
 }
 
-.user-table th {
-    background-color: #f5f5f5;
+tbody {
+    background-color: var(--color-surface-light);
 }
 
 button {

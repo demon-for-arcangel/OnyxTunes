@@ -18,6 +18,9 @@ module.exports = {
       reproducciones: {
         type: Sequelize.INTEGER
       },
+      portadaURL: {
+        type: Sequelize.TEXT
+      },
       album_id: {
         type: Sequelize.INTEGER,
         allowNull: true, 

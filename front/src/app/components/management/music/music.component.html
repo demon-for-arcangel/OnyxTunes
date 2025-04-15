@@ -1,6 +1,6 @@
 <header>
     <div class="header-content">
-        <img src="assets/images/onyxtunes.jpeg" alt="OnyxTunes Logo" class="logo" />
+        <img src="assets/images/onyxtunes.jpg" alt="OnyxTunes Logo" class="logo" />
     </div>
 </header>
 
@@ -11,7 +11,7 @@
                 <i class="pi pi-arrow-left"></i> Volver
             </button>
             <h1>Gestión de Música</h1>
-            <button (click)="view()">
+            <button (click)="view()" class="btn-selector">
                 {{ mostrarCanciones ? 'Ver Álbumes' : 'Ver Canciones' }}
             </button>
         </div>
@@ -34,8 +34,8 @@
                             <th>Artista</th>
                             <th>Álbum</th>
                             <th>Duración</th>
-                            <th>Género</th>
-                            <th>Acciones</th>
+<!--                             <th>Género</th>
+ -->                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,12 +44,18 @@
                                 <td>{{ cancion.titulo || 'Sin título' }}</td>
                                 <td>{{ cancion.artista.nombre || 'Sin artista' }}</td>
                                 <td>{{ cancion.Album?.titulo || 'Sin álbum' }}</td>
-                                <td>{{ formatDuration(cancion.duracion) }}</td>
-                                <td>{{ getGenerosString(cancion.generos) }}</td>
-                                <td>
-                                    <button (click)="editCancion(cancion)">Editar</button>
-                                    <button (click)="deleteSongs(cancion.id)">Eliminar</button>
-                                    <button (click)="showCancion(cancion)">Ver Detalles</button>
+<!--                                 <td>{{ formatDuration(cancion.duracion) }}</td>
+-->                             <td>
+                                    <div>
+                                        <div id="waveform-{{ cancion.id }}"></div>
+                                        <button (click)="togglePlay(cancion.id)">Reproducir</button>
+                                    </div>
+                                </td>
+<!--                                 <td>{{ getGenerosString(cancion.generos) }}</td>
+ -->                            <td>
+                                    <button (click)="editCancion(cancion)" class="btn-edit">Editar</button>
+                                    <button (click)="deleteSongs(cancion.id)" class="btn-delete">Eliminar</button>
+                                    <button (click)="showCancion(cancion)" class="btn-show">Ver Detalles</button>
                                 </td>
                             </tr>
                         }
@@ -90,14 +96,14 @@
                         @for(album of paginatedAlbums; track album){
                             <tr>
                                 <td>{{ album.titulo || 'Sin título' }}</td>
-                                <td>{{ album.artista || 'Sin artista' }}</td>
-                                <td>{{ album.anio || 'Sin año' }}</td>
-                                <td>{{ album.numCanciones || 'Sin número de canciones' }}</td>
-                                <td>{{ album.genero || 'Sin género' }}</td>
+                                <td>{{ album.Cancions.length > 0 ? album.Cancions[0].artista.nombre : 'Sin artista' }}</td>
+                                <td>{{ album.fecha_lanzamiento || 'Sin año' }}</td>
+                                <td>{{ album.totalCanciones || 'Sin número de canciones' }}</td>
+                                <td>{{ getGenerosAlbums(album) }}</td>
                                 <td>
-                                    <button (click)="editAlbum(album)">Editar</button>
-                                    <button (click)="deleteAlbum(album.id)">Eliminar</button>
-                                    <button (click)="showAlbum(album)">Ver Detalles</button>
+                                    <button (click)="editAlbum(album)" class="btn-edit">Editar</button>
+                                    <button (click)="deleteAlbum(album.id)" class="btn-delete">Eliminar</button>
+                                    <button (click)="showAlbum(album)" class="btn-show">Ver Detalles</button>
                                 </td>
                             </tr>
                         }

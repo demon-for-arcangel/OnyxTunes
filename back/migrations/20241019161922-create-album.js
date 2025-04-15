@@ -15,6 +15,9 @@ module.exports = {
       fecha_lanzamiento: {
         type: Sequelize.DATE
       },
+      portadaURL: {
+        type: Sequelize.TEXT
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

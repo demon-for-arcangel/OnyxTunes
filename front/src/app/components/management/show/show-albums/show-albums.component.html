@@ -1,1 +1,15 @@
-<p>show-albums works!</p>
+<div class="show-album-details">
+    <label for="nombre">Nombre:</label>
+    <input id="nombre" type="text" [value]="album?.titulo" disabled />
+
+    <label for="fecha_lanzamiento">Fecha de Salida:</label>
+    <input id="fecha_lanzamiento" type="text" [value]="album?.fecha_lanzamiento" disabled />
+
+    <label for="cancions">Canciones del Album:</label>
+    <input id="cancions" type="text" [value]="album?.Cancions.length" disabled />
+
+    <label for="likes">Likes:</label>
+    <input id="likes" type="text" [value]="album?.Likes.length" disabled />
+
+    <button (click)="verCanciones()">Ver Canciones</button>
+</div>
