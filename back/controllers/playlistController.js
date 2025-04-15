@@ -67,15 +67,17 @@ const createPlaylist = async (req, res = response) => {
 const updatePlaylist = async (req, res) => {
     const { id } = req.params;
     const updatedData = req.body;
-
+    const files = req.files;
+  
     try {
-        const updatedPlaylist = await conx.updatePlaylist(id, updatedData);
-        res.status(200).json({ msg: "Playlist actualizada con éxito", playlist: updatedPlaylist });
+      const updatedPlaylist = await conx.updatePlaylist(id, updatedData, files);
+      res.status(200).json({ msg: "Playlist actualizada con éxito", playlist: updatedPlaylist });
     } catch (error) {
-        console.error("Error al actualizar la playlist:", error);
-        res.status(500).json({ msg: "Error al actualizar la playlist" });
+      console.error("Error al actualizar la playlist:", error);
+      res.status(500).json({ msg: "Error al actualizar la playlist" });
     }
-};
+  };
+  
 
 const deletePlaylists = async (req, res) => {
     const { playlistIds } = req.body;

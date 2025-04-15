@@ -41,7 +41,8 @@ module.exports = (sequelize, DataTypes) => {
     nombre: DataTypes.STRING,
     descripcion: DataTypes.STRING,
     assetId: DataTypes.INTEGER,
-    publico: DataTypes.BOOLEAN
+    publico: DataTypes.BOOLEAN,
+    portadaURL: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'Playlist',

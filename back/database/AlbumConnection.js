@@ -2,6 +2,8 @@ require("dotenv").config();
 const { Sequelize, Op } = require("sequelize");
 const models = require("../models");
 const Conexion = require("./connection.js");
+const fs = require('fs');
+const { uploadImageToS3 } = require("../helpers/upload-file-minio.js");
 
 const conexion = new Conexion();
 
@@ -21,9 +23,32 @@ class AlbumModel {
     async indexAlbums() {
         try {
             const albums = await models.Album.findAll({
-                include: [{ model: models.Like }]
+                include: [
+                    { model: models.Like },
+                    {
+                        model: models.Cancion, 
+                        include: [
+                            {
+                                model: models.Usuario, 
+                                as: "artista",
+                            },
+                            {
+                                model: models.Genero,
+                                as: "generos",
+                            }
+                        ]
+                    }
+                ]
             });
-            return albums;
+
+            const albumsTotal = albums.map(album => {
+                return {
+                    ...album.toJSON(),
+                    totalCanciones: album.Cancions ? album.Cancions.length : 0
+                };
+            });
+    
+            return albumsTotal;
         } catch (error) {
             console.error('Error al mostrar la lista de los Albums: ', error);
             throw new Error('Error al mostrar la lista de albums');
@@ -32,19 +57,44 @@ class AlbumModel {
 
     async getAlbumById(id) {
         try {
-            console.log(id)
+            console.log(id);
             const album = await models.Album.findByPk(id, {
-                include: [{ model: models.Like }]
+                include: [
+                    {
+                        model: models.Like
+                    },
+                    {
+                        model: models.Cancion, 
+                        include: [
+                            {
+                                model: models.Usuario, 
+                                as: "artista",
+                            },
+                            {
+                                model: models.Genero, 
+                                as: "generos",
+                            }
+                        ]
+                    }
+                ]
             });
+    
             if (!album) {
-                throw new Error('Album no encontrado');
+                throw new Error('Álbum no encontrado');
             }
-            return album;
+    
+            const totalCanciones = album.Cancions ? album.Cancions.length : 0;
+    
+            return {
+                album,
+                totalCanciones
+            };
         } catch (error) {
-            console.error('Error al mostrar el album: ', error);
-            throw new Error('Error al mostrar el album');
+            console.error('Error al mostrar el álbum: ', error);
+            throw new Error('Error al mostrar el álbum');
         }
     }
+    
 
     async getAlbumByTitle(titulo) {
         try {
@@ -76,49 +126,81 @@ class AlbumModel {
         }
     }
 
-    async updateAlbum(albumId, newData) {
+    async updateAlbum(albumId, updatedData, files) {
         try {
-            const album = await models.Album.findByPk(albumId); 
+            const album = await models.Album.findByPk(albumId);
             if (!album) {
-                throw new Error('Álbum no encontrado');
+                throw new Error("Álbum no encontrado.");
             }
-            const updatedAlbum = await album.update(newData, {
-                include: [{ model: models.Like }]
-            }); 
-            return updatedAlbum;
+    
+            let portadaPath = album.portadaURL; 
+    
+            if (files && files.portada) {
+                const file = files.portada;
+    
+                if (!file.mimetype.startsWith("image/")) {
+                    throw new Error("Archivo inválido: debe ser una imagen.");
+                }
+    
+                if (!file.data || file.data.length === 0) {
+                    const tempFilePath = file.tempFilePath;
+                    if (!tempFilePath) {
+                        throw new Error("Archivo inválido: No se pudo leer el contenido.");
+                    }
+                    file.data = fs.readFileSync(tempFilePath);
+                }
+    
+                const bucketName = process.env.MINIO_BUCKET;
+                const folder = "portadas_album";
+    
+                const filename = `${folder}/${Date.now()}_${file.name}`;
+    
+                portadaPath = await uploadImageToS3(bucketName, filename, file.data);
+            }
+    
+            const updatedAlbum = await album.update({
+                ...updatedData,
+                portadaURL: portadaPath, 
+            });
+    
+            return {
+                message: "Álbum actualizado con éxito.",
+                album: updatedAlbum,
+            };
         } catch (error) {
-            console.error('Error al actualizar el álbum', error);
-            throw new Error('Error al actualizar el álbum');
+            console.error("Error al actualizar el álbum:", error.message);
+            throw new Error("Error al actualizar el álbum.");
         }
-    }    
+    }
 
     async deleteAlbum(albumsIds) {
         try {
-            const albumsToDelete = await models.Album.findAll({
+            // Paso 1: Eliminar las relaciones dependientes en `usuario_album`
+            await models.UsuarioAlbum.destroy({
                 where: {
-                    id: albumsIds
-                },
-                include: [{ model: models.Like }]
+                    album_id: albumsIds, // Relaciona el álbum con las dependencias
+                }
             });
     
-            if (albumsToDelete.length !== albumsIds.length) {
-                throw new Error("Algunos álbumes no fueron encontrados.");
-            }
+            console.log(`Relaciones eliminadas para álbumes: ${albumsIds}`);
     
+            // Paso 2: Eliminar los álbumes
             const result = await models.Album.destroy({
                 where: {
                     id: albumsIds
                 }
             });
     
+            console.log(`Álbum(es) eliminados: ${result}`);
+    
             return {
-                msg: `Se eliminaron ${result} álbum(es) exitosamente.`
+                msg: `Se eliminaron ${result} álbum(es) exitosamente.`,
             };
         } catch (error) {
-            console.error("Error al eliminar álbumes:", error);
-            throw new Error("Error al eliminar álbum(es).");
+            console.error("Error al eliminar álbum(es):", error);
+            throw new Error("Error al eliminar álbum(es). Verifica las relaciones y los permisos.");
         }
-    }    
+    }       
 
     async getAlbumsByUserId(userId) {
         try {

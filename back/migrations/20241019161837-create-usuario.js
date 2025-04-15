@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.DATE
       },
       foto_perfil: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT,
       },
       direccion: {
         type: Sequelize.STRING

@@ -26,13 +26,15 @@ class Server {
     this.apiLikes = "/api/likes";
     this.apiReproducciones = "/api/reproducciones";
     this.apiSeguidores = "/api/seguidores";
+    this.apiRecommend = "/api/recomendaciones"
 
     this.app.use(
       fileUpload({
-        useTempFiles: true,
-        tempFileDir: "/tmp/",
-        createParentPath: true,
-      }),
+        useTempFiles: true, 
+        tempFileDir: '/tmp/', 
+        limits: { fileSize: 50 * 1024 * 1024 }, 
+        debug: false, 
+      })
     );
 
     this.server = require("http").createServer(this.app);
@@ -55,16 +57,29 @@ class Server {
   middlewares() {
     this.app.use(
       cors({
-        origin: process.env.FRONT_URL,
-        credentials: true,
+        origin: process.env.FRONT_URL || "http://localhost:4200", 
+        methods: "GET, POST, PUT, DELETE, OPTIONS",
+        allowedHeaders: ["Content-Type", "Authorization", "x-token"], 
+        exposedHeaders: ["x-token"],
+        credentials: true, 
       }),
     );
     this.app.use(express.json());
-    console.log("RUTA", path.join(__dirname, "../../front/src/assets/uploads"));
+
     this.app.use(
       "/uploads",
       express.static(path.join(__dirname, "../public/uploads")),
     );
+
+    this.app.use((req, res, next) => {
+      res.header("Access-Control-Allow-Origin", process.env.FRONT_URL || "http://localhost:4200");
+      res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+      res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, x-token");
+      res.header("Access-Control-Expose-Headers", "x-token"); 
+      res.header("Cross-Origin-Resource-Policy", "cross-origin");
+      next();
+    });
+  
   }
 
   routes() {
@@ -81,6 +96,7 @@ class Server {
     this.app.use(this.apiPlaylist, require("../routes/PlaylistRoutes"));
     this.app.use(this.apiLikes, require("../routes/likesRoutes"));
     this.app.use(this.apiProfile, require("../routes/profileRoutes"));
+    this.app.use(this.apiRecommend, require("../routes/recommendRoutes"))
     this.app.use(
       this.apiReproducciones,
       require("../routes/reproduccionesRoutes"),

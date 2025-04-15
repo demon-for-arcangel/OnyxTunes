@@ -26,7 +26,7 @@ export class PlayerService {
         }
       }
     });
-    
+
     this.audioPlayer.addEventListener('timeupdate', () => {
       console.log('entro')
       this.currentTime = this.audioPlayer.currentTime;
@@ -59,20 +59,20 @@ export class PlayerService {
   setAudioElement(audioElement: ElementRef<HTMLAudioElement>): void {
     if (audioElement && audioElement.nativeElement) {
       this.audioPlayer = audioElement.nativeElement;
-  
+
       this.audioPlayer.addEventListener('timeupdate', () => {
         this.currentTime = this.audioPlayer.currentTime;
       });
-  
+
       this.audioPlayer.addEventListener('loadedmetadata', () => {
         this.duration = this.audioPlayer.duration;
         console.log('Duración del audio:', this.duration);
       });
-  
+
       this.audioPlayer.addEventListener('ended', () => {
         this.handleSongEnd();
       });
-  
+
       this.audioPlayer.addEventListener('error', (event: any) => {
         console.error('Error en el reproductor de audio:', event.target.error);
       });
@@ -80,7 +80,6 @@ export class PlayerService {
       console.error('El elemento de audio no está definido.');
     }
   }
-  
 
   playSong(song: any): void {
     if (!this.audioPlayer) {
@@ -92,10 +91,13 @@ export class PlayerService {
       return;
     }
   
-    console.log('Ruta de la canción:', song.asset.path);  
+    const songUrl = `${song.asset.path}`;  
+  
+    console.log('Ruta de la canción:', songUrl);  
     this.currentSong = song;
-    this.audioPlayer.src = `${environment.assetsUrl}${song.asset.path}`;
+    this.audioPlayer.src = songUrl;  
     console.log('Ruta completa de la canción:', this.audioPlayer.src);  
+  
     this.audioPlayer.load();
     this.audioPlayer.play().then(() => {
       this.isPlaying = true;
@@ -104,7 +106,7 @@ export class PlayerService {
     });
   }
   
-  
+
   play(): void {
     if (this.audioPlayer.src) {
       this.audioPlayer.play().then(() => {
@@ -182,7 +184,6 @@ export class PlayerService {
       }
     }
   }
-  
 
   playFromIndex(index: number): void {
     this.currentIndex = index; 

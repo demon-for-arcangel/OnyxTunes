@@ -20,6 +20,8 @@ import { authGuard } from "./guards/auth.guard";
 import { RequestResetComponent } from "./components/resetPassword/request-reset/request-reset.component";
 import { ResetPasswordComponent } from "./components/resetPassword/reset-password/reset-password.component";
 import { ArtistDetailComponent } from "./components/artist-detail/artist-detail.component";
+import { GenresComponent } from "./components/management/genres/genres.component";
+import { ShowAlbumSongsComponent } from "./components/management/show/show-album-songs/show-album-songs.component";
 
 export const routes: Routes = [
   { path: "", component: LandingComponent },
@@ -66,7 +68,13 @@ export const routes: Routes = [
     component: MusicArtistComponent,
     canActivate: [authGuard],
   },
+  {
+    path: "platform/genresManagement",
+    component: GenresComponent,
+    canActivate: [authGuard]
+  },
   { path: "forgot-password", component: RequestResetComponent },
   { path: "reset/:token", component: ResetPasswordComponent },
   { path: "artist/:id", component: ArtistDetailComponent },
+  { path: 'album/:id/canciones', component: ShowAlbumSongsComponent }
 ];

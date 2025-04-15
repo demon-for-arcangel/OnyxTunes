@@ -3,7 +3,29 @@
     <main>
         <h2>Configuración</h2>
         <form (ngSubmit)="saveChanges()">
-            <label for="nombre">Nombre de usuario:</label>
+            <div class="profile-photo-container">
+                @if(user.foto_perfil) {
+                    <img [src]="user.foto_perfil" alt="Foto de perfil" />
+                    @if(errorMessages) {
+                        @if(errorMessages.foto_perfil) {
+                            <p class="error">{{ errorMessages.foto_perfil }}</p>
+                        }
+                    }
+                }
+                
+                <div>
+                    <label for="fileInput" class="upload-label">Cambiar la foto de perfil</label>
+                    <input
+                        id="fileInput"
+                        type="file"
+                        (change)="onFileSelected($event)"
+                        class="hidden"
+                    />
+                </div>
+            </div>
+
+
+            <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" [(ngModel)]="user.nombre" name="nombre" required />
             @if(errorMessages) {
                 @if(errorMessages.nombre) {

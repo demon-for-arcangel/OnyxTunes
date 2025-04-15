@@ -77,7 +77,8 @@ const sendMail = async (mailOptions) => {} //por hacer
 
 const updateUser = async (req, res) => {
     const userId = req.params.id; 
-    const { nombre, email, nickname, fecha_nacimiento, direccion, telefono, genero, activo, password, rol } = req.body; 
+    const { nombre, email, nickname, fecha_nacimiento, foto_perfil, direccion, telefono, genero, activo, rol } = req.body; 
+    const files = req.files; 
 
     try {
         const existingUser = await conx.getUserById(userId);
@@ -85,33 +86,27 @@ const updateUser = async (req, res) => {
             return res.status(404).json({ msg: "Usuario no encontrado" });
         }
 
-        let hashedPassword;
-        if (password) {
-            hashedPassword = await bcrypt.hash(password, 10);
-        }
-
         const updatedData = {
             nombre: nombre || existingUser.nombre, 
             email: email || existingUser.email, 
             nickname: nickname || existingUser.nickname,
             fecha_nacimiento: fecha_nacimiento || existingUser.fecha_nacimiento,
-            //añadir foto de perfil
+            foto_perfil: foto_perfil,
             direccion: direccion || existingUser.direccion,
             telefono: telefono || existingUser.telefono,
             genero: genero || existingUser.genero,
             activo: activo || existingUser.activo,
-            password: hashedPassword || existingUser.password,
             rol: rol || existingUser.rol 
         };
 
-        const updatedUser = await conx.updateUser(userId, updatedData);
-
+        const updatedUser = await conx.updateUser(userId, updatedData, files);
         res.status(200).json({ msg: "Usuario actualizado exitosamente", user: updatedUser });
     } catch (error) {
         console.error("Error al actualizar usuario", error);
         res.status(500).json({ msg: "Error al actualizar usuario" });
     }
 };
+
 
 const deleteUsers = async (req, res) => {
     const userIds = req.body.userIds;

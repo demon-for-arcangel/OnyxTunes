@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
@@ -44,8 +44,15 @@ export class UserService {
     });
   }
 
-  updateUser(userId: string, user: Usuario): Observable<Usuario> {
+  /* updateUser(userId: string, user: Usuario): Observable<Usuario> {
     return this.http.put<Usuario>(`${this.url}` + `${this.usersUrl}` + `/${userId}`, user);
+  } */
+
+  updateUser(userId: string, user: FormData): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'multipart/form-data');
+
+    return this.http.put<any>(`${this.url}${this.usersUrl}/${userId}`, user, { headers });
   }
 
   updatePassword(userId: string, currentPassword: string, newPassword: string, confirmPassword: string): Observable<any> {

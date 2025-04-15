@@ -1,5 +1,8 @@
 const { Op, Sequelize } = require("sequelize");
 const models = require("../models");
+//const { uploadImageToS3 } = require("../helpers/upload-file-aws.js");
+const { uploadImageToS3 } = require("../helpers/upload-file-minio.js");
+const fs = require("fs");
 
 /**
  * Conexion de Playlist
@@ -105,22 +108,57 @@ class PlaylistConnection {
         }
     }
 
-    async updatePlaylist(playlistId, newData) {
-        try {
+    async updatePlaylist(playlistId, newData, files) {
+        try {            
             const playlist = await models.Playlist.findByPk(playlistId, {
                 attributes: { exclude: ['usuario_id'] },
-                include: [{ model: models.Like }] 
+                include: [{ model: models.Like }]
             });
             if (!playlist) {
+                console.error("Error: Playlist no encontrada.");
                 throw new Error("Playlist no encontrada");
             }
-            const updatedPlaylist = await playlist.update(newData);
-            return updatedPlaylist;
+        
+            let portadaUrl = playlist.portadaURL; 
+    
+            if (files && files.portada) {
+                const file = files.portada;
+
+                if (!file.mimetype.startsWith("image/")) {
+                    throw new Error("Archivo inválido: debe ser una imagen.");
+                }
+
+                if (!file.data || file.data.length === 0) {
+                    const tempFilePath = file.tempFilePath;
+                    if (!tempFilePath) {
+                        throw new Error("Archivo inválido: No se pudo leer el contenido.");
+                    }
+                    file.data = fs.readFileSync(tempFilePath);
+                }
+    
+                const bucketName = process.env.MINIO_BUCKET;
+                const folder = "portadas_playlists"; 
+    
+                const filename = `${folder}/${Date.now()}_${file.name}`;
+    
+                portadaUrl = await uploadImageToS3(bucketName, filename, file.data);;
+            }
+        
+            const updatedPlaylist = await playlist.update({
+                ...newData,
+                portadaURL: portadaUrl
+            });
+    
+            return {
+                message: "Playlist actualizada con éxito.",
+                playlist: updatedPlaylist
+            };
         } catch (error) {
             console.error("Error al actualizar la playlist:", error);
-            throw new Error("Error al actualizar la playlist");
+            throw new Error("Error al actualizar la playlist.");
         }
     }
+    
 
     async deletePlaylists(playlistIds) {
         try {

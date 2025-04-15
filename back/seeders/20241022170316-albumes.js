@@ -16,24 +16,28 @@ module.exports = {
       {
         titulo: 'Viaje Nocturno',
         fecha_lanzamiento: new Date('2020-01-01'),
+        portadaURL: 'https://via.placeholder.com/150',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         titulo: 'Ecos del Mar',
         fecha_lanzamiento: new Date('2019-06-15'),
+        portadaURL: 'https://via.placeholder.com/150',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         titulo: 'Luz de Luna',
         fecha_lanzamiento: new Date('2021-03-12'),
+        portadaURL: 'https://via.placeholder.com/150',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         titulo: 'Caminos Infinitos',
         fecha_lanzamiento: new Date('2018-10-08'),
+        portadaURL: 'https://via.placeholder.com/150',
         createdAt: new Date(),
         updatedAt: new Date()
       }
