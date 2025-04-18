@@ -132,9 +132,9 @@ export class HomeComponent {
       if (response.ok && response.songRecommendation) {
         this.recommendedSong = response.songRecommendation;
         this.open();
-      } else {
+      }/*  else {
         console.error("No se pudo obtener una recomendación:", response.msg);
-      }
+      } */
     });
   }
 
@@ -143,6 +143,7 @@ export class HomeComponent {
       console.error("No hay canción recomendada para mostrar.");
       return;
     }
+
 
     this.dialogRef = this.dialogService.open(RecommendedSongComponent, {
       header: "Tu recomendación del día",

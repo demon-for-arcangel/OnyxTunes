@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Component, OnInit } from '@angular/core';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-recommended-song',
@@ -9,30 +9,14 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
   styleUrl: './recommended-song.component.css'
 })
 export class RecommendedSongComponent implements OnInit {
-  @Input() recommendedSong: any = null;
-  dialogRef!: DynamicDialogRef
+  recommendedSong: any = null;
 
-  constructor(private dialogService: DialogService) {}
+  constructor(private config: DynamicDialogConfig) {}
 
   ngOnInit(): void {
-    if (!this.recommendedSong) {
-      console.error("No hay canción recomendada para mostrar");
-      return;
-    }
+    this.recommendedSong = this.config.data.recommendedSong;
 
-    this.show();
+    console.log("Datos recibidos en el diálogo:", this.recommendedSong);
   }
 
-  show(): void {
-    this.dialogRef = this.dialogService.open(RecommendedSongComponent, {
-      header: "Recomendación del día",
-      width: "40vw", 
-      closable: false, 
-      data: { recommendedSong: this.recommendedSong },
-    });
-
-    setTimeout(() => {
-      this.dialogRef.close();
-    }, 10000);
-  }
 }
