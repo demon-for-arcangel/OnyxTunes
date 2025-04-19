@@ -96,7 +96,7 @@ header {
     font-size: 16px;
     border-radius: 28px;
     width: 400px;
-    border: 1px solid #ddd;
+    border: 1px solid #ddd; /* revisar el color */
 }
 
 .search-bar button {
@@ -139,7 +139,7 @@ tbody {
 .pagination-controls button {
     padding: 8px 16px;
     font-size: 14px;
-    background-color: #0073e6;
+    background-color: #0073e6; /* revisar colores */
     color: white;
     border: none;
     border-radius: 4px;
@@ -147,12 +147,12 @@ tbody {
 }
 
 .pagination-controls button[disabled] {
-    background-color: #555; 
+    background-color: #555; /* revisar colores */
     cursor: not-allowed;
 }
 
 .pagination-controls button:hover:not([disabled]) {
-    background-color: #005bb5; 
+    background-color: #005bb5; /* revisar colores */
 }
 
 button {
@@ -192,7 +192,7 @@ select option {
 .music-actions button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #0073e6; 
+    background-color: #0073e6; /* revisar colores */
     color: white;
     border: none;
     border-radius: 4px;
@@ -200,7 +200,7 @@ select option {
 }
 
 .music-actions button:hover {
-    background-color: #005bb5; 
+    background-color: #005bb5; /* revisar colores */
 }
 
 .btn-selector {
