@@ -32,6 +32,8 @@ export class CreateUserComponent implements OnInit {
   errors: any = {};
   showPassword: boolean = false;
 
+  crearOtro: boolean = false;
+
   constructor(public ref: DynamicDialogRef, private userService: UserService, private rolService: RolService) {}
 
   ngOnInit(): void {
@@ -98,10 +100,19 @@ export class CreateUserComponent implements OnInit {
 
         this.userService.createUsuario(userData).subscribe({
             next: (response) => {
-                this.ref.close(response);
+              console.log(response);
+
+              if (!this.crearOtro) {
+                console.log("Cerrando modal con respuesta { created: true }");
+
+                this.ref.close({ created: true });
+
                 setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                  window.location.reload();
+                }, 1000)
+              } else {
+                this.resetForm();
+              }
             },
             error: (error) => {
                 console.error('Error al crear usuario:', error);
@@ -113,7 +124,24 @@ export class CreateUserComponent implements OnInit {
     }
 }
 
+  resetForm () {
+    this.nombre = '';
+    this.email = '';
+    this.password = '';
+    this.rol = null;
+    this.errors = {};
+  }
+
   onCancel() {
+    console.log("Modal cerrado manualmente.");
+    
+    if (this.crearOtro) {
+      console.log("Checkbox activo: recargando página al cerrar manualmente.");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  
     this.ref.close();
   }
 

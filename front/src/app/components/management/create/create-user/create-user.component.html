@@ -53,10 +53,12 @@
     }
   </div>
 
+  <div class="form-field">
+    <label for="crearOtro">Crear otro usuario</label>
+    <input type="checkbox" id="crearOtro" [(ngModel)]="crearOtro" name="crearOtro">
+  </div>
   <div class="button-container">
-    <button pButton type="button" label="Cancelar" class="p-button-secondary" (click)="onCancel()">
-    </button>
-    <button pButton type="submit" label="Guardar">
-    </button>
+    <button pButton type="button" label="Cancelar" class="p-button-secondary" (click)="onCancel()"></button>
+    <button pButton type="submit" label="Guardar"></button>
   </div>
 </form>
