@@ -164,36 +164,36 @@ class SongModel {
         }
     }
 
-    async createSong(data, files) {
+    async createSongs(data, files) {
         try {
-            const { titulo, duracion, likes, reproducciones, album_id, artista_id, generos = [] } = data;
+            const { duracion, likes, reproducciones, album_id, artista_id, generos = [] } = data;
     
-            let assetId = null;
+            const bucketName = process.env.AWS_BUCKET;
+            const folder = "canciones";
     
-            if (files && files.archivo) {
-                const file = files.archivo;
+            let cancionesCreadas = [];
     
+            // Detectar si `files.archivo` es único o un array
+            const archivos = Array.isArray(files.archivo) ? files.archivo : [files.archivo];
+    
+            for (const file of archivos) {
                 if (!file.mimetype.startsWith("audio/")) {
-                    throw new Error("Archivo inválido: debe ser un archivo de audio válido.");
+                    throw new Error(`Archivo inválido: ${file.name} debe ser un archivo de audio válido.`);
                 }
     
                 if (!file.data || file.data.length === 0) {
                     const tempFilePath = file.tempFilePath;
                     if (!tempFilePath) {
-                        throw new Error("Archivo inválido: No se pudo leer el contenido del archivo.");
+                        throw new Error(`Archivo inválido: No se pudo leer el contenido del archivo ${file.name}.`);
                     }
     
-                    const fs = require('fs');
+                    const fs = require("fs");
                     file.data = fs.readFileSync(tempFilePath);
                 }
     
-                const bucketName = process.env.AWS_BUCKET;
-                const folder = "canciones";
-    
                 const originalFileName = file.name;
-    
+                const titulo = originalFileName.split(".").slice(0, -1).join("."); // Elimina la extensión del archivo
                 const filename = `${folder}/${originalFileName}`;
-    
                 const fileUrl = await uploadAudioToS3(filename, bucketName, file.data);
     
                 const newAsset = await models.Asset.create({
@@ -202,32 +202,34 @@ class SongModel {
                     updatedAt: new Date(),
                 });
     
-                assetId = newAsset.id;
-            }
+                const assetId = newAsset.id;
     
-            const newSong = await models.Cancion.create({
-                titulo,
-                duracion,
-                likes: likes || 0,
-                reproducciones: reproducciones || 0,
-                album_id: album_id || null,
-                artista_id,
-                assetId,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            });
-    
-            if (Array.isArray(generos) && generos.length > 0) {
-                const generosExistentes = await models.Genero.findAll({
-                    where: { id: generos },
+                const newSong = await models.Cancion.create({
+                    titulo,
+                    duracion,
+                    likes: likes || 0,
+                    reproducciones: reproducciones || 0,
+                    album_id: album_id || null,
+                    artista_id,
+                    assetId,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
                 });
-                await newSong.setGeneros(generosExistentes);
+    
+                if (Array.isArray(generos) && generos.length > 0) {
+                    const generosExistentes = await models.Genero.findAll({
+                        where: { id: generos },
+                    });
+                    await newSong.setGeneros(generosExistentes);
+                }
+    
+                cancionesCreadas.push(newSong);
             }
     
-            return { message: "Canción creada con éxito", cancion: newSong };
+            return { message: "Canciones creadas con éxito", canciones: cancionesCreadas };
         } catch (error) {
-            console.error("Error al crear la canción:", error.message);
-            throw new Error("Error al crear la canción");
+            console.error("Error al crear las canciones:", error.message);
+            throw new Error("Error al crear las canciones");
         }
     }
 
