@@ -44,9 +44,7 @@ header, footer {
     background: linear-gradient(45deg, #e51d36, #1e1e1e);
     color: white;
     transition: background 0.3s ease, transform 0.2s ease;
-
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
-
 }
 
 .btn-auth button:hover {
