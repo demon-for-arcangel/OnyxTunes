@@ -35,6 +35,7 @@ export class CreateSongsComponent {
   showArtistas: boolean = false;
   selectedFiles: File[] = []; // Almacenar múltiples archivos seleccionados
   user: any;
+  userRol: string = ''
 
   constructor(
     private cancionesService: SongService,
@@ -57,10 +58,25 @@ export class CreateSongsComponent {
       this.authService.getUserByToken(token).subscribe(
         (response) => {
           this.user = response;
+  
+          // Asignar el rol del usuario
+          if (this.user.Rol && Array.isArray(this.user.Rol)) {
+            this.userRol = this.user.Rol[0].nombre; // Asumiendo que 'nombre' almacena el rol como 'Administrador' o 'Artista'
+          } else if (this.user.Rol) {
+            this.userRol = this.user.Rol.nombre;
+          }
+  
+          // Si es artista, asignar automáticamente su nombre y ID
+          if (this.userRol === "Artista") {
+            this.nuevaCancion.artista = this.user.nombre;
+            this.nuevaCancion.artista_id = this.user.id;
+          }
+  
+          console.log("Usuario y Rol cargados:", this.user, this.userRol);
         },
         (error) => {
           console.error("Error al obtener el usuario:", error);
-        },
+        }
       );
     }
   }

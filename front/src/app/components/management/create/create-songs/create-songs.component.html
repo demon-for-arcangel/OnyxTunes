@@ -28,7 +28,7 @@
     </div>
   }
 
-  <label for="artista">Artista:</label>
+  <!-- <label for="artista">Artista:</label>
   <input
     id="artista"
     type="text"
@@ -47,6 +47,45 @@
         </li>
       }
     </ul>
+  } -->
+
+  <label for="artista">Artista:</label>
+  @if (userRol === 'Administrador') {
+    <div>
+      <!-- Administrador: Campo editable -->
+      <input
+        id="artista"
+        type="text"
+        [(ngModel)]="nuevaCancion.artista"
+        (input)="filterArtistas($event)"
+        (focus)="onFocus()"
+        (blur)="onBlur()"
+        required
+        placeholder="Escribe el nombre del artista"
+      />
+      @if (showArtistas && artistasFiltrados.length > 0) {
+        <ul>
+          @for (artista of artistasFiltrados; track artista) {
+            <li (click)="selectArtista(artista)">
+              {{ artista.nombre }}
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  }
+
+  @if (userRol === 'Artista') {
+    <div>
+      <!-- Artista: Campo no editable -->
+      <input
+        id="artista"
+        type="text"
+        [value]="nuevaCancion.artista"
+        readonly
+        class="readonly-field"
+      />
+    </div>
   }
 
   <label for="generos">Géneros</label>
