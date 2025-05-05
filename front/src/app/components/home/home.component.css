@@ -13,8 +13,7 @@ app-sidebar {
 
 main {
     flex: 1; 
-/*     background-color: #ecf0f1; 
- */    padding: 20px; 
+    padding: 20px; 
     overflow-y: auto;
 }
 
@@ -22,4 +21,90 @@ li {
     list-style-type: none; 
     margin: 0; 
     padding: 0; 
+}
+
+.carousel-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+}
+
+.songs-wrapper {
+    overflow: hidden; 
+    width: 80vw; 
+}
+
+.songs-container {
+    display: flex;
+    gap: 20px;
+    overflow: hidden;
+    scroll-behavior: smooth;
+    padding-bottom: 10px;
+    max-width: calc(180px * 5 + 20px * 4);
+}
+
+.song-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 140px;
+    height: 230px;
+    text-align: center;
+    background: #1e1e1e;
+    padding: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    justify-content: space-between;
+}
+.cover-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.song-title {
+    margin: 0 auto;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block; 
+    transition: all 0.3s ease-in-out;
+}
+
+.song-card:hover .song-title {
+    white-space: normal; 
+    overflow: visible; 
+    animation: scrollText 5s linear infinite; 
+}
+
+/* Animación de desplazamiento */
+@keyframes scrollText {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+.song-artist {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.prev, .next {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: white;
+    padding: 10px;
+}
+
+.prev:hover, .next:hover {
+    color: #ff4a57;
 }

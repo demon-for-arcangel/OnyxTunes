@@ -14,6 +14,7 @@ import { RecommendationService } from "../../services/recommendation.service";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { DialogModule } from "primeng/dialog";
 import { RecommendedSongComponent } from "../recommended-song/recommended-song.component";
+import { SongService } from "../../services/song.service";
 
 @Component({
   selector: "app-home",
@@ -40,13 +41,15 @@ export class HomeComponent {
   albumes: string[] = ["album1", "album 2", "album 3", "album 4"];
   listas: string[] = ["lista 1", "lista 2", "lista 3", "lista 4"];
   recommendedSong: any = null;
+  cancionesNuevas: any[] = [];
 
   dialogRef!: DynamicDialogRef;
 
-  constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService, private usuarioService: UserService, private recommendationService: RecommendationService, private dialogService: DialogService) {}
+  constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService, private usuarioService: UserService, private recommendationService: RecommendationService, private dialogService: DialogService, private songService: SongService) {}
 
   ngOnInit() {
     this.loadUserId();
+    this.loadCancionesNuevas();
   }
 
   navigateToPlaylist(playlist: Playlist) {
@@ -66,6 +69,11 @@ export class HomeComponent {
     this.menuOpen = false;
     this.router.navigate([`/${route}`]);
   }
+
+  navigateToSong(cancion: any): void {
+    const songTitle = encodeURIComponent(cancion.titulo);
+    this.router.navigate([`/song/${cancion.id}/${songTitle}`]);
+  }  
 
   searchArtists() {
     //por hacer
@@ -132,9 +140,7 @@ export class HomeComponent {
       if (response.ok && response.songRecommendation) {
         this.recommendedSong = response.songRecommendation;
         this.open();
-      }/*  else {
-        console.error("No se pudo obtener una recomendación:", response.msg);
-      } */
+      }
     });
   }
 
@@ -169,4 +175,38 @@ export class HomeComponent {
       }
     }, 10000);
   }
+
+  loadCancionesNuevas(): void {
+    this.songService.getCanciones().subscribe(
+      (response) => {
+        const ahora = new Date();
+        const haceUnaSemana = new Date();
+        haceUnaSemana.setDate(ahora.getDate() - 7); 
+  
+        this.cancionesNuevas = response.filter((cancion: any) => {
+          const fechaCreacion = new Date(cancion.createdAt); 
+          return fechaCreacion >= haceUnaSemana && fechaCreacion <= ahora;
+        });
+  
+        console.log("Canciones nuevas de esta semana:", this.cancionesNuevas);
+      },
+      (error) => {
+        console.error("Error al cargar canciones:", error);
+      }
+    );
+  }
+
+  scrollLeft(): void {
+    const container = document.querySelector(".songs-container") as HTMLElement;
+    if (container) {
+      container.scrollLeft -= 200;
+    }
+  }
+  scrollRight(): void {
+    const container = document.querySelector(".songs-container") as HTMLElement;
+    if (container) {
+      container.scrollLeft += 200; 
+    }
+  }
+  
 }

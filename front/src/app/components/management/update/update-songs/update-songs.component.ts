@@ -92,7 +92,7 @@ export class UpdateSongsComponent implements OnInit {
     onSubmit(): void {
       const formData = new FormData();
       formData.append('titulo', this.cancion.titulo);
-      formData.append('duracion', this.cancion.duracion.toString());
+      formData.append('duracion', this.cancion.duracion);
       formData.append('artista_id', this.cancion.artista_id.toString());
   
       this.cancion.generos.forEach((genero: any, index: number) => {

@@ -20,8 +20,24 @@
             </div>
         }
 
-        <h2>Nueva música</h2> <!-- canciones nuevas que se han subido en el mes a la plataforma, intentar que salga dependiendo del usuario como si fuera una recomendación -->
-        
+        <h2>Nueva Música</h2>
+        <div class="carousel-container">
+            <button class="prev" (click)="scrollLeft()">&#9664;</button>
+            <div class="songs-wrapper">
+                <div class="songs-container">
+                    @for (cancion of cancionesNuevas; track cancion) {
+                        <div class="song-card">
+                            <img [src]="cancion.portadaURL" alt="Portada de {{ cancion.titulo }}" class="cover-image"/>
+                            <p class="song-title">{{ cancion.titulo }}</p>
+                            <p class="song-artist">{{ cancion.artista.nombre }}</p>
+                            <button (click)="navigateToSong(cancion)">Escuchar</button>
+                        </div>
+                    }
+                </div>
+            </div>
+            <button class="next" (click)="scrollRight()">&#9654;</button>
+        </div>
+                
         <app-player></app-player>
     </main>
 </div>
