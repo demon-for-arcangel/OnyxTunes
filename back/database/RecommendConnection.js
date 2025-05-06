@@ -268,6 +268,40 @@ class RecommendConnection {
       throw error;
     }
   }
+
+  /**
+     * Obtener el estado de habilitación de recomendaciones para un usuario.
+     */
+  async getRecommendationStatus(userId) {
+    try {
+        const recommendation = await models.Recomendacion.findOne({
+            attributes: ["habilitada"],
+            where: { usuario_id: userId }
+        });
+
+        return recommendation ? recommendation.habilitada : false;
+    } catch (error) {
+        console.error("Error al obtener estado de recomendaciones:", error);
+        throw new Error("Error al obtener estado de recomendaciones");
+    }
+}
+
+  /**
+   * Activar o desactivar recomendaciones en la base de datos.
+   */
+  async updateRecommendationStatus(userId, habilitada) {
+    try {
+        await models.Recomendacion.update(
+            { habilitada },
+            { where: { usuario_id: userId } }
+        );
+
+        return { msg: `Recomendaciones ${habilitada ? "activadas" : "desactivadas"} correctamente.` };
+    } catch (error) {
+        console.error("Error al actualizar estado de recomendaciones:", error);
+        throw new Error("Error al actualizar estado de recomendaciones");
+    }
+  }
 }
 
 module.exports = RecommendConnection;
