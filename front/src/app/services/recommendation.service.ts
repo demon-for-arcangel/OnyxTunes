@@ -15,4 +15,12 @@ export class RecommendationService {
   getRecommendationOnLogin(userId: string): Observable<any> {
     return this.http.get<any>(`${this.url}/recomendaciones/login/${userId}`);
   }
+
+  getRecommendationStatus(userId: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.url}/recomendaciones/status/${userId}`); // Ajusta el userId dinámicamente
+  }
+
+  updateRecommendationStatus(userId: string, status: boolean): Observable<any> {
+    return this.http.post(`${this.url}/recomendaciones/update-status/${userId}`, { habilitada: status });
+  }
 }

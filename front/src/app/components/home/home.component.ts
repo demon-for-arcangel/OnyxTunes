@@ -136,13 +136,24 @@ export class HomeComponent {
   }
 
   RecommendationOnLogin(userId: number) {
-    this.recommendationService.getRecommendationOnLogin(userId.toString()).subscribe((response) => {
-      if (response.ok && response.songRecommendation) {
-        this.recommendedSong = response.songRecommendation;
-        this.open();
+    this.recommendationService.getRecommendationOnLogin(userId.toString()).subscribe({
+      next: (response) => {
+        if (response.ok) {
+          if (response.songRecommendation) {
+            this.recommendedSong = response.songRecommendation;
+            this.open(); // ✅ Abrir solo si hay una recomendación
+          } else {
+            console.log("Las recomendaciones están deshabilitadas o no hay ninguna disponible.");
+            this.recommendedSong = null; // ✅ Limpia la recomendación
+          }
+        }
+      },
+      error: (err) => {
+        console.error("Error al obtener la recomendación:", err);
       }
     });
-  }
+}
+
 
   open() {
     if (!this.recommendedSong) {

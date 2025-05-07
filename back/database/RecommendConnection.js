@@ -10,7 +10,7 @@ class RecommendConnection {
   /**
    * Generar una lista diaria de recomendaciones basada en historial, likes y géneros.
    */
-  static async generateDailyRecommendations(userId) {
+  async generateDailyRecommendations(userId) {
     try {
       const userExists = await models.Usuario.findByPk(userId);
       if (!userExists) {
@@ -112,7 +112,7 @@ class RecommendConnection {
     }
   }
 
-  static async getOrCreatePlaylist(userId) {
+  async getOrCreatePlaylist(userId) {
     console.log("Entrando en getOrCreatePlaylist para el usuario:", userId);
     try {
       let playlist = await models.Playlist.findOne({
@@ -152,7 +152,7 @@ class RecommendConnection {
     }
   }
   
-  static async addSongsToPlaylist(userId, songIds) {
+  async addSongsToPlaylist(userId, songIds) {
     console.log("Entrando en addSongsToPlaylist", userId);
     try {
       const playlist = await this.getOrCreatePlaylist(userId);
@@ -196,78 +196,100 @@ class RecommendConnection {
   /**
    * Recomendar una canción en cada inicio de sesión basada en géneros más escuchados.
    */
-  static async recommendOnLogin(userId) {
+  async recommendOnLogin(userId) {
     try {
-      const userPreference = await models.Recomendacion.findOne({
-        where: { usuario_id: userId },
-      });
-  
-      if (userPreference && !userPreference.habilitada) {
-        console.log("El usuario ha deshabilitado las recomendaciones.");
-        return null;
-      }
-  
-      const userHistory = await models.Historial.findAll({
-        where: { usuario_id: userId },
-        include: [{ model: models.Cancion, as: "cancion" }], 
-      });
-  
-      let songRecommendation;
-  
-      if (!userHistory.length) {
-        songRecommendation = await models.Cancion.findOne({
-          order: Sequelize.literal("RAND()"),
+        const userPreference = await models.Recomendacion.findOne({
+            where: { usuario_id: userId },
         });
-      } else {
-        const genreCounts = userHistory.reduce((acc, entry) => {
-          const genreId = entry.cancion?.generoId;
-          if (genreId) {
-            acc[genreId] = (acc[genreId] || 0) + 1;
-          }
-          return acc;
-        }, {});
-  
-        const topGenre = Object.entries(genreCounts).sort(
-          ([, countA], [, countB]) => countB - countA
-        )[0]?.[0];
-  
-        if (!topGenre) {
-          return null;
+
+        if (userPreference && !userPreference.habilitada) {
+            console.log("El usuario ha deshabilitado las recomendaciones.");
+            return {
+                ok: true,
+                msg: "Las recomendaciones están deshabilitadas para este usuario.",
+                songRecommendation: null
+            };
         }
-  
-        songRecommendation = await models.Cancion.findOne({
-          where: {
-            generoId: topGenre,
-            id: {
-              [Op.notIn]: userHistory.map((entry) => entry.cancionId),
-            },
-          },
-          order: Sequelize.literal("RAND()"),
+
+        const userHistory = await models.Historial.findAll({
+            where: { usuario_id: userId },
+            include: [{ model: models.Cancion, as: "Cancion" }]
         });
-      }
-  
-      if (!songRecommendation) {
-        return null;
-      }
-  
-      const newRecommendation = await models.Recomendacion.create({
-        usuario_id: userId,
-        cancion_id: songRecommendation.id,
-        fecha_recomendacion: new Date(),
-        habilitada: true,
-      });
-  
-      const recommendationWithSong = await models.Recomendacion.findOne({
-        where: { id: newRecommendation.id },
-        include: [{ model: models.Cancion, as: "cancion" }], 
-      });
-  
-      return recommendationWithSong.cancion;
+
+        let songRecommendation;
+
+        if (!userHistory.length) {
+            songRecommendation = await models.Cancion.findOne({
+                order: Sequelize.literal("RAND()"),
+            });
+        } else {
+            const genreCounts = userHistory.reduce((acc, entry) => {
+                const genreId = entry.Cancion?.generoId;
+                if (genreId) {
+                    acc[genreId] = (acc[genreId] || 0) + 1;
+                }
+                return acc;
+            }, {});
+
+            const topGenre = Object.entries(genreCounts).sort(
+                ([, countA], [, countB]) => countB - countA
+            )[0]?.[0];
+
+            if (!topGenre) {
+                return {
+                    ok: true,
+                    msg: "No se pudo generar una recomendación en este momento.",
+                    songRecommendation: null
+                };
+            }
+
+            songRecommendation = await models.Cancion.findOne({
+                where: {
+                    generoId: topGenre,
+                    id: {
+                        [Op.notIn]: userHistory.map((entry) => entry.Cancion?.id),
+                    },
+                },
+                order: Sequelize.literal("RAND()"),
+            });
+        }
+
+        if (!songRecommendation) {
+            return {
+                ok: true,
+                msg: "No se pudo generar una recomendación en este momento.",
+                songRecommendation: null
+            };
+        }
+
+        const newRecommendation = await models.Recomendacion.create({
+            usuario_id: userId,
+            cancion_id: songRecommendation.id,
+            fecha_recomendacion: new Date(),
+            habilitada: true,
+        });
+
+        const recommendationWithSong = await models.Recomendacion.findOne({
+            where: { id: newRecommendation.id },
+            include: [{ model: models.Cancion, as: "Cancion" }],
+        });
+
+        return {
+            ok: true,
+            songRecommendation: recommendationWithSong?.Cancion || null,
+            msg: recommendationWithSong?.Cancion ? "Recomendación generada exitosamente." : "No se encontró una canción recomendada."
+        };
+
     } catch (error) {
-      console.error("Error al recomendar una canción en inicio de sesión:", error);
-      throw error;
+        console.error("Error al recomendar una canción en inicio de sesión:", error);
+        return {
+            ok: false,
+            msg: "Error interno del servidor.",
+            error: error.message,
+        };
     }
-  }
+}
+
 
   /**
      * Obtener el estado de habilitación de recomendaciones para un usuario.
@@ -284,7 +306,7 @@ class RecommendConnection {
         console.error("Error al obtener estado de recomendaciones:", error);
         throw new Error("Error al obtener estado de recomendaciones");
     }
-}
+  }
 
   /**
    * Activar o desactivar recomendaciones en la base de datos.

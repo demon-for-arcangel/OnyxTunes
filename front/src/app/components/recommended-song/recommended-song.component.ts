@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { RecommendationService } from '../../services/recommendation.service';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-recommended-song',
@@ -10,13 +13,69 @@ import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 })
 export class RecommendedSongComponent implements OnInit {
   recommendedSong: any = null;
+  isEnabled: boolean = false;
+  userId: string = '';
 
-  constructor(private config: DynamicDialogConfig) {}
+  constructor(private config: DynamicDialogConfig, private recommendationService: RecommendationService, private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.recommendedSong = this.config.data.recommendedSong;
-
     console.log("Datos recibidos en el diálogo:", this.recommendedSong);
+
+    this.getUserFromToken();
   }
 
+  getUserFromToken(): void {
+    const tokenObject = localStorage.getItem("user");
+    if (!tokenObject) {
+      console.error("Token no encontrado, redirigiendo a login");
+      this.router.navigate(["/login"]);
+      return;
+    }
+
+    this.authService.getUserByToken(tokenObject).subscribe({
+      next: (usuario) => {
+        if (usuario?.id) {
+          this.userId = usuario.id.toString();
+          this.checkRecommendationStatus();
+        } else {
+          console.error("Usuario no encontrado en el token, redirigiendo a login");
+          this.router.navigate(["/login"]);
+        }
+      },
+      error: (err) => {
+        console.error("Error al obtener usuario desde el token:", err);
+        this.router.navigate(["/login"]);
+      }
+    });
+  }
+
+  checkRecommendationStatus(): void {
+    if (!this.userId) return;
+
+    this.recommendationService.getRecommendationStatus(this.userId).subscribe({
+      next: (status: boolean) => {
+        this.isEnabled = status;
+        console.log(this.isEnabled)
+      },
+      error: (err) => {
+        console.error("Error al obtener el estado de recomendaciones:", err);
+      }
+    });
+  }
+
+  toggleRecommendation(): void {
+    if (!this.userId) return; 
+
+    this.isEnabled = !this.isEnabled;
+
+    this.recommendationService.updateRecommendationStatus(this.userId, this.isEnabled).subscribe({
+      next: (response) => {
+        console.log("Estado actualizado correctamente:", response);
+      },
+      error: (err) => {
+        console.error("Error al actualizar estado de recomendaciones:", err);
+      }
+    });
+  }
 }
