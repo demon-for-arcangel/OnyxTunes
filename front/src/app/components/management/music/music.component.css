@@ -213,3 +213,34 @@ select option {
     background: linear-gradient(45deg, #1e1e1e, #e51d36);
     transform: scale(1.05);
 }
+
+.play-button {
+    height: 30px;
+    width: 30px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #e51d36;
+    font-size: 16px;
+    transition: color 0.2s;
+    border-radius: 50%;
+    border: 2px solid #e51d36;
+}
+
+.play-button:hover {
+    color: #ff4d6d;
+    border-color: #ff4d6d;
+}
+
+.play-button i {
+    display: block;
+    font-size: 16px;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+}
