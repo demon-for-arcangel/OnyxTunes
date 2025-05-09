@@ -24,7 +24,8 @@ import { SongService } from "../../services/song.service";
     SidebarComponent,
     PlayerComponent,
     AccountButtonComponent,
-    DialogModule, RecommendedSongComponent
+    DialogModule, RecommendedSongComponent,
+    PlaylistComponent
   ],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.css",
@@ -50,6 +51,21 @@ export class HomeComponent {
   ngOnInit() {
     this.loadUserId();
     this.loadCancionesNuevas();
+    this.loadDailyRecommendations();
+  }
+
+  scrollLeft(): void {
+    const container = document.querySelector(".songs-container") as HTMLElement;
+    if (container) {
+      container.scrollLeft -= 200;
+    }
+  }
+
+  scrollRight(): void {
+    const container = document.querySelector(".songs-container") as HTMLElement;
+    if (container) {
+      container.scrollLeft += 200;
+    }
   }
 
   navigateToPlaylist(playlist: Playlist) {
@@ -96,26 +112,7 @@ export class HomeComponent {
             console.log(this.userId);
             this.RecommendationOnLogin(this.userId);
 
-            this.playlistService.getUserPlaylists(this.userId).subscribe(
-              (response) => {
-                console.log(response);
-                if (response.success) {
-                  this.playlists = response.data;
-            
-                  this.especialPlaylists = this.playlists.filter((playlist) =>
-                    playlist.nombre.includes("Recomendación Diaria"),
-                  );
-                  this.userPlaylists = this.playlists.filter((playlist) =>
-                    !playlist.nombre.includes("Recomendación Diaria"),
-                  );
-                } else {
-                  console.error("Error al obtener las playlists:", response.message);
-                }
-              },
-              (error) => {
-                console.error("Error en la solicitud:", error);
-              },
-            );
+            this.loadUserPlaylists();
           } else {
             console.error("Usuario no encontrado en el token");
             this.router.navigate(["/login"]);
@@ -136,31 +133,43 @@ export class HomeComponent {
   }
 
   RecommendationOnLogin(userId: number) {
-    this.recommendationService.getRecommendationOnLogin(userId.toString()).subscribe({
-      next: (response) => {
-        if (response.ok) {
-          if (response.songRecommendation) {
-            this.recommendedSong = response.songRecommendation;
-            this.open(); // ✅ Abrir solo si hay una recomendación
-          } else {
-            console.log("Las recomendaciones están deshabilitadas o no hay ninguna disponible.");
-            this.recommendedSong = null; // ✅ Limpia la recomendación
-          }
+    if (userId) {
+      this.recommendationService.getRecommendationOnLogin(userId.toString()).subscribe({
+        next: (response) => {
+          console.log("Recomendaciones obtenidas:", response);
+          this.recommendedSong = response;
+          this.openRecommendedSongDialog();
+        },
+        error: (error) => {
+          console.error("Error al obtener recomendaciones:", error);
         }
-      },
-      error: (err) => {
-        console.error("Error al obtener la recomendación:", err);
-      }
-    });
-}
+      });
+    } else {
+      console.error("ID de usuario no encontrado");
+    }
+  }
 
+  loadDailyRecommendations() {
+    if (this.userId) {
+      this.recommendationService.getDailyRecommendations(this.userId.toString()).subscribe({
+        next: (response) => {
+          console.log("Recomendaciones diarias obtenidas:", response);
+          this.especialPlaylists = response;
+        },
+        error: (error) => {
+          console.error("Error al obtener recomendaciones diarias:", error);
+        }
+      });
+    } else {
+      console.error("ID de usuario no encontrado");
+    }
+  }
 
-  open() {
+  openRecommendedSongDialog() {
     if (!this.recommendedSong) {
       console.error("No hay canción recomendada para mostrar.");
       return;
     }
-
 
     this.dialogRef = this.dialogService.open(RecommendedSongComponent, {
       header: "Tu recomendación del día",
@@ -207,17 +216,29 @@ export class HomeComponent {
     );
   }
 
-  scrollLeft(): void {
-    const container = document.querySelector(".songs-container") as HTMLElement;
-    if (container) {
-      container.scrollLeft -= 200;
+  loadUserPlaylists() {
+    if (this.userId) {
+      this.playlistService.getUserPlaylists(this.userId).subscribe(
+        (response) => {
+          console.log(response);
+          if (response.success) {
+            this.playlists = response.data;
+            this.especialPlaylists = this.playlists.filter((playlist) =>
+              playlist.nombre.includes("Recomendación Diaria"),
+            );
+            this.userPlaylists = this.playlists.filter((playlist) =>
+              !playlist.nombre.includes("Recomendación Diaria"),
+            );
+          } else {
+            console.error("Error al obtener las playlists:", response.message);
+          }
+        },
+        (error) => {
+          console.error("Error en la solicitud:", error);
+        },
+      );
+    } else {
+      console.error("ID de usuario no encontrado");
     }
   }
-  scrollRight(): void {
-    const container = document.querySelector(".songs-container") as HTMLElement;
-    if (container) {
-      container.scrollLeft += 200; 
-    }
-  }
-  
 }

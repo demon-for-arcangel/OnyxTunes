@@ -23,4 +23,8 @@ export class RecommendationService {
   updateRecommendationStatus(userId: string, status: boolean): Observable<any> {
     return this.http.post(`${this.url}/recomendaciones/update-status/${userId}`, { habilitada: status });
   }
+
+  getDailyRecommendations(userId: string): Observable<any> {
+    return this.http.get<any>(`${this.url}/recomendaciones/daily/${userId}`);
+  }
 }

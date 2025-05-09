@@ -273,12 +273,10 @@ export class MusicComponent implements OnInit, AfterViewInit {
 
     this.ref.onClose.subscribe(() => {
         this.loadCanciones(); 
-        // Destruir el WaveSurfer de la canción editada
         if (this.wavesurferInstances[cancion.id]) {
             this.wavesurferInstances[cancion.id].destroy();
             delete this.wavesurferInstances[cancion.id];
         }
-        // El WaveSurfer se recreará automáticamente cuando el DOM esté listo
     });
 }
 
