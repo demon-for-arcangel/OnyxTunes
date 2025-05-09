@@ -69,8 +69,8 @@ export class HomeComponent {
   }
 
   navigateToPlaylist(playlist: Playlist) {
-    const playlistName = encodeURIComponent(playlist.nombre);
-    this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]);
+    const encodedData = btoa(`${playlist.id}:${playlist.nombre}`);
+    this.router.navigate([`/playlist/${encodedData}`]);
   }
 
   navigateToSearch() {
