@@ -64,7 +64,7 @@ OnyxTunes es una plataforma de streaming de música moderna y social, diseñada 
    npm run start
 
    # Frontend (en otra terminal)
-   cd ../front
+   cd front
    ng serve
    ```
 
