@@ -213,7 +213,7 @@ class RecommendConnection {
 
         const userHistory = await models.Historial.findAll({
             where: { usuario_id: userId },
-            include: [{ model: models.Cancion, as: "Cancion" }]
+            include: [{ model: models.Cancion, as: "cancion" }]
         });
 
         let songRecommendation;
