@@ -1,8 +1,8 @@
 @if (recommendedSong) {
     <div>
         <h2>{{ recommendedSong.songRecommendation.titulo }}</h2>
-        <p><strong>Artista:</strong>{{ recommendedSong.songRecommendation.artista }}</p>
-        <p><strong>Duración:</strong>{{ recommendedSong.duracion }}</p>
+        <p><strong>Artista:</strong>{{ artistName }}</p>
+        <p><strong>Duración:</strong>{{ recommendedSong.songRecommendation.duracion }}</p>
 
         <button (click)="toggleRecommendation()">
             {{ isEnabled ? 'Desactivar Recomendaciones' : 'Activar Recomendaciones' }}

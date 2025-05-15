@@ -3,6 +3,7 @@ import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { RecommendationService } from '../../services/recommendation.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-recommended-song',
@@ -15,8 +16,9 @@ export class RecommendedSongComponent implements OnInit {
   recommendedSong: any = null;
   isEnabled: boolean = false;
   userId: string = '';
+  artistName: string = '';
 
-  constructor(private config: DynamicDialogConfig, private recommendationService: RecommendationService, private authService: AuthService, private router: Router) {}
+  constructor(private config: DynamicDialogConfig, private recommendationService: RecommendationService, private authService: AuthService, private router: Router, private userService: UserService) {}
 
   ngOnInit(): void {
     this.recommendedSong = this.config.data.recommendedSong;
@@ -27,8 +29,17 @@ export class RecommendedSongComponent implements OnInit {
     }
 
     console.log("Datos recibidos en el diálogo:", this.recommendedSong);
+
+    if (this.recommendedSong.songRecommendation?.artista_id) {
+        console.log("Llamando a getArtistName con ID de artista:", this.recommendedSong.songRecommendation.artista_id);
+        this.getArtistName(this.recommendedSong.songRecommendation.artista_id);
+    } else {
+        console.log("No hay ID de artista disponible.");
+    }
+
     this.getUserFromToken();
-}
+  }
+
 
   getUserFromToken(): void {
     const tokenObject = localStorage.getItem("user");
@@ -80,6 +91,22 @@ export class RecommendedSongComponent implements OnInit {
       },
       error: (err) => {
         console.error("Error al actualizar estado de recomendaciones:", err);
+      }
+    });
+  }
+
+  getArtistName(artistaId: number): void {
+    this.userService.getUserById(artistaId.toString()).subscribe({
+      next: (usuario) => {
+        if (usuario?.nombre) {
+          this.artistName = usuario.nombre;
+          console.log("Nombre del artista obtenido:", this.artistName);
+        } else {
+          console.log("No se encontró el artista.");
+        }
+      },
+      error: (err) => {
+        console.error("Error al obtener el nombre del artista:", err);
       }
     });
   }

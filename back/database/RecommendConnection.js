@@ -288,8 +288,7 @@ class RecommendConnection {
             error: error.message,
         };
     }
-}
-
+  }
 
   /**
      * Obtener el estado de habilitación de recomendaciones para un usuario.
