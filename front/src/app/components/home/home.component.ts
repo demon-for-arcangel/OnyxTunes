@@ -51,8 +51,8 @@ export class HomeComponent {
   ngOnInit() {
     this.loadUserId();
     this.loadCancionesNuevas();
-    this.loadDailyRecommendations();
-  }
+/*     this.loadDailyRecommendations();
+ */  }
 
   scrollLeft(): void {
     const container = document.querySelector(".songs-container") as HTMLElement;
@@ -99,33 +99,32 @@ export class HomeComponent {
   loadUserId() {
     const tokenObject = localStorage.getItem("user");
     if (!tokenObject) {
-      console.error("Token no encontrado, redirigiendo a login");
-      this.router.navigate(["/login"]);
-      return;
+        console.error("Token no encontrado, redirigiendo a login");
+        this.router.navigate(["/login"]);
+        return;
     }
 
-    if (tokenObject) {
-      this.authService.getUserByToken(tokenObject).subscribe({
+    this.authService.getUserByToken(tokenObject).subscribe({
         next: (usuario: Usuario | undefined) => {
-          if (usuario?.id) {
-            this.userId = usuario.id;
-            console.log(this.userId);
-            this.RecommendationOnLogin(this.userId);
+            if (usuario?.id) {
+                this.userId = usuario.id;
+                console.log("ID de usuario obtenido:", this.userId);
 
-            this.loadUserPlaylists();
-          } else {
-            console.error("Usuario no encontrado en el token");
-            this.router.navigate(["/login"]);
-          }
+                // 🔹 Llamar a `loadDailyRecommendations()` solo cuando `userId` esté disponible
+                console.log("🔹 Llamando a loadDailyRecommendations()...");
+                this.loadDailyRecommendations();
+                this.RecommendationOnLogin(this.userId);
+                this.loadUserPlaylists();
+            } else {
+                console.error("Usuario no encontrado en el token");
+                this.router.navigate(["/login"]);
+            }
         },
         error: (err) => {
-          console.error("Error al obtener el usuario desde el token:", err);
-          this.router.navigate(["/login"]);
-        },
-      });
-    } else {
-      console.error("No se encontró el token.");
-    }
+            console.error("Error al obtener el usuario desde el token:", err);
+            this.router.navigate(["/login"]);
+        }
+    });
   }
 
   crearPlaylist() {
@@ -157,19 +156,24 @@ export class HomeComponent {
 
   loadDailyRecommendations() {
     if (this.userId) {
-      this.recommendationService.getDailyRecommendations(this.userId.toString()).subscribe({
-        next: (response) => {
-          console.log("Recomendaciones diarias obtenidas:", response);
-          this.especialPlaylists = response;
-        },
-        error: (error) => {
-          console.error("Error al obtener recomendaciones diarias:", error);
-        }
-      });
+        console.log("🔹 Ejecutando loadDailyRecommendations con userId:", this.userId);
+
+        this.recommendationService.getDailyRecommendations(this.userId.toString()).subscribe({
+            next: (response) => {
+                console.log("✅ Respuesta antes de asignar:", response);
+
+                this.especialPlaylists = response;
+                console.log("✅ Estado de especialPlaylists después de asignar:", this.especialPlaylists);
+            },
+            error: (error) => {
+                console.error("🚨 Error al obtener recomendaciones diarias:", error);
+            }
+        });
     } else {
-      console.error("ID de usuario no encontrado");
+        console.error("❌ ID de usuario no encontrado, no se ejecuta loadDailyRecommendations.");
     }
-  }
+}
+
 
   openRecommendedSongDialog() {
     if (!this.recommendedSong) {

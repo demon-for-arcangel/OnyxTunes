@@ -115,6 +115,14 @@ class RecommendConnection {
   async getOrCreatePlaylist(userId) {
     console.log("Entrando en getOrCreatePlaylist para el usuario:", userId);
     try {
+
+      const usuario = await models.Usuario.findByPk(userId);
+      if (!usuario) {
+          throw new Error(`❌ Usuario con ID ${userId} no encontrado.`);
+      }
+
+      const playlistName = `Recomendación Diaria ${usuario.nombre}`;
+
       let playlist = await models.Playlist.findOne({
         include: [
           {
@@ -123,13 +131,13 @@ class RecommendConnection {
             through: { model: models.UsuarioPlaylist },
           },
         ],
-        where: { nombre: "Recomendación Diaria" },
+        where: { nombre: playlistName },
       });
   
       if (!playlist) {
         console.log(`Creando la playlist 'Recomendación Diaria' para el usuario con ID ${userId}.`);
         playlist = await models.Playlist.create({
-          nombre: "Recomendación Diaria",
+          nombre: playlistName,
           descripcion: "Playlist generada automáticamente con las canciones recomendadas para el día.",
           fechaCreacion: new Date(),
         });
@@ -175,7 +183,7 @@ class RecommendConnection {
   
       for (const cancionId of validSongIds) {
         try {
-          await models.PlaylistCancion.create({
+          await models.CancionPlaylist.create({
             playlist_id: playlist.id,
             cancion_id: cancionId,
             fechaAgregado: new Date(),

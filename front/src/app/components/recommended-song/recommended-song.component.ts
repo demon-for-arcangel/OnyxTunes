@@ -31,12 +31,10 @@ export class RecommendedSongComponent implements OnInit {
     console.log("Datos recibidos en el diálogo:", this.recommendedSong);
 
     if (this.recommendedSong.songRecommendation?.artista_id) {
-        console.log("Llamando a getArtistName con ID de artista:", this.recommendedSong.songRecommendation.artista_id);
         this.getArtistName(this.recommendedSong.songRecommendation.artista_id);
     } else {
         console.log("No hay ID de artista disponible.");
     }
-
     this.getUserFromToken();
   }
 
