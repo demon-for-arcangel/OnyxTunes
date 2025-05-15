@@ -137,6 +137,12 @@ export class HomeComponent {
       this.recommendationService.getRecommendationOnLogin(userId.toString()).subscribe({
         next: (response) => {
           console.log("Recomendaciones obtenidas:", response);
+
+          if (!response.songRecommendation) {
+            console.log("Las recomendaciones están deshabilitadas o no hay una recomendación disponible.");
+            return;
+          }
+
           this.recommendedSong = response;
           this.openRecommendedSongDialog();
         },
@@ -167,8 +173,8 @@ export class HomeComponent {
 
   openRecommendedSongDialog() {
     if (!this.recommendedSong) {
-      console.error("No hay canción recomendada para mostrar.");
-      return;
+        console.log("No hay canción recomendada, el modal no se abrirá.");
+        return; // Evita abrir el modal
     }
 
     this.dialogRef = this.dialogService.open(RecommendedSongComponent, {
@@ -194,8 +200,7 @@ export class HomeComponent {
         this.dialogRef.close();
       }
     }, 10000);
-  }
-
+}
   loadCancionesNuevas(): void {
     this.songService.getCanciones().subscribe(
       (response) => {

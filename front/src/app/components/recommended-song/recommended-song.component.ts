@@ -20,10 +20,15 @@ export class RecommendedSongComponent implements OnInit {
 
   ngOnInit(): void {
     this.recommendedSong = this.config.data.recommendedSong;
-    console.log("Datos recibidos en el diálogo:", this.recommendedSong);
 
+    if (!this.recommendedSong) {
+        console.log("No hay canción recomendada, cerrando el modal.");
+        return;
+    }
+
+    console.log("Datos recibidos en el diálogo:", this.recommendedSong);
     this.getUserFromToken();
-  }
+}
 
   getUserFromToken(): void {
     const tokenObject = localStorage.getItem("user");
