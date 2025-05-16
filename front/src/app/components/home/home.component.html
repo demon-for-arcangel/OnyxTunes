@@ -5,9 +5,9 @@
         <h1>Escuchado recientemente</h1> <!-- canciones sueltas y playlist que han sido escuchadas por ultima vez -->
         <h2>Especialmente para ti</h2> <!-- lista de reproduccion con canciones recomendadas y canciones que te gustan -->
         <!-- añadir canciones sueltas para meter mas recomendaciones (no importa si estas canciones ya fueron recomendadas en la playlist)-->
-        @if (especialPlaylists.length > 0) {
+        @if (playlists) {
             <div class="playlists-container">
-                @for (playlist of especialPlaylists; track playlist) {
+                @for (playlist of playlists; track playlist) {
                     <div class="playlist-card">
 <!--                         <img [src]="playlist.portadaURL" [alt]="playlist.nombre" class="playlist-cover"/>
  -->                        <h3>{{ playlist.nombre }}</h3>
