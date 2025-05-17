@@ -87,13 +87,16 @@ export class CreateSongsComponent {
     if (input.files && input.files.length > 0) {
       this.selectedFiles = Array.from(input.files); // Convertir archivos a un array
   
-      if (this.selectedFiles.length === 1) {
+      //this.selectedFiles.length === 1
+      if (this.selectedFiles) {
         // Caso: Solo un archivo seleccionado
         const file = this.selectedFiles[0];
         const fileURL = URL.createObjectURL(file);
         const audio = new Audio(fileURL);
   
         audio.onloadedmetadata = () => {
+          console.log(`Duración obtenida: ${audio.duration} segundos`);
+          
           const durationInSeconds = Math.floor(audio.duration);
           this.horas = Math.floor(durationInSeconds / 3600);
           this.minutos = Math.floor((durationInSeconds % 3600) / 60);
@@ -102,14 +105,14 @@ export class CreateSongsComponent {
           this.nuevaCancion.titulo = file.name.split('.').slice(0, -1).join('.'); // Asignar título
           console.log(`Duración de ${file.name}: ${this.horas}h ${this.minutos}m ${this.segundos}s`);
         };
-      } else {
+      } /* else {
         // Caso: Múltiples archivos seleccionados
         this.nuevaCancion.titulo = ""; // Resetear título para múltiples archivos
         this.horas = 0;
         this.minutos = 0;
         this.segundos = 0;
         console.log(`${this.selectedFiles.length} archivos seleccionados`);
-      }
+      } */
     }
   }
   loadGeneros() {
@@ -209,15 +212,16 @@ export class CreateSongsComponent {
       formData.append("generos", genero.toString());
     });
   
-    if (this.selectedFiles.length === 1) {
+    //this.selectedFiles.length === 1
+    if (this.selectedFiles) {
       // Subida única: Enviar título y duración
       formData.append("titulo", this.nuevaCancion.titulo);
       formData.append("duracion", this.calcularDuracionEnSegundos().toString());
-    } else {
+    } /* else {
       // Subida múltiple: Backend se encarga de asignar títulos
       formData.append("duracion", "0"); // Duración no aplica
       formData.append("titulo", ""); // Sin título para múltiples archivos
-    }
+    } */
   
     // Agregar archivos al FormData
     this.selectedFiles.forEach((file) => {
