@@ -51,8 +51,7 @@ export class HomeComponent {
   ngOnInit() {
     this.loadUserId();
     this.loadCancionesNuevas();
-/*     this.loadDailyRecommendations();
- */  }
+  }
 
   scrollLeft(): void {
     const container = document.querySelector(".songs-container") as HTMLElement;
@@ -233,12 +232,6 @@ export class HomeComponent {
           if (response.success) {
             this.playlists = response.data;
             console.log("hola", this.playlists)
-            /* this.especialPlaylists = this.playlists.filter((playlist) =>
-              playlist.nombre.includes("Recomendación Diaria"),
-            );
-            this.userPlaylists = this.playlists.filter((playlist) =>
-              !playlist.nombre.includes("Recomendación Diaria"),
-            ); */
           } else {
             console.error("Error al obtener las playlists:", response.message);
           }

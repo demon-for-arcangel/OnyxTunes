@@ -75,7 +75,7 @@ main {
 .carousel-container {
     display: flex;
     align-items: center;
-    gap: 10px; /* Espaciado entre flechas y contenido */
+    gap: 10px; 
 }
 
 .songs-wrapper {
@@ -94,18 +94,6 @@ main {
     max-width: calc(180px * 5 + 20px * 4); 
 }
 
-/* .song-title {
-    font-size: 14px;
-    font-weight: bold;
-    color: white;
-    margin-top: 8px;
-    width: 100%;
-    text-align: center;
-    overflow: hidden;
-    white-space: nowrap;
-    display: inline-block;
-} */
-
 .song-title {
     font-size: 14px;
     font-weight: bold;
@@ -117,8 +105,8 @@ main {
     white-space: nowrap;
     text-overflow: ellipsis;
     display: inline-block;
-    max-height: 20px; /* Ajustar según necesites */
-    line-height: 20px; /* Igual que max-height para prevenir saltos de línea */
+    max-height: 20px; 
+    line-height: 20px;
 }
 
 .song-card:hover .song-title {
