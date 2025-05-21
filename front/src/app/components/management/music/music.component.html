@@ -39,18 +39,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for(cancion of paginatedCanciones; track cancion){
-                            <tr>
+                        @for(cancion of paginatedCanciones; track cancion.id){
+                            <tr data-id="{{ cancion.id }}">
                                 <td>{{ cancion.titulo || 'Sin título' }}</td>
                                 <td>{{ cancion.artista.nombre || 'Sin artista' }}</td>
                                 <td>{{ cancion.Album?.titulo || 'Sin álbum' }}</td>
 <!--                                 <td>{{ formatDuration(cancion.duracion) }}</td>
 -->                             <td>
-                                    <div>
-                                        <div id="waveform-{{ cancion.id }}"></div>
-                                        <button (click)="togglePlay(cancion.id)">Reproducir</button>
-                                    </div>
-                                </td>
+                                <div style="height: 40px; display: flex; align-items: center;">
+                                    <div id="waveform-{{ cancion.id }}" style="width: 300px; height: 30px; display: inline-block; margin-right: 10px;"></div>
+                                    <button (click)="togglePlay(cancion.id)" class="play-button">
+                                        @if (!isPlaying(cancion.id)) {
+                                            <i class="pi pi-play"></i>
+                                        } @else {
+                                            <i class="pi pi-pause"></i>
+                                        }
+                                    </button>
+                                </div>
+                            </td>
 <!--                                 <td>{{ getGenerosString(cancion.generos) }}</td>
  -->                            <td>
                                     <button (click)="editCancion(cancion)" class="btn-edit">Editar</button>

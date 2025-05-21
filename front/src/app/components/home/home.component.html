@@ -5,42 +5,40 @@
         <h1>Escuchado recientemente</h1> <!-- canciones sueltas y playlist que han sido escuchadas por ultima vez -->
         <h2>Especialmente para ti</h2> <!-- lista de reproduccion con canciones recomendadas y canciones que te gustan -->
         <!-- añadir canciones sueltas para meter mas recomendaciones (no importa si estas canciones ya fueron recomendadas en la playlist)-->
-        @if (especialPlaylists.length > 0) {
-            <div>
-                @for (playlist  of especialPlaylists; track playlist) {
-                    <div>
-                        <li>
-                            <button (click)="navigateToPlaylist(playlist)">
-                                {{ playlist.nombre }}
-                            </button>
-                        </li>
+        @if (playlists) {
+            <div class="playlists-container">
+                @for (playlist of playlists; track playlist) {
+                    <div class="playlist-card">
+<!--                         <img [src]="playlist.portadaURL" [alt]="playlist.nombre" class="playlist-cover"/>
+ -->                        <h3>{{ playlist.nombre }}</h3>
+                        <!-- <p>{{ playlist.creador.nombre }}</p> -->
+                        <button (click)="navigateToPlaylist(playlist)">Ver Playlist</button>
                     </div>
                 }
-            
             </div>
         }
 
-        <h2>Nueva música</h2> <!-- canciones nuevas que se han subido en el mes a la plataforma, intentar que salga dependiendo del usuario como si fuera una recomendación -->
-        
-        <h2>Recomendación del día</h2>
-        @if (recommendedSong) {
-            <div>
-                <p><strong>{{ recommendedSong.titulo }}</strong> - {{ recommendedSong.artista }}</p>
-                <button (click)="openRecommendationPopup()">Mostrar más detalles</button>
-              </div>
-              
-        }
-        
-        <p-dialog [(visible)]="displayPopup" modal="true" header="Recomendación del día">
-            @if (recommendedSong) {
-                <div>
-                    <p><strong>{{ recommendedSong.titulo }}</strong> - {{ recommendedSong.artista }}</p>
-                    <p><strong>Duración:</strong> {{ recommendedSong.duracion }}</p>
+        <h2>Nueva Música</h2>
+        <div class="carousel-container">
+            <button class="prev" (click)="scrollLeft()">&#9664;</button>
+            <div class="songs-wrapper">
+                <div class="songs-container">
+                    @for (cancion of cancionesNuevas; track cancion) {
+                        <div class="song-card">
+                            <img [src]="cancion.portadaURL" alt="Portada de {{ cancion.titulo }}" class="cover-image"/>
+                            <p class="song-title">{{ cancion.titulo }}</p>
+                            <p class="song-artist">{{ cancion.artista.nombre }}</p>
+                            <button (click)="navigateToSong(cancion)">Escuchar</button>
+                        </div>
+                    }
                 </div>
-            }
+            </div>
+            <button class="next" (click)="scrollRight()">&#9654;</button>
+        </div>
 
-            <button pButton type="button" (click)="closePopup()" label="Cerrar"></button>
-          </p-dialog>
+        <h2>Descubra nueva música</h2>
+
+                
         <app-player></app-player>
     </main>
 </div>

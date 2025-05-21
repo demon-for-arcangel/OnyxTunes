@@ -1,10 +1,34 @@
-<div class="create-song-details">
+<div class="create-song-details"> 
   <h2>Añadir Nueva Canción</h2>
+  <label for="archivo">Subir Archivos:</label>
+  <input
+    id="archivo"
+    type="file"
+    multiple
+    (change)="onFilesSelected($event)"
+    accept=".mp3,.wav,.ogg"
+  />
+  @if (selectedFiles.length === 1) {
+    <div>
+      <label for="titulo">Título:</label>
+      <input id="titulo" type="text" [(ngModel)]="nuevaCancion.titulo" required />
+  
+      <label>Duración:</label>
+      <div class="duracion-container">
+        <input type="number" [(ngModel)]="horas" placeholder="Horas" min="0" disabled />
+        <input type="number" [(ngModel)]="minutos" placeholder="Minutos" min="0" max="59" disabled />
+        <input type="number" [(ngModel)]="segundos" placeholder="Segundos" min="0" max="59" disabled />
+      </div>
+    </div>
+  }
 
-  <label for="titulo">Título:</label>
-  <input id="titulo" type="text" [(ngModel)]="nuevaCancion.titulo" required />
+  @if (selectedFiles.length > 1) {
+    <div>
+      <p>Subida múltiple: Los títulos y duraciones se asignarán automáticamente.</p>
+    </div>
+  }
 
-  <label for="artista">Artista:</label>
+  <!-- <label for="artista">Artista:</label>
   <input
     id="artista"
     type="text"
@@ -23,49 +47,51 @@
         </li>
       }
     </ul>
+  } -->
+
+  <label for="artista">Artista:</label>
+  @if (userRol === 'Administrador') {
+    <div>
+      <!-- Administrador: Campo editable -->
+      <input
+        id="artista"
+        type="text"
+        [(ngModel)]="nuevaCancion.artista"
+        (input)="filterArtistas($event)"
+        (focus)="onFocus()"
+        (blur)="onBlur()"
+        required
+        placeholder="Escribe el nombre del artista"
+      />
+      @if (showArtistas && artistasFiltrados.length > 0) {
+        <ul>
+          @for (artista of artistasFiltrados; track artista) {
+            <li (click)="selectArtista(artista)">
+              {{ artista.nombre }}
+            </li>
+          }
+        </ul>
+      }
+    </div>
   }
 
-  <label for="album">Álbum:</label>
-  <select id="album" [(ngModel)]="nuevaCancion.album" required>
-    @if (albumsDisponibles.length === 0) {
-      <option disabled>No hay albumes disponibles</option>
-    }
-    @for (album of albumsDisponibles; track album) {
-      <option [value]="album.id">{{ album.titulo }}</option>
-    }
-  </select>
-
-  <label>Duración:</label>
-  <div class="duracion-container">
-    <input
-      type="number"
-      [(ngModel)]="horas"
-      placeholder="Horas"
-      min="0"
-      disabled
-    />
-    <input
-      type="number"
-      [(ngModel)]="minutos"
-      placeholder="Minutos"
-      min="0"
-      max="59"
-      disabled
-    />
-    <input
-      type="number"
-      [(ngModel)]="segundos"
-      placeholder="Segundos"
-      min="0"
-      max="59"
-      disabled
-    />
-  </div>
+  @if (userRol === 'Artista') {
+    <div>
+      <!-- Artista: Campo no editable -->
+      <input
+        id="artista"
+        type="text"
+        [value]="nuevaCancion.artista"
+        readonly
+        class="readonly-field"
+      />
+    </div>
+  }
 
   <label for="generos">Géneros</label>
   <div class="genero-container">
-    @for (genero of generosDisponibles; track genero) {
-      <div class="genero-item">
+    @for(genero of generosDisponibles; track genero) {
+      <div>
         <input
           type="checkbox"
           [value]="genero"
@@ -75,16 +101,11 @@
         {{ genero.nombre }}
       </div>
     }
-  </div>
 
-  <label for="archivo">Subir Archivo:</label>
-  <input
-    id="archivo"
-    type="file"
-    (change)="onFileSelected($event)"
-    accept=".mp3,.wav,.ogg"
-  />
+  </div>
 
   <button (click)="crearCancion()">Crear Canción</button>
   <button class="cancel" (click)="ref.close()">Cancelar</button>
 </div>
+
+

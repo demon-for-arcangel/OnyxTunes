@@ -33,8 +33,9 @@ export class CreateSongsComponent {
   minutos: number = 0;
   segundos: number = 0;
   showArtistas: boolean = false;
-  selectedFile: File | null = null;
+  selectedFiles: File[] = [];
   user: any;
+  userRol: string = ''
 
   constructor(
     private cancionesService: SongService,
@@ -57,31 +58,52 @@ export class CreateSongsComponent {
       this.authService.getUserByToken(token).subscribe(
         (response) => {
           this.user = response;
+  
+          if (this.user.Rol && Array.isArray(this.user.Rol)) {
+            this.userRol = this.user.Rol[0].nombre; 
+          } else if (this.user.Rol) {
+            this.userRol = this.user.Rol.nombre;
+          }
+  
+          if (this.userRol === "Artista") {
+            this.nuevaCancion.artista = this.user.nombre;
+            this.nuevaCancion.artista_id = this.user.id;
+          }
+  
+          console.log("Usuario y Rol cargados:", this.user, this.userRol);
         },
         (error) => {
           console.error("Error al obtener el usuario:", error);
-        },
+        }
       );
     }
   }
 
-  onFileSelected(event: Event) {
+
+  onFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
-
-      const fileURL = URL.createObjectURL(this.selectedFile);
-      const audio = new Audio(fileURL);
-
-      audio.onloadedmetadata = () => {
-        const durationInSeconds = Math.floor(audio.duration);
-        this.horas = Math.floor(durationInSeconds / 3600);
-        this.minutos = Math.floor((durationInSeconds % 3600) / 60);
-        this.segundos = durationInSeconds % 60;
-      };
+      this.selectedFiles = Array.from(input.files); 
+  
+      if (this.selectedFiles) {
+        const file = this.selectedFiles[0];
+        const fileURL = URL.createObjectURL(file);
+        const audio = new Audio(fileURL);
+  
+        audio.onloadedmetadata = () => {
+          console.log(`Duración obtenida: ${audio.duration} segundos`);
+          
+          const durationInSeconds = Math.floor(audio.duration);
+          this.horas = Math.floor(durationInSeconds / 3600);
+          this.minutos = Math.floor((durationInSeconds % 3600) / 60);
+          this.segundos = durationInSeconds % 60;
+  
+          this.nuevaCancion.titulo = file.name.split('.').slice(0, -1).join('.'); // Asignar título
+          console.log(`Duración de ${file.name}: ${this.horas}h ${this.minutos}m ${this.segundos}s`);
+        };
+      }
     }
   }
-
   loadGeneros() {
     this.generosService.getGeneros().subscribe(
       (data) => {
@@ -169,43 +191,32 @@ export class CreateSongsComponent {
     return this.horas * 3600 + this.minutos * 60 + this.segundos;
   }
 
-  crearCancion() {
-    this.nuevaCancion.duracion = this.calcularDuracionEnSegundos();
-    this.nuevaCancion.generos = this.generosSeleccionados.map((g) => g.id);
-
-    console.log("Datos de la canción a crear:", this.nuevaCancion);
-    console.log("ID del álbum antes de enviar:", this.nuevaCancion.album);
-    console.log(
-      "Géneros antes de enviar:",
-      JSON.stringify(this.nuevaCancion.generos),
-    );
-
-    if (!this.nuevaCancion.artista_id) {
-      console.error("Error: artista_id no está definido");
-      return;
-    }
-
+  crearCancion(): void {
     const formData = new FormData();
-    formData.append("titulo", this.nuevaCancion.titulo);
+  
     formData.append("artista_id", this.nuevaCancion.artista_id.toString());
     formData.append("album_id", this.nuevaCancion.album.toString());
-    formData.append("duracion", this.nuevaCancion.duracion.toString());
-    this.nuevaCancion.generos.forEach((genero: any) => {
+    this.nuevaCancion.generos.forEach((genero: number) => {
       formData.append("generos", genero.toString());
     });
-
-    if (this.selectedFile) {
-      formData.append("archivo", this.selectedFile);
+  
+    if (this.selectedFiles) {
+      formData.append("titulo", this.nuevaCancion.titulo);
+      formData.append("duracion", this.calcularDuracionEnSegundos().toString());
     }
-
+  
+    this.selectedFiles.forEach((file) => {
+      formData.append("archivo", file);
+    });
+  
     this.cancionesService.createCancion(formData).subscribe(
       (response) => {
-        console.log("Canción añadida:", response);
+        console.log("Canciones añadidas:", response);
         this.ref.close();
       },
       (error) => {
-        console.error("Error al añadir la canción", error);
-      },
+        console.error("Error al añadir las canciones:", error);
+      }
     );
   }
 

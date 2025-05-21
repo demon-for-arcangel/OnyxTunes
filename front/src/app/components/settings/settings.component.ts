@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../utils/sidebar/sidebar.component';
 import { Errors } from '../../interfaces/errors';
+import { RecommendationService } from '../../services/recommendation.service';
 
 @Component({
   selector: 'app-settings',
@@ -18,10 +19,15 @@ export class SettingsComponent {
   successMessage: string = '';
   selectedFile: File | null = null;
 
-  constructor(private authService: AuthService, private userService: UserService) { }
+  constructor(
+    private authService: AuthService, 
+    private userService: UserService,
+    private recommendationService: RecommendationService
+  ) { }
 
   ngOnInit(): void {
     this.loadUserData();
+    this.checkRecommendationStatus();
   }
 
   loadUserData() {
@@ -33,6 +39,60 @@ export class SettingsComponent {
       }
     }, error => {
       console.error('Error al cargar los datos del usuario:', error);
+    });
+  }
+
+  checkRecommendationStatus() {
+    const tokenObject = localStorage.getItem("user");
+    if (!tokenObject) {
+      console.error("Token no encontrado");
+      return;
+    }
+
+    this.authService.getUserByToken(tokenObject).subscribe({
+      next: (usuario) => {
+        if (usuario?.id) {
+          const userId = usuario.id.toString();
+          this.recommendationService.getRecommendationStatus(userId).subscribe({
+            next: (status: boolean) => {
+              this.user.recommendationsEnabled = status;
+            },
+            error: (err) => {
+              console.error("Error al obtener el estado de recomendaciones:", err);
+            }
+          });
+        }
+      },
+      error: (err) => {
+        console.error("Error al obtener usuario desde el token:", err);
+      }
+    });
+  }
+
+  toggleRecommendations() {
+    const tokenObject = localStorage.getItem("user");
+    if (!tokenObject) {
+      console.error("Token no encontrado");
+      return;
+    }
+
+    this.authService.getUserByToken(tokenObject).subscribe({
+      next: (usuario) => {
+        if (usuario?.id) {
+          const userId = usuario.id.toString();
+          this.recommendationService.updateRecommendationStatus(userId, this.user.recommendationsEnabled).subscribe({
+            next: (response) => {
+              console.log("Estado de recomendaciones actualizado correctamente:", response);
+            },
+            error: (err) => {
+              console.error("Error al actualizar estado de recomendaciones:", err);
+            }
+          });
+        }
+      },
+      error: (err) => {
+        console.error("Error al obtener usuario desde el token:", err);
+      }
     });
   }
 
@@ -118,6 +178,9 @@ export class SettingsComponent {
       (response) => {
         console.log('Usuario actualizado:', response);
         this.successMessage = 'Actualizado correctamente.';
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
       },
       (error) => {
         console.error('Error al actualizar el usuario:', error);

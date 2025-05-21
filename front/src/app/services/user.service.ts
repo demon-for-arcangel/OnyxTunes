@@ -44,10 +44,6 @@ export class UserService {
     });
   }
 
-  /* updateUser(userId: string, user: Usuario): Observable<Usuario> {
-    return this.http.put<Usuario>(`${this.url}` + `${this.usersUrl}` + `/${userId}`, user);
-  } */
-
   updateUser(userId: string, user: FormData): Observable<any> {
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'multipart/form-data');

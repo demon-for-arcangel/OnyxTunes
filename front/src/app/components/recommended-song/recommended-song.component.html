@@ -1,0 +1,11 @@
+@if (recommendedSong) {
+    <div><!-- Añadir portada de la cancion recomendada -->
+        <h2>{{ recommendedSong.songRecommendation.titulo }}</h2>
+        <p><strong>Artista:</strong>{{ artistName }}</p>
+        <p><strong>Duración:</strong>{{ recommendedSong.songRecommendation.duracion }}</p>
+
+        <button (click)="toggleRecommendation()">
+            {{ isEnabled ? 'Desactivar Recomendaciones' : 'Activar Recomendaciones' }}
+        </button>
+    </div>
+}

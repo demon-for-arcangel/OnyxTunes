@@ -77,22 +77,10 @@ export class UpdateSongsComponent implements OnInit {
     }
   }
 
-  /* onSubmit(): void {
-    this.cancionesService.updateCancion(this.cancionId, this.cancion).subscribe(
-      (response) => {
-        console.log('Canción actualizada:', response);
-        this.router.navigate(['/songs']); 
-      },
-      (error) => {
-        console.error('Error al actualizar la canción:', error);
-      }
-    );
-  } */
-
     onSubmit(): void {
       const formData = new FormData();
       formData.append('titulo', this.cancion.titulo);
-      formData.append('duracion', this.cancion.duracion.toString());
+      formData.append('duracion', this.cancion.duracion);
       formData.append('artista_id', this.cancion.artista_id.toString());
   
       this.cancion.generos.forEach((genero: any, index: number) => {
@@ -106,8 +94,7 @@ export class UpdateSongsComponent implements OnInit {
       this.cancionesService.updateCancion(this.cancionId, formData).subscribe(
         (response) => {
           console.log('Canción actualizada:', response);
-/*           this.router.navigate(['/songs']); 
- */        },
+        },
         (error) => {
           console.error('Error al actualizar la canción:', error);
         }
