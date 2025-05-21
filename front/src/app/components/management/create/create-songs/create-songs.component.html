@@ -77,7 +77,6 @@
 
   @if (userRol === 'Artista') {
     <div>
-      <!-- Artista: Campo no editable -->
       <input
         id="artista"
         type="text"
@@ -87,6 +86,32 @@
       />
     </div>
   }
+
+  <label for="buscarColaborador">Buscar colaborador:</label>
+  <input 
+    id="buscarColaborador"
+    type="text"
+    [(ngModel)]="filtroColaboradores"
+    placeholder="Escribe el nombre de un artista..."
+  />
+
+
+<!--   <label for="colaboradores">Colaboradores</label>
+ -->  <div class="colaboradores-container">
+    <ul>
+      @for (artista of getArtistasFiltrados(); track artista) {
+        <li>
+          <input
+            type="checkbox"
+            [value]="artista.id"
+            (change)="toggleColaborador(artista)"
+            [checked]="colaboradoresSeleccionados.includes(artista.id)"
+          />
+          {{ artista.nombre }}
+        </li>
+      }
+    </ul>
+  </div>
 
   <label for="generos">Géneros</label>
   <div class="genero-container">
