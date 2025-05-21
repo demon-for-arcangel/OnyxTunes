@@ -166,14 +166,20 @@ class SongModel {
 
     async createSongs(data, files) {
         try {
-            const { duracion, likes, reproducciones, album_id, artista_id, generos = [] } = data;
+            const { duracion, likes, reproducciones, album_id, artista_id, generos = [], colaboradores = [] } = data;
     
             const bucketName = process.env.AWS_BUCKET;
             const folder = "canciones";
     
             let cancionesCreadas = [];
+
+            console.log("Contenido de colaboradores:", colaboradores);
+
+            let colaboradoresList = colaboradores;
+            if (typeof colaboradores === "string") {
+                colaboradoresList = colaboradores.split(",").map(num => parseInt(num.trim(), 10));
+            }
     
-            // Detectar si `files.archivo` es único o un array
             const archivos = Array.isArray(files.archivo) ? files.archivo : [files.archivo];
     
             for (const file of archivos) {
@@ -222,10 +228,25 @@ class SongModel {
                     });
                     await newSong.setGeneros(generosExistentes);
                 }
-    
+
+                if (Array.isArray(colaboradoresList) && colaboradoresList.length > 0) {
+                    console.log("hola");
+                    for (const userId of colaboradoresList) {
+                        try {
+                            await models.cancionColaborador.create({
+                                usuario_id: userId,
+                                cancion_id: newSong.id,
+                                createdAt: new Date(),
+                                updatedAt: new Date(),
+                            });
+                            console.log(`Colaborador ${userId} insertado en la canción ${newSong.id}`);
+                        } catch (error) {
+                            console.error(`Error al insertar colaborador ${userId}:`, error);
+                        }
+                    }
+                }
                 cancionesCreadas.push(newSong);
             }
-    
             return { message: "Canciones creadas con éxito", canciones: cancionesCreadas };
         } catch (error) {
             console.error("Error al crear las canciones:", error.message);
