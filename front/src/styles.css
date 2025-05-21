@@ -54,11 +54,10 @@ html, body {
     --hover-btn-green: #32CD32; /* o #66CDAA */
     --color-btn-orange: #FF8C00;
     --hover-btn-orange: #FFB347;
-    --view-toggle-color: #8A2BE2;
-    --view-toggle-hover: #6C1CBF;
+    --color-btn-blue: #0073e6;
+    --hover-btn-blue: #005bb5;
 
 
-    /* Sombras */
     --shadow-elevation-low: 0 2px 4px rgba(0, 0, 0, 0.3);
     --shadow-elevation-medium: 0 4px 8px rgba(0, 0, 0, 0.4);
     --shadow-elevation-high: 0 8px 16px rgba(0, 0, 0, 0.5);
@@ -72,7 +71,6 @@ html, body {
     padding: 0;
   }
   
-  /* Estilos para scrollbars personalizados */
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -90,7 +88,6 @@ html, body {
     background: var(--color-text-disabled);
   }
   
-  /* Clases de utilidad para colores */
   .text-primary {
     color: var(--color-text-primary);
   }

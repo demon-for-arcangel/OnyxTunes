@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Playlist } from '../../interfaces/playlist';
 import { PlaylistService } from '../../services/playlist.service';
@@ -17,151 +17,159 @@ import { ReproduccionesService } from '../../services/reproducciones.service';
 @Component({
   selector: 'app-playlist',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, PlayerComponent, AccountButtonComponent],
+  imports: [
+    CommonModule,
+    SidebarComponent,
+    PlayerComponent,
+    AccountButtonComponent
+  ],
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.css',
 })
 export class PlaylistComponent {
+  @Input() playlist!: Playlist;
   playlistId: number | null = null;
-  playlist: Playlist | null = null;
   canciones: any[] = [];
   user: any;
   userLikes: number[] = [];
   currentSongIndex: number = 0;
 
   @ViewChild(PlayerComponent) playerComponent!: PlayerComponent;
-  
-  constructor(private route: ActivatedRoute, private playlistService: PlaylistService, 
-    private songService: SongService, private authService: AuthService,
-    private likeService: LikesService, private playerService: PlayerService,
-    private reproduccionesService: ReproduccionesService) {}
+
+  constructor(
+    private route: ActivatedRoute,
+    private playlistService: PlaylistService,
+    private songService: SongService,
+    private authService: AuthService,
+    private likeService: LikesService,
+    private playerService: PlayerService,
+    private reproduccionesService: ReproduccionesService
+  ) { }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const encodedData = params['data']; 
-      const decodedData = atob(encodedData); 
-      const [id, nombre] = decodedData.split(':'); 
-      this.playlistId = +id; 
-      console.log('ID de la playlist:', this.playlistId);
-      this.loadPlaylistDetails(this.playlistId);
-    });
-
+    this.initializePlaylist();
     const token = localStorage.getItem('user'); 
     if (token) {
       this.authService.getUserByToken(token).subscribe(
-        response => {
+        (response: any) => {
           this.user = response; 
-          console.log('Usuario obtenido:', this.user);
         },
-        error => {
+        (error: any) => {
           console.error('Error al obtener el usuario:', error);
         }
       );
     }
   }
 
-  loadPlaylistDetails(id: number) {
-    this.playlistService.getPlaylistById(id).subscribe(response => {
-      console.log(response);
-      if (response) {
-        this.playlist = response;
-        this.canciones = response.canciones; 
-        console.log('Playlist cargada:', this.playlist);
-        console.log('Canciones:', this.canciones);
-        console.log('titulo', response.canciones[0]?.titulo);
-      } else {
-        console.error('Error al obtener los detalles de la playlist:', response.message || 'Respuesta no válida');
-      }
-    }, error => {
-      console.error('Error en la solicitud:', error);
-    });
-  }
-
-  reproducirCancion(cancion: any) {
-    const songIndex = this.canciones.findIndex((s) => s.id === cancion.id); 
-    if (songIndex !== -1) {
-      this.playerService.setQueue(this.canciones); 
-      this.playerService.playFromIndex(songIndex); 
-
-      this.reproduccionesService.createUpdateReproduccion(this.user.id, cancion.id, 'cancion').subscribe(response => {
-        console.log('Reproducción creada:', response);
-      }, error => {
-        console.error('Error al crear la reproducción:', error);
+  initializePlaylist(): void {
+    if (this.playlist) {
+      this.playlistId = this.playlist.id;
+      this.loadPlaylistDetails(this.playlistId);
+    } else {
+      this.route.params.subscribe(params => {
+        const encodedData = params['data']; 
+        const decodedData = atob(encodedData); 
+        const [id, nombre] = decodedData.split(':'); 
+        this.playlistId = +id; 
+        this.loadPlaylistDetails(this.playlistId);
       });
-    } else {
-      console.error('La canción no se encontró en la playlist.');
     }
   }
 
-  addToHistory(cancionId: number) {
-    if (this.user) { 
-        console.log('ID de la canción:', cancionId);
-        console.log('ID del usuario:', this.user.id);
-        this.songService.addToHistory(cancionId, this.user.id).subscribe(response => {
-            console.log('Canción añadida al historial:', response);
-        }, error => {
-            console.error('Error al añadir al historial:', error);
-        });
-    } else {
-        console.error('No se pudo añadir al historial, usuario no encontrado.');
-    }
-}
-
-eliminarCancion(cancionId: number) {
-  console.log('ID de la playlist:', this.playlistId);
-  console.log('ID de la canción a eliminar:', cancionId);
-  console.log('ID del usuario:', this.user.id); 
-
-  this.likeService.getLikesByUserId(this.user.id).subscribe(
-      (response) => {
-          const like = response.data.find(like => like.entidad_id === cancionId);
-          if (like) {
-              this.likeService.deleteLike(like.id).subscribe(
-                  (response) => {
-                      console.log('Like eliminado:', response);
-                      this.userLikes = this.userLikes.filter(id => id !== cancionId);
-                      this.canciones = this.canciones.filter(c => c.id !== cancionId); 
-                  },
-                  (error) => {
-                      console.error('Error al eliminar el like:', error);
-                  }
-              );
-          } else {
-              console.error('El like no existe para esta canción.');
-          }
+  loadPlaylistDetails(id: number): void {
+    this.playlistService.getPlaylistById(id).subscribe(
+      (response: any) => {
+        if (response) {
+          this.playlist = response;
+          this.canciones = response.canciones;
+        } else {
+          console.error('Error al obtener los detalles de la playlist:', response?.message || 'Respuesta no válida');
+        }
       },
-      (error) => {
-          console.error('Error al obtener los likes del usuario:', error);
+      (error: any) => {
+        console.error('Error en la solicitud:', error);
       }
-  );
-}
+    );
+  }
+
+  reproducirCancion(cancion: any): void {
+    if (!cancion || !this.canciones) return;
+    const songIndex = this.canciones.findIndex((s: any) => s.id === cancion.id);
+    if (songIndex !== -1) {
+      this.playerService.setQueue(this.canciones);
+      this.playerService.playFromIndex(songIndex);
+
+      if (this.user) {
+        this.reproduccionesService.createUpdateReproduccion(this.user.id, cancion.id, 'cancion').subscribe(
+          (response: any) => {
+            console.log('Reproducción creada:', response);
+          },
+          (error: any) => {
+            console.error('Error al crear la reproducción:', error);
+          }
+        );
+      }
+    }
+  }
+
+  addToHistory(cancionId: number): void {
+    if (!this.user) return;
+    this.songService.addToHistory(cancionId, this.user.id).subscribe(
+      (response: any) => {
+        console.log('Canción añadida al historial:', response);
+      },
+      (error: any) => {
+        console.error('Error al añadir al historial:', error);
+      }
+    );
+  }
+
+  eliminarCancion(cancionId: number): void {
+    if (!this.user) return;
+    this.likeService.getLikesByUserId(this.user.id).subscribe(
+      (response: any) => {
+        const like = response.data.find((like: any) => like.entidad_id === cancionId);
+        if (like) {
+          this.likeService.deleteLike(like.id).subscribe(
+            (response: any) => {
+              this.userLikes = this.userLikes.filter(id => id !== cancionId);
+              this.canciones = this.canciones.filter((c: any) => c.id !== cancionId);
+            },
+            (error: any) => {
+              console.error('Error al eliminar el like:', error);
+            }
+          );
+        }
+      },
+      (error: any) => {
+        console.error('Error al obtener los likes del usuario:', error);
+      }
+    );
+  }
 
   formatDuration(seconds: number): string {
+    if (!seconds) return '00:00';
     const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-    const formattedSeconds = secs.toString().padStart(2, '0');
-
-    return `${formattedMinutes}:${formattedSeconds}`; 
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
 
-  onSongEnded() {
+  onSongEnded(): void {
+    if (!this.playerComponent) return;
     this.currentSongIndex++;
-  
+    
     if (this.currentSongIndex >= this.canciones.length) {
       if (this.playerComponent.isLoop) {
         this.currentSongIndex = 0;
-        const nextSong = this.canciones[this.currentSongIndex];
-        this.reproducirCancion(nextSong);
+        this.reproducirCancion(this.canciones[0]);
       } else {
-        console.log('Fin de la lista de reproducción');
-        this.currentSongIndex = 0; 
+        this.currentSongIndex = 0;
       }
     } else {
       const nextSong = this.canciones[this.currentSongIndex];
-      this.reproducirCancion(nextSong);
+      if (nextSong) {
+        this.reproducirCancion(nextSong);
+      }
     }
   }
-  
 }

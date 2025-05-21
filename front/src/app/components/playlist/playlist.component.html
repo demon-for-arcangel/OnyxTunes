@@ -2,21 +2,26 @@
     <app-sidebar></app-sidebar>
     <main>
         <app-account-button></app-account-button>
-        <h1>{{ playlist?.nombre }}</h1>
-        <p>{{ playlist?.descripcion }}</p>
-        <h2>Canciones en la Playlist</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Álbum</th>
-                    <th>Duracción</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            @if(canciones.length > 0){
+        <div class="playlist-content">
+            <h1>{{ playlist.nombre }}</h1>
+            <p>{{ playlist.descripcion }}</p>
+            <h2>Canciones en la Playlist</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Álbum</th>
+                        <th>Duracción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
                 <tbody>
-                    @for(cancion of canciones; track cancion) {
+                    @if (canciones.length === 0) {
+                        <tr>
+                            <td colspan="4">No hay canciones en la playlist</td>
+                        </tr>
+                    }
+                    @for (cancion of canciones; track cancion) {
                         <tr>
                             <td>{{ cancion.titulo }}</td>
                             <td>{{ cancion.Album?.titulo }}</td>
@@ -27,9 +32,10 @@
                             </td>
                         </tr>
                     }
+
                 </tbody>
-            }
-        </table>
-        <app-player></app-player>
+            </table>
+            <app-player></app-player>
+        </div>
     </main>
 </div>

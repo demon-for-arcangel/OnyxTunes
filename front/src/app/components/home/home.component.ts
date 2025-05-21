@@ -11,8 +11,10 @@ import { PlaylistComponent } from "../playlist/playlist.component";
 import { PlayerComponent } from "../player/player.component";
 import { AccountButtonComponent } from "../utils/account-button/account-button.component";
 import { RecommendationService } from "../../services/recommendation.service";
-import { DialogService } from "primeng/dynamicdialog";
+import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { DialogModule } from "primeng/dialog";
+import { RecommendedSongComponent } from "../recommended-song/recommended-song.component";
+import { SongService } from "../../services/song.service";
 
 @Component({
   selector: "app-home",
@@ -22,7 +24,8 @@ import { DialogModule } from "primeng/dialog";
     SidebarComponent,
     PlayerComponent,
     AccountButtonComponent,
-    DialogModule
+    DialogModule, RecommendedSongComponent,
+    PlaylistComponent
   ],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.css",
@@ -39,17 +42,34 @@ export class HomeComponent {
   albumes: string[] = ["album1", "album 2", "album 3", "album 4"];
   listas: string[] = ["lista 1", "lista 2", "lista 3", "lista 4"];
   recommendedSong: any = null;
-  displayPopup: boolean = false;
+  cancionesNuevas: any[] = [];
 
-  constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService, private usuarioService: UserService, private recommendationService: RecommendationService, private dialogService: DialogService) {}
+  dialogRef!: DynamicDialogRef;
+
+  constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService, private usuarioService: UserService, private recommendationService: RecommendationService, private dialogService: DialogService, private songService: SongService) {}
 
   ngOnInit() {
     this.loadUserId();
+    this.loadCancionesNuevas();
+  }
+
+  scrollLeft(): void {
+    const container = document.querySelector(".songs-container") as HTMLElement;
+    if (container) {
+      container.scrollLeft -= 200;
+    }
+  }
+
+  scrollRight(): void {
+    const container = document.querySelector(".songs-container") as HTMLElement;
+    if (container) {
+      container.scrollLeft += 200;
+    }
   }
 
   navigateToPlaylist(playlist: Playlist) {
-    const playlistName = encodeURIComponent(playlist.nombre);
-    this.router.navigate([`/playlist/${playlist.id}/${playlistName}`]);
+    const encodedData = btoa(`${playlist.id}:${playlist.nombre}`);
+    this.router.navigate([`/playlist/${encodedData}`]);
   }
 
   navigateToSearch() {
@@ -65,6 +85,11 @@ export class HomeComponent {
     this.router.navigate([`/${route}`]);
   }
 
+  navigateToSong(cancion: any): void {
+    const songTitle = encodeURIComponent(cancion.titulo);
+    this.router.navigate([`/song/${cancion.id}/${songTitle}`]);
+  }  
+
   searchArtists() {
     //por hacer
     console.log("Buscando:", this.searchTerm);
@@ -73,100 +98,150 @@ export class HomeComponent {
   loadUserId() {
     const tokenObject = localStorage.getItem("user");
     if (!tokenObject) {
-      console.error("Token no encontrado, redirigiendo a login");
-      this.router.navigate(["/login"]);
-      return;
+        console.error("Token no encontrado, redirigiendo a login");
+        this.router.navigate(["/login"]);
+        return;
     }
 
-    if (tokenObject) {
-      this.authService.getUserByToken(tokenObject).subscribe({
+    this.authService.getUserByToken(tokenObject).subscribe({
         next: (usuario: Usuario | undefined) => {
-          if (usuario?.id) {
-            this.userId = usuario.id;
-            console.log(this.userId);
-            this.playlistService.getUserPlaylists(this.userId).subscribe(
-              (response) => {
-                console.log(response);
-                if (response.success) {
-                  this.playlists = response.data;
-            
-                  this.especialPlaylists = this.playlists.filter((playlist) =>
-                    playlist.nombre.includes("Recomendación Diaria"),
-                  );
-                  this.userPlaylists = this.playlists.filter((playlist) =>
-                    !playlist.nombre.includes("Recomendación Diaria"),
-                  );
-                  this.checkDailyRecommendation();
-                } else {
-                  console.error("Error al obtener las playlists:", response.message);
-                }
-              },
-              (error) => {
-                console.error("Error en la solicitud:", error);
-              },
-            );
-          } else {
-            console.error("Usuario no encontrado en el token");
-            this.router.navigate(["/login"]);
-          }
+            if (usuario?.id) {
+                this.userId = usuario.id;
+                console.log("ID de usuario obtenido:", this.userId);
+
+                // 🔹 Llamar a `loadDailyRecommendations()` solo cuando `userId` esté disponible
+                console.log("🔹 Llamando a loadDailyRecommendations()...");
+                this.loadDailyRecommendations();
+                this.RecommendationOnLogin(this.userId);
+                this.loadUserPlaylists();
+            } else {
+                console.error("Usuario no encontrado en el token");
+                this.router.navigate(["/login"]);
+            }
         },
         error: (err) => {
-          console.error("Error al obtener el usuario desde el token:", err);
-          this.router.navigate(["/login"]);
-        },
-      });
-    } else {
-      console.error("No se encontró el token.");
-    }
+            console.error("Error al obtener el usuario desde el token:", err);
+            this.router.navigate(["/login"]);
+        }
+    });
   }
 
   crearPlaylist() {
     //por hacer
   }
 
-  openRecommendationPopup() {
-    if (!this.recommendedSong) {
-      console.error("No hay canción recomendada para mostrar.");
-      return;
-    }
-  
-    this.dialogService.open(HomeComponent, {
-      header: "Tu recomendación del día",
-      width: "50vw",
-      styleClass: "custom-dialog",
-      closable: true,
-      contentStyle: { "text-align": "center" },
-      data: {
-        recommendedSong: this.recommendedSong, // Pasa la canción recomendada
-      },
-    });
-  }
+  RecommendationOnLogin(userId: number) {
+    if (userId) {
+      this.recommendationService.getRecommendationOnLogin(userId.toString()).subscribe({
+        next: (response) => {
+          console.log("Recomendaciones obtenidas:", response);
 
-  checkDailyRecommendation() {
-    this.fetchRecommendationOnLogin(); // Directamente llama a `fetchRecommendationOnLogin` para pedir al servidor la recomendación
-  }
+          if (!response.songRecommendation) {
+            console.log("Las recomendaciones están deshabilitadas o no hay una recomendación disponible.");
+            return;
+          }
 
-  fetchRecommendationOnLogin() {
-    if (!this.userId) {
-      console.error("Error: userId no está definido.");
-      return;
-    }
-  
-    this.recommendationService.getRecommendationOnLogin(this.userId.toString()).subscribe(
-      (response) => {
-        if (response.ok && response.songRecommendation) {
-          this.recommendedSong = response.songRecommendation; // Recibe la recomendación directamente del servidor
-        } else {
-          console.error("No se pudo obtener una recomendación:", response.msg);
+          this.recommendedSong = response;
+          this.openRecommendedSongDialog();
+        },
+        error: (error) => {
+          console.error("Error al obtener recomendaciones:", error);
         }
+      });
+    } else {
+      console.error("ID de usuario no encontrado");
+    }
+  }
+
+  loadDailyRecommendations() {
+    if (this.userId) {
+        console.log("🔹 Ejecutando loadDailyRecommendations con userId:", this.userId);
+
+        this.recommendationService.getDailyRecommendations(this.userId.toString()).subscribe({
+            next: (response) => {
+                console.log("✅ Respuesta antes de asignar:", response);
+
+                this.especialPlaylists = response;
+                console.log("✅ Estado de especialPlaylists después de asignar:", this.especialPlaylists);
+            },
+            error: (error) => {
+                console.error("🚨 Error al obtener recomendaciones diarias:", error);
+            }
+        });
+    } else {
+        console.error("❌ ID de usuario no encontrado, no se ejecuta loadDailyRecommendations.");
+    }
+}
+
+
+  openRecommendedSongDialog() {
+    if (!this.recommendedSong) {
+        console.log("No hay canción recomendada, el modal no se abrirá.");
+        return; // Evita abrir el modal
+    }
+
+    this.dialogRef = this.dialogService.open(RecommendedSongComponent, {
+      header: "Tu recomendación del día",
+      width: "40vw",
+      styleClass: 'custom-modal',
+      contentStyle: {
+        'background-color': '#1e1e1e',
+        'color': 'white',
+        'border-radius': '8px',
+        'padding': '20px'
+      },
+      baseZIndex: 10000,
+      style: {
+        'background-color': '#1e1e1e',
+      },
+      closable: false,
+      data: { recommendedSong: this.recommendedSong },
+    });
+
+    setTimeout(() => {
+      if (this.dialogRef) {
+        this.dialogRef.close();
+      }
+    }, 10000);
+}
+  loadCancionesNuevas(): void {
+    this.songService.getCanciones().subscribe(
+      (response) => {
+        const ahora = new Date();
+        const haceUnaSemana = new Date();
+        haceUnaSemana.setDate(ahora.getDate() - 7); 
+  
+        this.cancionesNuevas = response.filter((cancion: any) => {
+          const fechaCreacion = new Date(cancion.createdAt); 
+          return fechaCreacion >= haceUnaSemana && fechaCreacion <= ahora;
+        });
+  
+        console.log("Canciones nuevas de esta semana:", this.cancionesNuevas);
       },
       (error) => {
-        console.error("Error en la solicitud de recomendación:", error);
+        console.error("Error al cargar canciones:", error);
       }
     );
   }
 
-  closePopup() {
-    this.displayPopup = false;
+  loadUserPlaylists() {
+    if (this.userId) {
+      this.playlistService.getUserPlaylists(this.userId).subscribe(
+        (response) => {
+          console.log(response);
+          if (response.success) {
+            this.playlists = response.data;
+            console.log("hola", this.playlists)
+          } else {
+            console.error("Error al obtener las playlists:", response.message);
+          }
+        },
+        (error) => {
+          console.error("Error en la solicitud:", error);
+        },
+      );
+    } else {
+      console.error("ID de usuario no encontrado");
+    }
   }
 }

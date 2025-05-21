@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { PrimeIcons } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SongService } from '../../../services/song.service';
@@ -20,7 +21,7 @@ import WaveSurfer from 'wavesurfer.js';
   styleUrls: ['./music.component.css'],
   providers: [DialogService]
 })
-export class MusicComponent implements OnInit {
+export class MusicComponent implements OnInit, AfterViewInit {
 
   canciones: any[] = [];
   albums: any[] = [];
@@ -35,17 +36,19 @@ export class MusicComponent implements OnInit {
   ref: DynamicDialogRef | undefined;
   dialog: any;
 
-  createdWaveforms: { [key: number]: boolean } = {};
-
-  constructor(private router: Router, private cancionesService: SongService, public dialogService: DialogService, private albumsService: AlbumsService) { }
+  constructor(private router: Router, private cancionesService: SongService, public dialogService: DialogService, private albumsService: AlbumsService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.loadCanciones();
     this.loadAlbums();
   }
 
-  ngAfterViewChecked() {
-    this.canciones.forEach((cancion) => {
+  ngAfterViewInit() {
+    this.createWaveformsForVisibleSongs();
+  }
+
+  private createWaveformsForVisibleSongs() {
+    this.paginatedCanciones.forEach(cancion => {
       if (!this.wavesurferInstances[cancion.id]) {
         this.createWaveform(cancion);
       }
@@ -56,8 +59,8 @@ export class MusicComponent implements OnInit {
     this.cancionesService.getCanciones().subscribe(
         (data) => {
             this.canciones = data; 
-            console.log('Canciones cargadas:', this.canciones);
-            this.canciones.forEach(cancion => this.createWaveform(cancion));
+            this.cdr.detectChanges();
+            this.createWaveformsForVisibleSongs();
         },
         (error) => {
             console.error('Error al cargar las canciones:', error);
@@ -67,34 +70,75 @@ export class MusicComponent implements OnInit {
 
   createWaveform(cancion: any) {
     const containerId = `waveform-${cancion.id}`;
-    const container = document.getElementById(containerId);
-
+    
+    let container = document.getElementById(containerId) as HTMLElement;
     if (!container) {
-        console.warn(`Contenedor no encontrado para: ${containerId}`);
+        const tr = document.querySelector(`tr[data-id="${cancion.id}"]`) as HTMLTableRowElement;
+        if (tr) {
+            const waveformDiv = document.createElement('div');
+            waveformDiv.id = containerId;
+            waveformDiv.style.width = '300px';  
+            waveformDiv.style.height = '30px';  
+            waveformDiv.style.marginRight = '10px';  
+            
+            const td = tr.querySelector('td:nth-child(4) > div') as HTMLDivElement;
+            if (td) {
+                td.appendChild(waveformDiv);
+                container = waveformDiv;
+            } else {
+                return;
+            }
+        } else {
+            return;
+        }
+    }
+
+    if (!cancion.asset?.path) {
         return;
     }
 
     if (this.wavesurferInstances[cancion.id]) {
-        console.log(`WaveSurfer ya existe para: ${containerId}`);
-        return; // Si ya existe una instancia, no la recrees
+        this.wavesurferInstances[cancion.id].load(cancion.asset.path);
+        return;
     }
 
-    console.log(`Creando wavesurfer en contenedor: ${containerId}`);
     this.wavesurferInstances[cancion.id] = WaveSurfer.create({
         container: `#${containerId}`,
         waveColor: '#d9dcff',
         progressColor: '#e51d36',
-        height: 50,
-        barWidth: 2,
+        height: 30,
+        barWidth: 1,
         normalize: true,
+        backend: 'MediaElement'
     });
 
-    console.log('Cargando archivo de audio:', cancion.asset?.path);
-    this.wavesurferInstances[cancion.id].load(cancion.asset?.path);
+    this.wavesurferInstances[cancion.id].on('error', (error: Error) => {
+        console.error(`Error en WaveSurfer para canción ${cancion.id}:`, error.message);
+        if (this.wavesurferInstances[cancion.id]) {
+            this.wavesurferInstances[cancion.id].destroy();
+            delete this.wavesurferInstances[cancion.id];
+        }
+    });
+
+    this.wavesurferInstances[cancion.id].on('loaderror', (error: Error) => {
+        console.error(`Error al cargar el audio para canción ${cancion.id}:`, error.message);
+        if (this.wavesurferInstances[cancion.id]) {
+            this.wavesurferInstances[cancion.id].destroy();
+            delete this.wavesurferInstances[cancion.id];
+        }
+    });
+
+    this.wavesurferInstances[cancion.id].on('ready', () => {
+        console.log(`WaveSurfer listo para canción ${cancion.id}`);
+    });
+
+    console.log('Cargando archivo de audio:', cancion.asset.path);
+    this.wavesurferInstances[cancion.id].load(cancion.asset.path);
   }
 
   handlePageChange() {
-    // Elimina las ondas de las canciones que ya no están visibles
+    this.cdr.detectChanges();
+    
     const currentPageIds = this.paginatedCanciones.map((c) => c.id);
 
     Object.keys(this.wavesurferInstances).forEach((id) => {
@@ -105,8 +149,18 @@ export class MusicComponent implements OnInit {
         }
     });
 
-    // Crea las ondas para las nuevas canciones visibles
-    this.paginatedCanciones.forEach((cancion) => this.createWaveform(cancion));
+    this.paginatedCanciones.forEach(cancion => {
+        if (this.wavesurferInstances[cancion.id]) {
+            this.wavesurferInstances[cancion.id].load(cancion.asset.path);
+        } else {
+            this.createWaveform(cancion);
+        }
+    });
+}
+
+  isPlaying(cancionId: number): boolean {
+    const wavesurfer = this.wavesurferInstances[cancionId];
+    return wavesurfer ? wavesurfer.isPlaying() : false;
   }
 
   togglePlay(cancionId: number) {
@@ -128,8 +182,6 @@ export class MusicComponent implements OnInit {
     this.albumsService.getAlbums().subscribe(
       (data) => {
         this.albums = data;
-        console.log('Albums cargadas:', this.albums);
-
       },
       (error) => {
         console.error('Error al cargar los álbumes', error);
@@ -221,6 +273,10 @@ export class MusicComponent implements OnInit {
 
     this.ref.onClose.subscribe(() => {
         this.loadCanciones(); 
+        if (this.wavesurferInstances[cancion.id]) {
+            this.wavesurferInstances[cancion.id].destroy();
+            delete this.wavesurferInstances[cancion.id];
+        }
     });
 }
 

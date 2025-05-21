@@ -49,7 +49,7 @@ header {
     display: flex;
     gap: 20px;
     justify-content: center;
-    flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea si no caben */
+    flex-wrap: wrap; 
 }
 
 .section {

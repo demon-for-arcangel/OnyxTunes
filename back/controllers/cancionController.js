@@ -57,13 +57,13 @@ const getSongByUser = async (req, res) => {
     }
 };
 
-const createSong = async (req, res) => {
+const createSongs = async (req, res) => {
     try {
-        const result = await conx.createSong(req.body, req.files);
+        const result = await conx.createSongs(req.body, req.files);
         res.status(201).json(result);
     } catch (error) {
-        console.error("Error al crear la canción:", error);
-        res.status(500).json({ message: 'Error al crear la canción' });
+        console.error("Error al crear las canciones:", error);
+        res.status(500).json({ message: "Error al crear las canciones" });
     }
 };
 
@@ -144,6 +144,6 @@ const getHistoryByUser = async (req, res) => {
 };
 
 module.exports = {
-    index, getSongById, createSong, updateSong, deleteSong, getSongByUser,
+    index, getSongById, createSongs, updateSong, deleteSong, getSongByUser,
     addToHistory, getHistoryByUser
 }
