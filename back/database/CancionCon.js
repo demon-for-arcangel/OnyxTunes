@@ -300,7 +300,6 @@ class SongModel {
                 await models.cancionColaborador.destroy({
                     where: { cancion_id: songId }
                 });
-                console.log("Colaboradores eliminados correctamente");
 
                 for (const userId of updatedData.colaboradores) {
                     try {
@@ -310,7 +309,6 @@ class SongModel {
                             createdAt: new Date(),
                             updatedAt: new Date(),
                         });
-                        console.log(`Colaborador ${userId} añadido en la canción ${songId}`);
                     } catch (error) {
                         console.error(`Error al añadir un nuevo colaborador ${userId}:`, error);
                     }
@@ -319,7 +317,7 @@ class SongModel {
     
             return {
                 message: "Canción actualizada con éxito.",
-                cancion: updatedSong
+                cancion: updatedSong,
             };
         } catch (error) {
             console.error('Error al actualizar la canción:', error);
