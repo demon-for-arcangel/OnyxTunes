@@ -33,6 +33,32 @@
                 }
             </select>
         </div>
+        <div>
+            <label for="buscarColaborador">Buscar colaborador:</label>
+            <input 
+                id="buscarColaborador" 
+                type="text" 
+                [(ngModel)]="filtroColaboradores" 
+                placeholder="Escribe el nombre de un artista..."
+            />
+        </div>
+<div class="colaboradores-container">
+            <label for="colaboradores">Colaboradores:</label>
+            <ul>
+                @for(let artista of getArtistasFiltrados(); track artista) {
+                    <li>
+                        <input 
+                            type="checkbox" 
+                            [value]="artista.id" 
+                            (change)="toggleColaborador(artista)" 
+                            [checked]="colaboradoresSeleccionados.includes(artista.id)"
+                        />
+                        {{ artista.nombre }}
+                    </li>
+                }
+            </ul>
+        </div>
+
         <button type="submit">Actualizar Canción</button>
     </form>
 </div>

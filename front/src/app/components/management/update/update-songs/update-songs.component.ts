@@ -4,6 +4,7 @@ import { SongService } from '../../../../services/song.service';
 import { GeneroService } from '../../../../services/genero.service';
 import { FormsModule } from '@angular/forms';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { UserService } from '../../../../services/user.service';
 
 @Component({
   selector: 'app-update-songs',
@@ -24,13 +25,18 @@ export class UpdateSongsComponent implements OnInit {
   generosDisponibles: any[] = [];
   artistas: any[] = [];
   selectedFile: File | null = null;
+  colaboradoresSeleccionados: any[] = [];
+  filtroColaboradores: string = '';
+  artistasFiltrados: any[] = [];
+  artistasDisponibles: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private cancionesService: SongService,
     private generosService: GeneroService,
-    private config: DynamicDialogConfig
+    private config: DynamicDialogConfig,
+    private usuarioService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +52,10 @@ export class UpdateSongsComponent implements OnInit {
         this.cancion = data; 
 
         this.cancion.portada = data.portadaURL || '';
+        if (data.colaboradores) {
+          this.colaboradoresSeleccionados = data.colaboradores.map((colab: any) => colab.usuario_id);
+        }
+
         console.log(this.cancion);
       },
       (error) => {
@@ -62,6 +72,33 @@ export class UpdateSongsComponent implements OnInit {
       (error) => {
         console.error('Error al cargar los géneros:', error);
       }
+    );
+  }
+
+  loadColaboradores() {
+    this.usuarioService.getArtists().subscribe(
+      (data) => {
+        this.artistasFiltrados = data.filter(artista => artista.id !== this.cancion.artista_id);
+        console.log("🔹 Artistas filtrados (sin el creador):", this.artistasFiltrados);
+      },
+      (error) => {
+        console.error("❌ Error al cargar los artistas:", error);
+      }
+    );
+  }
+
+  toggleColaborador(artista: any) {
+    const index = this.colaboradoresSeleccionados.indexOf(artista.id);
+    if (index === -1) {
+      this.colaboradoresSeleccionados.push(artista.id);
+    } else {
+      this.colaboradoresSeleccionados.splice(index, 1);
+    }
+  }
+
+  getArtistasFiltrados(): any[] {
+    return this.artistasDisponibles.filter(artista =>
+      artista.nombre.toLowerCase().includes(this.filtroColaboradores.toLowerCase())
     );
   }
 
@@ -86,7 +123,11 @@ export class UpdateSongsComponent implements OnInit {
       this.cancion.generos.forEach((genero: any, index: number) => {
         formData.append(`generos[${index}]`, genero);
       });
-  
+
+      this.colaboradoresSeleccionados.forEach((colaboradorId) => {
+        formData.append("colaboradores", colaboradorId.toString());
+      });
+
       if (this.selectedFile) {
         formData.append('portada', this.selectedFile, this.selectedFile.name);
       }
