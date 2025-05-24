@@ -29,6 +29,7 @@ export class UpdateSongsComponent implements OnInit {
   filtroColaboradores: string = '';
   artistasFiltrados: any[] = [];
   artistasDisponibles: any[] = [];
+  showArtistas: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -44,6 +45,7 @@ export class UpdateSongsComponent implements OnInit {
     console.log(this.cancionId);
     this.loadCancion(); 
     this.loadGeneros(); 
+    this.loadColaboradores();
   }
 
   loadCancion(): void {
@@ -76,19 +78,27 @@ export class UpdateSongsComponent implements OnInit {
   }
 
   loadColaboradores() {
-    this.usuarioService.getArtists().subscribe(
-      (data) => {
-        this.artistasFiltrados = data.filter(artista => artista.id !== this.cancion.artista_id);
-        console.log("🔹 Artistas filtrados (sin el creador):", this.artistasFiltrados);
-      },
-      (error) => {
-        console.error("❌ Error al cargar los artistas:", error);
-      }
-    );
-  }
+  this.usuarioService.getArtists().subscribe(
+    (data) => {
+      this.artistasDisponibles = data;
+      this.artistasFiltrados = [...data];  // ✅ Se inicializa con todos los artistas
+
+      console.log("🔹 Artistas disponibles:", this.artistasDisponibles);
+      console.log("🔹 Artistas filtrados al inicio:", this.artistasFiltrados);
+    },
+    (error) => {
+      console.error("❌ Error al cargar los artistas:", error);
+    }
+  );
+}
+
 
   toggleColaborador(artista: any) {
     const index = this.colaboradoresSeleccionados.indexOf(artista.id);
+    console.log("Artista seleccionado:", artista);
+    console.log("Colaboradores seleccionados:", this.colaboradoresSeleccionados);
+    console.log("Index encontrado:", index);
+    console.log("Artista ID:", artista.id);
     if (index === -1) {
       this.colaboradoresSeleccionados.push(artista.id);
     } else {
@@ -100,6 +110,24 @@ export class UpdateSongsComponent implements OnInit {
     return this.artistasDisponibles.filter(artista =>
       artista.nombre.toLowerCase().includes(this.filtroColaboradores.toLowerCase())
     );
+  }
+
+  updateFiltroColaboradores(): void {
+  console.log("🔹 Buscando colaboradores con:", this.filtroColaboradores);
+  this.artistasFiltrados = this.artistasDisponibles.filter(artista =>
+    artista.nombre.toLowerCase().includes(this.filtroColaboradores.toLowerCase())
+  );
+  console.log("🔹 Resultado del filtro:", this.artistasFiltrados);
+}
+
+
+
+  filterArtistas(event: any) {
+    const query = event.target.value.toLowerCase();
+    this.artistasFiltrados = this.artistasDisponibles.filter(artista =>
+      artista.nombre.toLowerCase().includes(query)
+    );
+    this.showArtistas = query.length > 0;
   }
 
   onFileSelected(event: any) {
