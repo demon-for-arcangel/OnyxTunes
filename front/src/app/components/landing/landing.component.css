@@ -101,6 +101,7 @@ main {
 
 .section-right {
   flex: 0.6; 
+  max-width: 750px;
 }
 
 
@@ -204,7 +205,7 @@ footer button:hover {
   color: #666;
 }
 
-.prev-btn, .next-btn {
+.prev, .next {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -216,9 +217,9 @@ footer button:hover {
   cursor: pointer;
 }
 
-.prev-btn { left: 0; }
-.next-btn { right: 0; }
+.prev { left: 0; }
+.next { right: 0; }
 
-.prev-btn:hover, .next-btn:hover {
+.prev:hover, .next:hover {
   background: rgba(0, 0, 0, 0.8);
 }
