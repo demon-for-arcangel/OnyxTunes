@@ -135,7 +135,7 @@ class ConexionSeguidores {
           {
             model: models.Usuario,
             as: "artista",
-            attributes: ["id", "nombre", "email"],
+            attributes: ["id", "nombre", "email", "foto_perfil"],
           },
         ],
       });
@@ -157,7 +157,7 @@ class ConexionSeguidores {
       const artistIds = topArtists.map((artist) => artist.artistId);
       const artists = await models.Usuario.findAll({
         where: { id: artistIds },
-        attributes: ["id", "nombre", "email"],
+        attributes: ["id", "nombre", "email", "foto_perfil"],
       });
 
       const result = artists.map((artist) => {

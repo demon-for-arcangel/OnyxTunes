@@ -172,6 +172,21 @@ class ReproduccionConnection {
             }
             topPlaylists.sort((a, b) => b.total_reproducciones - a.total_reproducciones);
             topPlaylists.splice(limit);
+
+            if (topCanciones.length === 0) {
+                const allCanciones = await models.Cancion.findAll({ attributes: ["id", "titulo"] });
+                topCanciones.push(...this.getRandomElements(allCanciones, limit));
+            }
+
+            if (topAlbums.length === 0) {
+                const allAlbums = await models.Album.findAll({ attributes: ["id", "titulo"] });
+                topAlbums.push(...this.getRandomElements(allAlbums, limit));
+            }
+
+            if (topPlaylists.length === 0) {
+                const allPlaylists = await models.Playlist.findAll({ where: { publico: true }, attributes: ["id", "nombre"] });
+                topPlaylists.push(...this.getRandomElements(allPlaylists, limit));
+            }
     
             return {
                 canciones: topCanciones,
@@ -182,6 +197,11 @@ class ReproduccionConnection {
             console.error("Error al obtener las reproducciones más populares:", error);
             throw new Error("Error al obtener las reproducciones más populares");
         }
+    }
+
+    getRandomElements(array, count) {
+        const shuffled = array.sort(() => 0.5 - Math.random()); // Mezcla aleatoriamente el array
+        return shuffled.slice(0, count); // Extrae solo el número necesario
     }
 }
 
