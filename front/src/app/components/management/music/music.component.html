@@ -1,0 +1,127 @@
+<header>
+    <div class="header-content">
+        <img src="assets/images/onyxtunes.jpg" alt="OnyxTunes Logo" class="logo" />
+    </div>
+</header>
+
+<main>
+    <div class="music-management">
+        <div class="header-container">
+            <button class="back-button" (click)="goBack()">
+                <i class="pi pi-arrow-left"></i> Volver
+            </button>
+            <h1>Gestión de Música</h1>
+            <button (click)="view()" class="btn-selector">
+                {{ mostrarCanciones ? 'Ver Álbumes' : 'Ver Canciones' }}
+            </button>
+        </div>
+
+        @if(mostrarCanciones){
+            <div class="search-bar">
+                <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar canción o álbum..." (keyup.enter)="searchMusic()"/>
+                <button (click)="newCancion()">
+                    <i class="pi pi-plus"></i> Añadir Canción
+                </button>
+            </div>
+        
+            <!-- Tabla de Canciones -->
+            <div class="songs-section">
+                <h2>Lista de Canciones</h2>
+                <table class="music-table">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Artista</th>
+                            <th>Álbum</th>
+                            <th>Duración</th>
+<!--                             <th>Género</th>
+ -->                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(cancion of paginatedCanciones; track cancion.id){
+                            <tr data-id="{{ cancion.id }}">
+                                <td>{{ cancion.titulo || 'Sin título' }}</td>
+                                <td>{{ cancion.artista.nombre || 'Sin artista' }}</td>
+                                <td>{{ cancion.Album?.titulo || 'Sin álbum' }}</td>
+<!--                                 <td>{{ formatDuration(cancion.duracion) }}</td>
+-->                             <td>
+                                <div style="height: 40px; display: flex; align-items: center;">
+                                    <div id="waveform-{{ cancion.id }}" style="width: 300px; height: 30px; display: inline-block; margin-right: 10px;"></div>
+                                    <button (click)="togglePlay(cancion.id)" class="play-button">
+                                        @if (!isPlaying(cancion.id)) {
+                                            <i class="pi pi-play"></i>
+                                        } @else {
+                                            <i class="pi pi-pause"></i>
+                                        }
+                                    </button>
+                                </div>
+                            </td>
+<!--                                 <td>{{ getGenerosString(cancion.generos) }}</td>
+ -->                            <td>
+                                    <button (click)="editCancion(cancion)" class="btn-edit">Editar</button>
+                                    <button (click)="deleteSongs(cancion.id)" class="btn-delete">Eliminar</button>
+                                    <button (click)="showCancion(cancion)" class="btn-show">Ver Detalles</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+        
+                <div class="pagination-controls">
+                    <button (click)="prevCancionesPage()" [disabled]="currentCancionesPage === 1">Anterior</button>
+                    <span>Página {{ currentCancionesPage }} de {{ totalCancionesPages }}</span>
+                    <button (click)="nextCancionesPage()" [disabled]="currentCancionesPage === totalCancionesPages">Siguiente</button>
+                </div>
+            </div>
+        }
+    
+        @if(!mostrarCanciones) {
+            <div class="search-bar">
+                <input type="text" [(ngModel)]="searchQuery" placeholder="Buscar canción o álbum..." (keyup.enter)="searchMusic()"/>
+                <button (click)="newAlbum()">
+                    <i class="pi pi-plus"></i> Añadir Álbum
+                </button>
+            </div>
+
+            <!-- Tabla de Álbumes -->
+            <div class="albums-section">
+                <h2>Lista de Álbumes</h2>
+                <table class="music-table">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Artista</th>
+                            <th>Año</th>
+                            <th>Número de Canciones</th>
+                            <th>Género</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(album of paginatedAlbums; track album){
+                            <tr>
+                                <td>{{ album.titulo || 'Sin título' }}</td>
+                                <td>{{ album.Cancions.length > 0 ? album.Cancions[0].artista.nombre : 'Sin artista' }}</td>
+                                <td>{{ album.fecha_lanzamiento || 'Sin año' }}</td>
+                                <td>{{ album.totalCanciones || 'Sin número de canciones' }}</td>
+                                <td>{{ getGenerosAlbums(album) }}</td>
+                                <td>
+                                    <button (click)="editAlbum(album)" class="btn-edit">Editar</button>
+                                    <button (click)="deleteAlbum(album.id)" class="btn-delete">Eliminar</button>
+                                    <button (click)="showAlbum(album)" class="btn-show">Ver Detalles</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+        
+                <div class="pagination-controls">
+                    <button (click)="prevAlbumsPage()" [disabled]="currentAlbumsPage === 1">Anterior</button>
+                    <span>Página {{ currentAlbumsPage }} de {{ totalAlbumsPages }}</span>
+                    <button (click)="nextAlbumsPage()" [disabled]="currentAlbumsPage === totalAlbumsPages">Siguiente</button>
+                </div>
+            </div>
+        }
+    </div>
+</main>

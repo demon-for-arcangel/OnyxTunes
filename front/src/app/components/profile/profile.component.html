@@ -1,0 +1,22 @@
+<div class="profile-container">
+    <app-sidebar></app-sidebar>
+    <main>
+        <app-account-button></app-account-button>
+
+        <h2>Perfil de Usuario</h2>
+
+        <h3>Playlists Públicas</h3>
+        @if(playlists.length > 0) {
+            <ul>
+                @for(playlist of playlists; track playlist.id) {
+                    <li>
+                        <h4>{{ playlist.nombre }}</h4>
+                        <p>{{ playlist.descripcion }}</p>
+                    </li>
+                }
+            </ul>
+        }@else {
+            <p>No hay playlists públicas disponibles.</p>
+        }
+    </main>
+</div>

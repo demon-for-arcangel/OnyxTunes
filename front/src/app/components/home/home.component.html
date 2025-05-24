@@ -1,49 +1,43 @@
-<header>
-    <div class="header-content">
-        <img src="assets/images/onyxtunes.jpeg" alt="OnyxTunes Logo" class="logo" />
-        <button (click)="navigateTo('home')">
-            <i class="pi pi-home" style="font-size: 1.5rem"></i>
-        </button> 
-        <input
-            type="text"
-            placeholder="Desea reproducir algo..."
-            [(ngModel)]="searchTerm"
-            (input)="searchArtists()"
-        />
-        <div class="btn-auth">
-            <button (click)="navigateTo('login')">Iniciar Sesión</button>
-            <button (click)="navigateTo('register')">Registrarte</button>    
+<div class="container">
+    <app-sidebar></app-sidebar>
+    <main>
+        <app-account-button></app-account-button>
+        <h1>Escuchado recientemente</h1> <!-- canciones sueltas y playlist que han sido escuchadas por ultima vez -->
+        <h2>Especialmente para ti</h2> <!-- lista de reproduccion con canciones recomendadas y canciones que te gustan -->
+        <!-- añadir canciones sueltas para meter mas recomendaciones (no importa si estas canciones ya fueron recomendadas en la playlist)-->
+        @if (playlists) {
+            <div class="playlists-container">
+                @for (playlist of playlists; track playlist) {
+                    <div class="playlist-card">
+<!--                         <img [src]="playlist.portadaURL" [alt]="playlist.nombre" class="playlist-cover"/>
+ -->                        <h3>{{ playlist.nombre }}</h3>
+                        <!-- <p>{{ playlist.creador.nombre }}</p> -->
+                        <button (click)="navigateToPlaylist(playlist)">Ver Playlist</button>
+                    </div>
+                }
+            </div>
+        }
+
+        <h2>Nueva Música</h2>
+        <div class="carousel-container">
+            <button class="prev" (click)="scrollLeft()">&#9664;</button>
+            <div class="songs-wrapper">
+                <div class="songs-container">
+                    @for (cancion of cancionesNuevas; track cancion) {
+                        <div class="song-card">
+                            <img [src]="cancion.portadaURL" alt="Portada de {{ cancion.titulo }}" class="cover-image"/>
+                            <p class="song-title">{{ cancion.titulo }}</p>
+                            <p class="song-artist">{{ cancion.artista.nombre }}</p>
+                            <button (click)="navigateToSong(cancion)">Escuchar</button>
+                        </div>
+                    }
+                </div>
+            </div>
+            <button class="next" (click)="scrollRight()">&#9654;</button>
         </div>
-    </div>
-</header>
-  
-<main>
-    <div class="section-left">
-        <h2>Artistas:</h2>
-        <ul>
-            @for(artist of artists; track artist){
-                <li>{{ artist }}</li>
-            }
-        </ul>
-    </div>
-    <div class="section-right">
-        <h2>Álbumes populares</h2>
-        <ul>
-            @for(album of albumes; track album){
-                <li>{{ album }}</li>
-            }
-        </ul>
-        <h2>Listas populares</h2>
-        <ul>
-            @for(lista of listas; track lista){
-                <li>{{ lista }}</li>
-            }
-        </ul>
-    </div>
-</main>
 
+        <h2>Descubra música por generos</h2>
 
-<footer>
-    <p>Regístrate para disfrutar de todas las características que ofrece la plataforma</p>
-    <button (click)="navigateTo('register')">Registrarse</button>
-</footer>
+        <app-player></app-player>
+    </main>
+</div>

@@ -1,0 +1,90 @@
+.create-song-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"], select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.duracion-container {
+    display: flex;
+    gap: 10px; 
+}
+
+.duracion-container input[type="number"] {
+    width: 80px; 
+    text-align: center; 
+}
+
+
+.duracion-container input:disabled {
+    background-color: #f0f0f0;
+    color: #333; 
+    border: 1px solid #ccc;
+    cursor: not-allowed; 
+    opacity: 1; 
+}
+
+.genero-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px; 
+}
+
+.genero-item {
+    display: flex;
+    align-items: center;
+}
+
+.genero-item input {
+    margin-right: 5px; 
+}
+
+ul {
+    list-style-type: none; 
+    padding: 0; 
+    margin: 0;
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    max-height: 200px; 
+    overflow-y: auto; 
+    background-color: #464545;
+    z-index: 1000; 
+}
+
+li {
+    padding: 10px; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+}
+
+li:hover {
+    background-color: #2a2a2a; 
+}
+
+button {
+    background-color: #0073e6; 
+    color: white; 
+    border: none; 
+    padding: 10px 20px; 
+    text-align: center; 
+    margin: 10px 0; 
+    border-radius: 5px; 
+}
+
+button.cancel {
+    background-color: #f44336;
+}
+
+button.cancel:hover {
+    background-color: #d32f2f;
+}

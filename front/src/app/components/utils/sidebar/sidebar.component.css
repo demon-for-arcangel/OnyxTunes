@@ -1,0 +1,99 @@
+.sidebar {
+    border-radius: 20px; 
+    color: white; 
+    height: 100%;
+}
+
+.inicio-busqueda {
+    margin-top: 20px;
+    background-color: #1f1f1f; 
+    padding: 15px; 
+    border-radius: 10px;
+    margin-bottom: 20px; 
+}
+
+.biblioteca {
+    background-color: #1f1f1f; 
+    padding: 15px; 
+    border-radius: 10px;
+    height: 65%; 
+    overflow-y: auto; 
+}
+
+.header-biblioteca {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 10px; 
+}
+
+.header-biblioteca .h2 {
+    margin: 0; 
+    font-size: 18px;
+}
+
+.add-button {
+    background-color: #28a745; 
+    color: white; 
+    border: none; 
+    border-radius: 50%; 
+    width: 30px; 
+    height: 30px;
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+    font-size: 16px; 
+    cursor: pointer;
+    transition: background-color 0.3s; 
+}
+
+.add-button:hover {
+    background-color: #218838; 
+}
+
+.biblioteca ul {
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px; 
+    list-style-type: none; 
+    margin: 0; 
+    padding: 0; 
+}
+
+.biblioteca li {
+    display: flex; 
+    justify-content: center; 
+}
+
+.sidebar h2 {
+    margin-bottom: 20px; 
+}
+
+.sidebar button {
+    background-color: #007BFF; 
+    color: white; 
+    border: none; 
+    padding: 10px 15px; 
+    text-align: center; 
+    text-decoration: none;
+    display: block; 
+    width: 50%; 
+    margin-bottom: 10px;
+    border-radius: 5px; 
+    transition: background-color 0.3s;
+}
+
+.sidebar button:hover {
+    background-color: #0056b3; 
+}
+
+.biblioteca button {
+    margin-bottom: 15px;
+}
+
+.logo {
+    height: 70px; 
+    left: 10px;  
+    top: 10px;   
+    z-index: 100;
+}

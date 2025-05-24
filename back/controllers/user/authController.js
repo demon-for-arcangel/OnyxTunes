@@ -6,12 +6,15 @@ const nodemailer = require('nodemailer');
 
 const conx = new Conexion();
 
+/**
+ * Controlador para la autenticacion de usuarios
+ * 
+ * @function register Registro de un usuario
+ * @function registerByAdmin Registro de un usuario por un administrador
+ * @function login Login de un usuario
+ */
 const register = async (req, res) => {
     const body = req.body;
-    console.log('cuerpo', body);
-
-    let roles = body.roles || ['Usuario'];
-    console.log('roles', roles);
 
     try {
         const existingUser = await conx.getUserByEmail(body.email);
@@ -21,7 +24,6 @@ const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(body.password, 10);
         body.password = hashedPassword;
-        body.active = false;
 
         const newUser = await conx.registerUser({
             nombre: body.nombre,
@@ -29,19 +31,15 @@ const register = async (req, res) => {
             password: body.password,
             fecha_nacimiento: body.fecha_nacimiento,
             direccion: body.direccion,
-            telefono: body.telefono
+            telefono: body.telefono,
+            genero: body.genero,
+            activo: 1,
+            rol: 3
         });
 
-        if (!roles || roles.length === 0) {
-            roles = ['Usuario'];
-        }
+        await conx.createDefaultPlaylist(newUser.id);
 
-        if (roles.length > 0) {
-            console.log("Asignando roles:", roles);
-            await conx.createUserRols(newUser.id, roles); 
-        }
-
-        const token = await generarJWT(newUser.id, roles);
+        const token = await generarJWT(newUser.id);
 
         res.status(201).json({
             nombre: newUser.nombre,
@@ -49,11 +47,59 @@ const register = async (req, res) => {
             fecha_nacimiento: newUser.fecha_nacimiento,
             direccion: newUser.direccion,
             telefono: newUser.telefono,
+            genero: newUser.genero,
+            activo: newUser.activo,
+            rol: newUser.rol,
             token
         });
 
     } catch (err) {
         console.error("Error al registrar el usuario:", err);
+        res.status(500).json({ msg: "Error al registrar el usuario" });
+    }
+};
+
+/* revisar el atributo activo siempre lo coge como 0 */
+const registerByAdmin = async (req, res) => {
+    const body = req.body;
+    console.log('cuerpo recibido por el admin:', body);
+
+    try {
+        const existingUser = await conx.getUserByEmail(body.email);
+        if (existingUser) {
+            return res.status(400).json({ msg: "El usuario ya existe" });
+        }
+
+        const hashedPassword = await bcrypt.hash(body.password, 10);
+        body.password = hashedPassword;
+
+        const newUser = await conx.registerUser({
+            nombre: body.nombre,
+            email: body.email,
+            password: body.password,
+            fecha_nacimiento: body.fecha_nacimiento,
+            direccion: body.direccion,
+            telefono: body.telefono,
+            genero: body.genero,
+            activo: body.activo, 
+            rol: body.rol 
+        });
+
+        await conx.createDefaultPlaylist(newUser.id);
+
+        res.status(201).json({
+            nombre: newUser.nombre,
+            email: newUser.email,
+            fecha_nacimiento: newUser.fecha_nacimiento,
+            direccion: newUser.direccion,
+            telefono: newUser.telefono,
+            genero: newUser.genero,
+            activo: newUser.activo,
+            rol: newUser.rol
+        });
+
+    } catch (err) {
+        console.error("Error al registrar el usuario por el administrador:", err);
         res.status(500).json({ msg: "Error al registrar el usuario" });
     }
 };
@@ -78,5 +124,5 @@ const login = async (req, res) => {
 };
 
 module.exports = {
-  register, login
+  register, login, registerByAdmin
 };

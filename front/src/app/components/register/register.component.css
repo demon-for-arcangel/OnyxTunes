@@ -1,83 +1,75 @@
 .registro-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; 
-    background-color: #1f1f1f; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .registro {
-    width: 100%;
-    max-width: 400px; 
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #333; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-    color: white;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+  background-color: var(--color-surface);
 }
 
 .logo {
-    height: 80px; 
-    width: auto;  
-    border-radius: 15px; 
+  height: 80px;
+  width: auto;
+  border-radius: 15px;
 }
 
 form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-input, .custom-select {
-    padding: 15px;
-    border-radius: 3px;
-    background-color: #333; 
-    border: 1px solid white; 
-    color: white; 
-    outline: none;
-}
-
-input::placeholder {
-    color: #bbb; 
-}
-
-.custom-select::placeholder {
-    color: #bbb;
+input,
+.custom-select {
+  color: white;
+  padding: 15px;
+  background-color: var(--color-surface-light);
 }
 
 button {
-    padding: 10px;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-    background-color: #d32f2f;
-    color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #e51d36, #1e1e1e);
+  color: white;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
+button:hover {
+  background: linear-gradient(45deg, #1e1e1e, #e51d36);
+  transform: scale(1.05);
+}
 
 .header-step {
-    display: flex;
-    align-items: center;
-    gap: 10px; 
-    margin-bottom: 20px; 
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .header-step button {
-    padding: 8px;
-    background-color: #d32f2f;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    color: white;
+  padding: 8px;
+  background-color: #d32f2f;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
 }
 
 .header-step h2 {
-    margin: 0;
-    color: white;
+  margin: 0;
+  color: white;
 }
 
 .error-message {
-    color: #ff6b6b; 
-    font-size: 0.875em;
-    margin-top: 5px;
+  color: #ff6b6b;
+  font-size: 0.875em;
+  margin-top: 5px;
 }

@@ -1,0 +1,24 @@
+<div class="update-albums">
+    <h2>Actualizar Álbum</h2>
+    <form (ngSubmit)="onSubmit()">
+        <div>
+            <label for="portada">Portada:</label>
+            <input id="portada" type="file" (change)="onFileSelected($event)" accept="image/*" />
+        </div>
+        @if(album.portadaURL){
+            <img [src]="album.portadaURL" alt="Portada del álbum" width="200"/>
+        }
+
+        <div>
+            <label for="titulo">Título:</label>
+            <input type="text" id="titulo" [(ngModel)]="album.titulo" name="titulo" required />
+        </div>
+
+        <div>
+            <label for="fecha_lanzamiento">Fecha de Lanzamiento:</label>
+            <input type="date" id="fecha_lanzamiento" [(ngModel)]="album.fecha_lanzamiento" name="fecha_lanzamiento" required />
+        </div>
+
+        <button type="submit">Actualizar Álbum</button>
+    </form>
+</div>

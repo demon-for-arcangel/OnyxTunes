@@ -1,7 +1,14 @@
 const jwt = require('jsonwebtoken')
 
-const generarJWT = (uid = '', roles) => {
-    return jwt.sign({uid, roles}, process.env.SECRETORPRIVATEKEY, {
+/**
+ * Generar un token JWT
+ * @function generarJWT Generar un token JWT
+ * @function revokeToken Revocar un token JWT
+ * @function verifyTokenRevoke Verificar si un token JWT ha sido revocado
+ * @function verifyToken Verificar un token JWT
+ */
+const generarJWT = (uid = '') => {
+    return jwt.sign({uid}, process.env.SECRETORPRIVATEKEY, {
         expiresIn: '6h'
     });
 }

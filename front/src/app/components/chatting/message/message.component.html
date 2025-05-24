@@ -1,0 +1,22 @@
+<div class="chat-container">
+  <!-- Mostrar los mensajes enviados por ti -->
+  @if (message.emisorUsuario.id === self.id) {
+    <div class="message-container sent-container">
+      <div class="message sent-message">
+        <app-send-message [message]="message" [user]="self"></app-send-message>
+      </div>
+    </div>
+  }
+
+  <!-- Mostrar los mensajes que has recibido -->
+  @if (message.receptorUsuario.id === partner.id) {
+    <div class="message-container">
+      <div class="message received-message">
+        <app-received-message
+          [message]="message"
+          [user]="partner"
+        ></app-received-message>
+      </div>
+    </div>
+  }
+</div>

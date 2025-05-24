@@ -12,19 +12,32 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.hasMany(models.Cancion, {
-        foreignKey: 'album_id'
+        foreignKey: 'album_id',
       });
     
       this.belongsToMany(models.Usuario, {
         through: models.UsuarioAlbum,
-        foreignKey: 'album_id'
+        foreignKey: 'album_id',
+        otherKey: 'usuario_id'
+      });
+
+      this.hasMany(models.Like, { 
+        foreignKey: 'entidad_id', 
+        constraints: false, 
+        scope: {
+          entidad_tipo: 'Album' 
+        }
+      });
+
+      this.hasMany(models.Cancion, { 
+        foreignKey: "album_id" 
       });
     }
   }
   Album.init({
     titulo: DataTypes.STRING,
-    artista_id: DataTypes.INTEGER,
-    fecha_lanzamiento: DataTypes.DATE
+    fecha_lanzamiento: DataTypes.DATE,
+    portadaURL: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'Album',

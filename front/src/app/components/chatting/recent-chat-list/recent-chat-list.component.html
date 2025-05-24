@@ -1,0 +1,37 @@
+@if (pending && notPending) {
+    <ul id="pendingList" class="max-w-sm divide-y divide-gray-200 dark:divide-gray-700">
+      @for (user of pending!.values(); track user.id) {
+        <li class="pb-3 sm:pb-4 hover:bg-gray-800 cursor-pointer" (click)="goToChat(user)">
+          <div class="flex items-center space-x-4 rtl:space-x-reverse">
+            <div class="flex flex-row gap-3 items-center">
+              <div class="flex-shrink-0">
+                <img class="w-8 h-8 rounded-full" src="{{user.picUrl}}">
+              </div>
+              <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                {{user.nickname}}
+              </p>
+              <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                  {{user.pendingCount}}
+                </span>
+            </div>
+          </div>
+        </li>
+      }
+  
+      @for (user of notPending!.values(); track user.id) {
+        <li class="pb-3 sm:pb-4 hover:bg-gray-800 cursor-pointer" (click)="goToChat(user)">
+          <div class="flex items-center space-x-4 rtl:space-x-reverse">
+            <div class="flex flex-row gap-3 items-center">
+              <div class="flex-shrink-0">
+                <img class="w-8 h-8 rounded-full" src="{{user.picUrl}}">
+              </div>
+              <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                {{user.nickname}}
+              </p>
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+  

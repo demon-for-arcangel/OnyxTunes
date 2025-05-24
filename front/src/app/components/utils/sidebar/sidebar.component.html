@@ -1,0 +1,30 @@
+
+<div class="sidebar">
+    <img src="assets/images/onyxtunes.jpg" alt="OnyxTunes Logo" class="logo" />
+
+    <!-- <div class="menu">
+        <button (click)="navigateToHome()">Inicio</button>
+        <button (click)="navigateToSearch()">Buscar</button>
+        <button (click)="navigateToLibrary()">Biblioteca</button>
+        <button (click)="navigateToManagement()">Gestión</button>
+    </div> -->
+    <div class="inicio-busqueda">
+        <button (click)="navigateToHome()">Inicio</button>
+        <button (click)="navigateToSearch()">Buscar</button>    
+    </div>
+    <div class="biblioteca">
+        <div class="header-biblioteca">
+            <h2>Tu Biblioteca:</h2>
+            <button (click)="addPlaylist()" class="add-button">Añadir</button>
+        </div>
+        <ul>
+            @for(playlist of playlists; track playlist){
+                <li>
+                    <button (click)="navigateToPlaylist(playlist)">
+                        {{ playlist.nombre }}
+                    </button>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

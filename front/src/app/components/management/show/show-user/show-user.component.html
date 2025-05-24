@@ -1,0 +1,48 @@
+<div class="form-container">
+
+    <div class="profile-container">
+        <div class="form-group">
+            @if(usuario.foto_perfil){
+                <img [src]="usuario.foto_perfil" alt="Foto de Perfil" class="imagen" style="margin-top: 10px; max-width: 200px;">
+            }
+        </div>
+    
+        <div class="form-group">
+            <label for="nickname">Nombre de Usuario</label>
+            <input type="text" class="form-control" id="nickname" name="nickname" [(ngModel)]="usuario.nickname" disabled>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="usuario.nombre" disabled>
+    </div>
+    <div class="form-group">
+        <label for="email">Correo Electrónico</label>
+        <input type="email" class="form-control" id="email" name="email" [(ngModel)]="usuario.email" disabled>
+    </div>
+    <div class="form-group">
+        <label for="rol">Rol</label>
+        <input type="text" class="form-control" id="rol" name="rol" [value]="rolUsuario" disabled>
+    </div>
+    <div>
+        <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+        <input type="text" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" [(ngModel)]="usuario.fecha_nacimiento" disabled>
+    </div>
+    <div>
+        <label for="telefono">Telefono</label>
+        <input type="text" class="form-control" id="telefono" name="telefono" [(ngModel)]="usuario.telefono" disabled>
+    </div>
+    <div>
+        <label for="direccion">Direccion</label>
+        <input type="text" class="form-control" id="direccion" name="direccion" [(ngModel)]="usuario.direccion" disabled>
+    </div>
+    <div>
+        <label for="genero">Genero</label>
+        <input type="text" class="form-control" id="genero" name="genero" [(ngModel)]="usuario.genero" disabled>
+    </div>
+    <div class="form-group">
+        <label for="activo">Activo</label>
+        <span>{{ usuario.activo ? 'Sí' : 'No' }}</span>
+    </div>
+</div>

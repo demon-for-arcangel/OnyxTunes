@@ -1,89 +1,127 @@
-### **README: OnyxTunes**
+### OnyxTunes
 
-#### **Descripción del proyecto**
-**OnyxTunes** es una plataforma de streaming de música diseñada para ofrecer una experiencia personalizada y social. Inspirada en modelos como Spotify, permite a los usuarios explorar un amplio catálogo de canciones, crear listas de reproducción personalizadas, descubrir nueva música a través de recomendaciones y conectar con otros usuarios. La plataforma está construida con tecnologías modernas como **NodeJS** para el backend, **Angular 18** para el frontend, y **MySQL** como base de datos.
+![OnyxTunes Logo](./assets/logo.png)
 
-#### **Propósito**
-El propósito principal de **OnyxTunes** es proporcionar una experiencia de escucha de música intuitiva, accesible y personalizada, con un fuerte enfoque en la interacción social y la facilidad de uso. A través de funcionalidades avanzadas, los usuarios pueden disfrutar de su música favorita, descubrir nuevos artistas y compartir sus gustos musicales con amigos y otros usuarios.
+## 🎵 Descripción
+OnyxTunes es una plataforma de streaming de música moderna y social, diseñada para ofrecer una experiencia personalizada y enriquecedora. Con una interfaz intuitiva y características avanzadas, conecta a los amantes de la música en un ambiente interactivo y personalizado.
 
-#### **Funcionalidades principales**
-- Exploración y búsqueda de música.
-- Reproducción de canciones en tiempo real.
-- Creación y gestión de listas de reproducción.
-- Recomendaciones personalizadas basadas en el historial de escucha.
-- Perfiles de usuarios y características sociales para compartir música.
-- Modo offline para escuchar música sin conexión.
+## 🚀 Características Principales
 
-#### **Configuración del entorno de desarrollo**
-Sigue estos pasos para configurar el entorno de desarrollo de **OnyxTunes** en tu máquina local:
+- 🎶 Exploración y búsqueda avanzada de música
+- 🎮 Reproducción en tiempo real con control preciso
+- 📝 Listas de reproducción personalizadas y compartibles
+- 🎯 Recomendaciones inteligentes basadas en tus gustos
+- 👥 Perfiles sociales y funcionalidades de interacción
+- 📱 Modo offline para escuchar música sin conexión
+- 🎨 Interfaz moderna y responsiva
 
-1. Clona el repositorio:
+## 📋 Requisitos del Sistema
+
+- NodeJS (versión 18 o superior)
+- Angular CLI (versión 18 o superior)
+- MySQL (versión 5.7 o superior)
+- Navegador web moderno (Chrome, Firefox, Safari)
+- Git (para clonación del repositorio)
+
+## 🛠️ Instalación
+
+1. **Clonar el repositorio**:
    ```bash
    git clone https://github.com/usuario/onyxtunes.git
    cd onyxtunes
    ```
 
-2. Instala las dependencias del backend:
+2. **Configurar el backend**:
    ```bash
    cd back
    npm install
+   cp .env.example .env  # Copiar archivo de configuración
+   ```
+   Editar el archivo `.env` con tus credenciales de MySQL:
+   ```bash
+   DB_HOST=localhost
+   DB_USER=tu_usuario
+   DB_PASSWORD=tu_contraseña
+   DB_NAME=onyxtunes
    ```
 
-3. Instala las dependencias del frontend:
+3. **Configurar el frontend**:
    ```bash
    cd ../front
    npm install
    ```
 
-4. Configura el archivo `.env` con las credenciales de tu base de datos y otras variables de entorno:
+4. **Inicializar la base de datos**:
    ```bash
-   DB_HOST=localhost
-   DB_USER=root
-   DB_PASSWORD=tu_contraseña
-   DB_NAME=onyxtunes
+   cd ../back
+   npm run deploy-db  # Montar la base de datos
    ```
 
-5. Montar la base de datos
-Para montar la base de datos tendremos que utilizar el siguiente comando: `npm run deploy-db`
+5. **Iniciar los servidores**:
+   ```bash
+   # Backend (en una terminal)
+   cd back
+   npm run start
 
-En caso de que tengamos ya la base de datos montada y necesitemos refrescarla usaremos: `npm run refresh`
+   # Frontend (en otra terminal)
+   cd front
+   ng serve
+   ```
 
-7. Instalación
-Para instalar el proyecto seguiremos los siguientes pasos:
-- Añadiremos el archivo `.env` en el directorio `back`. El .env será una copia del .env.example en el que solo tendremos que añadir los datos que nos requieran.
+## 🛠️ Tecnologías Utilizadas
 
-- Necesitaremos crear una base de datos llama `heartconnect`
+### Backend (NodeJS)
+- Express.js
+- Sequelize (ORM)
+- dotenv
+- bcrypt
+- jsonwebtoken
+- cors
 
-- Con una terminal nos iremos al directorio back: `cd back`, ejecutaremos el comando `npm update` esto lo que hara es instalar todas las dependencias necesarias del proyecto. Seguidamente podremos ejecutar el comando `npm run deploy-db` para ejecutar las migrations y los seeders. Para arrancar el servidor del back ejecutaremos `nodemon`.
+### Frontend (Angular 18)
+- Angular CLI
+- Angular Material
+- HttpClient
+- RxJS
+- NgRx (para estado global)
 
-- Con otra terminal iremos al directorio front: `cd front`, ejecutaremos de nuevo el comando `npm update` para las dependencias y seguidamente podremos lanzar el servidor del front con el comando `ng serve`.
+## 📝 Documentación
 
-#### **Librerías y dependencias**
-A continuación, se enumeran las principales librerías y dependencias utilizadas en el proyecto:
+- [API Documentation](./docs/api.md)
+- [Frontend Architecture](./docs/frontend.md)
+- [Backend Architecture](./docs/backend.md)
 
-- **Backend (NodeJS)**:
-  - Express
-  - Sequelize (ORM para MySQL)
-  - dotenv (para la gestión de variables de entorno)
-  - bcrypt (para la encriptación de contraseñas)
-  - jsonwebtoken (para la autenticación)
-  - cors (para la configuración de CORS)
+## 🤝 Contribución
 
-- **Frontend (Angular 18)**:
-  - Angular CLI
-  - RxJS (para la gestión de estados reactivos)
-  - Angular Material (para la interfaz de usuario)
-  - HttpClient (para la comunicación con el backend)
+1. Fork del repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
-#### **Requisitos del sistema**
-- **NodeJS** (versión 18 o superior)
-- **Angular CLI** (versión 18 o superior)
-- **MySQL** (versión 5.7 o superior)
-- **Navegador web** actualizado (Google Chrome, Firefox, etc.)
-- **Git** para la clonación del repositorio
+## 📄 Licencia
 
-#### **Instrucciones adicionales**
-- Asegúrate de que MySQL esté correctamente configurado y en ejecución antes de iniciar la aplicación.
-- Si encuentras problemas de permisos en la instalación de dependencias, prueba ejecutar los comandos con permisos de administrador.
+Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
 
-El **objetivo de este README** es ofrecer una guía clara y completa para cualquier desarrollador que quiera contribuir o probar **OnyxTunes**, proporcionando información esencial para entender el proyecto y ponerlo en funcionamiento.
+## 🙏 Agradecimientos
+
+- A toda la comunidad de desarrolladores que contribuyen con sus librerías y frameworks
+- A los usuarios que prueban y dan feedback sobre la plataforma
+
+## 📢 Soporte
+
+Para reportar bugs o solicitar nuevas características, por favor abre un issue en el repositorio.
+
+## 📈 Roadmap
+
+- [ ] Implementación de sistema de pagos
+- [ ] Soporte para podcasts
+- [ ] Integración con redes sociales
+- [ ] Modo oscuro en la interfaz
+- [ ] Sistema de notificaciones mejorado
+
+## 📫 Contacto
+
+- Email: contacto@onyxtunes.com
+- Twitter: @onyxtunes
+- GitHub: @onyxtunes

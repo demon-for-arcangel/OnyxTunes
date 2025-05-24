@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.Usuario, {
+        foreignKey: 'artista_id',
+        as: 'artista' 
+    });
+    
       this.belongsToMany(models.Genero, {
         through: models.GeneroCancion,
         foreignKey: 'cancion_id',
@@ -36,13 +41,29 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.Album, {
         foreignKey: 'album_id'
       });
+
+      this.hasMany(models.Like, { 
+        foreignKey: 'entidad_id', 
+        constraints: false, 
+        scope: {
+          entidad_tipo: 'Cancion' 
+        }
+      });
+
+      this.belongsTo(models.Asset, {
+        foreignKey: 'assetId',
+        as: 'asset',
+      });
     }
   }
   Cancion.init({
     titulo: DataTypes.STRING,
-    duracion: DataTypes.TIME,
+    duracion: DataTypes.INTEGER,
+    reproducciones: DataTypes.INTEGER,
     album_id: DataTypes.INTEGER,
-    artista_id: DataTypes.INTEGER
+    artista_id: DataTypes.INTEGER,
+    assetId: DataTypes.INTEGER,
+    portadaURL: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'Cancion',

@@ -1,0 +1,35 @@
+.chat-container {
+  display: flex;
+  flex-direction: column; 
+  gap: 10px; 
+  max-height: 400px; 
+  overflow-y: auto; 
+  padding-right: 10px;
+  flex-grow: 1; 
+}
+
+.message-container {
+  display: flex;
+  justify-content: flex-start; 
+}
+
+.sent-container {
+  justify-content: flex-end; 
+}
+
+.message {
+  max-width: 70%; 
+  padding: 10px;
+  border-radius: 5px;
+  word-wrap: break-word; 
+}
+
+.sent-message {
+  background-color: #d1e7dd; 
+  align-self: flex-end; 
+}
+
+.received-message {
+  background-color: #f8d7da; 
+  align-self: flex-start; 
+}

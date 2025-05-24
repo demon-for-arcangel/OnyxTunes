@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Usuario } from '../../interfaces/usuario';
+import { Errors } from '../../interfaces/errors';
+import { UserService } from '../../services/user.service';
+import { RolService } from '../../services/rol.service';
 
 @Component({
   selector: 'app-login',
@@ -14,37 +16,85 @@ import { Usuario } from '../../interfaces/usuario';
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  errors?: Usuario = {};
+  errors: Errors = {};
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router, private authService: AuthService, private rolService: RolService) { }
 
   login() {
+    this.errors = {};
+
+    if (!this.email.trim()) {
+      this.errors.email = 'El correo electrónico es obligatorio.';
+    }
+
+    if (!this.password.trim()) {
+      this.errors.password = 'La contraseña es obligatoria.';
+    }
+
+    if (Object.keys(this.errors).length > 0) {
+      return;
+    }
+    console.log(this.email);
+
     this.authService.login(this.email, this.password).subscribe({
-      next: (response) => {
-        console.log('Iniciada la sesión');
-        const token = response.token; // Asegúrate de que response.token sea solo un string
-        localStorage.setItem('token', token); // Guarda solo el token
-        this.authService.getUserByToken(token).subscribe({
-          next: (user) => {
-            console.log(user)
-            if (user && user.roles && user.roles.length > 0) {
-              const userRole = user.roles[0].nombre; 
-    
-              if (userRole === 'Usuario') {
-                this.router.navigate(['/home']); 
-              } else if (userRole === 'Artista' || userRole === 'Administrador') {
-                this.router.navigate(['/selectAccess']); 
-              }
-            }
-          },
-          error: (error) => {
-            console.error('Error al obtener el usuario por token:', error);
-          },
-        });
+      next: (token) => {
+        console.log('Inicio de sesión exitoso, token:', token);
+        this.getDatos()
       },
-      error: (error) => {
-        console.error('Error en el login:', error);
+      error: (err) => {
+        console.error('Error al iniciar sesión:', err.message);
       }
-    });    
+    });
+  }
+
+  getDatos() {
+    this.userService.getUserByEmail(this.email).subscribe({
+      next: (user) => {
+        console.log('Usuario recibido:', user);
+        if (user) {
+          this.handleUserResponse(user);
+        } else {
+          this.errors.login = 'Credenciales incorrectas.';
+        }
+      },
+      error: (error) => this.handleError(error)
+    });
+  }
+
+
+  handleUserResponse(user: any) {
+    console.log('Respuesta del usuario:', user);
+
+    if (!user || !user.rol) {
+      console.error('Usuario o ID de rol no definido.');
+      this.errors.login = 'No se pudo obtener el rol del usuario.';
+      return;
+    }
+
+    const roleId = user.rol;
+    this.rolService.getRolesById(roleId).subscribe({
+      next: (role) => {
+        console.log('Nombre del rol obtenido:', role.nombre);
+
+        if (role.nombre === 'Usuario') {
+          this.router.navigate(['/home']);
+        } else if (role.nombre === 'Artista' || role.nombre === 'Administrador') {
+          this.router.navigate(['/selectAccess']);
+        } else {
+          console.warn('Rol desconocido:', role.nombre);
+          this.errors.login = 'Rol del usuario no reconocido.';
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener el rol:', err);
+        this.errors.login = 'Error al obtener el rol del usuario.';
+      }
+    });
+  }
+
+  handleError(error: any) {
+    console.error('Error al obtener el usuario:', error);
+    this.errors.login = 'No se pudo obtener la información del usuario.';
   }
 }
+

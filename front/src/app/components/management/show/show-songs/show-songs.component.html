@@ -1,0 +1,17 @@
+<div class="show-song-details">
+    <label for="titulo">Título:</label>
+    <input id="titulo" type="text" [value]="cancion?.titulo" disabled />
+
+    <label for="artista">Artista:</label>
+    <input id="artista" type="text" [value]="cancion?.artista?.nombre" disabled />
+
+    <label for="album">Álbum:</label>
+    <input id="album" type="text" [value]="cancion?.Album?.titulo" disabled />
+
+    <label for="duracion">Duración:</label>
+    <input id="duracion" type="text" [value]="formatDuration(cancion?.duracion)" disabled />
+
+    <label for="generos">Géneros:</label>
+    <input id="generos" type="text" [value]="getGenerosString(cancion?.generos)" disabled />
+
+</div>

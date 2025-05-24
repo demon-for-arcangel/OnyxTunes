@@ -1,0 +1,28 @@
+<div class="player-container">
+    <div class="song-title">{{ playerService.currentSong?.titulo }}</div>
+    <div class="progress-container">
+        <span class="duration left">{{ formatTime(playerService.currentTime) }}</span>
+        <input type="range" min="0" [max]="playerService.duration" [value]="playerService.currentTime" (input)="seekTo($event)" class="progress-bar" />
+        <span class="duration right">{{ formatTime(playerService.duration) }}</span>
+    </div>
+    <div class="buttons-container">
+        <button (click)="previous()" aria-label="Anterior">
+            <i class="pi pi-step-backward"></i> 
+        </button>
+        <button (click)="togglePlay()" aria-label="Reproducir/Pausar">
+            <i class="pi" [ngClass]="playerService.playing ? 'pi-pause' : 'pi-play'"></i>
+        </button>
+        <button (click)="next()" aria-label="Siguiente">
+            <i class="pi pi-step-forward"></i> 
+        </button>
+        <button (click)="toggleRandom()" aria-label="Aleatorio">
+            <i class="pi" [ngClass]="isRandom ? 'pi-random' : 'pi-refresh'"></i> 
+        </button>
+        
+        <button (click)="toggleLoop()" aria-label="Bucle">
+            <i class="pi" [ngClass]="isLoop ? 'pi-repeat' : 'pi-repeat-off'"></i>
+        </button>
+    </div>
+</div>
+
+<audio #audioElement></audio>

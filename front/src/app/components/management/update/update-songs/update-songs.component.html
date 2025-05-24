@@ -1,0 +1,65 @@
+<div class="update-songs">
+    <h2>Actualizar Canción</h2>
+    <form (ngSubmit)="onSubmit()">
+        <div>
+            <label for="portada">Portada:</label>
+            <input id="portada" type="file" (change)="onFileSelected($event)" accept="image/*" />
+        </div>
+        @if(cancion.portada){
+            <img [src]="cancion.portada" alt="Portada de la canción" with="200"/>
+        }
+
+        <div>
+            <label for="titulo">Título:</label>
+            <input type="text" id="titulo" [(ngModel)]="cancion.titulo" name="titulo" required />
+        </div>
+        <div>
+            <label for="duracion">Duración (en segundos):</label>
+            <input type="number" id="duracion" [(ngModel)]="cancion.duracion" name="duracion" required />
+        </div>
+        <div>
+            <label for="artista">Artista:</label>
+            <select id="artista" [(ngModel)]="cancion.artista_id" name="artista" required>
+                @for(artista of artistas; track artista){
+                    <option [value]="artista.id">{{ artista.nombre }}</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label for="generos">Géneros:</label>
+            <select id="generos" [(ngModel)]="cancion.generos" name="generos" multiple>
+                @for(genero of generosDisponibles; track genero){
+                    <option [value]="genero.id">{{ genero.nombre }}</option>
+                }
+            </select>
+        </div>
+        <!-- <div>
+            <label for="buscarColaborador">Buscar colaborador:</label>
+            <input 
+  id="buscarColaborador" 
+  type="text" 
+  [(ngModel)]="filtroColaboradores"
+  (inpu)="updateFiltroColaboradores()" 
+  placeholder="Escribe el nombre de un artista..."
+/>
+
+        </div>
+<div class="colaboradores-container">
+            <ul>
+                @for(artista of getArtistasFiltrados(); track artista) {
+                    <li>
+                        <input 
+                            type="checkbox" 
+                            [value]="artista.id" 
+                            (change)="toggleColaborador(artista)" 
+                            [checked]="colaboradoresSeleccionados.includes(artista.id)"
+                        />
+                        {{ artista.nombre }}
+                    </li>
+                }
+            </ul>
+        </div>
+ -->
+        <button type="submit">Actualizar Canción</button>
+    </form>
+</div>

@@ -1,0 +1,29 @@
+<div class="chat-list">
+  <h2>Lista de Chats</h2>
+
+  <!-- Verifica si hay chats disponibles -->
+  @if (chats.length > 0) {
+    <div>
+      <ul>
+        <!-- Itera sobre los chats disponibles -->
+        @for (chat of chats; track chat) {
+          <li>
+            <div class="chat-item">
+              <img
+                [src]="chat.foto_perfil || 'assets/default-profile.png'"
+                alt="Foto de perfil"
+                class="profile-pic"
+              />
+              <div>
+                <p>{{ chat.nombre }}</p>
+                <button (click)="goToChat(chat)">Abrir Chat</button>
+              </div>
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
+  } @else {
+    <p>No hay chats disponibles.</p>
+  }
+</div>

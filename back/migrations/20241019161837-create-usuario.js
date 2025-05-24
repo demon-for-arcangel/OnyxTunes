@@ -18,10 +18,16 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
+      nickname: {
+        type: Sequelize.STRING
+      },
       fecha_nacimiento: {
         type: Sequelize.DATE
       },
       foto_perfil: {
+        type: Sequelize.TEXT,
+      },
+      direccion: {
         type: Sequelize.STRING
       },
       telefono: {
@@ -31,10 +37,26 @@ module.exports = {
         type: Sequelize.ENUM('Femenino', 'Masculino', 'Otro'),
         allowNull: false 
       },
-      active: {
+      activo: {
         type: Sequelize.BOOLEAN,
         allowNull:false,
         defaultValue: 1,
+      },
+      last_login: {
+        type: Sequelize.DATE
+      },
+      connected: {
+        type: Sequelize.BOOLEAN
+      },
+      rol: {
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: process.env.TABLA_ROL
+          },
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,

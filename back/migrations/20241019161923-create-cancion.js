@@ -13,11 +13,17 @@ module.exports = {
         type: Sequelize.STRING
       },
       duracion: {
-        type: Sequelize.TIME
+        type: Sequelize.INTEGER
+      },
+      reproducciones: {
+        type: Sequelize.INTEGER
+      },
+      portadaURL: {
+        type: Sequelize.TEXT
       },
       album_id: {
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        allowNull: true, 
         references: {
           model: {
             tableName: process.env.TABLA_ALBUM
@@ -31,6 +37,16 @@ module.exports = {
         references: {
           model: {
             tableName: process.env.TABLA_USUARIO
+          },
+          key: 'id'
+        }
+      },
+      assetId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: process.env.TABLA_ASSET
           },
           key: 'id'
         }

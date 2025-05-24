@@ -11,19 +11,38 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Usuario, {
-        foreignKey: 'usuario_id'
+      this.belongsToMany(models.Usuario, {
+        through: process.env.TABLA_USUARIO_PLAYLIST,
+        foreignKey: 'playlist_id', 
+        otherKey: 'usuario_id',   
+      });
+
+      this.hasMany(models.Like, { 
+        foreignKey: 'entidad_id', 
+        constraints: false, 
+        scope: {
+          entidad_tipo: 'Playlist' 
+        }
       });
     
       this.belongsToMany(models.Cancion, {
         through: models.CancionPlaylist,
         foreignKey: 'playlist_id',
+        as: 'canciones'
       });
+
+      this.belongsTo(models.Asset, {
+        foreignKey: 'assetId',
+        as: 'asset',
+      })
     }
   }
   Playlist.init({
     nombre: DataTypes.STRING,
-    descripcion: DataTypes.STRING
+    descripcion: DataTypes.STRING,
+    assetId: DataTypes.INTEGER,
+    publico: DataTypes.BOOLEAN,
+    portadaURL: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'Playlist',

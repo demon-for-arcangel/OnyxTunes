@@ -8,6 +8,18 @@ const bcrypt = require("bcrypt");
 
 const conx = new Conexion();
 
+/**
+ * Controlador de Usuarios
+ * @function index Obtener los usuarios
+ * @function indexArtist Obtener los artistas
+ * @function getUserById Obtener un usuario por su id
+ * @function getUserByEmail Obtener un usuario por su email
+ * @function sendMail Enviar un email
+ * @function updateUser Actualizar un usuario
+ * @function deleteUsers Eliminar usuarios
+ * @function getUserByToken Obtener un usuario por su token
+ * @function updatePassword Actualizar la contraseña de un usuario
+ */
 const index = async (req, res) => {
     try{
         const users = await conx.indexUser();
@@ -28,17 +40,90 @@ const indexArtist = async (req, res = response) => {
     }
 };
 
-const getUserById = async (req, res) => {}
+const getUserById = async (req, res) => {
+    const userId = req.params.id;
 
-const getUserByEmail = async (req, res) => {}
+    try {
+        const user = await conx.getUserById(userId); 
 
-const sendMail = async (mailOptions) => {}
+        if (!user) {
+            return res.status(404).json({ msg: "Usuario no encontrado" });
+        }
 
-const registerUserByAdmin = async (req, res) => {}
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error al obtener el usuario:', error);
+        res.status(500).json({ msg: "Error al obtener el usuario" }); 
+    }
+};
 
-const updateUser = async (req, res) => {}
+const getUserByEmail = async (req, res) => {
+    const email = req.query.email;
 
-const deleteUsers = async (req, res) => {}
+    try {
+        const user = await conx.getUserByEmail(email);
+        if (!user) {
+            res.status(404).json({ msg: "Usuario no encontrado" });
+        } else {
+            res.status(200).json(user);
+        }
+    } catch (error) {
+        console.error('Error al obtener el usuario:', error);
+        res.status(500).json({ msg: "Error al obtener el usuario" });
+    }
+};
+
+const sendMail = async (mailOptions) => {} //por hacer
+
+const updateUser = async (req, res) => {
+    const userId = req.params.id; 
+    const { nombre, email, nickname, fecha_nacimiento, foto_perfil, direccion, telefono, genero, activo, rol } = req.body; 
+    const files = req.files; 
+
+    try {
+        const existingUser = await conx.getUserById(userId);
+        if (!existingUser) {
+            return res.status(404).json({ msg: "Usuario no encontrado" });
+        }
+
+        const updatedData = {
+            nombre: nombre || existingUser.nombre, 
+            email: email || existingUser.email, 
+            nickname: nickname || existingUser.nickname,
+            fecha_nacimiento: fecha_nacimiento || existingUser.fecha_nacimiento,
+            foto_perfil: foto_perfil,
+            direccion: direccion || existingUser.direccion,
+            telefono: telefono || existingUser.telefono,
+            genero: genero || existingUser.genero,
+            activo: activo || existingUser.activo,
+            rol: rol || existingUser.rol 
+        };
+
+        const updatedUser = await conx.updateUser(userId, updatedData, files);
+        res.status(200).json({ msg: "Usuario actualizado exitosamente", user: updatedUser });
+    } catch (error) {
+        console.error("Error al actualizar usuario", error);
+        res.status(500).json({ msg: "Error al actualizar usuario" });
+    }
+};
+
+
+const deleteUsers = async (req, res) => {
+    const userIds = req.body.userIds;
+   
+    try {
+       if (!Array.isArray(userIds) || userIds.length === 0) {
+         return res.status(400).json({ msg: "No se proporcionaron IDs de usuario para eliminar." });
+       }
+
+       await conx.deleteUsers(userIds);
+       
+       res.status(200).json({ message: 'Eliminado correctamente' });
+    } catch (error) {
+       console.error('Error al eliminar los usuarios:', error);
+       res.status(500).json({ msg: "Error al eliminar los usuarios" });
+    }
+};
 
 const getUserByToken = async (req, res) => {
     const token = req.headers['x-token'];
@@ -55,14 +140,25 @@ const getUserByToken = async (req, res) => {
     
     res.status(200).json(user);
     } catch (error) {
-    console.error('Error al obtener el usuario por token:', error);
-    res.status(500).json({ error: 'Error al obtener el usuario por token' });
+        console.error('Error al obtener el usuario por token:', error);
+        res.status(500).json({ error: 'Error al obtener el usuario por token' });
     }
 };
 
-const searchUsers = async (req, res) => {}
+const updatePassword = async (req, res) => {
+    const userId = req.params.id; 
+    const { currentPassword, newPassword, confirmPassword } = req.body; 
+
+    try {
+        const result = await conx.updatePassword(userId, currentPassword, newPassword, confirmPassword);
+        res.status(200).json(result); 
+    } catch (error) {
+        console.error('Error al actualizar la contraseña:', error);
+        res.status(400).json({ error: error.message }); 
+    }
+};
 
 module.exports = {
-    index, indexArtist, getUserById, getUserByEmail, sendMail, registerUserByAdmin, updateUser, deleteUsers, 
-    getUserByToken, searchUsers
+    index, indexArtist, getUserById, getUserByEmail, sendMail, updateUser, deleteUsers, 
+    getUserByToken, updatePassword
 }

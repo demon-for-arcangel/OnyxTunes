@@ -1,0 +1,27 @@
+<section>
+  <!-- Mostrar los mensajes -->
+
+  @if (partner) {
+    @for (message of messages.values(); track message) {
+      <app-message
+        [message]="message"
+        [partner]="partner"
+        [self]="self"
+      ></app-message>
+    }
+
+    <!-- Indicador de 'escribiendo...' -->
+    @if (partnerTyping) {
+      <div>Escribiendo...</div>
+    }
+
+    <app-message-input
+      id="chatInput"
+      (onSendMessage)="handleNewMessage($event)"
+      (onTyping)="handleTyping($event)"
+    >
+    </app-message-input>
+  } @else {
+    <p>No hay mensajes, abra un chat</p>
+  }
+</section>

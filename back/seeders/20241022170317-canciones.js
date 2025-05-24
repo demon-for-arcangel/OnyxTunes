@@ -15,33 +15,41 @@ module.exports = {
    await queryInterface.bulkInsert(process.env.TABLA_CANCION, [
     {
       titulo: 'Luz de Luna',
-      duracion: '00:03:45',
+      duracion: 120,
+      reproducciones: 30,
       album_id: 1,    
-      artista_id: 1,  
+      artista_id: 1, 
+      portadaURL: 'https://via.placeholder.com/150', 
       createdAt: new Date(),
       updatedAt: new Date()
     },
     {
       titulo: 'Caminos Infinitos',
-      duracion: '00:04:20',
+      duracion: 200,
+      reproducciones: 7321,
       album_id: 1,    
-      artista_id: 2,  
+      artista_id: 2,    
+      portadaURL: 'https://via.placeholder.com/150',
       createdAt: new Date(),
       updatedAt: new Date()
     },
     {
       titulo: 'Ecos de Ayer',
-      duracion: '00:05:10',
+      duracion: 260,
+      reproducciones: 18000,
       album_id: 2,    
       artista_id: 1,  
+      portadaURL: 'https://via.placeholder.com/150',
       createdAt: new Date(),
       updatedAt: new Date()
     },
     {
       titulo: 'Sueños Perdidos',
-      duracion: '00:03:30',
+      duracion: 243,
+      reproducciones: 11855,
       album_id: 2,    
       artista_id: 2,  
+      portadaURL: 'https://via.placeholder.com/150',
       createdAt: new Date(),
       updatedAt: new Date()
     }

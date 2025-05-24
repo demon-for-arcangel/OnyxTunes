@@ -5,6 +5,11 @@ const Conexion = require("./connection.js");
 
 const conexion = new Conexion();
 
+/**
+ * Conexion de rol 
+ * @function indexRols Listar todos los roles
+ * @function getRolById Obtener un rol por su id
+ */
 class RolModel {
     constructor() {}
     
@@ -29,42 +34,6 @@ class RolModel {
         console.error('Error al mostrar el rol: ', error);
         throw error;
       }
-    }
-
-    async createRol() {}
-
-    updateRol = async (rolId, newData) => {
-        try {
-          const rol = await models.Rol.findByPk(rolId);
-          if (!rol) {
-            throw new Error('Rol no encontrado.');
-          }
-    
-          const updated = await rol.update(newData);
-          return updated;
-        }catch (error) {
-          console.error('Error al actualizar el rol: ', error);
-          throw error;
-        }
-    }
-
-    deleteUsers = async (rolIds) => {
-        try {
-           if (!Array.isArray(rolIds) || rolIds.length === 0) {
-             throw new Error('No se proporcionaron IDs de usuario para eliminar.');
-           }
-       
-           const result = await models.Rol.destroy({
-             where: {
-               id: rolIds
-             }
-           });
-       
-           return { message: `${result} roles eliminados.` };
-        } catch (error) {
-           console.error('Error al eliminar los roles:', error);
-           throw error;
-        }
     }
 }
 
