@@ -23,14 +23,17 @@
   </div>
   <div class="section-right">
     <h2>Canciones populares</h2>
-    <ul>
-      @for (cancion of topCanciones; track cancion) {
-        <li>
-          <strong>{{ cancion.titulo }}</strong> <br />
-          <p>Total de reproducciones: {{ cancion.total_reproducciones }}</p>
-        </li>
-      }
-    </ul>
+    <div class="carousel-container">
+      <div class="carousel">
+        @for (cancion of topCanciones; track cancion) {
+          <div class="song-card">
+            <img src="{{ cancion.portadaURL }}" alt="{{ cancion.titulo }}" class="song-image" />
+            <p class="song-title">{{ cancion.titulo }}</p>
+          </div>
+        }
+      </div>
+    </div>
+
     <h2>Álbumes populares</h2>
     <ul>
       @for (album of topAlbums; track album) {

@@ -12,8 +12,6 @@ class ReproduccionConnection {
     /**
      * Funcion para obtener todas las reproducciones de un usuario 
      * en canciones, playlists y albumes
-     * @param {*} usuario_id 
-     * @returns 
      */
     async getReproduccionesByUserId(usuario_id) {
         try {
@@ -32,9 +30,6 @@ class ReproduccionConnection {
     /**
      * Funcion para obtener todas las reproducciones de una entidad
      * La entidad puede ser una cancion, una playlist o un album
-     * @param {*} id 
-     * @param {*} tipo 
-     * @returns 
      */
     async getReproduccionesByEntidad(id, tipo) {
         try {
@@ -54,9 +49,7 @@ class ReproduccionConnection {
     /**
      * Funcion para crear o actualizar una reproduccion
      * se crea añadiendo 1 a la cantidad de reproducciones si nunca lo ha reproducido ese usuario
-     * si se ha reproducido antes por este usuario, se actualiza la cantidad de reproducciones añadiendo 1
-     * @param {*} data 
-     * @returns 
+     * si se ha reproducido antes por este usuario, se actualiza la cantidad de reproducciones añadiendo 1    
      */
     async createOrUpdateReproduccion(data) { 
         const { usuario_id, entidad_id, entidad_tipo } = data;
@@ -97,8 +90,6 @@ class ReproduccionConnection {
      * Funcion para obtener las canciones, albums y playlists mas populares
      * añadiendo un atributo en la respuesta llamado total_reproducciones que sera la suma
      * de las reproducciones de las canciones, albums o playlists
-     * @param {*} limit 
-     * @returns 
      */
     async topReproducciones(limit) {
         try {
@@ -174,7 +165,7 @@ class ReproduccionConnection {
             topPlaylists.splice(limit);
 
             if (topCanciones.length === 0) {
-                const allCanciones = await models.Cancion.findAll({ attributes: ["id", "titulo"] });
+                const allCanciones = await models.Cancion.findAll({ attributes: ["id", "titulo", "duracion", "portadaURL"] });
                 topCanciones.push(...this.getRandomElements(allCanciones, limit));
             }
 
@@ -200,8 +191,8 @@ class ReproduccionConnection {
     }
 
     getRandomElements(array, count) {
-        const shuffled = array.sort(() => 0.5 - Math.random()); // Mezcla aleatoriamente el array
-        return shuffled.slice(0, count); // Extrae solo el número necesario
+        const shuffled = array.sort(() => 0.5 - Math.random()); 
+        return shuffled.slice(0, count); 
     }
 }
 
