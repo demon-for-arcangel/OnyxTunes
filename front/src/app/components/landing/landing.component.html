@@ -33,15 +33,23 @@
           </div>
         }
       </div>
-      <button class="next" (click)="scrollCarousel(1)">❮</button>
+      <button class="next" (click)="scrollCarousel(1)">❯</button>
     </div>
 
     <h2>Álbumes populares</h2>
-    <ul>
-      @for (album of topAlbums; track album) {
-        <li>{{ album.titulo }} - {{ album.total_reproducciones }}</li>
-      }
-    </ul>
+    <div class="carousel-container">
+      <button class="prev" (click)="scrollCarousel(-1)">❮</button>
+      <div class="carousel">
+        @for (album of topAlbums; track album) {
+          <div class="song-card">
+            <img src="{{ album.portadaURL ? album.portadaURL : 'assets/images/songs_Default.png' }}" alt="{{ album.titulo }}" class="song-image" />
+            <p class="album-title">{{ album.titulo }}</p>
+          </div>
+        }
+      </div>
+      <button class="next" (click)="scrollCarousel(1)">❯</button> 
+    </div>
+
     <h2>Listas populares</h2>
     <ul>
       @for (lista of topPlaylists; track lista) {
