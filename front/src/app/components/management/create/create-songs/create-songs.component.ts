@@ -36,6 +36,8 @@ export class CreateSongsComponent {
   selectedFiles: File[] = [];
   user: any;
   userRol: string = ''
+  colaboradoresSeleccionados: any[] = [];
+  filtroColaboradores: string = "";
 
   constructor(
     private cancionesService: SongService,
@@ -150,6 +152,33 @@ export class CreateSongsComponent {
     );
   }
 
+  loadColaboradores() {
+  this.usuarioService.getArtists().subscribe(
+    (data) => {
+      this.artistasDisponibles = data.filter(artista => artista.id !== this.nuevaCancion.artista_id);
+      console.log("Artistas filtrados (sin el creador):", this.artistasDisponibles);
+    },
+    (error) => {
+      console.error("Error al cargar los artistas:", error);
+    });
+  }
+
+  toggleColaborador(artista: any) {
+    const index = this.colaboradoresSeleccionados.indexOf(artista.id);
+    if (index === -1) {
+      this.colaboradoresSeleccionados.push(artista.id);
+    } else {
+      this.colaboradoresSeleccionados.splice(index, 1);
+    }
+  }
+
+  getArtistasFiltrados(): any[] {
+    return this.artistasDisponibles.filter(artista =>
+      artista.nombre.toLowerCase().includes(this.filtroColaboradores.toLowerCase())
+    );
+  }
+
+
   filterArtistas(event: any) {
     const query = event.target.value.toLowerCase();
     this.artistasFiltrados = this.artistasDisponibles.filter((artista) =>
@@ -207,6 +236,10 @@ export class CreateSongsComponent {
   
     this.selectedFiles.forEach((file) => {
       formData.append("archivo", file);
+    });
+
+    this.colaboradoresSeleccionados.forEach((colaboradorId) => {
+      formData.append("colaboradores", colaboradorId.toString());
     });
   
     this.cancionesService.createCancion(formData).subscribe(

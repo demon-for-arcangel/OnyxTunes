@@ -282,12 +282,8 @@ class SongModel {
                 }
     
                 const bucketName = process.env.MINIO_BUCKET;
-                const folder = "portadas_canciones"; 
-                console.log(file.name)
-                console.log(file)
-    
+                const folder = "portadas_canciones";     
                 const filename = `${folder}/${Date.now()}_${file.name}`;
-    
                 portadaPath = await uploadImageToS3(bucketName, filename, file.data);
             }
     
@@ -295,10 +291,33 @@ class SongModel {
                 ...updatedData,
                 portadaURL: portadaPath,
             });
+
+            if (typeof updatedData.colaboradores === "string") {
+                updatedData.colaboradores = updatedData.colaboradores.split(",").map(num => parseInt(num.trim(), 10));
+            }
+
+            if (updatedData.colaboradores && Array.isArray(updatedData.colaboradores)) {
+                await models.cancionColaborador.destroy({
+                    where: { cancion_id: songId }
+                });
+
+                for (const userId of updatedData.colaboradores) {
+                    try {
+                        await models.cancionColaborador.create({
+                            usuario_id: userId,
+                            cancion_id: songId,
+                            createdAt: new Date(),
+                            updatedAt: new Date(),
+                        });
+                    } catch (error) {
+                        console.error(`Error al añadir un nuevo colaborador ${userId}:`, error);
+                    }
+                }
+            }
     
             return {
                 message: "Canción actualizada con éxito.",
-                cancion: updatedSong
+                cancion: updatedSong,
             };
         } catch (error) {
             console.error('Error al actualizar la canción:', error);

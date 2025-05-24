@@ -4,6 +4,7 @@ import { SongService } from '../../../../services/song.service';
 import { GeneroService } from '../../../../services/genero.service';
 import { FormsModule } from '@angular/forms';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { UserService } from '../../../../services/user.service';
 
 @Component({
   selector: 'app-update-songs',
@@ -24,13 +25,19 @@ export class UpdateSongsComponent implements OnInit {
   generosDisponibles: any[] = [];
   artistas: any[] = [];
   selectedFile: File | null = null;
+  colaboradoresSeleccionados: any[] = [];
+  filtroColaboradores: string = '';
+  artistasFiltrados: any[] = [];
+  artistasDisponibles: any[] = [];
+  showArtistas: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private cancionesService: SongService,
     private generosService: GeneroService,
-    private config: DynamicDialogConfig
+    private config: DynamicDialogConfig,
+    private usuarioService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +45,7 @@ export class UpdateSongsComponent implements OnInit {
     console.log(this.cancionId);
     this.loadCancion(); 
     this.loadGeneros(); 
+    this.loadColaboradores();
   }
 
   loadCancion(): void {
@@ -46,6 +54,10 @@ export class UpdateSongsComponent implements OnInit {
         this.cancion = data; 
 
         this.cancion.portada = data.portadaURL || '';
+        if (data.colaboradores) {
+          this.colaboradoresSeleccionados = data.colaboradores.map((colab: any) => colab.usuario_id);
+        }
+
         console.log(this.cancion);
       },
       (error) => {
@@ -63,6 +75,59 @@ export class UpdateSongsComponent implements OnInit {
         console.error('Error al cargar los géneros:', error);
       }
     );
+  }
+
+  loadColaboradores() {
+  this.usuarioService.getArtists().subscribe(
+    (data) => {
+      this.artistasDisponibles = data;
+      this.artistasFiltrados = [...data];  // ✅ Se inicializa con todos los artistas
+
+      console.log("🔹 Artistas disponibles:", this.artistasDisponibles);
+      console.log("🔹 Artistas filtrados al inicio:", this.artistasFiltrados);
+    },
+    (error) => {
+      console.error("❌ Error al cargar los artistas:", error);
+    }
+  );
+}
+
+
+  toggleColaborador(artista: any) {
+    const index = this.colaboradoresSeleccionados.indexOf(artista.id);
+    console.log("Artista seleccionado:", artista);
+    console.log("Colaboradores seleccionados:", this.colaboradoresSeleccionados);
+    console.log("Index encontrado:", index);
+    console.log("Artista ID:", artista.id);
+    if (index === -1) {
+      this.colaboradoresSeleccionados.push(artista.id);
+    } else {
+      this.colaboradoresSeleccionados.splice(index, 1);
+    }
+  }
+
+  getArtistasFiltrados(): any[] {
+    return this.artistasDisponibles.filter(artista =>
+      artista.nombre.toLowerCase().includes(this.filtroColaboradores.toLowerCase())
+    );
+  }
+
+  updateFiltroColaboradores(): void {
+  console.log("🔹 Buscando colaboradores con:", this.filtroColaboradores);
+  this.artistasFiltrados = this.artistasDisponibles.filter(artista =>
+    artista.nombre.toLowerCase().includes(this.filtroColaboradores.toLowerCase())
+  );
+  console.log("🔹 Resultado del filtro:", this.artistasFiltrados);
+}
+
+
+
+  filterArtistas(event: any) {
+    const query = event.target.value.toLowerCase();
+    this.artistasFiltrados = this.artistasDisponibles.filter(artista =>
+      artista.nombre.toLowerCase().includes(query)
+    );
+    this.showArtistas = query.length > 0;
   }
 
   onFileSelected(event: any) {
@@ -86,7 +151,11 @@ export class UpdateSongsComponent implements OnInit {
       this.cancion.generos.forEach((genero: any, index: number) => {
         formData.append(`generos[${index}]`, genero);
       });
-  
+
+      this.colaboradoresSeleccionados.forEach((colaboradorId) => {
+        formData.append("colaboradores", colaboradorId.toString());
+      });
+
       if (this.selectedFile) {
         formData.append('portada', this.selectedFile, this.selectedFile.name);
       }
