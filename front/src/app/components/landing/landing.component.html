@@ -28,7 +28,7 @@
       <div class="carousel">
         @for (cancion of topCanciones; track cancion) {
           <div class="song-card">
-            <img src="{{ cancion.portadaURL }}" alt="{{ cancion.titulo }}" class="song-image" />
+            <img src="{{ cancion.portadaURL ? cancion.portadaURL : 'assets/images/songs_Default.png' }}" alt="{{ cancion.titulo }}" class="song-image" />
             <p class="song-title">{{ cancion.titulo }}</p>
           </div>
         }
