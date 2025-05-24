@@ -12,14 +12,14 @@
 <main>
   <div class="section-left">
     <h2>Artistas populares</h2>
-    <ul>
-      @for (artist of topArtists; track artist) {
-        <li>
-          <strong>{{ artist.nombre }}</strong>
-          <p>Seguidores: {{ artist.followers }}</p>
-        </li>
-      }
-    </ul>
+    <div class="top-artists-container">
+        @for (artist of topArtists; track artist) {
+          <div class="artist-card">
+            <img src="{{ artist.foto_perfil }}" alt="{{ artist.nombre }}" class="artist-image" />
+            <p class="artist-name">{{ artist.nombre }}</p>
+          </div>
+        }
+    </div>
   </div>
   <div class="section-right">
     <h2>Canciones populares</h2>
