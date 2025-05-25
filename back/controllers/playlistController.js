@@ -148,7 +148,24 @@ const deleteSongPlaylist = async (req, res) => {
     }
 };
 
+
+const createPlaylistByGenre = async (req, res) => {
+    const { nombre, genero, limiteCanciones } = req.body; 
+
+    try {
+        // 🔹 Llamar a la función de conexión para generar la playlist
+        const newPlaylist = await conx.createPlaylistsByGenres();
+
+        res.status(201).json({ msg: "Playlist por género creada con éxito", playlist: newPlaylist });
+    } catch (error) {
+        console.error("Error al crear la playlist por género:", error);
+        res.status(500).json({ msg: "Error al crear la playlist por género." });
+    }
+};
+
+
 module.exports = {
     index, getPlaylistById, createPlaylist, updatePlaylist, deletePlaylists, 
-    getUserPlaylists, createPlaylistByUser, addToFavorites, deleteSongPlaylist
+    getUserPlaylists, createPlaylistByUser, addToFavorites, deleteSongPlaylist, 
+    createPlaylistByGenre
 };
