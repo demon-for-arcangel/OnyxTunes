@@ -15,7 +15,7 @@
     <div class="top-artists-container">
         @for (artist of topArtists; track artist) {
           <div class="artist-card">
-            <img src="{{ artist.foto_perfil }}" alt="{{ artist.nombre }}" class="artist-image" />
+            <img src="{{ artist.foto_perfil ? artist.foto_perfil : 'assets/images/perfil-de-usuario.jpg' }}" alt="{{ artist.nombre }}" class="artist-image" />
             <p class="artist-name">{{ artist.nombre }}</p>
           </div>
         }
@@ -42,7 +42,7 @@
       <div class="carousel">
         @for (album of topAlbums; track album) {
           <div class="song-card">
-            <img src="{{ album.portadaURL ? album.portadaURL : 'assets/images/songs_Default.png' }}" alt="{{ album.titulo }}" class="song-image" />
+            <img src="{{ album.portadaURL ? album.portadaURL : 'assets/images/albums_Default.png' }}" alt="{{ album.titulo }}" class="song-image" />
             <p class="album-title">{{ album.titulo }}</p>
           </div>
         }
