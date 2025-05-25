@@ -179,7 +179,7 @@ class SongModel {
             if (typeof generos === "string") {
                 generos = generos.split(",").map(num => parseInt(num.trim(), 10));
             }
-            console.log("✅ Géneros convertidos a array:", generos, typeof generos);
+            console.log("Géneros convertidos a array:", generos, typeof generos);
 
             let colaboradoresList = colaboradores;
             if (typeof colaboradores === "string") {
@@ -204,7 +204,7 @@ class SongModel {
                 }
     
                 const originalFileName = file.name;
-                const titulo = originalFileName.split(".").slice(0, -1).join("."); // Elimina la extensión del archivo
+                const titulo = originalFileName.split(".").slice(0, -1).join(".");
                 const filename = `${folder}/${originalFileName}`;
                 const fileUrl = await uploadAudioToS3(filename, bucketName, file.data);
     
@@ -229,13 +229,13 @@ class SongModel {
                 });
     
                 if (Array.isArray(generos) && generos.length > 0) {
-                    console.log("✅ Procesando asignación de géneros...");
+                    console.log("Procesando asignación de géneros...");
                 
                     for (const generoId of generos) {
                         try {
                             const generoExistente = await models.Genero.findByPk(generoId);
                             if (!generoExistente) {
-                                console.warn(`⚠ Género con ID ${generoId} no existe en la base de datos.`);
+                                console.log(`Género con ID ${generoId} no existe en la base de datos.`);
                                 continue;
                             }
                 
@@ -246,9 +246,9 @@ class SongModel {
                                 updatedAt: new Date(),
                             });
                 
-                            console.log(`✅ Género ${generoId} asignado correctamente a la canción ${newSong.id}`);
+                            console.log(`Género ${generoId} asignado correctamente a la canción ${newSong.id}`);
                         } catch (error) {
-                            console.error(`❌ Error al asignar género ${generoId} a la canción ${newSong.id}:`, error);
+                            console.error(`Error al asignar género ${generoId} a la canción ${newSong.id}:`, error);
                         }
                     }
                 }
@@ -284,12 +284,12 @@ class SongModel {
             const song = await models.Cancion.findByPk(songId, {
                 include: [{ model: models.Like }]
             });
-
-            let portadaPath = song.portadaURL;
     
             if (!song) {
                 throw new Error('Canción no encontrada');
             }
+    
+            let portadaPath = song.portadaURL;
     
             if (files && files.portada) {
                 const file = files.portada;
@@ -297,7 +297,7 @@ class SongModel {
                 if (!file.mimetype.startsWith("image/")) {
                     throw new Error("Archivo inválido: debe ser una imagen.");
                 }
-
+    
                 if (!file.data || file.data.length === 0) {
                     const tempFilePath = file.tempFilePath;
                     if (!tempFilePath) {
@@ -307,7 +307,7 @@ class SongModel {
                 }
     
                 const bucketName = process.env.MINIO_BUCKET;
-                const folder = "portadas_canciones";     
+                const folder = "portadas_canciones";
                 const filename = `${folder}/${Date.now()}_${file.name}`;
                 portadaPath = await uploadImageToS3(bucketName, filename, file.data);
             }
@@ -316,26 +316,54 @@ class SongModel {
                 ...updatedData,
                 portadaURL: portadaPath,
             });
-
+    
             if (typeof updatedData.colaboradores === "string") {
                 updatedData.colaboradores = updatedData.colaboradores.split(",").map(num => parseInt(num.trim(), 10));
             }
-
+    
             if (updatedData.colaboradores && Array.isArray(updatedData.colaboradores)) {
-                await models.cancionColaborador.destroy({
-                    where: { cancion_id: songId }
-                });
-
+                await models.CancionColaborador.destroy({ where: { cancion_id: songId } });
+    
                 for (const userId of updatedData.colaboradores) {
                     try {
-                        await models.cancionColaborador.create({
+                        await models.CancionColaborador.create({
                             usuario_id: userId,
                             cancion_id: songId,
                             createdAt: new Date(),
                             updatedAt: new Date(),
                         });
+                        console.log(`✅ Colaborador ${userId} asignado a la canción ${songId}`);
                     } catch (error) {
-                        console.error(`Error al añadir un nuevo colaborador ${userId}:`, error);
+                        console.error(`Error al añadir colaborador ${userId}:`, error);
+                    }
+                }
+            }
+    
+            if (typeof updatedData.generos === "string") {
+                updatedData.generos = updatedData.generos.split(",").map(num => parseInt(num.trim(), 10));
+            }
+    
+            if (updatedData.generos && Array.isArray(updatedData.generos)) {
+                await models.GeneroCancion.destroy({ where: { cancion_id: songId } });
+    
+                for (const generoId of updatedData.generos) {
+                    try {
+                        const generoExistente = await models.Genero.findByPk(generoId);
+                        if (!generoExistente) {
+                            console.log(`Género con ID ${generoId} no existe en la base de datos.`);
+                            continue;
+                        }
+    
+                        await models.GeneroCancion.create({
+                            cancion_id: songId,
+                            genero_id: generoId,
+                            createdAt: new Date(),
+                            updatedAt: new Date(),
+                        });
+    
+                        console.log(`Género ${generoId} asignado correctamente a la canción ${songId}`);
+                    } catch (error) {
+                        console.error(`Error al asignar género ${generoId} a la canción ${songId}:`, error);
                     }
                 }
             }
@@ -348,7 +376,8 @@ class SongModel {
             console.error('Error al actualizar la canción:', error);
             throw new Error('Error al actualizar la canción');
         }
-    }    
+    }
+       
      
     async deleteSong(songsIds) { //mirar para incluir los assets
         try {
