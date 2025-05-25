@@ -166,7 +166,7 @@ class SongModel {
 
     async createSongs(data, files) {
         try {
-            const { duracion, likes, reproducciones, album_id, artista_id, generos = [], colaboradores = [] } = data;
+            let { duracion, likes, reproducciones, album_id, artista_id, generos = [], colaboradores = [] } = data;
     
             const bucketName = process.env.AWS_BUCKET;
             const folder = "canciones";
@@ -174,6 +174,12 @@ class SongModel {
             let cancionesCreadas = [];
 
             console.log("Contenido de colaboradores:", colaboradores);
+            console.log("generos", generos);
+            console.log("Generos recibidos (tipo y contenido)", generos, typeof generos)
+            if (typeof generos === "string") {
+                generos = generos.split(",").map(num => parseInt(num.trim(), 10));
+            }
+            console.log("✅ Géneros convertidos a array:", generos, typeof generos);
 
             let colaboradoresList = colaboradores;
             if (typeof colaboradores === "string") {
@@ -223,11 +229,30 @@ class SongModel {
                 });
     
                 if (Array.isArray(generos) && generos.length > 0) {
-                    const generosExistentes = await models.Genero.findAll({
-                        where: { id: generos },
-                    });
-                    await newSong.setGeneros(generosExistentes);
+                    console.log("✅ Procesando asignación de géneros...");
+                
+                    for (const generoId of generos) {
+                        try {
+                            const generoExistente = await models.Genero.findByPk(generoId);
+                            if (!generoExistente) {
+                                console.warn(`⚠ Género con ID ${generoId} no existe en la base de datos.`);
+                                continue;
+                            }
+                
+                            await models.GeneroCancion.create({
+                                cancion_id: newSong.id,
+                                genero_id: generoId,
+                                createdAt: new Date(),
+                                updatedAt: new Date(),
+                            });
+                
+                            console.log(`✅ Género ${generoId} asignado correctamente a la canción ${newSong.id}`);
+                        } catch (error) {
+                            console.error(`❌ Error al asignar género ${generoId} a la canción ${newSong.id}:`, error);
+                        }
+                    }
                 }
+                
 
                 if (Array.isArray(colaboradoresList) && colaboradoresList.length > 0) {
                     console.log("hola");
