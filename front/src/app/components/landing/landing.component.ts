@@ -137,4 +137,14 @@ export class LandingComponent {
   goToRegister() {
     this.router.navigate(["/register"]);
   }
+
+  scrollCarousel(direction: number): void {
+  const carousel = document.querySelector(".carousel") as HTMLElement | null;
+    if (carousel) {
+      carousel.scrollBy({
+        left: direction * 220,
+        behavior: "smooth"
+      });
+    }
+  }
 }

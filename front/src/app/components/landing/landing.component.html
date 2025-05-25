@@ -12,31 +12,44 @@
 <main>
   <div class="section-left">
     <h2>Artistas populares</h2>
-    <ul>
-      @for (artist of topArtists; track artist) {
-        <li>
-          <strong>{{ artist.nombre }}</strong>
-          <p>Seguidores: {{ artist.followers }}</p>
-        </li>
-      }
-    </ul>
+    <div class="top-artists-container">
+        @for (artist of topArtists; track artist) {
+          <div class="artist-card">
+            <img src="{{ artist.foto_perfil ? artist.foto_perfil : 'assets/images/perfil-de-usuario.jpg' }}" alt="{{ artist.nombre }}" class="artist-image" />
+            <p class="artist-name">{{ artist.nombre }}</p>
+          </div>
+        }
+    </div>
   </div>
   <div class="section-right">
     <h2>Canciones populares</h2>
-    <ul>
-      @for (cancion of topCanciones; track cancion) {
-        <li>
-          <strong>{{ cancion.titulo }}</strong> <br />
-          <p>Total de reproducciones: {{ cancion.total_reproducciones }}</p>
-        </li>
-      }
-    </ul>
+    <div class="carousel-container">
+      <button class="prev" (click)="scrollCarousel(-1)">❮</button>
+      <div class="carousel">
+        @for (cancion of topCanciones; track cancion) {
+          <div class="song-card">
+            <img src="{{ cancion.portadaURL ? cancion.portadaURL : 'assets/images/songs_Default.png' }}" alt="{{ cancion.titulo }}" class="song-image" />
+            <p class="song-title">{{ cancion.titulo }}</p>
+          </div>
+        }
+      </div>
+      <button class="next" (click)="scrollCarousel(1)">❯</button>
+    </div>
+
     <h2>Álbumes populares</h2>
-    <ul>
-      @for (album of topAlbums; track album) {
-        <li>{{ album.titulo }} - {{ album.total_reproducciones }}</li>
-      }
-    </ul>
+    <div class="carousel-container">
+      <button class="prev" (click)="scrollCarousel(-1)">❮</button>
+      <div class="carousel">
+        @for (album of topAlbums; track album) {
+          <div class="song-card">
+            <img src="{{ album.portadaURL ? album.portadaURL : 'assets/images/albums_Default.png' }}" alt="{{ album.titulo }}" class="song-image" />
+            <p class="album-title">{{ album.titulo }}</p>
+          </div>
+        }
+      </div>
+      <button class="next" (click)="scrollCarousel(1)">❯</button> 
+    </div>
+
     <h2>Listas populares</h2>
     <ul>
       @for (lista of topPlaylists; track lista) {
