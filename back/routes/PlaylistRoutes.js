@@ -12,5 +12,7 @@ router.post('/:userId', playlistController.createPlaylistByUser);
 router.post('/song/like', playlistController.addToFavorites);
 router.delete('/song/delete', playlistController.deleteSongPlaylist);
 
+router.post("/genre/createPlaylist", playlistController.createPlaylistsByGenres);
+
 module.exports = router;
  

@@ -159,7 +159,6 @@ class PlaylistConnection {
         }
     }
     
-
     async deletePlaylists(playlistIds) {
         try {
             const playlistsToDelete = await models.Playlist.findAll({
@@ -319,6 +318,75 @@ class PlaylistConnection {
             throw new Error("Error al eliminar la canción de la playlist.");
         }
     }
+
+    async createPlaylistsByGenres() {
+        console.log("hola");
+        try {
+            let usuarioDefecto = await models.Usuario.findOne({
+                where: { email: "onyxtunes@gmail.com" }
+            });
+    
+            if (!usuarioDefecto || !usuarioDefecto.id) {
+                throw new Error("⚠ No se encontró un usuario válido con ese email.");
+            }
+    
+            console.log("✅ Usuario por defecto encontrado con ID:", usuarioDefecto.id);
+    
+            const generos = await models.Genero.findAll({ attributes: ["id", "nombre"] });
+    
+            if (!generos.length) {
+                throw new Error("No se encontraron géneros en la base de datos.");
+            }
+    
+            const playlistsCreadas = [];
+    
+            for (const genero of generos) {
+                const nombrePlaylist = `Top ${genero.nombre}`;
+    
+                const cancionesPopulares = await models.Cancion.findAll({
+                    include: [{
+                        model: models.Genero,
+                        as: "generos",
+                        required: true,
+                        through: {
+                            model: models.GeneroCancion
+                        },
+                        where: { id: genero.id }
+                    }],
+                    attributes: ["id", "titulo", "artista_id", "reproducciones"],
+                    order: [["reproducciones", "DESC"]],
+                    limit: 20
+                });
+    
+                if (!cancionesPopulares.length) {
+                    console.warn(`⚠ No hay canciones populares para el género ${genero.nombre}.`);
+                    continue;
+                }
+    
+                const newPlaylist = await models.Playlist.create({ nombre: nombrePlaylist });
+    
+                const cancionesData = cancionesPopulares.map(cancion => ({
+                    playlist_id: newPlaylist.id,
+                    cancion_id: cancion.id
+                }));
+                await models.CancionPlaylist.bulkCreate(cancionesData);
+    
+                await models.UsuarioPlaylist.create({
+                    usuario_id: usuarioDefecto.id,
+                    playlist_id: newPlaylist.id
+                });
+    
+                playlistsCreadas.push(newPlaylist);
+                console.log(`✅ Playlist creada y asociada: ${nombrePlaylist}`);
+            }
+    
+            return { msg: "Playlists generadas y asociadas con éxito.", data: playlistsCreadas };
+        } catch (error) {
+            console.error("❌ Error al generar las playlists por género:", error);
+            throw new Error("Error en la generación automática de playlists.");
+        }
+    }
+    
 }
 
 module.exports = PlaylistConnection;
