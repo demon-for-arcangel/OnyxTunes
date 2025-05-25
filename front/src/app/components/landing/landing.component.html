@@ -30,9 +30,6 @@
           <div class="song-card">
             <img src="{{ cancion.portadaURL ? cancion.portadaURL : 'assets/images/songs_Default.png' }}" alt="{{ cancion.titulo }}" class="song-image" />
             <p class="song-title">{{ cancion.titulo }}</p>
-            <button (click)="isPlaying(cancion.id) ? stopSong(cancion.id) : getSongPreview(cancion.id, 30)">
-              <i class="pi" [ngClass]="isPlaying(cancion.id) ? 'pi-pause' : 'pi-play'"></i>
-            </button>
           </div>
         }
       </div>
