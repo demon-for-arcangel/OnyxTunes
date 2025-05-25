@@ -147,4 +147,25 @@ export class LandingComponent {
       });
     }
   }
+
+  getSongPreview(id: number, duration: number) {
+    return this.songService.getCancionById(id).subscribe((data) => {
+        const audio = new Audio(data.url);
+        audio.currentTime = 0; 
+        audio.play();
+        setTimeout(() => {
+          audio.pause(); 
+        }, duration * 1000);
+    });
+  }
+
+  getPreviewForPlaylistOrAlbum(id: number) {
+    this.playlistsService.getPlaylistById(id).subscribe((data) => {
+      const songs = data.canciones.slice(0, 3); 
+      songs.forEach((song) => {
+        const audio = new Audio(song.url);
+        audio.play();
+      });
+    });
+  }
 }
