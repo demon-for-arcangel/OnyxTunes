@@ -330,6 +330,22 @@ class SongModel {
             if (!Array.isArray(songsIds) || songsIds.length === 0) {
                 throw new Error("Debe proporcionar una lista de IDs de canciones para eliminar.");
             }
+
+            await models.Recomendacion.destroy({
+                where: {
+                    cancion_id: {
+                        [Op.in]: songsIds,
+                    },
+                },
+            });
+
+            await models.CancionPlaylist.destroy({
+                where: {
+                    cancion_id: {
+                        [Op.in]: songsIds,
+                    },
+                },
+            });
     
             const songsToDelete = await models.Cancion.findAll({
                 where: {

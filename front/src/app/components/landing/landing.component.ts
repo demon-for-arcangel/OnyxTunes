@@ -9,11 +9,12 @@ import { SongService } from "../../services/song.service";
 import { AlbumsService } from "../../services/albums.service";
 import { PlaylistService } from "../../services/playlist.service";
 import { SeguidoresService } from "../../services/seguidores.service";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-home",
   standalone: true,
-  imports: [FormsModule, SidebarComponent],
+  imports: [FormsModule, SidebarComponent, CommonModule],
   templateUrl: "./landing.component.html",
   styleUrl: "./landing.component.css",
 })
@@ -23,6 +24,10 @@ export class LandingComponent {
   topAlbums: any[] = [];
   topPlaylists: any[] = [];
   topArtists: any[] = [];
+  isPlayingMap: { [key: number]: boolean } = {};
+  audio: HTMLAudioElement | null = null;
+  audioPlayer: HTMLAudioElement | null = null;
+
 
   constructor(
     private router: Router,
@@ -147,4 +152,93 @@ export class LandingComponent {
       });
     }
   }
+
+/*  isPlaying(songId: number): boolean {
+  return this.isPlayingMap[songId] === true;
+  }
+
+playSong(songId: number, duration: number) {
+  // 🔹 Si hay una canción en reproducción, destruirla completamente
+  if (this.audioPlayer) {
+    this.audioPlayer.pause();
+    this.audioPlayer.src = ""; // 🔹 Eliminar referencia de audio
+    this.audioPlayer.load(); // 🔹 Forzar recarga del objeto para eliminar bloqueos
+    this.audioPlayer = null;
+  }
+
+  this.songService.getCancionById(songId).subscribe((data) => {
+    if (!data.asset || !data.asset.path) {
+      console.error(`La canción con ID ${songId} no tiene URL válida`);
+      return;
+    }
+
+    // 🔹 Crear un nuevo objeto de audio, asegurando que no quede bloqueado
+    this.audioPlayer = new Audio(data.asset.path);
+    this.audioPlayer.play().then(() => {
+      this.isPlayingMap[songId] = true;
+    }).catch((error) => {
+      console.error(`Error al reproducir canción con ID ${songId}`, error);
+    });
+
+    // 🔹 Configurar evento para reiniciar completamente cuando termine
+    this.audioPlayer.onended = () => {
+      this.resetAudioPlayer();
+    };
+
+    // 🔹 Detener manualmente tras `duration` segundos
+    setTimeout(() => {
+      this.resetAudioPlayer();
+    }, duration * 1000);
+  });
+} */
+
+/* resetAudioPlayer() {
+  if (this.audioPlayer) {
+    this.audioPlayer.pause();
+    this.audioPlayer.src = "";
+    this.audioPlayer.load(); // 🔹 Recargar objeto para eliminar bloqueos
+    this.audioPlayer = null;
+  }
+  Object.keys(this.isPlayingMap).forEach(id => this.isPlayingMap[+id] = false);
+} */
+
+/* handleAudioEnd(event: Event) {
+  console.log("Canción ha terminado");
+
+  const target = event.target as HTMLAudioElement;
+  if (target) {
+    target.pause();
+    target.currentTime = 0;
+    target.src = ""; // 🔹 Limpiar fuente de audio
+  }
+
+  this.audioPlayer = null;
+} */
+
+/* stopSong(songId: number) {
+  this.resetAudioPlayer();
+}
+
+  getPreviewForPlaylistOrAlbum(id: number) {
+    this.playlistsService.getPlaylistById(id).subscribe((data) => {
+      if (!data.canciones || data.canciones.length === 0) {
+        console.error(`Error: No hay canciones en la playlist/álbum con ID ${id}`);
+        return;
+      }
+
+      const songs = data.canciones.slice(0, 3);
+
+      songs.forEach((song: any) => {
+        if (!song.url) {
+          console.error(`Error: La canción ${song.titulo} no tiene URL válida`);
+          return;
+        }
+
+        const audio = new Audio(song.url);
+        audio.play().catch((error) => {
+          console.error(`Error al reproducir la canción ${song.titulo}:`, error);
+        });
+      });
+    });
+  } */
 }
