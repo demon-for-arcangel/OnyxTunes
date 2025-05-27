@@ -58,7 +58,8 @@ export class MusicComponent implements OnInit, AfterViewInit {
   loadCanciones() {
     this.cancionesService.getCanciones().subscribe(
         (data) => {
-            this.canciones = data; 
+            this.canciones = data;
+            console.log(this.canciones) 
             this.cdr.detectChanges();
             this.createWaveformsForVisibleSongs();
         },

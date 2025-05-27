@@ -20,6 +20,10 @@ export class SongService {
     return this.http.get(`${this.url}` + `${this.songsUrl}` + `/${id}`);
   }
 
+  getGenreBySong(songId: number): Observable<any> {
+    return this.http.get(`${this.url}` + `${this.songsUrl}` + `/${songId}/genre`);
+  }
+
   getCancionesByUser(userId: number): Observable<any> {
     return this.http.get(`${this.url}` + `${this.songsUrl}` + `/user/${userId}`);
   }

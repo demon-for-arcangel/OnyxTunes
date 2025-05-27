@@ -14,5 +14,6 @@ router.get('/user/:userId', controlador.getSongByUser);
 
 router.post('/add/history', controlador.addToHistory);
 router.get('/history/:userId', controlador.getHistoryByUser);
+router.get('/:songId/genre', controlador.getGenreBySong);
 
-module.exports = router;
+module.exports = router; 

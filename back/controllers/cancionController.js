@@ -36,7 +36,27 @@ const getSongById = async (req, res) => {
         }
         res.status(200).json(song);
     } catch (error) {
-        
+        console.error('Error al obtener la cancion:', error);
+        res.status(500).json({ msg: "Error al obtener la cancion" });
+    }
+}
+
+const getGenreBySong = async (req, res) => {
+    const songId = req.params.songId;
+
+    console.log("hola")
+    console.log(songId)
+
+    try {
+        const song = await conx.getGenreBySong(songId);
+
+        if (!song) {
+            return res.status(404).json({ msg: "Cancion no encontrada" });
+        }
+        res.status(200).json(song);
+    } catch (error) {
+        console.error('Error al obtener los géneros de la canción:', error);
+        res.status(500).json({ msg: "Error al obtener los géneros de la canción" });
     }
 }
 
@@ -145,5 +165,5 @@ const getHistoryByUser = async (req, res) => {
 
 module.exports = {
     index, getSongById, createSongs, updateSong, deleteSong, getSongByUser,
-    addToHistory, getHistoryByUser
+    addToHistory, getHistoryByUser, getGenreBySong
 }

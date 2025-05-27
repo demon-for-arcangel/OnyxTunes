@@ -15,13 +15,7 @@ import { UserService } from '../../../../services/user.service';
 })
 export class UpdateSongsComponent implements OnInit {
   cancionId!: number; 
-  cancion: any = {
-    titulo: '',
-    duracion: 0,
-    artista_id: 0,
-    generos: [], 
-    portada: '',
-  };
+  cancion: any = {};
   generosDisponibles: any[] = [];
   artistas: any[] = [];
   selectedFile: File | null = null;
@@ -51,6 +45,8 @@ export class UpdateSongsComponent implements OnInit {
   loadCancion(): void {
     this.cancionesService.getCancionById(this.cancionId).subscribe(
       (data) => {
+        console.log("✅ Datos recibidos en el frontend:", data);
+        console.log("✅ Géneros recibidos en el frontend:", data.generos);
         this.cancion = data; 
 
         this.cancion.portada = data.portadaURL || '';
@@ -58,13 +54,29 @@ export class UpdateSongsComponent implements OnInit {
           this.colaboradoresSeleccionados = data.colaboradores.map((colab: any) => colab.usuario_id);
         }
 
+        this.loadGenerosPorCancion();
+
         console.log(this.cancion);
+        console.log(this.cancion.generos)
       },
       (error) => {
         console.error('Error al cargar la canción:', error);
       }
     );
   }
+
+  loadGenerosPorCancion(): void {
+    this.cancionesService.getGenreBySong(this.cancionId).subscribe(
+      (data) => {
+        console.log("✅ Géneros obtenidos en el frontend antes de asignar:", data);
+        this.cancion.generos = Array.isArray(data) ? data : []; // 🔹 Asegura que es un array válido
+        console.log("✅ Géneros en el estado después de asignar:", this.cancion.generos);
+      },
+      (error) => {
+        console.error('❌ Error al cargar los géneros de la canción:', error);
+      }
+    );
+}
 
   loadGeneros(): void {
     this.generosService.getGeneros().subscribe(
@@ -81,13 +93,13 @@ export class UpdateSongsComponent implements OnInit {
   this.usuarioService.getArtists().subscribe(
     (data) => {
       this.artistasDisponibles = data;
-      this.artistasFiltrados = [...data];  // ✅ Se inicializa con todos los artistas
+      this.artistasFiltrados = [...data];  
 
       console.log("🔹 Artistas disponibles:", this.artistasDisponibles);
       console.log("🔹 Artistas filtrados al inicio:", this.artistasFiltrados);
     },
     (error) => {
-      console.error("❌ Error al cargar los artistas:", error);
+      console.error("Error al cargar los artistas:", error);
     }
   );
 }

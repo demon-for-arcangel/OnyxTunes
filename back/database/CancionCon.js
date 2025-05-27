@@ -73,8 +73,9 @@ class SongModel {
                     },
                     {
                         model: models.Genero, 
-                        attributes: ['id', 'nombre'], 
-                        as: 'generos' 
+                        attributes: ['id', 'nombre'],
+                        as: 'generos',
+                        through: { attributes: [] } 
                     },
                     {
                         model: models.Asset,
@@ -84,15 +85,48 @@ class SongModel {
                     { model: models.Like } 
                 ],
             });
+    
             if (!song) {
-                throw new Error('Cancion no encontrado');
+                throw new Error('Cancion no encontrada');
             }
+    
+            console.log("✅ Canción obtenida con IDs de géneros:", song);
             return song;
         } catch (error) {
-            console.error('Error al mostrar la cancion: ', error);
-            throw new Error('Error al mostrar la cancion');
+            console.error('❌ Error al mostrar la canción: ', error);
+            throw new Error('Error al mostrar la canción');
         }
     }
+
+    async getGenreBySong(songId) {
+        console.log("cancion id", songId)
+        if (!songId || isNaN(Number(songId))) {
+            throw new Error(`⚠ Error: ID de canción inválido. Valor recibido: ${songId}`);
+        }
+        try {
+            const song = await models.Cancion.findByPk(songId, {
+                include: [
+                    {
+                        model: models.Genero,
+                        attributes: ["id", "nombre"],
+                        as: "generos",
+                        through: { attributes: [] }, // 🔹 Evita que `GeneroCancion` agregue datos innecesarios
+                    },
+                ],
+            });
+    
+            if (!song) {
+                throw new Error(`⚠ Canción con ID ${songId} no encontrada.`);
+            }
+    
+            console.log("✅ Géneros obtenidos:", song.generos);
+            return song.generos;
+        } catch (error) {
+            console.error("❌ Error al obtener los géneros de la canción:", error);
+            throw new Error("Error al obtener los géneros de la canción.");
+        }
+    }
+    
 
     async getSongByTitle(titulo) {
         try {
