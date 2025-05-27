@@ -9,8 +9,9 @@
             <div class="playlists-container">
                 @for (playlist of playlists; track playlist) {
                     <div class="playlist-card">
-<!--                         <img [src]="playlist.portadaURL" [alt]="playlist.nombre" class="playlist-cover"/>
- -->                        <h3>{{ playlist.nombre }}</h3>
+                        <!-- Revisar poner foto -->
+                       <img src="{{ playlist.portadaURL ? playlist.portadaURL : 'assets/images/albums_Default.png' }}" [alt]="playlist.nombre" class="playlist-cover"/>
+                       <h3>{{ playlist.nombre }}</h3>
                         <!-- <p>{{ playlist.creador.nombre }}</p> -->
                         <button (click)="navigateToPlaylist(playlist)">Ver Playlist</button>
                     </div>

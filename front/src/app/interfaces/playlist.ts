@@ -4,6 +4,7 @@ export interface Playlist {
     descripcion: string,
     canciones?: Cancion[];
     publico?: boolean;
+    portadaURL?: string;
 }
 
 export interface Cancion {
