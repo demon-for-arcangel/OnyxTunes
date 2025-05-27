@@ -10,7 +10,7 @@
                 @for (playlist of playlists; track playlist) {
                     <div class="playlist-card">
                         <!-- Revisar poner foto -->
-                       <img src="{{ playlist.portadaURL ? playlist.portadaURL : 'assets/images/albums_Default.png' }}" [alt]="playlist.nombre" class="playlist-cover"/>
+                       <img src="{{ playlist.portadaURL ? playlist.portadaURL : 'assets/images/playlist_Default.png' }}" [alt]="playlist.nombre" class="playlist-cover"/>
                        <h3>{{ playlist.nombre }}</h3>
                         <!-- <p>{{ playlist.creador.nombre }}</p> -->
                         <button (click)="navigateToPlaylist(playlist)">Ver Playlist</button>
@@ -26,7 +26,7 @@
                 <div class="songs-container">
                     @for (cancion of cancionesNuevas; track cancion) {
                         <div class="song-card">
-                            <img [src]="cancion.portadaURL" alt="Portada de {{ cancion.titulo }}" class="cover-image"/>
+                            <img src="{{ cancion.portadaURL ? cancion.portadaURL : 'assets/images/songs_Default.png' }}" alt="Portada de {{ cancion.titulo }}" class="cover-image"/>
                             <p class="song-title">{{ cancion.titulo }}</p>
                             <p class="song-artist">{{ cancion.artista.nombre }}</p>
                             <button (click)="navigateToSong(cancion)">Escuchar</button>
