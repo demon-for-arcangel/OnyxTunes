@@ -56,6 +56,7 @@ export class SettingsComponent {
           this.recommendationService.getRecommendationStatus(userId).subscribe({
             next: (status: boolean) => {
               this.user.recommendationsEnabled = status;
+              console.log("Estado de recomendaciones:", this.user.recommendationsEnabled.habilitada);
             },
             error: (err) => {
               console.error("Error al obtener el estado de recomendaciones:", err);

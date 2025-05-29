@@ -38,4 +38,8 @@ export class PlaylistService {
       } 
     });
   }
+
+  createPlaylistsByGenres(): Observable<any> {
+    return this.http.post(`${this.url}/${this.playlistUrl}/genre/createPlaylist`, {});
+  }
 }

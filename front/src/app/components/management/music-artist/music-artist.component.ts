@@ -113,7 +113,7 @@ export class MusicArtistComponent {
 
     if (this.wavesurferInstances[cancion.id]) {
         console.log(`WaveSurfer ya existe para: ${containerId}`);
-        return; // Si ya existe una instancia, no la recrees
+        return; 
     }
 
     console.log(`Creando wavesurfer en contenedor: ${containerId}`);

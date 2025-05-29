@@ -83,7 +83,6 @@ export class AuthService {
     }
   }
 
-  //Revisar todas a partir de aca
   isLoggedIn(): boolean{
     const user = this.getCurrentUser();
     return user !== null;

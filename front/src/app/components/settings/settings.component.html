@@ -85,7 +85,7 @@
 
                     <div class="recommendations-section">
                         <label for="recommendations">Recibir recomendaciones:</label>
-                        <input type="checkbox" id="recommendations" name="recommendations" [(ngModel)]="user.recommendationsEnabled" (change)="toggleRecommendations()" />
+                        <input type="checkbox" id="recommendations" name="recommendations" [(ngModel)]="user.recommendationsEnabled.habilitada" (change)="toggleRecommendations()" />                        
                         <p class="recommendations-description">Recibe recomendaciones personalizadas basadas en tus gustos musicales</p>
                     </div>
                 </div>

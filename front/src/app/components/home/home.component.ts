@@ -43,6 +43,8 @@ export class HomeComponent {
   listas: string[] = ["lista 1", "lista 2", "lista 3", "lista 4"];
   recommendedSong: any = null;
   cancionesNuevas: any[] = [];
+  isEnabled: boolean = false;
+  genrePlaylists: Playlist[] = [];
 
   dialogRef!: DynamicDialogRef;
 
@@ -109,11 +111,19 @@ export class HomeComponent {
                 this.userId = usuario.id;
                 console.log("ID de usuario obtenido:", this.userId);
 
-                // 🔹 Llamar a `loadDailyRecommendations()` solo cuando `userId` esté disponible
                 console.log("🔹 Llamando a loadDailyRecommendations()...");
                 this.loadDailyRecommendations();
-                this.RecommendationOnLogin(this.userId);
                 this.loadUserPlaylists();
+
+                this.checkRecommendationStatus();
+
+                  if (this.isEnabled) {
+                      console.log("🔹 Recomendaciones habilitadas, llamando a RecommendationOnLogin...");
+                      this.RecommendationOnLogin(this.userId);
+                  } else {
+                      console.log("🚫 Recomendaciones deshabilitadas, no se ejecuta RecommendationOnLogin.");
+                  }
+ this.createPlaylistsByGenres()
             } else {
                 console.error("Usuario no encontrado en el token");
                 this.router.navigate(["/login"]);
@@ -152,6 +162,32 @@ export class HomeComponent {
       console.error("ID de usuario no encontrado");
     }
   }
+
+  checkRecommendationStatus(): void {
+    if (!this.userId) return;
+
+    this.recommendationService.getRecommendationStatus(this.userId.toString()).subscribe({
+      next: (status: boolean) => {
+        this.isEnabled = status;
+        console.log(this.isEnabled);
+      },
+      error: (err) => {
+        console.error("Error al obtener el estado de recomendaciones:", err);
+      }
+    });
+  }
+
+  createPlaylistsByGenres(): void {
+    this.playlistService.createPlaylistsByGenres().subscribe({
+        next: (response) => {
+            console.log("✅ Playlists creadas correctamente:", response);
+        },
+        error: (error) => {
+            console.error("❌ Error al crear playlists por género:", error);
+        }
+    });
+  }
+
 
   loadDailyRecommendations() {
     if (this.userId) {

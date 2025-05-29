@@ -100,7 +100,7 @@ export class CreateSongsComponent {
           this.minutos = Math.floor((durationInSeconds % 3600) / 60);
           this.segundos = durationInSeconds % 60;
   
-          this.nuevaCancion.titulo = file.name.split('.').slice(0, -1).join('.'); // Asignar título
+          this.nuevaCancion.titulo = file.name.split('.').slice(0, -1).join('.');
           console.log(`Duración de ${file.name}: ${this.horas}h ${this.minutos}m ${this.segundos}s`);
         };
       }

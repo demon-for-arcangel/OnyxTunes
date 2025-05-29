@@ -69,7 +69,7 @@ export class UpdateSongsComponent implements OnInit {
     this.cancionesService.getGenreBySong(this.cancionId).subscribe(
       (data) => {
         console.log("✅ Géneros obtenidos en el frontend antes de asignar:", data);
-        this.cancion.generos = Array.isArray(data) ? data : []; // 🔹 Asegura que es un array válido
+        this.cancion.generos = Array.isArray(data) ? data : []; 
         console.log("✅ Géneros en el estado después de asignar:", this.cancion.generos);
       },
       (error) => {

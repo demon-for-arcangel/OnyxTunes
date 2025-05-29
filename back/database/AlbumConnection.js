@@ -175,16 +175,14 @@ class AlbumModel {
 
     async deleteAlbum(albumsIds) {
         try {
-            // Paso 1: Eliminar las relaciones dependientes en `usuario_album`
             await models.UsuarioAlbum.destroy({
                 where: {
-                    album_id: albumsIds, // Relaciona el álbum con las dependencias
+                    album_id: albumsIds, 
                 }
             });
     
             console.log(`Relaciones eliminadas para álbumes: ${albumsIds}`);
     
-            // Paso 2: Eliminar los álbumes
             const result = await models.Album.destroy({
                 where: {
                     id: albumsIds

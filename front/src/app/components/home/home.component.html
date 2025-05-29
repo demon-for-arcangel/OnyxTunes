@@ -26,10 +26,12 @@
                 <div class="songs-container">
                     @for (cancion of cancionesNuevas; track cancion) {
                         <div class="song-card">
+                            <button>Opciones</button>
                             <img src="{{ cancion.portadaURL ? cancion.portadaURL : 'assets/images/songs_Default.png' }}" alt="Portada de {{ cancion.titulo }}" class="cover-image"/>
                             <p class="song-title">{{ cancion.titulo }}</p>
                             <p class="song-artist">{{ cancion.artista.nombre }}</p>
                             <button (click)="navigateToSong(cancion)">Escuchar</button>
+                            <button>Añadir a favoritos</button>
                         </div>
                     }
                 </div>
@@ -38,6 +40,18 @@
         </div>
 
         <h2>Descubra música por generos</h2>
+        @if (genrePlaylists) {
+            <div class="playlists-container">
+                @for (playlist of genrePlaylists; track playlist) {
+                    <div class="playlist-card">
+                        <img [src]="playlist.portadaURL ? playlist.portadaURL : 'assets/images/playlist_Default.png'" [alt]="playlist.nombre" class="playlist-cover"/>
+                        <h3>{{ playlist.nombre }}</h3>
+                        <button (click)="navigateToPlaylist(playlist)">Ver Playlist</button>
+                    </div>
+                }
+            </div>
+        }
+
 
         <app-player></app-player>
     </main>

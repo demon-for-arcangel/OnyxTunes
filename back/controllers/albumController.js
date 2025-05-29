@@ -100,7 +100,6 @@ const getAlbumsByUserId = async (req, res) => {
   try {
     const albums = await conx.getAlbumsByUserId(userId);
     if (albums.length === 0) {
-      // Devuelve un mensaje informativo con estado 200
       return res
         .status(200)
         .json({

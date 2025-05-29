@@ -110,7 +110,7 @@ class SongModel {
                         model: models.Genero,
                         attributes: ["id", "nombre"],
                         as: "generos",
-                        through: { attributes: [] }, // 🔹 Evita que `GeneroCancion` agregue datos innecesarios
+                        through: { attributes: [] },
                     },
                 ],
             });

@@ -1,4 +1,3 @@
-// message.component.ts
 import { Component, Input } from "@angular/core";
 import { SendMessageComponent } from "../send-message/send-message.component";
 import { ReceivedMessageComponent } from "../received-message/received-message.component";
