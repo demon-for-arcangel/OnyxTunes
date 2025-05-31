@@ -91,22 +91,9 @@ OnyxTunes es una plataforma de streaming de música moderna y social, diseñada 
 - [Frontend Architecture](./docs/frontend.md)
 - [Backend Architecture](./docs/backend.md)
 
-## 🤝 Contribución
-
-1. Fork del repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
 ## 📄 Licencia
 
 Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
-
-## 🙏 Agradecimientos
-
-- A toda la comunidad de desarrolladores que contribuyen con sus librerías y frameworks
-- A los usuarios que prueban y dan feedback sobre la plataforma
 
 ## 📢 Soporte
 
@@ -114,14 +101,6 @@ Para reportar bugs o solicitar nuevas características, por favor abre un issue 
 
 ## 📈 Roadmap
 
-- [ ] Implementación de sistema de pagos
 - [ ] Soporte para podcasts
 - [ ] Integración con redes sociales
-- [ ] Modo oscuro en la interfaz
 - [ ] Sistema de notificaciones mejorado
-
-## 📫 Contacto
-
-- Email: contacto@onyxtunes.com
-- Twitter: @onyxtunes
-- GitHub: @onyxtunes
