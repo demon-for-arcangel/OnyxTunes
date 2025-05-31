@@ -112,54 +112,64 @@ class RecommendConnection {
     }
   }
 
-  async getOrCreatePlaylist(userId) {
-    console.log("Entrando en getOrCreatePlaylist para el usuario:", userId);
+async getOrCreatePlaylist(userId) {
     try {
+        const usuario = await models.Usuario.findByPk(userId);
+        if (!usuario) {
+            throw new Error(`❌ Usuario con ID ${userId} no encontrado.`);
+        }
 
-      const usuario = await models.Usuario.findByPk(userId);
-      if (!usuario) {
-        throw new Error(`Usuario con ID ${userId} no encontrado.`);
-      }
+        const adminUsuario = await models.Usuario.findOne({ where: { email: "onyxtunes@gmail.com" } });
+        if (!adminUsuario) {
+            throw new Error("❌ Usuario administrador 'onyxtunes@gmail.com' no encontrado en la base de datos.");
+        }
 
-      const playlistName = `Recomendación Diaria ${usuario.nombre}`;
+        const playlistName = `Recomendación Diaria ${usuario.email}`;
 
-      let playlist = await models.Playlist.findOne({
-        include: [
-          {
-            model: models.Usuario,
-            where: { id: userId },
-            through: { model: models.UsuarioPlaylist },
-          },
-        ],
-        where: { nombre: playlistName },
-      });
-  
-      if (!playlist) {
-        console.log(`Creando la playlist 'Recomendación Diaria' para el usuario con ID ${userId}.`);
-        playlist = await models.Playlist.create({
-          nombre: playlistName,
-          descripcion: "Playlist generada automáticamente con las canciones recomendadas para el día.",
-          fechaCreacion: new Date(),
-          publico: false,
+        // 🔹 Primero, buscar la playlist sin importar el usuario relacionado
+        let playlist = await models.Playlist.findOne({
+            where: { nombre: playlistName }
         });
-  
-        await models.UsuarioPlaylist.create({
-          usuario_id: userId,
-          playlist_id: playlist.id,
-        });
-      }
-  
-      if (!playlist || !playlist.id) {
-        throw new Error("No se pudo obtener un ID válido para la playlist.");
-      }
-  
-      console.log("Playlist creada/obtenida con ID:", playlist.id);
-      return playlist;
+
+        if (!playlist) {
+            console.log(`🆕 Creando la playlist '${playlistName}' para el usuario ${usuario.nombre}.`);
+            playlist = await models.Playlist.create({
+                nombre: playlistName,
+                descripcion: "Playlist generada automáticamente con las canciones recomendadas para el día.",
+                fechaCreacion: new Date(),
+                publico: false
+            });
+
+            // 🔹 Asociar la playlist al usuario administrador por defecto
+            await models.UsuarioPlaylist.create({
+                usuario_id: adminUsuario.id,
+                playlist_id: playlist.id
+            });
+        } else {
+            console.log(`✅ La playlist ya existía con ID: ${playlist.id}`);
+            
+            // 🔹 Ahora verificamos si el usuario ya está vinculado a la playlist
+            const existeRelacion = await models.UsuarioPlaylist.findOne({
+                where: { usuario_id: userId, playlist_id: playlist.id }
+            });
+
+            if (!existeRelacion) {
+                console.log(`🔗 Vinculando la playlist '${playlistName}' al usuario ${usuario.email}.`);
+                await models.UsuarioPlaylist.create({
+                    usuario_id: userId,
+                    playlist_id: playlist.id
+                });
+            } else {
+                console.log(`🔹 El usuario ya está vinculado a la playlist '${playlistName}'.`);
+            }
+        }
+
+        return playlist;
     } catch (error) {
-      console.error("Error al verificar o crear la playlist:", error);
-      throw error;
+        console.error("❌ Error al verificar o crear la playlist:", error);
+        throw error;
     }
-  }
+}
   
   async addSongsToPlaylist(userId, songIds) {
     console.log("Entrando en addSongsToPlaylist", userId);
@@ -332,6 +342,39 @@ class RecommendConnection {
         throw new Error("Error al actualizar estado de recomendaciones");
     }
   }
+
+  async getPlaylistByUserEmail(email) {
+    console.log("🔍 Buscando la playlist de Recomendación Diaria para:", email);
+    try {
+        // 🔹 Buscar el usuario con el email proporcionado
+        const usuario = await models.Usuario.findOne({ where: { email } });
+        if (!usuario) {
+            throw new Error(`Usuario con email ${email} no encontrado.`);
+        }
+
+        const playlistName = `Recomendación Diaria ${email}`;
+
+        console.log("Nombre de la playlist a buscar:", playlistName);
+
+        // 🔹 Buscar la playlist con el nombre generado
+        const playlist = await models.Playlist.findOne({
+            where: { nombre: playlistName },
+            include: [{ model: models.Cancion, as: "canciones" }]
+        });
+
+        console.log("Playlist encontrada:", playlist ? playlist.id : "No encontrada");
+
+        if (!playlist) {
+            return { msg: "No se encontró una playlist de recomendaciones para este usuario.", data: null };
+        }
+
+        console.log("Playlist encontrada:", playlist.id);
+        return { msg: "Playlist obtenida.", data: playlist };
+    } catch (error) {
+        console.error("Error al obtener la playlist de recomendaciones:", error);
+        throw error;
+    }
+}
 }
 
 module.exports = RecommendConnection;

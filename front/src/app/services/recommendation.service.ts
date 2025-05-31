@@ -11,6 +11,10 @@ export class RecommendationService {
   constructor(private http: HttpClient) { }
   url = environment.baseUrl
 
+  getPlaylistByEmail(email: string): Observable<any> {
+    return this.http.get<any>(`${this.url}/recomendaciones/playlist/${email}`);
+  }
+
   getRecommendationOnLogin(userId: string): Observable<any> {
     return this.http.get<any>(`${this.url}/recomendaciones/login/${userId}`);
   }

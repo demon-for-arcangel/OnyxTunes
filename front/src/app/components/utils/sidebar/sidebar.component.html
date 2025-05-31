@@ -26,5 +26,23 @@
                 </li>
             }
         </ul>
+
+        @if (favoritePlaylists.length > 0) {
+            <div class="header-biblioteca">
+                <h3>Playlists Guardadas:</h3>
+            </div>
+            <ul>
+                @for (favoritePlaylist of favoritePlaylists; track favoritePlaylist) {
+                    <li>
+                        <button (click)="navigateToPlaylist(favoritePlaylist)">
+                            {{ favoritePlaylist.nombre }}
+                        </button>
+                    </li>
+                }
+            </ul>
+        } @else {
+            <p>No tienes playlists guardadas aún.</p>
+        }
+
     </div>
 </div>

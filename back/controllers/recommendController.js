@@ -109,6 +109,26 @@ class RecommendController {
       return res.status(500).json({ ok: false, msg: "Error interno del servidor.", error: error.message });
     }
   }
+
+  static async getPlaylistByUserEmail (req, res) {
+    try {
+        const { email } = req.params;
+
+        if (!email) {
+            return res.status(400).json({ msg: "El email es requerido." });
+        }
+
+        const playlist = await conx.getPlaylistByUserEmail(email);
+
+        res.status(200).json(playlist);
+    } catch (error) {
+        console.error("Error al obtener la playlist de recomendaciones:", error);
+        res.status(500).json({ msg: error.message || "Error interno del servidor" });
+    }
+  };
 }
+
+
+
 
 module.exports = RecommendController;

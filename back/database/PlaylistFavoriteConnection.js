@@ -36,29 +36,38 @@ async getFavoritePlaylistsByUser(usuarioId) {
         return { msg: "Error interno del servidor.", error: error.message };
     }
 }
-    async addFavoritePlaylist(usuarioId, playlistId) {
-        try {
-            const playlist = await models.Playlist.findByPk(playlistId);
+async addFavoritePlaylist(usuarioId, playlistId) {
+    try {
+        const playlist = await models.Playlist.findByPk(playlistId, {
+            include: [{
+                model: models.Usuario,
+                through: models.UsuarioPlaylist, 
+                attributes: ['id', 'email'] // 🔹 Obtener el ID y email del creador
+            }]
+        });
 
-            if (!playlist) {
-                throw new Error("La playlist no existe.");
-            }
-
-            if (!playlist.publico) {
-                throw new Error("No puedes añadir una playlist privada a favoritos.");
-            }
-
-            const favorite = await models.FavoritesPlaylist.create({
-                usuario_id: usuarioId,
-                playlist_id: playlistId
-            });
-
-            return favorite;
-        } catch (error) {
-            console.error("Error al agregar playlist a favoritos:", error);
-            throw error;
+        if (!playlist) {
+            throw new Error("La playlist no existe.");
         }
+
+        const creador = playlist.Usuarios.find(usuario => usuario.email === "onyxtunes@gmail.com");
+
+        if (!playlist.publico && !creador) { 
+            throw new Error("No puedes añadir una playlist privada a favoritos, ya que no fue creada por 'onyxtunes@gmail.com'.");
+        }
+
+        const favorite = await models.FavoritesPlaylist.create({
+            usuario_id: usuarioId,
+            playlist_id: playlistId
+        });
+
+        console.log("Playlist añadida a favoritos correctamente.");
+        return favorite;
+    } catch (error) {
+        console.error("Error al agregar playlist a favoritos:", error);
+        throw error;
     }
+}
 
     async removeFavoritePlaylist(usuarioId, playlistId) {
         try {

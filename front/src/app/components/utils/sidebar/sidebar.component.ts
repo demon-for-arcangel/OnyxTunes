@@ -6,6 +6,7 @@ import { PlaylistService } from '../../../services/playlist.service';
 import { Usuario } from '../../../interfaces/usuario';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CreatePlaylistComponent } from '../../management/create/create-playlist/create-playlist.component';
+import { PlaylistfavoriteService } from '../../../services/playlistfavorite.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,8 +21,11 @@ export class SidebarComponent {
   userId: number | null = null;
   ref: DynamicDialogRef | undefined;
   dialog: any;
+  favoritePlaylists: any[] = [];
 
-  constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService, public dialogService: DialogService) {}
+  constructor(private router: Router, private authService: AuthService, 
+    private playlistService: PlaylistService, public dialogService: DialogService, 
+  private playlistFavoriteService: PlaylistfavoriteService) {}
   ngOnInit() {
     this.loadUserId();
   }
@@ -57,6 +61,7 @@ export class SidebarComponent {
               this.playlistService.getUserPlaylists(this.userId).subscribe(response => {
                 console.log(response);
                 if (response.success) {
+                  console.log('Playlists obtenidas correctamente:', response.data);
                   this.playlists = response.data.filter((playlist: Playlist) =>
                     !playlist.nombre.includes("Recomendación Diaria")
                   );
@@ -66,6 +71,22 @@ export class SidebarComponent {
               }, error => {
                 console.error('Error en la solicitud:', error);
               });
+
+              this.playlistFavoriteService.getFavoritePlaylists(this.userId).subscribe({
+                next: (favResponse) => {
+                    if (favResponse?.data?.playlists && Array.isArray(favResponse.data.playlists)) {
+                        this.favoritePlaylists = favResponse.data.playlists.map((playlist: Playlist) => ({
+                        ...playlist, 
+                        nombre: playlist.nombre.startsWith("Recomendación Diaria") ? "Recomendación Diaria" : playlist.nombre
+                    }));
+                    } else {
+                        this.favoritePlaylists = [];
+                    }
+                },
+                error: (favError) => {
+                    this.favoritePlaylists = [];
+                }
+            });
             } else {
               console.error('Usuario no encontrado en el token');
               this.router.navigate(['/login']);

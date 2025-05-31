@@ -14,4 +14,6 @@ router.get("/status/:userId", controlador.getRecommendationStatus);
 // Activar o desactivar recomendaciones para un usuario
 router.post("/update-status/:userId", controlador.updateRecommendationStatus);
 
+router.get("/playlist/:email", controlador.getPlaylistByUserEmail);
+
 module.exports = router;
