@@ -95,8 +95,8 @@ export class UpdateSongsComponent implements OnInit {
       this.artistasDisponibles = data;
       this.artistasFiltrados = [...data];  
 
-      console.log("🔹 Artistas disponibles:", this.artistasDisponibles);
-      console.log("🔹 Artistas filtrados al inicio:", this.artistasFiltrados);
+      console.log("Artistas disponibles:", this.artistasDisponibles);
+      console.log("Artistas filtrados al inicio:", this.artistasFiltrados);
     },
     (error) => {
       console.error("Error al cargar los artistas:", error);
@@ -125,11 +125,11 @@ export class UpdateSongsComponent implements OnInit {
   }
 
   updateFiltroColaboradores(): void {
-  console.log("🔹 Buscando colaboradores con:", this.filtroColaboradores);
+  console.log("Buscando colaboradores con:", this.filtroColaboradores);
   this.artistasFiltrados = this.artistasDisponibles.filter(artista =>
     artista.nombre.toLowerCase().includes(this.filtroColaboradores.toLowerCase())
   );
-  console.log("🔹 Resultado del filtro:", this.artistasFiltrados);
+  console.log("Resultado del filtro:", this.artistasFiltrados);
 }
 
 
