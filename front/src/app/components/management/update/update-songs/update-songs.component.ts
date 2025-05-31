@@ -45,8 +45,8 @@ export class UpdateSongsComponent implements OnInit {
   loadCancion(): void {
     this.cancionesService.getCancionById(this.cancionId).subscribe(
       (data) => {
-        console.log("✅ Datos recibidos en el frontend:", data);
-        console.log("✅ Géneros recibidos en el frontend:", data.generos);
+        console.log("Datos recibidos en el frontend:", data);
+        console.log("Géneros recibidos en el frontend:", data.generos);
         this.cancion = data; 
 
         this.cancion.portada = data.portadaURL || '';
@@ -68,12 +68,12 @@ export class UpdateSongsComponent implements OnInit {
   loadGenerosPorCancion(): void {
     this.cancionesService.getGenreBySong(this.cancionId).subscribe(
       (data) => {
-        console.log("✅ Géneros obtenidos en el frontend antes de asignar:", data);
+        console.log("Géneros obtenidos en el frontend antes de asignar:", data);
         this.cancion.generos = Array.isArray(data) ? data : []; 
-        console.log("✅ Géneros en el estado después de asignar:", this.cancion.generos);
+        console.log("Géneros en el estado después de asignar:", this.cancion.generos);
       },
       (error) => {
-        console.error('❌ Error al cargar los géneros de la canción:', error);
+        console.error('Error al cargar los géneros de la canción:', error);
       }
     );
 }

@@ -150,13 +150,11 @@ const deleteSongPlaylist = async (req, res) => {
 
 
 const createPlaylistsByGenres = async (req, res) => {
-    console.log("📌 Se está llamando a createPlaylistsByGenres");
-
     try {
         const result = await conx.createPlaylistsByGenres();
         res.status(201).json({ msg: "Playlists por género creadas con éxito", data: result });
     } catch (error) {
-        console.error("❌ Error al crear playlists por género:", error);
+        console.error("Error al crear playlists por género:", error);
         res.status(500).json({ msg: "Error al crear playlists por género." });
     }
 };

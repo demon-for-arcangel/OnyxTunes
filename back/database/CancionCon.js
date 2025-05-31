@@ -90,10 +90,10 @@ class SongModel {
                 throw new Error('Cancion no encontrada');
             }
     
-            console.log("✅ Canción obtenida con IDs de géneros:", song);
+            console.log("Canción obtenida con IDs de géneros:", song);
             return song;
         } catch (error) {
-            console.error('❌ Error al mostrar la canción: ', error);
+            console.error('Error al mostrar la canción: ', error);
             throw new Error('Error al mostrar la canción');
         }
     }
@@ -101,7 +101,7 @@ class SongModel {
     async getGenreBySong(songId) {
         console.log("cancion id", songId)
         if (!songId || isNaN(Number(songId))) {
-            throw new Error(`⚠ Error: ID de canción inválido. Valor recibido: ${songId}`);
+            throw new Error(`ID de canción inválido. Valor recibido: ${songId}`);
         }
         try {
             const song = await models.Cancion.findByPk(songId, {
@@ -116,13 +116,13 @@ class SongModel {
             });
     
             if (!song) {
-                throw new Error(`⚠ Canción con ID ${songId} no encontrada.`);
+                throw new Error(`Canción con ID ${songId} no encontrada.`);
             }
     
-            console.log("✅ Géneros obtenidos:", song.generos);
+            console.log("Géneros obtenidos:", song.generos);
             return song.generos;
         } catch (error) {
-            console.error("❌ Error al obtener los géneros de la canción:", error);
+            console.error("Error al obtener los géneros de la canción:", error);
             throw new Error("Error al obtener los géneros de la canción.");
         }
     }
@@ -366,7 +366,7 @@ class SongModel {
                             createdAt: new Date(),
                             updatedAt: new Date(),
                         });
-                        console.log(`✅ Colaborador ${userId} asignado a la canción ${songId}`);
+                        console.log(`Colaborador ${userId} asignado a la canción ${songId}`);
                     } catch (error) {
                         console.error(`Error al añadir colaborador ${userId}:`, error);
                     }

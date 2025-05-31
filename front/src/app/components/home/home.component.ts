@@ -180,10 +180,10 @@ export class HomeComponent {
   createPlaylistsByGenres(): void {
     this.playlistService.createPlaylistsByGenres().subscribe({
         next: (response) => {
-            console.log("✅ Playlists creadas correctamente:", response);
+            console.log("Playlists creadas correctamente:", response);
         },
         error: (error) => {
-            console.error("❌ Error al crear playlists por género:", error);
+            console.error("Error al crear playlists por género:", error);
         }
     });
   }
@@ -191,21 +191,19 @@ export class HomeComponent {
 
   loadDailyRecommendations() {
     if (this.userId) {
-        console.log("🔹 Ejecutando loadDailyRecommendations con userId:", this.userId);
+      this.recommendationService.getDailyRecommendations(this.userId.toString()).subscribe({
+        next: (response) => {
+          console.log("Respuesta antes de asignar:", response);
 
-        this.recommendationService.getDailyRecommendations(this.userId.toString()).subscribe({
-            next: (response) => {
-                console.log("✅ Respuesta antes de asignar:", response);
-
-                this.especialPlaylists = response;
-                console.log("✅ Estado de especialPlaylists después de asignar:", this.especialPlaylists);
-            },
-            error: (error) => {
-                console.error("🚨 Error al obtener recomendaciones diarias:", error);
-            }
-        });
+          this.especialPlaylists = response;
+          console.log("Estado de especialPlaylists después de asignar:", this.especialPlaylists);
+        },
+        error: (error) => {
+          console.error("Error al obtener recomendaciones diarias:", error);
+        }
+      });
     } else {
-        console.error("❌ ID de usuario no encontrado, no se ejecuta loadDailyRecommendations.");
+      console.error("ID de usuario no encontrado.");
     }
 }
 

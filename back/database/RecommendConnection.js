@@ -118,7 +118,7 @@ class RecommendConnection {
 
       const usuario = await models.Usuario.findByPk(userId);
       if (!usuario) {
-          throw new Error(`❌ Usuario con ID ${userId} no encontrado.`);
+        throw new Error(`Usuario con ID ${userId} no encontrado.`);
       }
 
       const playlistName = `Recomendación Diaria ${usuario.nombre}`;
@@ -140,6 +140,7 @@ class RecommendConnection {
           nombre: playlistName,
           descripcion: "Playlist generada automáticamente con las canciones recomendadas para el día.",
           fechaCreacion: new Date(),
+          publico: false,
         });
   
         await models.UsuarioPlaylist.create({

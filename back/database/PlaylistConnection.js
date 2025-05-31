@@ -320,17 +320,16 @@ class PlaylistConnection {
     }
 
     async createPlaylistsByGenres() {
-        console.log("hola");
         try {
             let usuarioDefecto = await models.Usuario.findOne({
                 where: { email: "onyxtunes@gmail.com" }
             });
     
             if (!usuarioDefecto || !usuarioDefecto.id) {
-                throw new Error("⚠ No se encontró un usuario válido con ese email.");
+                throw new Error("No se encontró un usuario válido con ese email.");
             }
     
-            console.log("✅ Usuario por defecto encontrado con ID:", usuarioDefecto.id);
+            console.log("Usuario por defecto encontrado con ID:", usuarioDefecto.id);
     
             const generos = await models.Genero.findAll({ attributes: ["id", "nombre"] });
     
@@ -359,11 +358,15 @@ class PlaylistConnection {
                 });
     
                 if (!cancionesPopulares.length) {
-                    console.warn(`⚠ No hay canciones populares para el género ${genero.nombre}.`);
+                    console.log(`No hay canciones populares para el género ${genero.nombre}.`);
                     continue;
                 }
     
-                const newPlaylist = await models.Playlist.create({ nombre: nombrePlaylist });
+                const newPlaylist = await models.Playlist.create({ 
+                    nombre: nombrePlaylist,
+                    descripcion: "Playlist generada automáticamente por género",
+                    publico: false,
+                });
     
                 const cancionesData = cancionesPopulares.map(cancion => ({
                     playlist_id: newPlaylist.id,
@@ -377,12 +380,12 @@ class PlaylistConnection {
                 });
     
                 playlistsCreadas.push(newPlaylist);
-                console.log(`✅ Playlist creada y asociada: ${nombrePlaylist}`);
+                console.log(`Playlist creada y asociada: ${nombrePlaylist}`);
             }
     
             return { msg: "Playlists generadas y asociadas con éxito.", data: playlistsCreadas };
         } catch (error) {
-            console.error("❌ Error al generar las playlists por género:", error);
+            console.error("Error al generar las playlists por género:", error);
             throw new Error("Error en la generación automática de playlists.");
         }
     }
