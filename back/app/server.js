@@ -27,6 +27,7 @@ class Server {
     this.apiReproducciones = "/api/reproducciones";
     this.apiSeguidores = "/api/seguidores";
     this.apiRecommend = "/api/recomendaciones"
+    this.apiPlaylistFavorite = "/api/favorite";
 
     this.app.use(
       fileUpload({
@@ -96,12 +97,10 @@ class Server {
     this.app.use(this.apiPlaylist, require("../routes/PlaylistRoutes"));
     this.app.use(this.apiLikes, require("../routes/likesRoutes"));
     this.app.use(this.apiProfile, require("../routes/profileRoutes"));
-    this.app.use(this.apiRecommend, require("../routes/recommendRoutes"))
-    this.app.use(
-      this.apiReproducciones,
-      require("../routes/reproduccionesRoutes"),
-    );
+    this.app.use(this.apiRecommend, require("../routes/recommendRoutes"));
+    this.app.use(this.apiReproducciones, require("../routes/reproduccionesRoutes"));
     this.app.use(this.apiSeguidores, require("../routes/seguidoresRoutes"));
+    this.app.use(this.apiPlaylistFavorite, require("../routes/playlistFavoriteRoutes"));
   }
 
   listen() {
