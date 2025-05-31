@@ -6,8 +6,6 @@ const conx = new RecommendConnection();
 class RecommendController {
   /**
    * Generar recomendaciones diarias para un usuario.
-   * @param {request} req - Objeto de solicitud HTTP.
-   * @param {response} res - Objeto de respuesta HTTP.
    */
   static async getDailyRecommendations(req, res) {
     try {
