@@ -12,7 +12,19 @@
                             <button (click)="togglePlaylistMenu(playlist.id)">Opciones</button>
                             @if (menuOpen && selectedPlaylistId === playlist.id) {
                                 <div class="menu">
-                                    <button (click)="addSongsToPlaylist(playlist.id)">Añadir Canciones</button>
+                                    <button (click)="toggleShowPlaylists()">Añadir Canciones</button>
+                                    @if (showPlaylists) {
+                                        <h3>Selecciona una playlist</h3>
+                                        <ul>
+                                            @for (playlist of userPlaylists; track playlist) {
+                                                <li>
+                                                    <input type="radio" name="playlistSeleccionada" [value]="playlist.id" (change)="selectTargetPlaylist(playlist.id)">
+                                                    {{ playlist.nombre }}
+                                                </li>
+                                            }
+                                        </ul>
+                                        <button (click)="confirmAddSongs()">Añadir</button>
+                                    }
                                     <button (click)="savePlaylist(playlist.id)">Guardar en Biblioteca</button>
                                 </div>
                             }

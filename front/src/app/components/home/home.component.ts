@@ -52,6 +52,8 @@ export class HomeComponent {
   selectedSongId: number | null = null;
   selectedPlaylistId: number | null = null;
   userLikes: number[] = [];
+  showPlaylists = false;
+  targetPlaylistId: number | null = null;
 
   dialogRef!: DynamicDialogRef;
 
@@ -219,30 +221,29 @@ loadUserRecommendationPlaylist() {
     });
   }
 
+  loadDailyRecommendations() {
+      if (this.userId) {
+          this.recommendationService.getDailyRecommendations(this.userId.toString()).subscribe({
+              next: (response) => {
+                  if (response && Array.isArray(response)) {
+                      this.especialPlaylists = response;
+                  } else {
+                    this.especialPlaylists = response ? [response] : [];
+                  }
 
-loadDailyRecommendations() {
-    if (this.userId) {
-        this.recommendationService.getDailyRecommendations(this.userId.toString()).subscribe({
-            next: (response) => {
-                if (response && Array.isArray(response)) {
-                    this.especialPlaylists = response;
-                } else {
-                  this.especialPlaylists = response ? [response] : [];
-                }
-
-                this.loadUserRecommendationPlaylist();
-            },
-            error: (error) => {
-              this.especialPlaylists = [];
-            }
-        });
-    }
-}
+                  this.loadUserRecommendationPlaylist();
+              },
+              error: (error) => {
+                this.especialPlaylists = [];
+              }
+          });
+      }
+  }
 
   openRecommendedSongDialog() {
     if (!this.recommendedSong) {
         console.log("No hay canción recomendada, el modal no se abrirá.");
-        return; // Evita abrir el modal
+        return;
     }
 
     this.dialogRef = this.dialogService.open(RecommendedSongComponent, {
@@ -327,9 +328,26 @@ loadDailyRecommendations() {
     if (this.selectedPlaylistId === playlistId) {
       this.menuOpen = false;
       this.selectedPlaylistId = null;
+      this.showPlaylists = false;
+
     } else {
       this.menuOpen = true;
       this.selectedPlaylistId = playlistId;
+      this.showPlaylists = false;
+      this.loadUserPlaylists();  
+      this.getUserPlaylists(playlistId);
+    }
+  }
+
+  toggleShowPlaylists(): void {
+    if (!this.selectedPlaylistId) {
+      console.warn("⚠ No se ha seleccionado una playlist origen.");
+      return;
+    }
+
+    this.showPlaylists = !this.showPlaylists; 
+    if (this.showPlaylists) {
+      this.getUserPlaylists(this.selectedPlaylistId);
     }
   }
 
@@ -382,5 +400,52 @@ loadDailyRecommendations() {
     });
   }
 
-  addSongsToPlaylist(playlistId: number): void {}
+getUserPlaylists(sourcePlaylistId: number): void {
+    this.playlistService.getUserPlaylists(this.userId).subscribe({
+        next: (response) => {
+            console.log("Datos recibidos de la API:", response);
+
+            if (!response?.data || response.data.length === 0) {
+                console.warn("No se recibieron playlists.");
+                return;
+            }
+
+            this.userPlaylists = response.data.filter((p: Playlist) => p.id !== sourcePlaylistId);
+            console.log("Playlists disponibles:", this.userPlaylists);
+        },
+        error: (error) => {
+            console.error("Error al obtener playlists:", error);
+        }
+    });
+}
+addSongsToPlaylist(sourcePlaylistId: number, targetPlaylistId: number): void {
+    if (!targetPlaylistId) {
+        console.warn("⚠ No se ha seleccionado una playlist destino.");
+        return;
+    }
+
+    this.playlistService.addSongsToPlaylist(this.userId, sourcePlaylistId, targetPlaylistId).subscribe({
+        next: (response) => {
+            console.log("Canciones añadidas:", response.msg);
+        },
+        error: (error) => {
+            console.error("Error al añadir canciones:", error);
+        }
+    });
+  }
+
+  selectTargetPlaylist(playlistId: number): void {
+    this.targetPlaylistId = playlistId; 
+    console.log(`Playlist destino seleccionada: ${playlistId}`);
+  }
+
+  confirmAddSongs(): void {
+    if (!this.targetPlaylistId) {
+        console.warn("⚠ No se ha seleccionado una playlist destino.");
+        return;
+    }
+
+    this.addSongsToPlaylist(this.selectedPlaylistId!, this.targetPlaylistId);
+  }
+
 }
