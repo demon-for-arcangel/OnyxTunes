@@ -433,7 +433,7 @@ class PlaylistConnection {
             return { msg: "Canciones añadidas correctamente.", data: canciones };
 
         } catch (error) {
-            throw new Error("Error interno al añadir canciones.");
+            throw new Error("Error al añadir canciones.");
         }
     }
 }

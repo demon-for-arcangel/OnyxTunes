@@ -163,39 +163,12 @@ const addSongsToPlaylist = async (req, res) => {
     try {
         const { userId, sourcePlaylistId, targetPlaylistId } = req.body;
 
-        // 🔹 Verificar que el usuario es dueño de la playlist destino
-        const esPropietario = await models.UsuarioPlaylist.findOne({
-            where: { usuario_id: userId, playlist_id: targetPlaylistId }
-        });
+        const result = await conx.addSongsToPlaylist(userId, sourcePlaylistId, targetPlaylistId);
 
-        if (!esPropietario) {
-            return res.status(403).json({ msg: "❌ No puedes añadir canciones a una playlist que no te pertenece." });
-        }
-
-        // 🔹 Obtener las canciones de la playlist de origen
-        const canciones = await models.CancionPlaylist.findAll({
-            where: { playlist_id: sourcePlaylistId }
-        });
-
-        if (!canciones.length) {
-            return res.status(404).json({ msg: "⚠ La playlist origen no tiene canciones." });
-        }
-
-        // 🔹 Insertar canciones en la playlist destino
-        await Promise.all(
-            canciones.map(async (cancion) => {
-                await models.CancionPlaylist.create({
-                    playlist_id: targetPlaylistId,
-                    cancion_id: cancion.cancion_id
-                });
-            })
-        );
-
-        res.status(200).json({ msg: "✅ Canciones añadidas correctamente a la playlist destino." });
+        res.status(200).json({ msg: "Canciones añadidas correctamente a la playlist destino", data: result });
 
     } catch (error) {
-        console.error("❌ Error al añadir canciones a la playlist:", error);
-        res.status(500).json({ msg: "Error interno al añadir canciones." });
+        res.status(500).json({ msg: "Error al añadir canciones." });
     }
 };
 

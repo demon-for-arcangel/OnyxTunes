@@ -14,7 +14,7 @@ router.post('/song/like', playlistController.addToFavorites);
 router.delete('/song/delete', playlistController.deleteSongPlaylist);
 
 router.post("/genre/createPlaylist", playlistController.createPlaylistsByGenres);
-router.post("/addSongsToPlaylist", playlistController.addSongsToPlaylist);
+router.post("/add/songs", playlistController.addSongsToPlaylist);
 
 
 module.exports = router;
