@@ -1,0 +1,31 @@
+<div class="playlist-container"><!-- artist-info-container -->
+    <app-sidebar></app-sidebar>
+    <main>
+        <app-account-button></app-account-button>
+        <div class="-content">
+            <h2>{{ artistData?.nombre }}</h2>
+            <img [src]="artistData?.fotoURL ? artistData.fotoURL : 'assets/images/perfil-de-usuario.jpg'" alt="{{ artistData?.nombre }}" class="artist-image"/>
+
+            <h3>Álbumes</h3>
+            <ul class="album-list">
+                @for (album of albums; track album) {
+                    <li>
+                        <img [src]="album.portadaURL ? album.portadaURL : 'assets/images/album_Default.png'" alt="{{ album.nombre }}" class="album-cover"/>
+                        {{ album.nombre }}
+                    </li>
+                }
+            </ul>
+
+            <h3>Canciones</h3>
+            <ul class="song-list">
+                @for (song of songs; track song) {
+                    <li>
+                        <img [src]="song.portadaURL ? song.portadaURL : 'assets/images/songs_Default.png'" alt="{{ song.titulo }}" class="song-cover"/>
+                        {{ song.titulo }}
+                    </li>
+                }
+            </ul>
+            <app-player></app-player>
+        </div>
+    </main>
+</div>

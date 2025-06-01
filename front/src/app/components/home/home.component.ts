@@ -68,6 +68,10 @@ export class HomeComponent {
     this.loadCancionesNuevas();
   }
 
+  goToArtistPage(artistId: string) {
+    this.router.navigate(['/information-artist'], { queryParams: { artistId } });
+  }
+
   scrollLeft(): void {
     const container = document.querySelector(".songs-container") as HTMLElement;
     if (container) {

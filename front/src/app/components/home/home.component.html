@@ -47,7 +47,7 @@
                             <button>Opciones</button>
                             <img src="{{ cancion.portadaURL ? cancion.portadaURL : 'assets/images/songs_Default.png' }}" alt="Portada de {{ cancion.titulo }}" class="cover-image"/>
                             <p class="song-title">{{ cancion.titulo }}</p>
-                            <p class="song-artist">{{ cancion.artista.nombre }}</p>
+                            <p class="song-artist" (click)="goToArtistPage(cancion.artista.id)">{{ cancion.artista.nombre }}</p>
                             <button (click)="navigateToSong(cancion)">Escuchar</button>
                             @if (cancion?.id) {
                                 @if (userLikes.includes(cancion.id)) {
@@ -78,8 +78,6 @@
                 }
             </div>
         }
-
-
         <app-player></app-player>
     </main>
 </div>
