@@ -118,14 +118,13 @@ export class HomeComponent {
 
     this.authService.getUserByToken(tokenObject).subscribe({
         next: (usuario: Usuario | undefined) => {
-          console.log("Usuario obtenido desde el token:", usuario);//aqui puedo obtener el email
+          console.log("Usuario obtenido desde el token:", usuario)
             if (usuario?.id && usuario?.email) {
               this.usuarioEmail = usuario.email;
                 this.userId = usuario.id;
 
-                this.loadUserRecommendationPlaylist();
-/*                 this.loadDailyRecommendations();
- */                this.loadUserPlaylists();
+              this.loadUserRecommendationPlaylist();
+              this.loadUserPlaylists();
 
                 this.checkRecommendationStatus();
 
@@ -135,7 +134,8 @@ export class HomeComponent {
                   } else {
                       console.log("Recomendaciones deshabilitadas, no se ejecuta RecommendationOnLogin.");
                   }
- this.createPlaylistsByGenres()
+            this.createPlaylistsByGenres()
+
             } else {
                 console.error("Usuario no encontrado en el token");
                 this.router.navigate(["/login"]);
@@ -160,13 +160,13 @@ loadUserRecommendationPlaylist() {
                 .map((playlist: Playlist) => ({
                     ...playlist, 
                   nombre: playlist.nombre.includes("Recomendación Diaria") ? "Recomendación Diaria" : playlist.nombre                }));
-
             } else {
-                this.recommendationPlaylist = [];
+              this.recommendationPlaylist = [];
+              this.loadDailyRecommendations();
             }
         },
         error: (error) => {
-            this.recommendationPlaylist = [];
+          this.recommendationPlaylist = [];
         }
     });
 }
@@ -219,32 +219,26 @@ loadUserRecommendationPlaylist() {
     });
   }
 
-/* 
+
 loadDailyRecommendations() {
     if (this.userId) {
         this.recommendationService.getDailyRecommendations(this.userId.toString()).subscribe({
             next: (response) => {
-                console.log("Respuesta antes de asignar:", response); // 🔹 Depuración
-
                 if (response && Array.isArray(response)) {
                     this.especialPlaylists = response;
                 } else {
-                    console.warn("La API no devolvió un array. Convirtiéndolo...");
-                    this.especialPlaylists = response ? [response] : [];
+                  this.especialPlaylists = response ? [response] : [];
                 }
 
-                console.log("Estado de especialPlaylists después de asignar:", this.especialPlaylists);
+                this.loadUserRecommendationPlaylist();
             },
             error: (error) => {
-                console.error("Error al obtener recomendaciones diarias:", error);
-                this.especialPlaylists = [];
+              this.especialPlaylists = [];
             }
         });
-    } else {
-        console.error("❌ ID de usuario no encontrado.");
     }
 }
- */
+
   openRecommendedSongDialog() {
     if (!this.recommendedSong) {
         console.log("No hay canción recomendada, el modal no se abrirá.");
