@@ -55,6 +55,7 @@ export class HomeComponent {
   showPlaylists = false;
   targetPlaylistId: number | null = null;
   playlistsPorGenero: any[] = [];
+  successMessage: string = "";
 
   dialogRef!: DynamicDialogRef;
 
@@ -113,7 +114,6 @@ export class HomeComponent {
 
   searchArtists() {
     //por hacer
-    console.log("Buscando:", this.searchTerm);
   }
 
   loadUserId() {
@@ -210,8 +210,6 @@ loadUserRecommendationPlaylist() {
         next: (response) => {
             if (response.data && response.data.playlistsCreadas) {
               this.playlistsPorGenero = response.data.playlistsCreadas; 
-            } else {
-              console.error("Error: No se encontraron playlists en la respuesta.");
             }
         },
         error: (error) => {
@@ -294,8 +292,6 @@ loadUserRecommendationPlaylist() {
               this.playlists = response.data.filter((playlist: Playlist) =>
               playlist.nombre.includes("Recomendación Diaria")
             );
-          } else {
-            console.error("Error al obtener las playlists:", response.message);
           }
         },
         (error) => {
@@ -378,10 +374,17 @@ loadUserRecommendationPlaylist() {
     const usuarioId = this.userId;
 
     this.favoriteService.addFavoritePlaylist(usuarioId, playlistId).subscribe({
-      next: (response) => {
-        console.log("Playlist guardada en favoritos:", response);
+      next: () => {
+        this.successMessage = "Playlist guardada en favoritos.";
+        setTimeout(() => {
+          this.successMessage = "";
+        }, 3000);
       },
       error: (error) => {
+        this.successMessage = "Error al guardar la playlist.";
+        setTimeout(() => {
+          this.successMessage = "";
+        }, 3000);
         console.error("Error al guardar la playlist:", error);
       }
     });

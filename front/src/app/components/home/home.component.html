@@ -82,6 +82,9 @@
             <p>No hay playlists disponibles por género.</p>
         }
 
+        @if(successMessage) {
+            <p class="success-message">{{ successMessage }}</p>
+        }
         <app-player></app-player>
     </main>
 </div>
