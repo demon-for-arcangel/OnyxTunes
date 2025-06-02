@@ -53,14 +53,6 @@ export class LandingComponent {
         this.getCancionesTitle(this.topCanciones);
         this.getAlbumsTitle(this.topAlbums);
         this.getPlaylistsTitle(this.topPlaylists);
-        console.log(
-          "Top canciones:",
-          this.topCanciones,
-          "Top albums:",
-          this.topAlbums,
-          "Top playlists:",
-          this.topPlaylists,
-        );
       },
       (error) => {
         console.error(
@@ -75,7 +67,6 @@ export class LandingComponent {
     this.seguidoresService.getTopArtists(limit).subscribe(
       (data) => {
         this.topArtists = data; 
-        console.log("Top artistas:", this.topArtists);
       },
       (error) => {
         console.error("Error al obtener los artistas más seguidos:", error);
@@ -199,8 +190,6 @@ playSong(songId: number, duration: number) {
 } */
 
 /* handleAudioEnd(event: Event) {
-  console.log("Canción ha terminado");
-
   const target = event.target as HTMLAudioElement;
   if (target) {
     target.pause();

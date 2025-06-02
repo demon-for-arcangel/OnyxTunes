@@ -51,8 +51,6 @@ class RecommendController {
             order: [["fecha_recomendacion", "DESC"]],
         });
 
-        console.log("Recomendación existente:", existingRecommendation);
-
         if (existingRecommendation && new Date(existingRecommendation.fecha_recomendacion).setHours(0, 0, 0, 0) === today.getTime()) {
             return res.status(200).json({
                 ok: true,

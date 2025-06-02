@@ -21,8 +21,6 @@ export class SeguidoresService {
   }
 
   addFollower(artistaId: number, followerId: number): Observable<any> {
-    console.log("URL:", this.url + this.seguidoresUrl);
-    console.log("Body:", { artistaId, followerId });
     return this.http.post(this.url + this.seguidoresUrl, {
       artistaId,
       followerId,

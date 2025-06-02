@@ -57,11 +57,8 @@ export class SidebarComponent {
           next: (usuario: Usuario | undefined) => {
             if (usuario?.id) {
               this.userId = usuario.id
-              console.log(this.userId)
               this.playlistService.getUserPlaylists(this.userId).subscribe(response => {
-                console.log(response);
                 if (response.success) {
-                  console.log('Playlists obtenidas correctamente:', response.data);
                   this.playlists = response.data.filter((playlist: Playlist) =>
                     !playlist.nombre.includes("Recomendación Diaria")
                   );
@@ -103,8 +100,6 @@ export class SidebarComponent {
   }
 
   addPlaylist() {
-    console.log('Añadir playlist');
-
     this.ref = this.dialogService.open(CreatePlaylistComponent, {
       header: 'Añadir Nueva Playlist',
       modal: true,

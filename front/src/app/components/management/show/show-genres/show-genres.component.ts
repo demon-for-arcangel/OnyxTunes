@@ -18,7 +18,6 @@ export class ShowGenresComponent {
 
   ngOnInit(): void {
     this.generoId = this.config.data.generoId; 
-    console.log(this.generoId);
     if (this.generoId) {
       this.loadGeneroDetails(); 
     } else {
@@ -30,7 +29,6 @@ export class ShowGenresComponent {
     this.generoService.getGeneroById(this.generoId).subscribe({
         next: (data) => {
             this.genero = data; 
-            console.log(this.genero);
             if (!this.genero.canciones) {
               this.genero.canciones = [];
             }

@@ -37,7 +37,6 @@ export class GenresComponent {
     this.genresService.getGeneros().subscribe(
       (data) => {
         this.generos = data;
-        console.log('Generos cargados:', this.generos);
       },
       (error) => {
         console.error('Error al cargar los generos:', error);
@@ -97,7 +96,6 @@ export class GenresComponent {
   }
 
   deleteGenero(id: number) {
-    console.log(id)
     this.ref = this.dialogService.open(DeleteConfirmationComponent, {
           header: 'Confirmar Eliminación',
           width: '400px',
@@ -117,7 +115,6 @@ export class GenresComponent {
         if (confirmed) {
           this.genresService.deleteGenero([id]).subscribe(
             (data) => {
-              console.log('Genero eliminado:', data);
               this.loadGeneros();
             },
             (error) => {
@@ -129,7 +126,6 @@ export class GenresComponent {
   }
 
   showGenero(genero: any) { 
-    console.log("Genero seleccionado:", genero);
     this.ref = this.dialogService.open(ShowGenresComponent, {
       header: 'Información del Genero',
       modal: true,

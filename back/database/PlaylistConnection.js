@@ -64,7 +64,6 @@ class PlaylistConnection {
     }
 
     async createPlaylist(data, canciones) {
-        console.log(data);
         try {
             const existingPlaylist = await models.Playlist.findOne({
                 attributes: { exclude: ['usuario_id'] },
@@ -285,7 +284,6 @@ class PlaylistConnection {
     }
 
     async deleteSongPlaylist(songId, playlistId){
-        console.log(songId, playlistId);
         try {
             const playlist = await models.Playlist.findByPk(playlistId, {
                 attributes: { exclude: ['usuario_id'] },
@@ -380,7 +378,7 @@ class PlaylistConnection {
                 });
             }
 
-            playlistsCreadas.push(playlist); // 🔹 Agregar la playlist ya existente
+            playlistsCreadas.push(playlist);
 
             const cancionesData = cancionesPopulares.map(cancion => ({
                 playlist_id: playlist.id,
@@ -390,7 +388,6 @@ class PlaylistConnection {
             await models.CancionPlaylist.bulkCreate(cancionesData);
         }
 
-        console.log("Playlists generadas/actualizadas:", playlistsCreadas); // 🔹 Verifica que todas se agregan
         return { msg: "Playlists generadas/actualizadas con éxito.", playlistsCreadas };
 
     } catch (error) {
@@ -410,8 +407,6 @@ class PlaylistConnection {
                 throw new Error("No puedes añadir canciones a una playlist que no te pertenece.");
             }
 
-            console.log("Usuario autorizado para modificar la playlist destino.");
-
             const canciones = await models.CancionPlaylist.findAll({
                 where: { playlist_id: sourcePlaylistId },
                 attributes: ["cancion_id"]
@@ -421,16 +416,12 @@ class PlaylistConnection {
                 throw new Error("La playlist origen no tiene canciones.");
             }
 
-            console.log(`Se encontraron ${canciones.length} canciones en la playlist origen.`);
-
             const cancionesData = canciones.map(cancion => ({
                 playlist_id: targetPlaylistId,
                 cancion_id: cancion.cancion_id
             }));
 
             await models.CancionPlaylist.bulkCreate(cancionesData);
-
-            console.log(`Se añadieron ${canciones.length} canciones a la playlist destino.`);
 
             return { msg: "Canciones añadidas correctamente.", data: canciones };
 

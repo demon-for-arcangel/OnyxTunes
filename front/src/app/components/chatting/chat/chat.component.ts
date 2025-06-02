@@ -56,7 +56,6 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.userService.getUserById(this.self!.toString()).subscribe(
           (self) => {
             this.self = self;
-            console.log("Datos del partner:", this.partner);
           },
           (error) => {
             console.error("Error al obtener los datos del partner:", error);
@@ -74,7 +73,6 @@ export class ChatComponent implements OnInit, OnDestroy {
           this.userService.getUserById(this.partnerId!.toString()).subscribe(
             (partner) => {
               this.partner = partner;
-              console.log("Datos del partner:", this.partner);
             },
             (error) => {
               console.error("Error al obtener los datos del partner:", error);
@@ -104,10 +102,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (emisorId && receptorId) {
       this.chatService.getMessages(emisorId, receptorId).subscribe(
         (response) => {
-          console.log("Respuesta del backend:", response);
           if (response.success) {
             this.messages = response.mensajes;
-            console.log("Mensajes", this.messages);
           } else {
             console.error("Error al obtener los mensajes:", response);
           }

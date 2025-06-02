@@ -34,11 +34,9 @@ export class LoginComponent {
     if (Object.keys(this.errors).length > 0) {
       return;
     }
-    console.log(this.email);
 
     this.authService.login(this.email, this.password).subscribe({
       next: (token) => {
-        console.log('Inicio de sesión exitoso, token:', token);
         this.getDatos()
       },
       error: (err) => {
@@ -50,7 +48,6 @@ export class LoginComponent {
   getDatos() {
     this.userService.getUserByEmail(this.email).subscribe({
       next: (user) => {
-        console.log('Usuario recibido:', user);
         if (user) {
           this.handleUserResponse(user);
         } else {
@@ -63,8 +60,6 @@ export class LoginComponent {
 
 
   handleUserResponse(user: any) {
-    console.log('Respuesta del usuario:', user);
-
     if (!user || !user.rol) {
       console.error('Usuario o ID de rol no definido.');
       this.errors.login = 'No se pudo obtener el rol del usuario.';
@@ -74,8 +69,6 @@ export class LoginComponent {
     const roleId = user.rol;
     this.rolService.getRolesById(roleId).subscribe({
       next: (role) => {
-        console.log('Nombre del rol obtenido:', role.nombre);
-
         if (role.nombre === 'Usuario') {
           this.router.navigate(['/home']);
         } else if (role.nombre === 'Artista' || role.nombre === 'Administrador') {

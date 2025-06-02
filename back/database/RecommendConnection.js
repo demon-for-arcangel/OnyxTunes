@@ -30,7 +30,6 @@ class RecommendConnection {
         });
   
         const songIds = randomSongs.map((song) => song.dataValues.id);
-        console.log("IDs de canciones procesados:", songIds);
         await this.addSongsToPlaylist(userId, songIds);
 
         return randomSongs;
@@ -96,7 +95,6 @@ class RecommendConnection {
       const finalSongIds = dailyRecommendations.map((song) => song.id);
   
       await this.addSongsToPlaylist(userId, finalSongIds);
-      console.log("Llamada realizada a addSongsToPlaylist con IDs:", finalSongIds)
   
       return dailyRecommendations.slice(0, 20); 
     } catch (error) {
@@ -153,7 +151,7 @@ async getOrCreatePlaylist(userId) {
                     playlist_id: playlist.id
                 });
             } else {
-                console.log(`El usuario ya está vinculado a la playlist '${playlistName}'.`);
+              throw new Error("El usuario ya está vinculado a la playlist");
             }
         }
 
@@ -165,7 +163,6 @@ async getOrCreatePlaylist(userId) {
 }
   
   async addSongsToPlaylist(userId, songIds) {
-    console.log("Entrando en addSongsToPlaylist", userId);
     try {
       const playlist = await this.getOrCreatePlaylist(userId);
   
@@ -192,13 +189,11 @@ async getOrCreatePlaylist(userId) {
             cancion_id: cancionId,
             fechaAgregado: new Date(),
           });
-          console.log(`Canción ${cancionId} añadida a la playlist ${playlist.id}`);
         } catch (error) {
           console.error(`Error al añadir la canción ${cancionId} a la playlist:`, error);
         }
       }
   
-      console.log("Canciones añadidas a la playlist 'Recomendación Diaria'.");
     } catch (error) {
       console.error("Error al añadir canciones a la playlist:", error);
       throw error;
@@ -215,7 +210,6 @@ async getOrCreatePlaylist(userId) {
         });
 
         if (userPreference && !userPreference.habilitada) {
-            console.log("El usuario ha deshabilitado las recomendaciones.");
             return {
                 ok: true,
                 msg: "Las recomendaciones están deshabilitadas para este usuario.",
@@ -337,7 +331,6 @@ async getOrCreatePlaylist(userId) {
   }
 
   async getPlaylistByUserEmail(email) {
-    console.log("🔍 Buscando la playlist de Recomendación Diaria para:", email);
     try {
         const usuario = await models.Usuario.findOne({ where: { email } });
         if (!usuario) {
@@ -346,20 +339,14 @@ async getOrCreatePlaylist(userId) {
 
         const playlistName = `Recomendación Diaria ${email}`;
 
-        console.log("Nombre de la playlist a buscar:", playlistName);
-
         const playlist = await models.Playlist.findOne({
             where: { nombre: playlistName },
             include: [{ model: models.Cancion, as: "canciones" }]
         });
 
-        console.log("Playlist encontrada:", playlist ? playlist.id : "No encontrada");
-
         if (!playlist) {
             return { msg: "No se encontró una playlist de recomendaciones para este usuario.", data: null };
         }
-
-        console.log("Playlist encontrada:", playlist.id);
         return { msg: "Playlist obtenida.", data: playlist };
     } catch (error) {
         console.error("Error al obtener la playlist de recomendaciones:", error);

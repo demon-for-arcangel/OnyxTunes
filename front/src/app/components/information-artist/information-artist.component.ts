@@ -36,7 +36,6 @@ export class InformationArtistComponent {
     this.route.queryParams.subscribe(params => {
         if (params['artistId']) {
             this.artistId = Number(params['artistId']);
-            console.log('Artist ID:', this.artistId);
         } else {
             console.error("Error: No se recibió el ID del artista en los parámetros.");
         }
@@ -101,13 +100,11 @@ getUser(): void {
   getSongs() {
     this.songService.getCancionesByUser(this.artistId).subscribe(songs => {
       this.songs = songs;
-      console.log('Songs:', this.songs);
     });
   }
 
   getAlbums() {
     this.albumsService.getAlbumsByUserId(this.artistId).subscribe(albums => {
-        console.log('Albums:', albums); 
         this.albums = Array.isArray(albums) ? albums : [];
     });
   }

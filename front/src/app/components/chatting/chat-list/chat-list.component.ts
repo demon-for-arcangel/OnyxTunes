@@ -55,7 +55,6 @@ export class ChatListComponent implements OnInit {
       (response) => {
         if (response.success) {
           this.chats = response.chats;
-          console.log("Chats cargados:", this.chats);
         } else {
           console.error("Error en la respuesta del servidor:", response);
           this.chats = [];

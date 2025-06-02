@@ -57,7 +57,6 @@ class AlbumModel {
 
     async getAlbumById(id) {
         try {
-            console.log(id);
             const album = await models.Album.findByPk(id, {
                 include: [
                     {
@@ -181,16 +180,12 @@ class AlbumModel {
                 }
             });
     
-            console.log(`Relaciones eliminadas para álbumes: ${albumsIds}`);
-    
             const result = await models.Album.destroy({
                 where: {
                     id: albumsIds
                 }
             });
-    
-            console.log(`Álbum(es) eliminados: ${result}`);
-    
+        
             return {
                 msg: `Se eliminaron ${result} álbum(es) exitosamente.`,
             };
@@ -216,12 +211,11 @@ class AlbumModel {
             );
     
             if (filteredAlbums.length === 0) {
-                console.log(`No se encontraron álbumes para el usuario con ID: ${userId}`);
+                throw new Error('No se encontraron álbumes para el usuario.');
             }
     
             return filteredAlbums;
         } catch (error) {
-            console.error('Error al obtener los álbumes por ID de usuario: ', error);
             throw new Error('Error al obtener los álbumes por ID de usuario');
         }
     }

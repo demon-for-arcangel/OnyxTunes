@@ -20,7 +20,6 @@ const index = async (req, res) => {
         const songs = await conx.indexSongs();
         res.status(200).json(songs);
     } catch (error) {
-        console.log('Error al obtener las canciones', error);
         res.status(500).json({})
     }
 }
@@ -43,9 +42,6 @@ const getSongById = async (req, res) => {
 
 const getGenreBySong = async (req, res) => {
     const songId = req.params.songId;
-
-    console.log("hola")
-    console.log(songId)
 
     try {
         const song = await conx.getGenreBySong(songId);
@@ -127,9 +123,6 @@ const deleteSong = async (req, res) => {
 
 const addToHistory = async (req, res) => {
     const { songId, userId } = req.body; 
-
-    console.log('ID de la canción:', songId); 
-    console.log('ID del usuario:', userId); 
 
     if (!songId || !userId) {
         return res.status(400).json({ message: "Faltan datos necesarios" });

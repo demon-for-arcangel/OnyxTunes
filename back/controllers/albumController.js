@@ -18,7 +18,6 @@ const index = async (req, res) => {
     const albums = await conx.indexAlbums();
     res.status(200).json(albums);
   } catch (error) {
-    console.log("Error al obtener los albums", error);
     res.status(500).json({});
   }
 };

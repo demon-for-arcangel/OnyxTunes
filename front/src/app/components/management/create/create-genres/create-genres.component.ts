@@ -24,7 +24,6 @@ export class CreateGenresComponent {
     formData.append('nombre', this.nuevoGenero.nombre);
     this.generoService.createGenero(formData).subscribe(
       (response) => {
-        console.log("Genero añadido", response);
         this.ref.close();
       },
       (error) => {

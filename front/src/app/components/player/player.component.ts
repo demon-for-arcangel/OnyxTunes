@@ -46,7 +46,6 @@ export class PlayerComponent {
 
   playSong(song: any) {
     this.currentSong = song; 
-    console.log('Canción seleccionada:', this.currentSong);
 
     if (this.audioElement) {
         this.playerService.playSong(this.currentSong);

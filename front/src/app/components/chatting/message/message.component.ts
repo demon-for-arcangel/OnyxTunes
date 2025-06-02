@@ -19,9 +19,5 @@ export class MessageComponent {
 
   ngOnInit() {
     this.emisorId = Number(this.message.emisor);
-    console.log(this.emisorId);
-    console.log("hola", this.message);
-    console.log("self", this.self);
-    console.log("partner", this.partner);
   }
 }

@@ -36,7 +36,6 @@ export class UpdateSongsComponent implements OnInit {
 
   ngOnInit(): void {
     this.cancionId = this.config.data.cancionId;
-    console.log(this.cancionId);
     this.loadCancion(); 
     this.loadGeneros(); 
     this.loadColaboradores();
@@ -45,8 +44,6 @@ export class UpdateSongsComponent implements OnInit {
   loadCancion(): void {
     this.cancionesService.getCancionById(this.cancionId).subscribe(
       (data) => {
-        console.log("Datos recibidos en el frontend:", data);
-        console.log("Géneros recibidos en el frontend:", data.generos);
         this.cancion = data; 
 
         this.cancion.portada = data.portadaURL || '';
@@ -55,9 +52,6 @@ export class UpdateSongsComponent implements OnInit {
         }
 
         this.loadGenerosPorCancion();
-
-        console.log(this.cancion);
-        console.log(this.cancion.generos)
       },
       (error) => {
         console.error('Error al cargar la canción:', error);
@@ -68,9 +62,7 @@ export class UpdateSongsComponent implements OnInit {
   loadGenerosPorCancion(): void {
     this.cancionesService.getGenreBySong(this.cancionId).subscribe(
       (data) => {
-        console.log("Géneros obtenidos en el frontend antes de asignar:", data);
         this.cancion.generos = Array.isArray(data) ? data : []; 
-        console.log("Géneros en el estado después de asignar:", this.cancion.generos);
       },
       (error) => {
         console.error('Error al cargar los géneros de la canción:', error);
@@ -94,9 +86,6 @@ export class UpdateSongsComponent implements OnInit {
     (data) => {
       this.artistasDisponibles = data;
       this.artistasFiltrados = [...data];  
-
-      console.log("Artistas disponibles:", this.artistasDisponibles);
-      console.log("Artistas filtrados al inicio:", this.artistasFiltrados);
     },
     (error) => {
       console.error("Error al cargar los artistas:", error);
@@ -107,10 +96,6 @@ export class UpdateSongsComponent implements OnInit {
 
   toggleColaborador(artista: any) {
     const index = this.colaboradoresSeleccionados.indexOf(artista.id);
-    console.log("Artista seleccionado:", artista);
-    console.log("Colaboradores seleccionados:", this.colaboradoresSeleccionados);
-    console.log("Index encontrado:", index);
-    console.log("Artista ID:", artista.id);
     if (index === -1) {
       this.colaboradoresSeleccionados.push(artista.id);
     } else {
@@ -125,11 +110,9 @@ export class UpdateSongsComponent implements OnInit {
   }
 
   updateFiltroColaboradores(): void {
-  console.log("Buscando colaboradores con:", this.filtroColaboradores);
   this.artistasFiltrados = this.artistasDisponibles.filter(artista =>
     artista.nombre.toLowerCase().includes(this.filtroColaboradores.toLowerCase())
   );
-  console.log("Resultado del filtro:", this.artistasFiltrados);
 }
 
 
@@ -146,7 +129,6 @@ export class UpdateSongsComponent implements OnInit {
     const file: File = event.target.files[0];
 
     if (file) {
-      console.log("Archivo seleccionado:", file);
       this.selectedFile = file;
       this.cancion.portada = URL.createObjectURL(file);
     } else {

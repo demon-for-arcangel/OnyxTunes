@@ -53,13 +53,10 @@ export class PlatformManagementComponent {
   getUsuario(userId: string): void {
     this.usuarioService.getUserById(userId).subscribe({
       next: (usuario: Usuario) => {
-        console.log(usuario);
         const roles = Array.isArray(usuario.Rol) ? usuario.Rol : [usuario.Rol];
-        console.log("Roles del usuario:", roles);
 
         if (roles && roles.length > 0 && roles[0].nombre) {
           this.rol = roles[0].nombre;
-          console.log("Rol del usuario:", this.rol);
         }
       },
       error: (err) => {
@@ -74,8 +71,6 @@ export class PlatformManagementComponent {
   }
 
   canAccess(section: string): boolean {
-    console.log("Rol actual:", this.rol);
-
     const accessRules: { [key: string]: boolean } = {
       userManagement: this.rol === "Administrador",
       musicManagement: this.rol === "Administrador",
@@ -83,7 +78,6 @@ export class PlatformManagementComponent {
       genresManagement: this.rol === "Administrador",
     };
 
-    console.log(`Acceso para ${section}:`, accessRules[section]);
     return accessRules[section] ?? false;
   }
 }

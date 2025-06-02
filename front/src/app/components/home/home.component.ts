@@ -126,7 +126,6 @@ export class HomeComponent {
 
     this.authService.getUserByToken(tokenObject).subscribe({
         next: (usuario: Usuario | undefined) => {
-          console.log("Usuario obtenido desde el token:", usuario)
             if (usuario?.id && usuario?.email) {
               this.usuarioEmail = usuario.email;
                 this.userId = usuario.id;
@@ -137,21 +136,14 @@ export class HomeComponent {
                 this.checkRecommendationStatus();
 
                   if (this.isEnabled) {
-                      console.log("Recomendaciones habilitadas, llamando a RecommendationOnLogin...");
-                      this.RecommendationOnLogin(this.userId);
-                  } else {
-                      console.log("Recomendaciones deshabilitadas, no se ejecuta RecommendationOnLogin.");
+                    this.RecommendationOnLogin(this.userId);
                   }
-/*             this.createPlaylistsByGenres()
- */
             } else {
-                console.error("Usuario no encontrado en el token");
-                this.router.navigate(["/login"]);
+              this.router.navigate(["/login"]);
             }
         },
         error: (err) => {
-            console.error("Error al obtener el usuario desde el token:", err);
-            this.router.navigate(["/login"]);
+          this.router.navigate(["/login"]);
         }
     });
   }
@@ -183,10 +175,8 @@ loadUserRecommendationPlaylist() {
     if (userId) {
       this.recommendationService.getRecommendationOnLogin(userId.toString()).subscribe({
         next: (response) => {
-          console.log("Recomendaciones obtenidas:", response);
 
           if (!response.songRecommendation) {
-            console.log("Las recomendaciones están deshabilitadas o no hay una recomendación disponible.");
             return;
           }
 
@@ -208,7 +198,6 @@ loadUserRecommendationPlaylist() {
     this.recommendationService.getRecommendationStatus(this.userId.toString()).subscribe({
       next: (status: boolean) => {
         this.isEnabled = status;
-        console.log(this.isEnabled);
       },
       error: (err) => {
         console.error("Error al obtener el estado de recomendaciones:", err);
@@ -219,11 +208,8 @@ loadUserRecommendationPlaylist() {
   createPlaylistsByGenres(): void {
     this.playlistService.createPlaylistsByGenres().subscribe({
         next: (response) => {
-          console.log("Playlists creadas correctamente:", response);
-
             if (response.data && response.data.playlistsCreadas) {
               this.playlistsPorGenero = response.data.playlistsCreadas; 
-              console.log("Playlists asignadas en el frontend:", this.playlistsPorGenero);
             } else {
               console.error("Error: No se encontraron playlists en la respuesta.");
             }
@@ -255,8 +241,7 @@ loadUserRecommendationPlaylist() {
 
   openRecommendedSongDialog() {
     if (!this.recommendedSong) {
-        console.log("No hay canción recomendada, el modal no se abrirá.");
-        return;
+      return;
     }
 
     this.dialogRef = this.dialogService.open(RecommendedSongComponent, {
@@ -294,8 +279,6 @@ loadUserRecommendationPlaylist() {
           const fechaCreacion = new Date(cancion.createdAt); 
           return fechaCreacion >= haceUnaSemana && fechaCreacion <= ahora;
         });
-  
-        console.log("Canciones nuevas de esta semana:", this.cancionesNuevas);
       },
       (error) => {
         console.error("Error al cargar canciones:", error);
@@ -307,13 +290,10 @@ loadUserRecommendationPlaylist() {
     if (this.userId) {
       this.playlistService.getUserPlaylists(this.userId).subscribe(
         (response) => {
-          console.log(response);
           if (response.success) {
-/*             this.playlists = response.data;
- */            console.log("hola", this.playlists)
-                   this.playlists = response.data.filter((playlist: Playlist) =>
-                    playlist.nombre.includes("Recomendación Diaria")
-                  );
+              this.playlists = response.data.filter((playlist: Playlist) =>
+              playlist.nombre.includes("Recomendación Diaria")
+            );
           } else {
             console.error("Error al obtener las playlists:", response.message);
           }
@@ -366,11 +346,8 @@ loadUserRecommendationPlaylist() {
 
   addToFavorites(song: any) {
     const songId = song.id;
-    console.log(songId);
-    console.log(this.userId);
     this.playlistService.addToFavorites(songId, this.userId).subscribe(
       (response) => {
-        console.log("Canción añadida a favoritos:", response);
         this.userLikes.push(songId);
       },
       (error) => {
@@ -386,7 +363,6 @@ loadUserRecommendationPlaylist() {
     if (likeId) {
       this.likeService.deleteLike(likeId).subscribe(
         (response) => {
-          console.log("Like eliminado:", response);
           delete this.userLikes[songId];
         },
         (error) => {
@@ -401,8 +377,6 @@ loadUserRecommendationPlaylist() {
   savePlaylist(playlistId: number): void {
     const usuarioId = this.userId;
 
-    console.log("Guardando playlist con ID:", playlistId, "para el usuario con ID:", usuarioId);
-
     this.favoriteService.addFavoritePlaylist(usuarioId, playlistId).subscribe({
       next: (response) => {
         console.log("Playlist guardada en favoritos:", response);
@@ -416,15 +390,12 @@ loadUserRecommendationPlaylist() {
 getUserPlaylists(sourcePlaylistId: number): void {
     this.playlistService.getUserPlaylists(this.userId).subscribe({
         next: (response) => {
-            console.log("Datos recibidos de la API:", response);
+          if (!response?.data || response.data.length === 0) {
+            console.warn("No se recibieron playlists.");
+            return;
+          }
 
-            if (!response?.data || response.data.length === 0) {
-                console.warn("No se recibieron playlists.");
-                return;
-            }
-
-            this.userPlaylists = response.data.filter((p: Playlist) => p.id !== sourcePlaylistId);
-            console.log("Playlists disponibles:", this.userPlaylists);
+          this.userPlaylists = response.data.filter((p: Playlist) => p.id !== sourcePlaylistId);
         },
         error: (error) => {
             console.error("Error al obtener playlists:", error);
@@ -449,7 +420,6 @@ getUserPlaylists(sourcePlaylistId: number): void {
 
   selectTargetPlaylist(playlistId: number): void {
     this.targetPlaylistId = playlistId; 
-    console.log(`Playlist destino seleccionada: ${playlistId}`);
   }
 
   confirmAddSongs(): void {

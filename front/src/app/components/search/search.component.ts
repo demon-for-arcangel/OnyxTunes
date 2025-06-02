@@ -49,10 +49,8 @@ export class SearchComponent {
     const token = localStorage.getItem("user");
     this.authService.getUserByToken(token).subscribe(
       (user) => {
-        console.log(user);
         if (user && user.id) {
           this.userId = user.id;
-          console.log(this.userId);
           this.getUserLikes();
         }
       },
@@ -65,7 +63,6 @@ export class SearchComponent {
   getUserLikes() {
     this.likeService.getLikesByUserId(this.userId).subscribe(
       (response) => {
-        console.log("Likes obtenidos:", response);
         if (Array.isArray(response.data)) {
           this.userLikes = response.data.map((like) => like.entidad_id);
         } else {
@@ -83,7 +80,6 @@ export class SearchComponent {
       this.searchService.search(this.query).subscribe(
         (response) => {
           this.results = response;
-          console.log(this.results);
         },
         (error) => {
           console.error("Error en la búsqueda:", error);
@@ -98,11 +94,8 @@ export class SearchComponent {
 
   addToFavorites(song: any) {
     const songId = song.id;
-    console.log(songId);
-    console.log(this.userId);
     this.playlistService.addToFavorites(songId, this.userId).subscribe(
       (response) => {
-        console.log("Canción añadida a favoritos:", response);
         this.userLikes.push(songId);
       },
       (error) => {
@@ -118,8 +111,7 @@ export class SearchComponent {
     if (likeId) {
       this.likeService.deleteLike(likeId).subscribe(
         (response) => {
-          console.log("Like eliminado:", response);
-          delete this.userLikes[songId];
+          /* delete */ this.userLikes[songId];
         },
         (error) => {
           console.error("Error al eliminar el like:", error);

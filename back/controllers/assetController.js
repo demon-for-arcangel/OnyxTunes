@@ -84,7 +84,6 @@ const uploadAsset = async (req, res = response) => {
   try {
     const contentType = req.headers['content-type'];
     const userId = req.headers['user-id'];
-console.log(userId)
     if (!userId) {
       return res.status(400).json({ msg: "User ID es necesario" });
     }
@@ -94,9 +93,7 @@ console.log(userId)
     }
 
     const file = req.files.file;
-    console.log('objeto', file)
     const fileName = file.name;
-    console.log('nombre', fileName)
     const uploadDir = path.join(__dirname, './../../front/src/assets/uploads/photo_profile/');
     const uploadPath = path.join(uploadDir, fileName);
     const relativePath = `assets/uploads/photo_profile/${fileName}`;
@@ -108,7 +105,6 @@ console.log(userId)
     
       try {
         const assetId = await conx.addAsset(relativePath);
-        console.log('Asset ID:', assetId);
 
          const userIdInt = parseInt(userId);
          if (isNaN(userIdInt)) {

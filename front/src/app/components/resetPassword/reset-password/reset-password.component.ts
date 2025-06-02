@@ -25,7 +25,6 @@ export class ResetPasswordComponent {
   ngOnInit(): void{}
 
   onSubmit(): void {
-    console.log(this.token)
     if (this.newPassword === this.confirmPassword) {
         this.mailService.resetPassword(this.token, { newPassword: this.newPassword, confirmPassword: this.confirmPassword }).subscribe(
             (response: any) => {

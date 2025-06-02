@@ -60,8 +60,6 @@ async addFavoritePlaylist(usuarioId, playlistId) {
             usuario_id: usuarioId,
             playlist_id: playlistId
         });
-
-        console.log("Playlist añadida a favoritos correctamente.");
         return favorite;
     } catch (error) {
         console.error("Error al agregar playlist a favoritos:", error);

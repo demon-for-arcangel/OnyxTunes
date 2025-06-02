@@ -31,7 +31,6 @@ export class ShowSongsComponent {
     this.cancionesService.getCancionById(this.cancionId).subscribe({
         next: (data) => {
             this.cancion = data; 
-            console.log(this.cancion);
             if (!this.cancion.generos) {
                 this.cancion.generos = [];
             }

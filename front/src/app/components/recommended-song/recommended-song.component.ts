@@ -24,16 +24,11 @@ export class RecommendedSongComponent implements OnInit {
     this.recommendedSong = this.config.data.recommendedSong;
 
     if (!this.recommendedSong) {
-        console.log("No hay canción recomendada, cerrando el modal.");
         return;
     }
 
-    console.log("Datos recibidos en el diálogo:", this.recommendedSong);
-
     if (this.recommendedSong.songRecommendation?.artista_id) {
         this.getArtistName(this.recommendedSong.songRecommendation.artista_id);
-    } else {
-        console.log("No hay ID de artista disponible.");
     }
     this.getUserFromToken();
   }
@@ -70,7 +65,6 @@ export class RecommendedSongComponent implements OnInit {
     this.recommendationService.getRecommendationStatus(this.userId).subscribe({
       next: (status: boolean) => {
         this.isEnabled = status;
-        console.log(this.isEnabled)
       },
       error: (err) => {
         console.error("Error al obtener el estado de recomendaciones:", err);
@@ -98,7 +92,6 @@ export class RecommendedSongComponent implements OnInit {
       next: (usuario) => {
         if (usuario?.nombre) {
           this.artistName = usuario.nombre;
-          console.log("Nombre del artista obtenido:", this.artistName);
         } else {
           console.log("No se encontró el artista.");
         }

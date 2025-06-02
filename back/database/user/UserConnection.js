@@ -53,8 +53,6 @@ class UserModel {
         ],
       });
 
-      console.log(artists);
-
       return artists;
     } catch (error) {
       console.error("Error al mostrar la lista de artistas:", error);
@@ -147,7 +145,6 @@ class UserModel {
         if (!user) {
             throw new Error("Usuario no encontrado.");
         }
-        console.log("archivo", files);
 
         let assetPath = user.foto_perfil;
 
@@ -156,8 +153,6 @@ class UserModel {
             if (!file.mimetype.startsWith("image/")) {
                 throw new Error("Archivo inválido: debe ser una imagen.");
             }
-
-            console.log("data", file.data);
 
             if (!file.data || file.data.length === 0) {
               const tempFilePath = file.tempFilePath;
@@ -223,19 +218,12 @@ class UserModel {
         },
       });
 
-      console.log(
-        `Usuarios restantes en la playlist ${playlistId}: ${otherUsersCount}`,
-      );
-
       if (otherUsersCount === 0) {
         await models.Playlist.destroy({
           where: { id: playlistId },
         });
-        console.log(`Playlist con id ${playlistId} eliminada.`);
       } else {
-        console.log(
-          `La playlist con id ${playlistId} no se elimina porque está asociada a otros usuarios.`,
-        );
+        throw new Error("No se elimina porque está asociada a otros usuarios.");
       }
     }
 
@@ -290,10 +278,8 @@ class UserModel {
           nombre: "Favoritos",
         });
         playlistId = newPlaylist.id;
-        console.log('Lista de reproducción "Favoritos" creada.');
       } else {
         playlistId = existingPlaylist.id;
-        console.log('La lista de reproducción "Favoritos" ya existe.');
       }
 
       await models.UsuarioPlaylist.create({
@@ -301,12 +287,7 @@ class UserModel {
         playlist_id: playlistId,
       });
 
-      console.log('Lista de reproducción "Favoritos" asociada al usuario.');
     } catch (error) {
-      console.error(
-        'Error al crear o asociar la lista de reproducción "Favoritos":',
-        error,
-      );
       throw new Error("Error al crear o asociar la lista de reproducción");
     }
   }
