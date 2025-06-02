@@ -371,7 +371,5 @@ deleteSongs(ids: number[]): void {
     });
   }
 
-  showAlbum(album: any) {
-    console.log('Ver detalles de álbum:', album);
-  }
+  showAlbum(album: any) {  }
 }

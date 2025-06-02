@@ -80,8 +80,11 @@ export class SettingsComponent {
         if (usuario?.id) {
           const userId = usuario.id.toString();
           this.recommendationService.updateRecommendationStatus(userId, this.user.recommendationsEnabled).subscribe({
-            next: (response) => {
-              console.log("Estado de recomendaciones actualizado correctamente:", response);
+            next: () => {
+              this.successMessage = "Estado de recomendaciones actualizado.";
+              setTimeout(() => {
+                this.successMessage = "";
+              }, 3000);
             },
             error: (err) => {
               console.error("Error al actualizar estado de recomendaciones:", err);

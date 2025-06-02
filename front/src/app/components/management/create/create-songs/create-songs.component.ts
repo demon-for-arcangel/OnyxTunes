@@ -237,7 +237,5 @@ export class CreateSongsComponent {
     );
   }
 
-  crearAlbum() {
-    console.log("Crear álbum");
-  }
+  crearAlbum() {  }
 }
