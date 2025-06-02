@@ -66,37 +66,27 @@ export class SearchComponent {
   this.likeService.getLikesByUserId(this.userId).subscribe({
     next: (response) => {
       if (Array.isArray(response.data)) {
-        // 🔹 Guardamos el objeto completo con `id`, `entidad_id` y `entidad_tipo`
         this.userLikes = response.data.map((like) => ({
-          id: like.id,  // ID único del like (para eliminarlo)
-          entidad_id: like.entidad_id,  // ID de la entidad (Canción, Álbum o Playlist)
-          entidad_tipo: like.entidad_tipo, // Tipo de entidad (Cancion, Album, Playlist)
+          id: like.id, 
+          entidad_id: like.entidad_id, 
+          entidad_tipo: like.entidad_tipo,
         }));
 
-        console.log("✅ Likes cargados correctamente:", this.userLikes);
-      } else {
-        console.error("⚠ La respuesta no contiene un array en data:", response);
       }
     },
     error: (error) => {
-      console.error("❌ Error al obtener los likes del usuario:", error);
+      console.error("Error al obtener los likes del usuario:", error);
     },
   });
 }
-
-
 
 search() {
   if (this.query.trim()) {
     this.searchService.search(this.query).subscribe({
       next: (response) => {
-        console.log(" Datos recibidos en search():", response);
-
         if (response?.artists && Array.isArray(response.artists)) {
-          console.log("Artistas encontrados:", response.artists);
           this.results.artists = response.artists;
         } else {
-          console.warn("La API no devolvió artistas correctamente.");
           this.results.artists = [];
         }
 
@@ -104,7 +94,6 @@ search() {
         this.results.playlists = response.playlists ?? [];
         this.results.albums = response.albums ?? [];
 
-        console.log("Resultados asignados al componente:", this.results);
       },
       error: (error) => {
         console.error("Error en la búsqueda:", error);
