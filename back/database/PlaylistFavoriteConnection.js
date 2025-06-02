@@ -42,7 +42,7 @@ async addFavoritePlaylist(usuarioId, playlistId) {
             include: [{
                 model: models.Usuario,
                 through: models.UsuarioPlaylist, 
-                attributes: ['id', 'email'] // 🔹 Obtener el ID y email del creador
+                attributes: ['id', 'email']
             }]
         });
 

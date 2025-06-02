@@ -345,7 +345,7 @@ loadUserRecommendationPlaylist() {
 
   toggleShowPlaylists(): void {
     if (!this.selectedPlaylistId) {
-      console.warn("⚠ No se ha seleccionado una playlist origen.");
+      console.warn("No se ha seleccionado una playlist origen.");
       return;
     }
 
@@ -422,10 +422,10 @@ getUserPlaylists(sourcePlaylistId: number): void {
         }
     });
 }
-addSongsToPlaylist(sourcePlaylistId: number, targetPlaylistId: number): void {
+  addSongsToPlaylist(sourcePlaylistId: number, targetPlaylistId: number): void {
     if (!targetPlaylistId) {
-        console.warn("⚠ No se ha seleccionado una playlist destino.");
-        return;
+      console.warn("No se ha seleccionado una playlist destino.");
+      return;
     }
 
     this.playlistService.addSongsToPlaylist(this.userId, sourcePlaylistId, targetPlaylistId).subscribe({
@@ -445,7 +445,7 @@ addSongsToPlaylist(sourcePlaylistId: number, targetPlaylistId: number): void {
 
   confirmAddSongs(): void {
     if (!this.targetPlaylistId) {
-        console.warn("⚠ No se ha seleccionado una playlist destino.");
+        console.warn("No se ha seleccionado una playlist destino.");
         return;
     }
 

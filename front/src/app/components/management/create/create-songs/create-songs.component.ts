@@ -208,12 +208,14 @@ export class CreateSongsComponent {
   }
 
   toggleGenre(genre: any) {
-    const index = this.generosSeleccionados.indexOf(genre);
+    const index = this.generosSeleccionados.indexOf(genre.id);
     if (index === -1) {
-      this.generosSeleccionados.push(genre);
+      this.generosSeleccionados.push(genre.id);
     } else {
       this.generosSeleccionados.splice(index, 1);
     }
+
+    console.log("Géneros seleccionados (IDs):", this.generosSeleccionados);
   }
 
   calcularDuracionEnSegundos(): number {
@@ -225,8 +227,8 @@ export class CreateSongsComponent {
   
     formData.append("artista_id", this.nuevaCancion.artista_id.toString());
     formData.append("album_id", this.nuevaCancion.album.toString());
-    this.nuevaCancion.generos.forEach((genero: number) => {
-      formData.append("generos", genero.toString());
+    this.generosSeleccionados.forEach((generoId: number) => {
+      formData.append("generos", generoId.toString());
     });
   
     if (this.selectedFiles) {

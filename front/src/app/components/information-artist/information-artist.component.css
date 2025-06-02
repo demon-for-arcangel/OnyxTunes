@@ -1,4 +1,4 @@
-.playlist-container {
+.artist-info-container {
     display: flex;
     height: 100vh; 
     overflow: hidden; 
@@ -25,7 +25,7 @@ main {
     overflow-y: auto; 
 }
 
-.-content {
+.artist-info-content {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
@@ -95,4 +95,27 @@ li {
     object-fit: cover;
     border-radius: 10px;
     box-shadow: 0px 2px 6px rgba(255, 255, 255, 0.2);
+}
+
+.follow-button {
+    background-color: #1DB954;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.follow-button:hover {
+    background-color: #1ed760;
+}
+
+.follow-button.unfollow {
+    background-color: #FF4C4C;
+}
+
+.follow-button.unfollow:hover {
+    background-color: #E63939;
 }

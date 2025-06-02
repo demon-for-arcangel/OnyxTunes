@@ -332,7 +332,7 @@ class PlaylistConnection {
             const generos = await models.Genero.findAll({ attributes: ["id", "nombre"] });
 
             if (!generos.length) {
-                throw new Error("⚠ No se encontraron géneros en la base de datos.");
+                throw new Error("No se encontraron géneros en la base de datos.");
             }
 
             const playlistsCreadas = [];
