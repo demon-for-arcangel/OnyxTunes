@@ -66,18 +66,22 @@
             <button class="next" (click)="scrollRight()">&#9654;</button>
         </div>
 
-        <h2>Descubra música por generos</h2>
-        @if (genrePlaylists) {
+        <h2>Descubre música por géneros</h2>
+        @if (playlistsPorGenero?.length) {
             <div class="playlists-container">
-                @for (playlist of genrePlaylists; track playlist) {
+                @for (playlist of playlistsPorGenero; track playlist) {
                     <div class="playlist-card">
                         <img [src]="playlist.portadaURL ? playlist.portadaURL : 'assets/images/playlist_Default.png'" [alt]="playlist.nombre" class="playlist-cover"/>
                         <h3>{{ playlist.nombre }}</h3>
+                        <p>{{ playlist.descripcion }}</p>
                         <button (click)="navigateToPlaylist(playlist)">Ver Playlist</button>
                     </div>
                 }
             </div>
+        } @else {
+            <p>No hay playlists disponibles por género.</p>
         }
+
         <app-player></app-player>
     </main>
 </div>

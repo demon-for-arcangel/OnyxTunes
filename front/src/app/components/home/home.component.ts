@@ -54,6 +54,7 @@ export class HomeComponent {
   userLikes: number[] = [];
   showPlaylists = false;
   targetPlaylistId: number | null = null;
+  playlistsPorGenero: any[] = [];
 
   dialogRef!: DynamicDialogRef;
 
@@ -66,6 +67,7 @@ export class HomeComponent {
   ngOnInit() {
     this.loadUserId();
     this.loadCancionesNuevas();
+    this.createPlaylistsByGenres();
   }
 
   goToArtistPage(artistId: string) {
@@ -140,8 +142,8 @@ export class HomeComponent {
                   } else {
                       console.log("Recomendaciones deshabilitadas, no se ejecuta RecommendationOnLogin.");
                   }
-            this.createPlaylistsByGenres()
-
+/*             this.createPlaylistsByGenres()
+ */
             } else {
                 console.error("Usuario no encontrado en el token");
                 this.router.navigate(["/login"]);
@@ -217,13 +219,20 @@ loadUserRecommendationPlaylist() {
   createPlaylistsByGenres(): void {
     this.playlistService.createPlaylistsByGenres().subscribe({
         next: (response) => {
-            console.log("Playlists creadas correctamente:", response);
+          console.log("Playlists creadas correctamente:", response);
+
+            if (response.data && response.data.playlistsCreadas) {
+              this.playlistsPorGenero = response.data.playlistsCreadas; 
+              console.log("Playlists asignadas en el frontend:", this.playlistsPorGenero);
+            } else {
+              console.error("Error: No se encontraron playlists en la respuesta.");
+            }
         },
         error: (error) => {
-            console.error("Error al crear playlists por género:", error);
+          console.error("Error al crear playlists por género:", error);
         }
     });
-  }
+}
 
   loadDailyRecommendations() {
       if (this.userId) {
