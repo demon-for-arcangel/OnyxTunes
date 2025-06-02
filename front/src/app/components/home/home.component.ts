@@ -412,8 +412,11 @@ getUserPlaylists(sourcePlaylistId: number): void {
     }
 
     this.playlistService.addSongsToPlaylist(this.userId, sourcePlaylistId, targetPlaylistId).subscribe({
-        next: (response) => {
-            console.log("Canciones añadidas:", response.msg);
+        next: () => {
+            this.successMessage = "Canciones añadidas a la playlist.";
+            setTimeout(() => {
+              this.successMessage = "";
+            }, 3000);
         },
         error: (error) => {
             console.error("Error al añadir canciones:", error);
