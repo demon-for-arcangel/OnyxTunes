@@ -67,7 +67,7 @@
         </div>
 
         <h2>Descubre música por géneros</h2>
-        @if (playlistsPorGenero?.length) {
+        @if (playlistsPorGenero.length) {
             <div class="playlists-container">
                 @for (playlist of playlistsPorGenero; track playlist) {
                     <div class="playlist-card">

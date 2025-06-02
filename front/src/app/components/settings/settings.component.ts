@@ -60,7 +60,7 @@ export class SettingsComponent {
               console.error("Error al obtener el estado de recomendaciones:", err);
             }
           });
-        }
+        } 
       },
       error: (err) => {
         console.error("Error al obtener usuario desde el token:", err);

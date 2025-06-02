@@ -27,7 +27,8 @@ export class SearchComponent {
   };
   songHovered: any = null;
   userId: number = 0;
-  userLikes: number[] = [];
+userLikes: { id: number; entidad_id: number; entidad_tipo: string }[] = [];
+  selectedFilter: string = "all";
 
   @ViewChild(PlayerComponent) playerComponent!: PlayerComponent;
 
@@ -61,32 +62,55 @@ export class SearchComponent {
   }
 
   getUserLikes() {
-    this.likeService.getLikesByUserId(this.userId).subscribe(
-      (response) => {
-        if (Array.isArray(response.data)) {
-          this.userLikes = response.data.map((like) => like.entidad_id);
-        } else {
-          console.error("La respuesta no contiene un array en data:", response);
-        }
-      },
-      (error) => {
-        console.error("Error al obtener los likes del usuario:", error);
-      },
-    );
-  }
+  this.likeService.getLikesByUserId(this.userId).subscribe({
+    next: (response) => {
+      if (Array.isArray(response.data)) {
+        // 🔹 Guardamos el objeto completo con `id`, `entidad_id` y `entidad_tipo`
+        this.userLikes = response.data.map((like) => ({
+          id: like.id,  // ID único del like (para eliminarlo)
+          entidad_id: like.entidad_id,  // ID de la entidad (Canción, Álbum o Playlist)
+          entidad_tipo: like.entidad_tipo, // Tipo de entidad (Cancion, Album, Playlist)
+        }));
 
-  search() {
-    if (this.query.trim()) {
-      this.searchService.search(this.query).subscribe(
-        (response) => {
-          this.results = response;
-        },
-        (error) => {
-          console.error("Error en la búsqueda:", error);
-        },
-      );
-    }
+        console.log("✅ Likes cargados correctamente:", this.userLikes);
+      } else {
+        console.error("⚠ La respuesta no contiene un array en data:", response);
+      }
+    },
+    error: (error) => {
+      console.error("❌ Error al obtener los likes del usuario:", error);
+    },
+  });
+}
+
+
+
+search() {
+  if (this.query.trim()) {
+    this.searchService.search(this.query).subscribe({
+      next: (response) => {
+        console.log(" Datos recibidos en search():", response);
+
+        if (response?.artists && Array.isArray(response.artists)) {
+          console.log("Artistas encontrados:", response.artists);
+          this.results.artists = response.artists;
+        } else {
+          console.warn("La API no devolvió artistas correctamente.");
+          this.results.artists = [];
+        }
+
+        this.results.songs = response.songs ?? [];
+        this.results.playlists = response.playlists ?? [];
+        this.results.albums = response.albums ?? [];
+
+        console.log("Resultados asignados al componente:", this.results);
+      },
+      error: (error) => {
+        console.error("Error en la búsqueda:", error);
+      }
+    });
   }
+}
 
   playSong(cancion: any) {
     this.playerService.playSong(cancion);
@@ -104,21 +128,32 @@ export class SearchComponent {
     );
   }
 
-  deleteLike(song: any) {
-    const songId = song.id;
-    const likeId = this.userLikes[songId];
-
-    if (likeId) {
-      this.likeService.deleteLike(likeId).subscribe(
-        (response) => {
-          /* delete */ this.userLikes[songId];
-        },
-        (error) => {
-          console.error("Error al eliminar el like:", error);
-        },
-      );
-    } else {
-      console.error("No se encontró el like para la canción:", songId);
-    }
+  hasLikedSong(songId: number): boolean {
+    return this.userLikes.some(like => like.entidad_id === songId && like.entidad_tipo === 'Cancion');
   }
+
+
+deleteLike(entidadId: number, tipo: string) {
+  const likeToDelete = this.userLikes.find(
+    (like) => like.entidad_id === entidadId && like.entidad_tipo === tipo
+  );
+
+  if (likeToDelete) {
+    this.likeService.deleteLike(likeToDelete.id).subscribe({
+      next: () => {
+        console.log(`✅ Like eliminado para ${tipo} con ID ${entidadId}`);
+
+        // 🔹 Actualizar la lista de likes después de eliminarlo
+        this.getUserLikes();
+      },
+      error: (error) => {
+        console.error(`❌ Error al eliminar el like para ${tipo} con ID ${entidadId}:`, error);
+      },
+    });
+  } else {
+    console.warn(`⚠ No se encontró un like para ${tipo} con ID ${entidadId}`);
+  }
+}
+
+
 }
