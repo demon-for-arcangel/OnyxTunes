@@ -5,6 +5,10 @@
       <input [(ngModel)]="query" placeholder="Buscar..." />
       <button (click)="search()">Buscar</button>
 
+      @if(successMessage) {
+        <p class="success">{{ successMessage }}</p>
+      }
+
 <!--       <select [(ngModel)]="selectedFilter">
           <option value="all">Todo</option>
           <option value="songs">Canciones</option>

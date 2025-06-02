@@ -27,8 +27,9 @@ export class SearchComponent {
   };
   songHovered: any = null;
   userId: number = 0;
-userLikes: { id: number; entidad_id: number; entidad_tipo: string }[] = [];
+  userLikes: { id: number; entidad_id: number; entidad_tipo: string }[] = [];
   selectedFilter: string = "all";
+  successMessage: string = "";
 
   @ViewChild(PlayerComponent) playerComponent!: PlayerComponent;
 
@@ -116,17 +117,22 @@ search() {
     this.playerService.playSong(cancion);
   }
 
-  addToFavorites(song: any) {
-    const songId = song.id;
-    this.playlistService.addToFavorites(songId, this.userId).subscribe(
-      (response) => {
-        this.userLikes.push(songId);
-      },
-      (error) => {
-        console.error("Error al añadir la canción a favoritos:", error);
-      },
-    );
-  }
+addToFavorites(song: any) {
+  const songId = song.id;
+  this.playlistService.addToFavorites(songId, this.userId).subscribe({
+    next: () => {
+      this.userLikes.push({ id: songId, entidad_id: songId, entidad_tipo: "Cancion" });
+
+      this.successMessage = "Canción añadida a favoritos.";
+      setTimeout(() => {
+        this.successMessage = "";
+      }, 3000);
+    },
+    error: (error) => {
+      console.error("Error al añadir la canción a favoritos:", error);
+    },
+  });
+}
 
   hasLikedSong(songId: number): boolean {
     return this.userLikes.some(like => like.entidad_id === songId && like.entidad_tipo === 'Cancion');
@@ -141,17 +147,18 @@ deleteLike(entidadId: number, tipo: string) {
   if (likeToDelete) {
     this.likeService.deleteLike(likeToDelete.id).subscribe({
       next: () => {
-        console.log(`✅ Like eliminado para ${tipo} con ID ${entidadId}`);
-
-        // 🔹 Actualizar la lista de likes después de eliminarlo
+        this.successMessage = `${tipo} eliminado de favoritos.`;
         this.getUserLikes();
+        setTimeout(() => {
+          this.successMessage = "";
+        }, 3000);
       },
       error: (error) => {
-        console.error(`❌ Error al eliminar el like para ${tipo} con ID ${entidadId}:`, error);
+        console.error(`Error al eliminar el like para ${tipo} con ID ${entidadId}:`, error);
       },
     });
   } else {
-    console.warn(`⚠ No se encontró un like para ${tipo} con ID ${entidadId}`);
+    console.warn(`No se encontró un like para ${tipo} con ID ${entidadId}`);
   }
 }
 
