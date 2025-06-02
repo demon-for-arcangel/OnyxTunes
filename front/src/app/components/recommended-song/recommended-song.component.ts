@@ -17,6 +17,7 @@ export class RecommendedSongComponent implements OnInit {
   isEnabled: boolean = false;
   userId: string = '';
   artistName: string = '';
+  successMessage: string = "";
 
   constructor(private config: DynamicDialogConfig, private recommendationService: RecommendationService, private authService: AuthService, private router: Router, private userService: UserService) {}
 
@@ -79,8 +80,11 @@ export class RecommendedSongComponent implements OnInit {
 
     this.recommendationService.updateRecommendationStatus(this.userId, this.isEnabled).subscribe({
       next: (response) => {
-        console.log("Estado actualizado correctamente:", response);
-      },
+        this.successMessage = "Estado actualizado correctamente.";
+            setTimeout(() => {
+              this.successMessage = "";
+            }, 3000);
+         },
       error: (err) => {
         console.error("Error al actualizar estado de recomendaciones:", err);
       }
@@ -92,8 +96,6 @@ export class RecommendedSongComponent implements OnInit {
       next: (usuario) => {
         if (usuario?.nombre) {
           this.artistName = usuario.nombre;
-        } else {
-          console.log("No se encontró el artista.");
         }
       },
       error: (err) => {
