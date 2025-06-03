@@ -263,6 +263,12 @@ loadUserRecommendationPlaylist() {
       return;
     }
 
+    const hasSeenRecommendation = localStorage.getItem("hasSeenRecommendation");
+    if (hasSeenRecommendation === "true") {
+        return;
+    }
+    localStorage.setItem("hasSeenRecommendation", "true");
+
     this.dialogRef = this.dialogService.open(RecommendedSongComponent, {
       header: "Tu recomendación del día",
       width: "40vw",
