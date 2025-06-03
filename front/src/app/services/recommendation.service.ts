@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,22 +12,84 @@ export class RecommendationService {
   url = environment.baseUrl
 
   getPlaylistByEmail(email: string): Observable<any> {
-    return this.http.get<any>(`${this.url}/recomendaciones/playlist/${email}`);
+    const userls = localStorage.getItem("user");
+    const userData = userls ? JSON.parse(userls) : null;
+    const token = userData?.token;
+
+    if (!token) {
+      return throwError(() => new Error("No hay token en la petición."));
+    }
+
+    const headers = new HttpHeaders({
+      "x-token": token, 
+    });
+
+    return this.http.get<any>(`${this.url}/recomendaciones/playlist/${email}`, { headers });
   }
 
   getRecommendationOnLogin(userId: string): Observable<any> {
-    return this.http.get<any>(`${this.url}/recomendaciones/login/${userId}`);
+    const userls = localStorage.getItem("user");
+    const userData = userls ? JSON.parse(userls) : null;
+    const token = userData?.token;
+
+    if (!token) {
+      return throwError(() => new Error("No hay token en la petición."));
+    }
+
+    const headers = new HttpHeaders({
+      "x-token": token,
+    });
+
+    return this.http.get<any>(`${this.url}/recomendaciones/login/${userId}`, { headers });
   }
 
   getRecommendationStatus(userId: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.url}/recomendaciones/status/${userId}`);
+    const userRawData = localStorage.getItem("user");
+    const userData = userRawData ? JSON.parse(userRawData) : null;
+    const token = userData?.token;
+
+    if (!token) {
+      console.error("❌ No hay token disponible.");
+      return throwError(() => new Error("No hay token en la petición."));
+    }
+
+    const headers = new HttpHeaders({
+      "x-token": token, 
+    });
+
+    return this.http.get<boolean>(`${this.url}/recomendaciones/status/${userId}`, { headers });
   }
 
   updateRecommendationStatus(userId: string, status: boolean): Observable<any> {
-    return this.http.post(`${this.url}/recomendaciones/update-status/${userId}`, { habilitada: status });
+    const userls = localStorage.getItem("user");
+    const userData = userls ? JSON.parse(userls) : null;
+    const token = userData?.token;
+
+    if (!token) {
+      return throwError(() => new Error("No hay token en la petición."));
+    }
+
+    const headers = new HttpHeaders({
+      "x-token": token, 
+    });
+
+    return this.http.post(`${this.url}/recomendaciones/update-status/${userId}`, 
+      { habilitada: status }, { headers });
   }
 
   getDailyRecommendations(userId: string): Observable<any> {
-    return this.http.get<any>(`${this.url}/recomendaciones/daily/${userId}`);
+    const userls = localStorage.getItem("user");
+    const userData = userls ? JSON.parse(userls) : null;
+    const token = userData?.token;
+
+    if (!token) {
+      return throwError(() => new Error("No hay token en la petición."));
+    }
+
+    const headers = new HttpHeaders({
+      "x-token": token,
+    });
+
+    return this.http.get<any>(`${this.url}/recomendaciones/daily/${userId}`, { headers });
   }
 }
