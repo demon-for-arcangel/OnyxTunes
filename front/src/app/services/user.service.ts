@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Usuario } from '../interfaces/usuario';
 
 @Injectable({
@@ -39,10 +39,21 @@ export class UserService {
   }
   
   deleteUsuarios(userIds: number[]): Observable<void> {
-    return this.http.delete<void>(`${this.url}` + `${this.usersUrl}`, { 
-      body: { userIds } 
-    });
+  const userls = localStorage.getItem("user");
+  const userData = userls ? JSON.parse(userls) : null;
+  const token = userData?.token;
+
+  if (!token) {
+    return throwError(() => new Error("No hay token en la petición."));
   }
+
+  return this.http.delete<void>(`${this.url}${this.usersUrl}`, {
+    body: { userIds },
+    headers: {
+      "x-token": token,
+    },
+  });
+}
 
   updateUser(userId: string, user: FormData): Observable<any> {
     const headers = new HttpHeaders();

@@ -18,7 +18,7 @@ router.put('/:id', [
      /* checkToken, tokenCanAdmin */
 ], controlador.updateUser);
 router.get('/:id', controlador.getUserById);
-router.delete('/', controlador.deleteUsers);
+router.delete('/', [checkToken] , controlador.deleteUsers);
 router.put('/:id/password', controlador.updatePassword);
 
 module.exports = router;
