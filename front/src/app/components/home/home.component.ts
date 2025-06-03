@@ -70,6 +70,7 @@ export class HomeComponent {
     this.loadUserId();
     this.loadCancionesNuevas();
     this.createPlaylistsByGenres();
+    this.loadUserLikes();
   }
 
   goToArtistPage(artistId: string) {
@@ -367,35 +368,52 @@ loadUserRecommendationPlaylist() {
     }
   }
 
-  addToFavorites(song: any) {
-    const songId = song.id;
-    this.playlistService.addToFavorites(songId, this.userId).subscribe(
-      (response) => {
-        this.userLikes.push(songId);
-      },
-      (error) => {
-        console.error("Error al añadir la canción a favoritos:", error);
-      },
-    );
-  }
-
-  deleteLike(song: any) {
-    const songId = song.id;
-    const likeId = this.userLikes[songId];
-
-    if (likeId) {
-      this.likeService.deleteLike(likeId).subscribe(
-        (response) => {
-          delete this.userLikes[songId];
-        },
-        (error) => {
-          console.error("Error al eliminar el like:", error);
-        },
-      );
-    } else {
-      console.error("No se encontró el like para la canción:", songId);
+  loadUserLikes() {
+  this.likeService.getLikesByUserId(this.userId).subscribe({
+    next: (response: any) => {
+      if (response && response.ok && Array.isArray(response.likes)) {
+        this.userLikes = response.likes.map((like: any) => like.cancion_id);  
+      } else {
+        this.userLikes = [];
+      }
+    },
+    error: (err) => {
+      console.error("Error al obtener los likes:", err);
     }
+  });
+}
+
+addToFavorites(song: any) {
+  const songId = song.id;
+  this.playlistService.addToFavorites(songId, this.userId).subscribe({
+    next: () => {
+      this.loadUserLikes();  // ✅ Recargar los likes para reflejar los cambios
+    },
+    error: (error) => {
+      console.error("❌ Error al añadir la canción a favoritos:", error);
+    }
+  });
+}
+
+deleteLike(song: any) {
+  const songId = song.id;
+  const index = this.userLikes.indexOf(songId);
+
+  if (index !== -1) {
+    this.likeService.deleteLike(songId).subscribe({
+      next: () => {
+        this.loadUserLikes();  // ✅ Recargar los likes para reflejar los cambios
+      },
+      error: (error) => {
+        console.error("❌ Error al eliminar el like:", error);
+      }
+    });
+  } else {
+    console.error("⚠ No se encontró el like para la canción:", songId);
   }
+}
+
+
 
   savePlaylist(playlistId: number): void {
     const usuarioId = this.userId;
