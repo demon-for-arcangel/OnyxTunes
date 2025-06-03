@@ -155,15 +155,9 @@ export class ArtistDetailComponent {
     }
   }
 
-  playSong(song: any): void {
-    console.log("Reproduciendo canción:", song.titulo);
-  }
+  playSong(song: any): void {  }
 
-  playAllSongs(): void {
-    console.log("Reproduciendo todas las canciones del artista:", this.songs);
-  }
+  playAllSongs(): void {  }
 
-  showAllSongs(): void {
-    console.log("Mostrar todas las canciones");
-  }
+  showAllSongs(): void {  }
 }

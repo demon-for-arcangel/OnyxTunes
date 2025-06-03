@@ -30,6 +30,7 @@ export class SearchComponent {
   userLikes: { id: number; entidad_id: number; entidad_tipo: string }[] = [];
   selectedFilter: string = "all";
   successMessage: string = "";
+  errorMessage: string = "";
 
   @ViewChild(PlayerComponent) playerComponent!: PlayerComponent;
 
@@ -118,7 +119,10 @@ addToFavorites(song: any) {
       }, 3000);
     },
     error: (error) => {
-      console.error("Error al añadir la canción a favoritos:", error);
+      this.errorMessage = "Error al añadir la canción a favoritos.";
+      setTimeout(() => {
+        this.errorMessage = "";
+      }, 3000);
     },
   });
 }
@@ -143,7 +147,10 @@ deleteLike(entidadId: number, tipo: string) {
         }, 3000);
       },
       error: (error) => {
-        console.error(`Error al eliminar el like para ${tipo} con ID ${entidadId}:`, error);
+        this.errorMessage = "Error al eliminar el like.";
+        setTimeout(() => {
+          this.errorMessage = "";
+        }, 3000);
       },
     });
   } else {

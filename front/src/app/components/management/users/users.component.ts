@@ -119,8 +119,6 @@ export class UsersComponent {
     this.ref.onClose.subscribe((response) => {      
       if (response?.created === true) {
         this.loadUsuarios();
-      } else {
-        console.log("No hay usuarios nuevos, no se recarga la página.");
       }
     });
   

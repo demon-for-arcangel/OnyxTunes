@@ -18,6 +18,7 @@ export class RecommendedSongComponent implements OnInit {
   userId: string = '';
   artistName: string = '';
   successMessage: string = "";
+  errorMessage: string = "";
 
   constructor(private config: DynamicDialogConfig, private recommendationService: RecommendationService, private authService: AuthService, private router: Router, private userService: UserService) {}
 
@@ -86,7 +87,10 @@ export class RecommendedSongComponent implements OnInit {
             }, 3000);
          },
       error: (err) => {
-        console.error("Error al actualizar estado de recomendaciones:", err);
+        this.errorMessage = "Error al actualizar el estado de recomendaciones.";
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 3000);
       }
     });
   }

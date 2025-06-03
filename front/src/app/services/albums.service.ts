@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,16 +21,53 @@ export class AlbumsService {
   }
 
   createAlbum(cancion: any): Observable<any> {
-    return this.http.post(`${this.url}` + `${this.albumsUrl}` + `/new`, cancion);
+    const userls = localStorage.getItem("user");
+    const userData = userls ? JSON.parse(userls) : null;
+    const token = userData?.token;
+
+    if (!token) {
+      return throwError(() => new Error("No hay token en la petición."));
+    }
+
+    const headers = new HttpHeaders({
+      "x-token": token,
+    });
+
+    return this.http.post(`${this.url}${this.albumsUrl}/new`, cancion, { headers });
   }
 
   updateAlbum(id: number, cancion: any): Observable<any> {
-    return this.http.put(`${this.url}` + `${this.albumsUrl}` + `/${id}`, cancion);
+    const userls = localStorage.getItem("user");
+    const userData = userls ? JSON.parse(userls) : null;
+    const token = userData?.token;
+
+    if (!token) {
+      return throwError(() => new Error("No hay token en la petición."));
+    }
+
+    const headers = new HttpHeaders({
+      "x-token": token,
+    });
+
+    return this.http.put(`${this.url}${this.albumsUrl}/${id}`, cancion, { headers });
   }
 
   deleteAlbum(ids: number[]): Observable<void> {
-    return this.http.delete<void>(`${this.url}` + `${this.albumsUrl}`, { 
-      body: { albumsIds: ids } 
+    const userls = localStorage.getItem("user");
+    const userData = userls ? JSON.parse(userls) : null;
+    const token = userData?.token;
+
+    if (!token) {
+      return throwError(() => new Error("No hay token en la petición."));
+    }
+
+    const headers = new HttpHeaders({
+      "x-token": token,
+    });
+
+    return this.http.delete<void>(`${this.url}${this.albumsUrl}`, {
+      body: { albumsIds: ids },
+      headers,
     });
   }
 

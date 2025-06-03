@@ -1,15 +1,11 @@
 const { Router } = require("express");
 const controlador = require("../controllers/playlistFavoriteController");
+const { checkToken } = require('../middlewares/abilities');
 
 const router = Router();
 
-//Ruta para añadir una playlist a favoritos
-router.post("/add", controlador.addFavoritePlaylist);
-
-//Ruta para eliminar una playlist de favoritos
-router.delete("/remove", controlador.removeFavoritePlaylist);
-
-//Ruta para obtener todas las playlists favoritas de un usuario
-router.get("/:usuarioId", controlador.getFavoritePlaylistsByUser);
+router.post("/add", checkToken, controlador.addFavoritePlaylist);
+router.delete("/remove", checkToken, controlador.removeFavoritePlaylist);
+router.get("/:usuarioId", checkToken, controlador.getFavoritePlaylistsByUser);
 
 module.exports = router; 

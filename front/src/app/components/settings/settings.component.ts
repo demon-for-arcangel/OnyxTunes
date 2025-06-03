@@ -17,6 +17,7 @@ export class SettingsComponent {
   user: any = {}; 
   errorMessages: Errors = {};
   successMessage: string = '';
+  errorMessage: string = '';
   selectedFile: File | null = null;
 
   constructor(
@@ -87,7 +88,10 @@ export class SettingsComponent {
               }, 3000);
             },
             error: (err) => {
-              console.error("Error al actualizar estado de recomendaciones:", err);
+              this.errorMessage = "Error al actualizar el estado de recomendaciones.";
+              setTimeout(() => {
+                this.errorMessage = '';
+              }, 3000);
             }
           });
         }
@@ -183,7 +187,10 @@ export class SettingsComponent {
         }, 3000);
       },
       (error) => {
-        console.error('Error al actualizar el usuario:', error);
+        this.errorMessage = "Error al actualizar el usuario.";
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 3000);
       }
     );
   }

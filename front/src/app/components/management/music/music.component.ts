@@ -128,9 +128,7 @@ export class MusicComponent implements OnInit, AfterViewInit {
         }
     });
 
-    this.wavesurferInstances[cancion.id].on('ready', () => {
-        console.log(`WaveSurfer listo para canción ${cancion.id}`);
-    });
+    this.wavesurferInstances[cancion.id].on('ready', () => {    });
 
     this.wavesurferInstances[cancion.id].load(cancion.asset.path);
   }
