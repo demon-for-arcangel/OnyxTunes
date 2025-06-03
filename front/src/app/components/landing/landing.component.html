@@ -24,7 +24,9 @@
   <div class="section-right">
     <h2>Canciones populares</h2>
     <div class="carousel-container">
-      <button class="prev" (click)="scrollCarousel(-1)">❮</button>
+      <button class="prev" (click)="scrollCarousel(-1)">
+        <i class="pi pi-chevron-left"></i> 
+      </button>
       <div class="carousel">
         @for (cancion of topCanciones; track cancion) {
           <div class="song-card">
@@ -33,7 +35,9 @@
           </div>
         }
       </div>
-      <button class="next" (click)="scrollCarousel(1)">❯</button>
+      <button class="next" (click)="scrollCarousel(1)">
+        <i class="pi pi-chevron-right"></i>
+      </button>
     </div>
 
     <h2>Álbumes populares</h2>
