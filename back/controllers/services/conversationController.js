@@ -35,8 +35,6 @@ class ConversationController {
         roomUsers.delete(userId);
         ConversationController.conversations.set(uuid, roomUsers);
 
-        console.log(`Usuario ${this.socket.user.userId} ha salido de la room ${uuid}`);
-
         if (roomUsers.size === 0) {
             ConversationController.deleteConversation(uuid)
         }
@@ -56,7 +54,6 @@ class ConversationController {
     }
 
     joinRoom = (uuid) => {
-        console.log(`Metiendo al usuario ${this.socket.user.userId} en ${uuid}`)
         this.socket.join(uuid);
 
         const conversationUsers = ConversationController.getConversation(uuid);

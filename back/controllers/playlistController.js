@@ -150,21 +150,30 @@ const deleteSongPlaylist = async (req, res) => {
 
 
 const createPlaylistsByGenres = async (req, res) => {
-    console.log("📌 Se está llamando a createPlaylistsByGenres");
-
     try {
         const result = await conx.createPlaylistsByGenres();
         res.status(201).json({ msg: "Playlists por género creadas con éxito", data: result });
     } catch (error) {
-        console.error("❌ Error al crear playlists por género:", error);
+        console.error("Error al crear playlists por género:", error);
         res.status(500).json({ msg: "Error al crear playlists por género." });
     }
 };
 
+const addSongsToPlaylist = async (req, res) => {
+    try {
+        const { userId, sourcePlaylistId, targetPlaylistId } = req.body;
 
+        const result = await conx.addSongsToPlaylist(userId, sourcePlaylistId, targetPlaylistId);
+
+        res.status(200).json({ msg: "Canciones añadidas correctamente a la playlist destino", data: result });
+
+    } catch (error) {
+        res.status(500).json({ msg: "Error al añadir canciones." });
+    }
+};
 
 module.exports = {
     index, getPlaylistById, createPlaylist, updatePlaylist, deletePlaylists, 
     getUserPlaylists, createPlaylistByUser, addToFavorites, deleteSongPlaylist, 
-    createPlaylistsByGenres
+    createPlaylistsByGenres, addSongsToPlaylist
 };

@@ -33,7 +33,6 @@ export class SettingsComponent {
   loadUserData() {
     this.authService.getUserByToken(localStorage.getItem('user')).subscribe(data => {
       this.user = data; 
-      console.log(this.user)
       if (this.user.fecha_nacimiento) {
         this.user.fecha_nacimiento = this.formatDate(this.user.fecha_nacimiento);
       }
@@ -61,7 +60,7 @@ export class SettingsComponent {
               console.error("Error al obtener el estado de recomendaciones:", err);
             }
           });
-        }
+        } 
       },
       error: (err) => {
         console.error("Error al obtener usuario desde el token:", err);
@@ -81,8 +80,11 @@ export class SettingsComponent {
         if (usuario?.id) {
           const userId = usuario.id.toString();
           this.recommendationService.updateRecommendationStatus(userId, this.user.recommendationsEnabled).subscribe({
-            next: (response) => {
-              console.log("Estado de recomendaciones actualizado correctamente:", response);
+            next: () => {
+              this.successMessage = "Estado de recomendaciones actualizado.";
+              setTimeout(() => {
+                this.successMessage = "";
+              }, 3000);
             },
             error: (err) => {
               console.error("Error al actualizar estado de recomendaciones:", err);
@@ -100,7 +102,6 @@ export class SettingsComponent {
     const file: File = event.target.files[0];
   
     if (file) {
-      console.log("Archivo seleccionado:", file);
       this.selectedFile = file;
       this.user.foto_perfil = URL.createObjectURL(file); 
     } else {
@@ -176,7 +177,6 @@ export class SettingsComponent {
 
     this.userService.updateUser(this.user.id, formData).subscribe(
       (response) => {
-        console.log('Usuario actualizado:', response);
         this.successMessage = 'Actualizado correctamente.';
         setTimeout(() => {
           this.successMessage = '';

@@ -45,7 +45,6 @@ export class ProfileComponent {
     this.profileService.getPublicPlaylists(userId).subscribe({
       next: (response) => {
         this.playlists = response.data;
-        console.log("Playlists públicas:", this.playlists);
       },
       error: (err) => {
         console.error("Error al obtener las playlists públicas:", err);

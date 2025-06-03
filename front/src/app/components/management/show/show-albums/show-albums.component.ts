@@ -18,7 +18,6 @@ export class ShowAlbumsComponent {
 
   ngOnInit(): void {
     this.albumId = this.config.data.albumId;
-    console.log(this.albumId);
     if (this.albumId) {
       this.loadAlbumDetails();
     } else {
@@ -30,7 +29,6 @@ export class ShowAlbumsComponent {
     this.albumService.getAlbumById(this.albumId).subscribe({
       next: (data) => {
         this.album = data.album;
-        console.log(this.album);
         if (!this.album.Cancions) {
           this.album.Cancions = [];
         }

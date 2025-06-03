@@ -73,8 +73,9 @@ class SongModel {
                     },
                     {
                         model: models.Genero, 
-                        attributes: ['id', 'nombre'], 
-                        as: 'generos' 
+                        attributes: ['id', 'nombre'],
+                        as: 'generos',
+                        through: { attributes: [] } 
                     },
                     {
                         model: models.Asset,
@@ -84,15 +85,44 @@ class SongModel {
                     { model: models.Like } 
                 ],
             });
+    
             if (!song) {
-                throw new Error('Cancion no encontrado');
+                throw new Error('Cancion no encontrada');
             }
+    
             return song;
         } catch (error) {
-            console.error('Error al mostrar la cancion: ', error);
-            throw new Error('Error al mostrar la cancion');
+            throw new Error('Error al mostrar la canción');
         }
     }
+
+    async getGenreBySong(songId) {
+        if (!songId || isNaN(Number(songId))) {
+            throw new Error(`ID de canción inválido. Valor recibido: ${songId}`);
+        }
+        try {
+            const song = await models.Cancion.findByPk(songId, {
+                include: [
+                    {
+                        model: models.Genero,
+                        attributes: ["id", "nombre"],
+                        as: "generos",
+                        through: { attributes: [] },
+                    },
+                ],
+            });
+    
+            if (!song) {
+                throw new Error(`Canción con ID ${songId} no encontrada.`);
+            }
+    
+            return song.generos;
+        } catch (error) {
+            console.error("Error al obtener los géneros de la canción:", error);
+            throw new Error("Error al obtener los géneros de la canción.");
+        }
+    }
+    
 
     async getSongByTitle(titulo) {
         try {
@@ -173,13 +203,9 @@ class SongModel {
     
             let cancionesCreadas = [];
 
-            console.log("Contenido de colaboradores:", colaboradores);
-            console.log("generos", generos);
-            console.log("Generos recibidos (tipo y contenido)", generos, typeof generos)
             if (typeof generos === "string") {
                 generos = generos.split(",").map(num => parseInt(num.trim(), 10));
             }
-            console.log("Géneros convertidos a array:", generos, typeof generos);
 
             let colaboradoresList = colaboradores;
             if (typeof colaboradores === "string") {
@@ -228,9 +254,7 @@ class SongModel {
                     updatedAt: new Date(),
                 });
     
-                if (Array.isArray(generos) && generos.length > 0) {
-                    console.log("Procesando asignación de géneros...");
-                
+                if (Array.isArray(generos) && generos.length > 0) {                
                     for (const generoId of generos) {
                         try {
                             const generoExistente = await models.Genero.findByPk(generoId);
@@ -246,16 +270,14 @@ class SongModel {
                                 updatedAt: new Date(),
                             });
                 
-                            console.log(`Género ${generoId} asignado correctamente a la canción ${newSong.id}`);
                         } catch (error) {
-                            console.error(`Error al asignar género ${generoId} a la canción ${newSong.id}:`, error);
+                            throw new Error("Error al aasignar género a la cancion");
                         }
                     }
                 }
                 
 
                 if (Array.isArray(colaboradoresList) && colaboradoresList.length > 0) {
-                    console.log("hola");
                     for (const userId of colaboradoresList) {
                         try {
                             await models.cancionColaborador.create({
@@ -264,7 +286,6 @@ class SongModel {
                                 createdAt: new Date(),
                                 updatedAt: new Date(),
                             });
-                            console.log(`Colaborador ${userId} insertado en la canción ${newSong.id}`);
                         } catch (error) {
                             console.error(`Error al insertar colaborador ${userId}:`, error);
                         }
@@ -332,7 +353,6 @@ class SongModel {
                             createdAt: new Date(),
                             updatedAt: new Date(),
                         });
-                        console.log(`✅ Colaborador ${userId} asignado a la canción ${songId}`);
                     } catch (error) {
                         console.error(`Error al añadir colaborador ${userId}:`, error);
                     }
@@ -360,8 +380,6 @@ class SongModel {
                             createdAt: new Date(),
                             updatedAt: new Date(),
                         });
-    
-                        console.log(`Género ${generoId} asignado correctamente a la canción ${songId}`);
                     } catch (error) {
                         console.error(`Error al asignar género ${generoId} a la canción ${songId}:`, error);
                     }
@@ -452,7 +470,6 @@ class SongModel {
                 cancion_id: songId,
                 fecha_reproduccion: new Date() 
             });
-            console.log("Nueva entrada en el historial:", newEntry);
             return newEntry;
         } catch (error) {
             console.error("Error al agregar al historial:", error);

@@ -28,15 +28,11 @@ export class PlayerService {
     });
 
     this.audioPlayer.addEventListener('timeupdate', () => {
-      console.log('entro')
       this.currentTime = this.audioPlayer.currentTime;
-      console.log('Tiempo actual:', this.currentTime);
     });
 
     this.audioPlayer.addEventListener('loadedmetadata', () => {
-      console.log('entro')
       this.duration = this.audioPlayer.duration;
-      console.log('Duración de la canción:', this.duration);
     });
 
     this.audioPlayer.addEventListener('ended', () => {
@@ -66,7 +62,6 @@ export class PlayerService {
 
       this.audioPlayer.addEventListener('loadedmetadata', () => {
         this.duration = this.audioPlayer.duration;
-        console.log('Duración del audio:', this.duration);
       });
 
       this.audioPlayer.addEventListener('ended', () => {
@@ -93,10 +88,8 @@ export class PlayerService {
   
     const songUrl = `${song.asset.path}`;  
   
-    console.log('Ruta de la canción:', songUrl);  
     this.currentSong = song;
     this.audioPlayer.src = songUrl;  
-    console.log('Ruta completa de la canción:', this.audioPlayer.src);  
   
     this.audioPlayer.load();
     this.audioPlayer.play().then(() => {

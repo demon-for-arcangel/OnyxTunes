@@ -53,14 +53,6 @@ export class LandingComponent {
         this.getCancionesTitle(this.topCanciones);
         this.getAlbumsTitle(this.topAlbums);
         this.getPlaylistsTitle(this.topPlaylists);
-        console.log(
-          "Top canciones:",
-          this.topCanciones,
-          "Top albums:",
-          this.topAlbums,
-          "Top playlists:",
-          this.topPlaylists,
-        );
       },
       (error) => {
         console.error(
@@ -74,8 +66,7 @@ export class LandingComponent {
   loadTopArtists(limit: number) {
     this.seguidoresService.getTopArtists(limit).subscribe(
       (data) => {
-        this.topArtists = data; // Asignar los artistas más seguidos
-        console.log("Top artistas:", this.topArtists);
+        this.topArtists = data; 
       },
       (error) => {
         console.error("Error al obtener los artistas más seguidos:", error);
@@ -158,11 +149,10 @@ export class LandingComponent {
   }
 
 playSong(songId: number, duration: number) {
-  // 🔹 Si hay una canción en reproducción, destruirla completamente
   if (this.audioPlayer) {
     this.audioPlayer.pause();
-    this.audioPlayer.src = ""; // 🔹 Eliminar referencia de audio
-    this.audioPlayer.load(); // 🔹 Forzar recarga del objeto para eliminar bloqueos
+    this.audioPlayer.src = ""; 
+    this.audioPlayer.load(); 
     this.audioPlayer = null;
   }
 
@@ -172,7 +162,6 @@ playSong(songId: number, duration: number) {
       return;
     }
 
-    // 🔹 Crear un nuevo objeto de audio, asegurando que no quede bloqueado
     this.audioPlayer = new Audio(data.asset.path);
     this.audioPlayer.play().then(() => {
       this.isPlayingMap[songId] = true;
@@ -180,12 +169,10 @@ playSong(songId: number, duration: number) {
       console.error(`Error al reproducir canción con ID ${songId}`, error);
     });
 
-    // 🔹 Configurar evento para reiniciar completamente cuando termine
     this.audioPlayer.onended = () => {
       this.resetAudioPlayer();
     };
 
-    // 🔹 Detener manualmente tras `duration` segundos
     setTimeout(() => {
       this.resetAudioPlayer();
     }, duration * 1000);
@@ -196,20 +183,18 @@ playSong(songId: number, duration: number) {
   if (this.audioPlayer) {
     this.audioPlayer.pause();
     this.audioPlayer.src = "";
-    this.audioPlayer.load(); // 🔹 Recargar objeto para eliminar bloqueos
+    this.audioPlayer.load();
     this.audioPlayer = null;
   }
   Object.keys(this.isPlayingMap).forEach(id => this.isPlayingMap[+id] = false);
 } */
 
 /* handleAudioEnd(event: Event) {
-  console.log("Canción ha terminado");
-
   const target = event.target as HTMLAudioElement;
   if (target) {
     target.pause();
     target.currentTime = 0;
-    target.src = ""; // 🔹 Limpiar fuente de audio
+    target.src = "";
   }
 
   this.audioPlayer = null;

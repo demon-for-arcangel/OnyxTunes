@@ -58,7 +58,7 @@ export class MusicComponent implements OnInit, AfterViewInit {
   loadCanciones() {
     this.cancionesService.getCanciones().subscribe(
         (data) => {
-            this.canciones = data; 
+            this.canciones = data;
             this.cdr.detectChanges();
             this.createWaveformsForVisibleSongs();
         },
@@ -132,7 +132,6 @@ export class MusicComponent implements OnInit, AfterViewInit {
         console.log(`WaveSurfer listo para canción ${cancion.id}`);
     });
 
-    console.log('Cargando archivo de audio:', cancion.asset.path);
     this.wavesurferInstances[cancion.id].load(cancion.asset.path);
   }
 
@@ -143,7 +142,6 @@ export class MusicComponent implements OnInit, AfterViewInit {
 
     Object.keys(this.wavesurferInstances).forEach((id) => {
         if (!currentPageIds.includes(Number(id))) {
-            console.log(`Destruyendo instancia de WaveSurfer para: ${id}`);
             this.wavesurferInstances[Number(id)].destroy();
             delete this.wavesurferInstances[Number(id)];
         }
@@ -300,7 +298,6 @@ deleteSongs(id: number) {
       if (confirmed) {
           this.cancionesService.deleteCancion([id]).subscribe( 
               (response) => {
-                  console.log('Canción eliminada:', response);
                   this.canciones = this.canciones.filter(c => c.id !== id);
               },
               (error) => {
@@ -315,7 +312,6 @@ deleteSongs(id: number) {
     const nuevoAlbum = { /* datos del nuevo álbum */ };
     this.albumsService.createAlbum(nuevoAlbum).subscribe(
       (response) => {
-        console.log('Álbum añadido:', response);
         this.loadAlbums(); 
       },
       (error) => {
@@ -374,7 +370,6 @@ deleteSongs(id: number) {
         this.albumsService.deleteAlbum([id]).subscribe(
           (response) => {
             this.albums = this.albums.filter((a) => a.id !== id);
-            console.log('Álbum eliminado:', response);
           },
           (error) => {
             console.error('Error al eliminar el álbum', error);
@@ -438,7 +433,6 @@ deleteSongs(id: number) {
   }
 
   showCancion(cancion: any) {
-    console.log('Ver detalles de canción:', cancion);
     this.ref = this.dialogService.open(ShowSongsComponent, {
       header: 'Ver Datos de la Canción',
       modal: true,
@@ -464,7 +458,6 @@ deleteSongs(id: number) {
   }
 
   showAlbum(album: any) {
-    console.log('Ver detalles de álbum:', album);
     this.ref = this.dialogService.open(ShowAlbumsComponent, {
       header: 'Ver Datos del Album',
       modal: true,

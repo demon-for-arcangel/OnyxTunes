@@ -22,59 +22,29 @@ import { ResetPasswordComponent } from "./components/resetPassword/reset-passwor
 import { ArtistDetailComponent } from "./components/artist-detail/artist-detail.component";
 import { GenresComponent } from "./components/management/genres/genres.component";
 import { ShowAlbumSongsComponent } from "./components/management/show/show-album-songs/show-album-songs.component";
+import { InformationArtistComponent } from "./components/information-artist/information-artist.component";
 
 export const routes: Routes = [
   { path: "", component: LandingComponent },
   { path: "register", component: RegisterComponent },
   { path: "login", component: LoginComponent },
   { path: "gustosMusicales", component: GustosMusicalesComponent },
-  {
-    path: "selectAccess",
-    component: SelectAccessComponent,
-    canActivate: [authGuard],
-  },
+  { path: "selectAccess", component: SelectAccessComponent, canActivate: [authGuard], },
   { path: "home", component: HomeComponent, canActivate: [authGuard] },
-  {
-    path: "platformManagement",
-    component: PlatformManagementComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: "platform/userManagement",
-    component: UsersComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: "platform/musicManagement",
-    component: MusicComponent,
-    canActivate: [authGuard],
-  },
+  { path: "platformManagement", component: PlatformManagementComponent, canActivate: [authGuard], },
+  { path: "platform/userManagement", component: UsersComponent, canActivate: [authGuard], },
+  { path: "platform/musicManagement", component: MusicComponent, canActivate: [authGuard], },
   { path: "chat", component: ChatBaseComponent, canActivate: [authGuard] },
-  {
-    path: "playlist/:data",
-    component: PlaylistComponent,
-    canActivate: [authGuard],
-  },
+  { path: "playlist/:data", component: PlaylistComponent, canActivate: [authGuard], },
   { path: "search", component: SearchComponent },
   { path: "profile", component: ProfileComponent, canActivate: [authGuard] },
   { path: "settings", component: SettingsComponent, canActivate: [authGuard] },
-  {
-    path: "change-password",
-    component: ChangePasswordComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: "platform/artistManagement",
-    component: MusicArtistComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: "platform/genresManagement",
-    component: GenresComponent,
-    canActivate: [authGuard]
-  },
+  { path: "change-password", component: ChangePasswordComponent, canActivate: [authGuard], },
+  { path: "platform/artistManagement", component: MusicArtistComponent, canActivate: [authGuard], },
+  { path: "platform/genresManagement", component: GenresComponent, canActivate: [authGuard] },
   { path: "forgot-password", component: RequestResetComponent },
   { path: "reset/:token", component: ResetPasswordComponent },
   { path: "artist/:id", component: ArtistDetailComponent },
-  { path: 'album/:id/canciones', component: ShowAlbumSongsComponent }
+  { path: 'album/:id/canciones', component: ShowAlbumSongsComponent },
+  { path: "information-artist", component: InformationArtistComponent },
 ];

@@ -21,7 +21,7 @@ export class ChatService {
   private chatSubject = new Subject<PendingChat | UserChat>();
 
   constructor(private http: HttpClient) {
-    this.socket = io(environment.socketUrl); // Conexión al WebSocket
+    this.socket = io(environment.socketUrl);
   }
 
   // === Funciones HTTP ===
@@ -127,7 +127,6 @@ export class ChatService {
   // === Nuevas funciones añadidas ===
 
   listenForChats(callback: (chat: PendingChat | UserChat) => void): void {
-    // Escucha de chats desde el WebSocket y emite a través del Subject
     this.socket.on("newChat", (chat: PendingChat | UserChat) => {
       this.chatSubject.next(chat);
       callback(chat);
@@ -135,7 +134,6 @@ export class ChatService {
   }
 
   emitChat(chat: PendingChat | UserChat): void {
-    // Emitir un nuevo chat al WebSocket
     this.socket.emit("newChat", chat);
     this.chatSubject.next(chat);
   }

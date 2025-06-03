@@ -29,19 +29,15 @@ const checkToken = (req, res, next) => {
   const token = req.header("x-token");
 
   if (!token) {
-      return res.status(401).json({ msg: "No hay token en la petición." });
+    return res.status(401).json({ msg: "No hay token en la petición." });
   }
 
-  console.log('token', token);
-
   try {
-      const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
-      console.log('uid', uid);
-      req.userId = uid; 
-      next();
+    const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+    req.userId = uid; 
+    next();
   } catch (error) {
-      console.error('Error al verificar el token:', error); 
-      res.status(401).json({ msg: "Token no válido", error: error.message }); 
+    res.status(401).json({ msg: "Token no válido", error: error.message }); 
   }
 };
 
@@ -84,23 +80,22 @@ const tokenCanUser = (req, res, next) => {
 
 const userExist = async (userId) => {
   try {
-      if (userId) {
-          const user = await conx.getUserById(userId); 
+    if (userId) {
+      const user = await conx.getUserById(userId); 
 
-          if (!user) {
-              throw new Error('El usuario no existe.'); 
-          }
+      if (!user) {
+        throw new Error('El usuario no existe.'); 
       }
+    }
   } catch (e) {
-      console.log(e);
-      throw new Error('Ha habido un problema al comprobar si el usuario existe.');
+    throw new Error('Ha habido un problema al comprobar si el usuario existe.');
   }
 };
 
 module.exports = {
-    statusUser,
-    checkToken,
-    tokenCanAdmin,
-    tokenCanUser,
-    userExist
+  statusUser,
+  checkToken,
+  tokenCanAdmin,
+  tokenCanUser,
+  userExist
 }

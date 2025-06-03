@@ -55,7 +55,6 @@ export class UpdateUserComponent {
     this.usuario.roles = this.selectedRoles.map((rol: any) => rol.id);
   
     this.userService.updateUser(this.usuario.id, this.usuario).subscribe(response => {
-      console.log('Actualizado', this.usuario)
       setTimeout(() => {
         window.location.reload();
       }, 2000);
@@ -99,8 +98,6 @@ export class UpdateUserComponent {
         if (this.usuario.fecha_nacimiento) {
           this.usuario.fecha_nacimiento = new Date(this.usuario.fecha_nacimiento).toISOString().split('T')[0];
         }
-
-        console.log(this.usuario)
     
         this.filterAvailableRoles();
       },

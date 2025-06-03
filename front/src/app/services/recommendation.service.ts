@@ -10,14 +10,17 @@ export class RecommendationService {
 
   constructor(private http: HttpClient) { }
   url = environment.baseUrl
-  //recommendationUrl = environment.recomendationsUrl
+
+  getPlaylistByEmail(email: string): Observable<any> {
+    return this.http.get<any>(`${this.url}/recomendaciones/playlist/${email}`);
+  }
 
   getRecommendationOnLogin(userId: string): Observable<any> {
     return this.http.get<any>(`${this.url}/recomendaciones/login/${userId}`);
   }
 
   getRecommendationStatus(userId: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.url}/recomendaciones/status/${userId}`); // Ajusta el userId dinámicamente
+    return this.http.get<boolean>(`${this.url}/recomendaciones/status/${userId}`);
   }
 
   updateRecommendationStatus(userId: string, status: boolean): Observable<any> {

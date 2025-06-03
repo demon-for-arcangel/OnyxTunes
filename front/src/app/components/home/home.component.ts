@@ -15,6 +15,8 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { DialogModule } from "primeng/dialog";
 import { RecommendedSongComponent } from "../recommended-song/recommended-song.component";
 import { SongService } from "../../services/song.service";
+import { LikesService } from "../../services/likes.service";
+import { PlaylistfavoriteService } from "../../services/playlistfavorite.service";
 
 @Component({
   selector: "app-home",
@@ -36,21 +38,41 @@ export class HomeComponent {
   especialPlaylists: Playlist[] = [];
   userPlaylists: Playlist[] = []; 
   playlists: Playlist[] = [];
-  userId: number | null = null;
+  userId: number = 0; 
+  usuarioEmail !: string;
+  recommendationPlaylist: any = null;
   menuOpen: boolean = false;
   artists: string[] = ["Artista 1", "Artista 2", "Artista 3", "Artista 4"];
   albumes: string[] = ["album1", "album 2", "album 3", "album 4"];
   listas: string[] = ["lista 1", "lista 2", "lista 3", "lista 4"];
   recommendedSong: any = null;
   cancionesNuevas: any[] = [];
+  isEnabled: boolean = false;
+  genrePlaylists: Playlist[] = [];
+  selectedSongId: number | null = null;
+  selectedPlaylistId: number | null = null;
+  userLikes: number[] = [];
+  showPlaylists = false;
+  targetPlaylistId: number | null = null;
+  playlistsPorGenero: any[] = [];
+  successMessage: string = "";
 
   dialogRef!: DynamicDialogRef;
 
-  constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService, private usuarioService: UserService, private recommendationService: RecommendationService, private dialogService: DialogService, private songService: SongService) {}
+  constructor(private router: Router, private authService: AuthService, private playlistService: PlaylistService, 
+    private usuarioService: UserService, private recommendationService: RecommendationService, 
+    private dialogService: DialogService, private songService: SongService, private likeService: LikesService,
+    private favoriteService: PlaylistfavoriteService
+    ) {}
 
   ngOnInit() {
     this.loadUserId();
     this.loadCancionesNuevas();
+    this.createPlaylistsByGenres();
+  }
+
+  goToArtistPage(artistId: string) {
+    this.router.navigate(['/information-artist'], { queryParams: { artistId } });
   }
 
   scrollLeft(): void {
@@ -92,7 +114,6 @@ export class HomeComponent {
 
   searchArtists() {
     //por hacer
-    console.log("Buscando:", this.searchTerm);
   }
 
   loadUserId() {
@@ -105,23 +126,24 @@ export class HomeComponent {
 
     this.authService.getUserByToken(tokenObject).subscribe({
         next: (usuario: Usuario | undefined) => {
-            if (usuario?.id) {
+            if (usuario?.id && usuario?.email) {
+              this.usuarioEmail = usuario.email;
                 this.userId = usuario.id;
-                console.log("ID de usuario obtenido:", this.userId);
 
-                // 🔹 Llamar a `loadDailyRecommendations()` solo cuando `userId` esté disponible
-                console.log("🔹 Llamando a loadDailyRecommendations()...");
-                this.loadDailyRecommendations();
-                this.RecommendationOnLogin(this.userId);
-                this.loadUserPlaylists();
+              this.loadUserRecommendationPlaylist();
+              this.loadUserPlaylists();
+
+                this.checkRecommendationStatus();
+
+                  if (this.isEnabled) {
+                    this.RecommendationOnLogin(this.userId);
+                  }
             } else {
-                console.error("Usuario no encontrado en el token");
-                this.router.navigate(["/login"]);
+              this.router.navigate(["/login"]);
             }
         },
         error: (err) => {
-            console.error("Error al obtener el usuario desde el token:", err);
-            this.router.navigate(["/login"]);
+          this.router.navigate(["/login"]);
         }
     });
   }
@@ -130,14 +152,31 @@ export class HomeComponent {
     //por hacer
   }
 
+loadUserRecommendationPlaylist() {
+    this.recommendationService.getPlaylistByEmail(this.usuarioEmail).subscribe({
+        next: (response) => {
+            if (response.data) {
+                this.recommendationPlaylist = (Array.isArray(response.data) ? response.data : [response.data])
+                .map((playlist: Playlist) => ({
+                    ...playlist, 
+                  nombre: playlist.nombre.includes("Recomendación Diaria") ? "Recomendación Diaria" : playlist.nombre                }));
+            } else {
+              this.recommendationPlaylist = [];
+              this.loadDailyRecommendations();
+            }
+        },
+        error: (error) => {
+          this.recommendationPlaylist = [];
+        }
+    });
+}
+
   RecommendationOnLogin(userId: number) {
     if (userId) {
       this.recommendationService.getRecommendationOnLogin(userId.toString()).subscribe({
         next: (response) => {
-          console.log("Recomendaciones obtenidas:", response);
 
           if (!response.songRecommendation) {
-            console.log("Las recomendaciones están deshabilitadas o no hay una recomendación disponible.");
             return;
           }
 
@@ -153,31 +192,54 @@ export class HomeComponent {
     }
   }
 
-  loadDailyRecommendations() {
-    if (this.userId) {
-        console.log("🔹 Ejecutando loadDailyRecommendations con userId:", this.userId);
+  checkRecommendationStatus(): void {
+    if (!this.userId) return;
 
-        this.recommendationService.getDailyRecommendations(this.userId.toString()).subscribe({
-            next: (response) => {
-                console.log("✅ Respuesta antes de asignar:", response);
+    this.recommendationService.getRecommendationStatus(this.userId.toString()).subscribe({
+      next: (status: boolean) => {
+        this.isEnabled = status;
+      },
+      error: (err) => {
+        console.error("Error al obtener el estado de recomendaciones:", err);
+      }
+    });
+  }
 
-                this.especialPlaylists = response;
-                console.log("✅ Estado de especialPlaylists después de asignar:", this.especialPlaylists);
-            },
-            error: (error) => {
-                console.error("🚨 Error al obtener recomendaciones diarias:", error);
+  createPlaylistsByGenres(): void {
+    this.playlistService.createPlaylistsByGenres().subscribe({
+        next: (response) => {
+            if (response.data && response.data.playlistsCreadas) {
+              this.playlistsPorGenero = response.data.playlistsCreadas; 
             }
-        });
-    } else {
-        console.error("❌ ID de usuario no encontrado, no se ejecuta loadDailyRecommendations.");
-    }
+        },
+        error: (error) => {
+          console.error("Error al crear playlists por género:", error);
+        }
+    });
 }
 
+  loadDailyRecommendations() {
+      if (this.userId) {
+          this.recommendationService.getDailyRecommendations(this.userId.toString()).subscribe({
+              next: (response) => {
+                  if (response && Array.isArray(response)) {
+                      this.especialPlaylists = response;
+                  } else {
+                    this.especialPlaylists = response ? [response] : [];
+                  }
+
+                  this.loadUserRecommendationPlaylist();
+              },
+              error: (error) => {
+                this.especialPlaylists = [];
+              }
+          });
+      }
+  }
 
   openRecommendedSongDialog() {
     if (!this.recommendedSong) {
-        console.log("No hay canción recomendada, el modal no se abrirá.");
-        return; // Evita abrir el modal
+      return;
     }
 
     this.dialogRef = this.dialogService.open(RecommendedSongComponent, {
@@ -215,8 +277,6 @@ export class HomeComponent {
           const fechaCreacion = new Date(cancion.createdAt); 
           return fechaCreacion >= haceUnaSemana && fechaCreacion <= ahora;
         });
-  
-        console.log("Canciones nuevas de esta semana:", this.cancionesNuevas);
       },
       (error) => {
         console.error("Error al cargar canciones:", error);
@@ -228,12 +288,10 @@ export class HomeComponent {
     if (this.userId) {
       this.playlistService.getUserPlaylists(this.userId).subscribe(
         (response) => {
-          console.log(response);
           if (response.success) {
-            this.playlists = response.data;
-            console.log("hola", this.playlists)
-          } else {
-            console.error("Error al obtener las playlists:", response.message);
+              this.playlists = response.data.filter((playlist: Playlist) =>
+              playlist.nombre.includes("Recomendación Diaria")
+            );
           }
         },
         (error) => {
@@ -244,4 +302,139 @@ export class HomeComponent {
       console.error("ID de usuario no encontrado");
     }
   }
+
+  toggleSongMenu(songId: number): void {
+    if (this.selectedSongId === songId) {
+      this.menuOpen = false;
+      this.selectedSongId = null;
+    } else {
+      this.menuOpen = true;
+      this.selectedSongId = songId;
+    }
+  }
+
+  togglePlaylistMenu(playlistId: number): void {
+    if (this.selectedPlaylistId === playlistId) {
+      this.menuOpen = false;
+      this.selectedPlaylistId = null;
+      this.showPlaylists = false;
+
+    } else {
+      this.menuOpen = true;
+      this.selectedPlaylistId = playlistId;
+      this.showPlaylists = false;
+      this.loadUserPlaylists();  
+      this.getUserPlaylists(playlistId);
+    }
+  }
+
+  toggleShowPlaylists(): void {
+    if (!this.selectedPlaylistId) {
+      console.warn("No se ha seleccionado una playlist origen.");
+      return;
+    }
+
+    this.showPlaylists = !this.showPlaylists; 
+    if (this.showPlaylists) {
+      this.getUserPlaylists(this.selectedPlaylistId);
+    }
+  }
+
+  addToFavorites(song: any) {
+    const songId = song.id;
+    this.playlistService.addToFavorites(songId, this.userId).subscribe(
+      (response) => {
+        this.userLikes.push(songId);
+      },
+      (error) => {
+        console.error("Error al añadir la canción a favoritos:", error);
+      },
+    );
+  }
+
+  deleteLike(song: any) {
+    const songId = song.id;
+    const likeId = this.userLikes[songId];
+
+    if (likeId) {
+      this.likeService.deleteLike(likeId).subscribe(
+        (response) => {
+          delete this.userLikes[songId];
+        },
+        (error) => {
+          console.error("Error al eliminar el like:", error);
+        },
+      );
+    } else {
+      console.error("No se encontró el like para la canción:", songId);
+    }
+  }
+
+  savePlaylist(playlistId: number): void {
+    const usuarioId = this.userId;
+
+    this.favoriteService.addFavoritePlaylist(usuarioId, playlistId).subscribe({
+      next: () => {
+        this.successMessage = "Playlist guardada en favoritos.";
+        setTimeout(() => {
+          this.successMessage = "";
+        }, 3000);
+      },
+      error: (error) => {
+        this.successMessage = "Error al guardar la playlist.";
+        setTimeout(() => {
+          this.successMessage = "";
+        }, 3000);
+        console.error("Error al guardar la playlist:", error);
+      }
+    });
+  }
+
+getUserPlaylists(sourcePlaylistId: number): void {
+    this.playlistService.getUserPlaylists(this.userId).subscribe({
+        next: (response) => {
+          if (!response?.data || response.data.length === 0) {
+            console.warn("No se recibieron playlists.");
+            return;
+          }
+
+          this.userPlaylists = response.data.filter((p: Playlist) => p.id !== sourcePlaylistId);
+        },
+        error: (error) => {
+            console.error("Error al obtener playlists:", error);
+        }
+    });
+}
+  addSongsToPlaylist(sourcePlaylistId: number, targetPlaylistId: number): void {
+    if (!targetPlaylistId) {
+      console.warn("No se ha seleccionado una playlist destino.");
+      return;
+    }
+
+    this.playlistService.addSongsToPlaylist(this.userId, sourcePlaylistId, targetPlaylistId).subscribe({
+        next: () => {
+            this.successMessage = "Canciones añadidas a la playlist.";
+            setTimeout(() => {
+              this.successMessage = "";
+            }, 3000);
+        },
+        error: (error) => {
+            console.error("Error al añadir canciones:", error);
+        }
+    });
+  }
+
+  selectTargetPlaylist(playlistId: number): void {
+    this.targetPlaylistId = playlistId; 
+  }
+
+  confirmAddSongs(): void {
+    if (!this.targetPlaylistId) {
+        console.warn("No se ha seleccionado una playlist destino.");
+        return;
+    }
+
+    this.addSongsToPlaylist(this.selectedPlaylistId!, this.targetPlaylistId);
+  }
+
 }

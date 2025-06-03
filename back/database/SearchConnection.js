@@ -42,7 +42,8 @@ class SearchConnection {
                 where: {
                     nombre: {
                         [Op.like]: `%${nombre}%`
-                    }
+                    },
+                    publico: true
                 },
                 attributes: { exclude: ['usuario_id'] },
             });

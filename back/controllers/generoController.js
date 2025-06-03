@@ -17,7 +17,6 @@ const getGeneros = async (req, res) => {
         const generos = await conx.indexGeneros();
         res.status(200).json(generos);
     } catch (error) {
-        console.log('Error al obtener los géneros', error);
         res.status(500).json({ msg: "Error al obtener los géneros" });
     }
 };

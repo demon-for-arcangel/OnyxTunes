@@ -71,8 +71,6 @@ export class CreateSongsComponent {
             this.nuevaCancion.artista = this.user.nombre;
             this.nuevaCancion.artista_id = this.user.id;
           }
-  
-          console.log("Usuario y Rol cargados:", this.user, this.userRol);
         },
         (error) => {
           console.error("Error al obtener el usuario:", error);
@@ -92,16 +90,13 @@ export class CreateSongsComponent {
         const fileURL = URL.createObjectURL(file);
         const audio = new Audio(fileURL);
   
-        audio.onloadedmetadata = () => {
-          console.log(`Duración obtenida: ${audio.duration} segundos`);
-          
+        audio.onloadedmetadata = () => {          
           const durationInSeconds = Math.floor(audio.duration);
           this.horas = Math.floor(durationInSeconds / 3600);
           this.minutos = Math.floor((durationInSeconds % 3600) / 60);
           this.segundos = durationInSeconds % 60;
   
-          this.nuevaCancion.titulo = file.name.split('.').slice(0, -1).join('.'); // Asignar título
-          console.log(`Duración de ${file.name}: ${this.horas}h ${this.minutos}m ${this.segundos}s`);
+          this.nuevaCancion.titulo = file.name.split('.').slice(0, -1).join('.');
         };
       }
     }
@@ -110,7 +105,6 @@ export class CreateSongsComponent {
     this.generosService.getGeneros().subscribe(
       (data) => {
         this.generosDisponibles = data;
-        console.log("Generos disponibles:", this.generosDisponibles);
       },
       (error) => {
         console.error("Error al cargar los géneros:", error);
@@ -123,10 +117,6 @@ export class CreateSongsComponent {
       (response) => {
         if (response && response.albums) {
           this.albumsDisponibles = response.albums;
-          console.log(
-            "Álbumes disponibles para el artista:",
-            this.albumsDisponibles,
-          );
         } else {
           this.albumsDisponibles = [];
           console.warn("No se encontraron álbumes para este artista.");
@@ -143,8 +133,6 @@ export class CreateSongsComponent {
       (data) => {
         this.artistasDisponibles = data;
         this.artistasFiltrados = data;
-        console.log(data);
-        console.log("Artistas disponibles:", this.artistasDisponibles);
       },
       (error) => {
         console.error("Error al cargar los artistas:", error);
@@ -156,7 +144,6 @@ export class CreateSongsComponent {
   this.usuarioService.getArtists().subscribe(
     (data) => {
       this.artistasDisponibles = data.filter(artista => artista.id !== this.nuevaCancion.artista_id);
-      console.log("Artistas filtrados (sin el creador):", this.artistasDisponibles);
     },
     (error) => {
       console.error("Error al cargar los artistas:", error);
@@ -198,19 +185,17 @@ export class CreateSongsComponent {
   }
 
   selectArtista(artista: any) {
-    console.log("Artista seleccionado:", artista);
     this.nuevaCancion.artista = artista.nombre;
     this.nuevaCancion.artista_id = artista.id;
-    console.log("ID del artista asignado:", this.nuevaCancion.artista_id);
 
     this.loadAlbumsByArtistId(artista.id);
     this.showArtistas = false;
   }
 
   toggleGenre(genre: any) {
-    const index = this.generosSeleccionados.indexOf(genre);
+    const index = this.generosSeleccionados.indexOf(genre.id);
     if (index === -1) {
-      this.generosSeleccionados.push(genre);
+      this.generosSeleccionados.push(genre.id);
     } else {
       this.generosSeleccionados.splice(index, 1);
     }
@@ -225,8 +210,8 @@ export class CreateSongsComponent {
   
     formData.append("artista_id", this.nuevaCancion.artista_id.toString());
     formData.append("album_id", this.nuevaCancion.album.toString());
-    this.nuevaCancion.generos.forEach((genero: number) => {
-      formData.append("generos", genero.toString());
+    this.generosSeleccionados.forEach((generoId: number) => {
+      formData.append("generos", generoId.toString());
     });
   
     if (this.selectedFiles) {
@@ -244,7 +229,6 @@ export class CreateSongsComponent {
   
     this.cancionesService.createCancion(formData).subscribe(
       (response) => {
-        console.log("Canciones añadidas:", response);
         this.ref.close();
       },
       (error) => {
@@ -253,7 +237,5 @@ export class CreateSongsComponent {
     );
   }
 
-  crearAlbum() {
-    console.log("Crear álbum");
-  }
+  crearAlbum() {  }
 }

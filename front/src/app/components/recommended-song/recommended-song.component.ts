@@ -17,6 +17,7 @@ export class RecommendedSongComponent implements OnInit {
   isEnabled: boolean = false;
   userId: string = '';
   artistName: string = '';
+  successMessage: string = "";
 
   constructor(private config: DynamicDialogConfig, private recommendationService: RecommendationService, private authService: AuthService, private router: Router, private userService: UserService) {}
 
@@ -24,16 +25,11 @@ export class RecommendedSongComponent implements OnInit {
     this.recommendedSong = this.config.data.recommendedSong;
 
     if (!this.recommendedSong) {
-        console.log("No hay canción recomendada, cerrando el modal.");
         return;
     }
 
-    console.log("Datos recibidos en el diálogo:", this.recommendedSong);
-
     if (this.recommendedSong.songRecommendation?.artista_id) {
         this.getArtistName(this.recommendedSong.songRecommendation.artista_id);
-    } else {
-        console.log("No hay ID de artista disponible.");
     }
     this.getUserFromToken();
   }
@@ -70,7 +66,6 @@ export class RecommendedSongComponent implements OnInit {
     this.recommendationService.getRecommendationStatus(this.userId).subscribe({
       next: (status: boolean) => {
         this.isEnabled = status;
-        console.log(this.isEnabled)
       },
       error: (err) => {
         console.error("Error al obtener el estado de recomendaciones:", err);
@@ -85,8 +80,11 @@ export class RecommendedSongComponent implements OnInit {
 
     this.recommendationService.updateRecommendationStatus(this.userId, this.isEnabled).subscribe({
       next: (response) => {
-        console.log("Estado actualizado correctamente:", response);
-      },
+        this.successMessage = "Estado actualizado correctamente.";
+            setTimeout(() => {
+              this.successMessage = "";
+            }, 3000);
+         },
       error: (err) => {
         console.error("Error al actualizar estado de recomendaciones:", err);
       }
@@ -98,9 +96,6 @@ export class RecommendedSongComponent implements OnInit {
       next: (usuario) => {
         if (usuario?.nombre) {
           this.artistName = usuario.nombre;
-          console.log("Nombre del artista obtenido:", this.artistName);
-        } else {
-          console.log("No se encontró el artista.");
         }
       },
       error: (err) => {

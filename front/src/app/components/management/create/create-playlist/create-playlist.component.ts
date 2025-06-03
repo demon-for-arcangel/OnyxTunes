@@ -49,11 +49,8 @@ export class CreatePlaylistComponent {
       canciones: this.canciones
     };
 
-    console.log('playlistData', playlistData);
-
     this.playlistService.createPlaylist(playlistData).subscribe(
       response => {
-        console.log('Playlist creada:', response);
         this.ref.close();
       },
       error => {

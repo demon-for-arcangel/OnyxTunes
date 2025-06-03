@@ -99,7 +99,6 @@ const removeFollower = async (req, res) => {
  * Listar los artistas más famosos por sus seguidores
  */
 const getTopArtists = async (req, res) => {
-  //probar
   const { limit } = req.query;
 
   try {

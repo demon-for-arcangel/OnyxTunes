@@ -18,7 +18,6 @@ const index = async (req, res) => {
     const albums = await conx.indexAlbums();
     res.status(200).json(albums);
   } catch (error) {
-    console.log("Error al obtener los albums", error);
     res.status(500).json({});
   }
 };
@@ -100,7 +99,6 @@ const getAlbumsByUserId = async (req, res) => {
   try {
     const albums = await conx.getAlbumsByUserId(userId);
     if (albums.length === 0) {
-      // Devuelve un mensaje informativo con estado 200
       return res
         .status(200)
         .json({

@@ -81,14 +81,12 @@ export class ArtistDetailComponent {
             (follow: any) => follow.artista.id === this.artistId,
           );
         }
-        console.log("Estado de seguimiento actualizado:", this.isFollowing);
       },
       error: (err) => {
         if (err.status === 404) {
-          console.log("El usuario no sigue a ningún artista.");
           this.isFollowing = false;
         } else {
-          console.error("Error al verificar artistas seguidos:", err);
+          throw new Error("Error al verificar artistas seguidos");
         }
       },
     });
@@ -137,7 +135,6 @@ export class ArtistDetailComponent {
         .removeFollower(this.artistId, this.user.id)
         .subscribe({
           next: () => {
-            console.log("Dejaste de seguir al artista.");
             this.isFollowing = false;
           },
           error: (err) => {
@@ -149,7 +146,6 @@ export class ArtistDetailComponent {
         .addFollower(this.artistId, this.user.id)
         .subscribe({
           next: () => {
-            console.log("Ahora sigues al artista.");
             this.isFollowing = true;
           },
           error: (err) => {

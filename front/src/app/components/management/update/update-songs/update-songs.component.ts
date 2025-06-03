@@ -15,13 +15,7 @@ import { UserService } from '../../../../services/user.service';
 })
 export class UpdateSongsComponent implements OnInit {
   cancionId!: number; 
-  cancion: any = {
-    titulo: '',
-    duracion: 0,
-    artista_id: 0,
-    generos: [], 
-    portada: '',
-  };
+  cancion: any = {};
   generosDisponibles: any[] = [];
   artistas: any[] = [];
   selectedFile: File | null = null;
@@ -42,7 +36,6 @@ export class UpdateSongsComponent implements OnInit {
 
   ngOnInit(): void {
     this.cancionId = this.config.data.cancionId;
-    console.log(this.cancionId);
     this.loadCancion(); 
     this.loadGeneros(); 
     this.loadColaboradores();
@@ -58,13 +51,24 @@ export class UpdateSongsComponent implements OnInit {
           this.colaboradoresSeleccionados = data.colaboradores.map((colab: any) => colab.usuario_id);
         }
 
-        console.log(this.cancion);
+        this.loadGenerosPorCancion();
       },
       (error) => {
         console.error('Error al cargar la canción:', error);
       }
     );
   }
+
+  loadGenerosPorCancion(): void {
+    this.cancionesService.getGenreBySong(this.cancionId).subscribe(
+      (data) => {
+        this.cancion.generos = Array.isArray(data) ? data : []; 
+      },
+      (error) => {
+        console.error('Error al cargar los géneros de la canción:', error);
+      }
+    );
+}
 
   loadGeneros(): void {
     this.generosService.getGeneros().subscribe(
@@ -81,13 +85,10 @@ export class UpdateSongsComponent implements OnInit {
   this.usuarioService.getArtists().subscribe(
     (data) => {
       this.artistasDisponibles = data;
-      this.artistasFiltrados = [...data];  // ✅ Se inicializa con todos los artistas
-
-      console.log("🔹 Artistas disponibles:", this.artistasDisponibles);
-      console.log("🔹 Artistas filtrados al inicio:", this.artistasFiltrados);
+      this.artistasFiltrados = [...data];  
     },
     (error) => {
-      console.error("❌ Error al cargar los artistas:", error);
+      console.error("Error al cargar los artistas:", error);
     }
   );
 }
@@ -95,10 +96,6 @@ export class UpdateSongsComponent implements OnInit {
 
   toggleColaborador(artista: any) {
     const index = this.colaboradoresSeleccionados.indexOf(artista.id);
-    console.log("Artista seleccionado:", artista);
-    console.log("Colaboradores seleccionados:", this.colaboradoresSeleccionados);
-    console.log("Index encontrado:", index);
-    console.log("Artista ID:", artista.id);
     if (index === -1) {
       this.colaboradoresSeleccionados.push(artista.id);
     } else {
@@ -113,11 +110,9 @@ export class UpdateSongsComponent implements OnInit {
   }
 
   updateFiltroColaboradores(): void {
-  console.log("🔹 Buscando colaboradores con:", this.filtroColaboradores);
   this.artistasFiltrados = this.artistasDisponibles.filter(artista =>
     artista.nombre.toLowerCase().includes(this.filtroColaboradores.toLowerCase())
   );
-  console.log("🔹 Resultado del filtro:", this.artistasFiltrados);
 }
 
 
@@ -134,7 +129,6 @@ export class UpdateSongsComponent implements OnInit {
     const file: File = event.target.files[0];
 
     if (file) {
-      console.log("Archivo seleccionado:", file);
       this.selectedFile = file;
       this.cancion.portada = URL.createObjectURL(file);
     } else {

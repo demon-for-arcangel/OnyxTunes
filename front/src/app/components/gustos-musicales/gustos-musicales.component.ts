@@ -28,8 +28,6 @@ export class GustosMusicalesComponent {
     if (!this.artistasSeleccionados.includes(nombre)) {
       if (this.artistasSeleccionados.length < 3) {
         this.artistasSeleccionados.push(nombre);
-      } else {
-        console.log('Solo puedes seleccionar un máximo de 3 artistas.');
       }
     } else {
       this.artistasSeleccionados = this.artistasSeleccionados.filter(artista => artista !== nombre);

@@ -23,7 +23,6 @@ export class AuthService {
             const token = response.token; 
             if (token) {
                 localStorage.setItem('user', JSON.stringify({ token }));
-                console.log('Token guardado en localStorage:', token);
             } else {
                 console.error('Token no encontrado en la respuesta');
             }
@@ -39,7 +38,6 @@ export class AuthService {
 }
 
   getUserByToken(tokenObject: string | null): Observable<Usuario | undefined> {
-    console.log('token', tokenObject);
     if (tokenObject !== null && tokenObject !== undefined) {
       let parsedTokenObject;
       try {
@@ -50,7 +48,6 @@ export class AuthService {
 
       if ('token' in parsedTokenObject) {
         const token = parsedTokenObject.token;
-        console.log(token)
         const headers = new HttpHeaders({
           'x-token': token
         });
@@ -67,7 +64,6 @@ export class AuthService {
 
             const decodedToken = JSON.parse(atob(token.split('.')[1]));
             const userId = decodedToken.uid;
-            console.log(userId)
             return this.userService.getUserById(userId); 
           }),
           catchError((error: any) => {
@@ -83,7 +79,6 @@ export class AuthService {
     }
   }
 
-  //Revisar todas a partir de aca
   isLoggedIn(): boolean{
     const user = this.getCurrentUser();
     return user !== null;
@@ -127,10 +122,8 @@ export class AuthService {
 
            const isAdmin = user.Rol?.some(role => role.nombre === 'administrador');
            if (isAdmin) {
-             console.log('El usuario es administrador');
              return true;
            } else {
-             console.log('El usuario no es administrador');
              return false;
            }
          }),

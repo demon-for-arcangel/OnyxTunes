@@ -38,4 +38,16 @@ export class PlaylistService {
       } 
     });
   }
+
+  createPlaylistsByGenres(): Observable<any> {
+    return this.http.post(`${this.url}${this.playlistUrl}/genre/createPlaylist`, {});
+  }
+
+  addSongsToPlaylist(userId: number, sourcePlaylistId: number, targetPlaylistId: number): Observable<any> {
+    return this.http.post<any>(`${this.url}${this.playlistUrl}/add/songs`, {
+      userId,
+      sourcePlaylistId,
+      targetPlaylistId
+    });
+  }
 }

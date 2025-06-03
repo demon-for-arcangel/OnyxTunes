@@ -16,4 +16,5 @@ export const environment = {
   sendMail: "/mail/request-reset",
   resetPassword: "/mail/reset",
   seguidoresUrl: "/seguidores",
+  playlistFavoriteUrl: "/favorite",
 };

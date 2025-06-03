@@ -77,11 +77,9 @@ export class MusicArtistComponent {
                           if (data && data.length > 0) {
                               this.canciones = data; 
                           } else if (data.msg) {
-                              console.log(data.msg); 
                               this.canciones = []; 
                           } else {
                             this.canciones = [];
-                            console.log("No se encontraron canciones."); 
                           }
                       },
                       (err) => {
@@ -112,11 +110,9 @@ export class MusicArtistComponent {
     }
 
     if (this.wavesurferInstances[cancion.id]) {
-        console.log(`WaveSurfer ya existe para: ${containerId}`);
-        return; // Si ya existe una instancia, no la recrees
+        return; 
     }
 
-    console.log(`Creando wavesurfer en contenedor: ${containerId}`);
     this.wavesurferInstances[cancion.id] = WaveSurfer.create({
         container: `#${containerId}`,
         waveColor: '#d9dcff',
@@ -126,7 +122,6 @@ export class MusicArtistComponent {
         normalize: true,
     });
 
-    console.log('Cargando archivo de audio:', cancion.asset?.path);
     this.wavesurferInstances[cancion.id].load(cancion.asset?.path);
   }
 
@@ -135,7 +130,6 @@ export class MusicArtistComponent {
 
     Object.keys(this.wavesurferInstances).forEach((id) => {
         if (!currentPageIds.includes(Number(id))) {
-            console.log(`Destruyendo instancia de WaveSurfer para: ${id}`);
             this.wavesurferInstances[Number(id)].destroy();
             delete this.wavesurferInstances[Number(id)];
         }
@@ -269,7 +263,6 @@ deleteSongs(ids: number[]): void {
     const nuevoAlbum = {  };
     this.albumsService.createAlbum(nuevoAlbum).subscribe(
       (response) => {
-        console.log('Álbum añadido:', response);
         this.loadAlbums(); 
       },
       (error) => {
@@ -281,7 +274,6 @@ deleteSongs(ids: number[]): void {
   editAlbum(album: any) {
     this.albumsService.updateAlbum(album.id, album).subscribe(
       (response) => {
-        console.log('Álbum editado:', response);
         this.loadAlbums(); 
       },
       (error) => {
@@ -294,7 +286,6 @@ deleteSongs(ids: number[]): void {
     this.albumsService.deleteAlbum([id]).subscribe(
       (response) => {
         this.albums = this.albums.filter((a) => a.id !== id);
-        console.log('Álbum eliminado:', id);
       },
       (error) => {
         console.error('Error al eliminar el álbum', error);
@@ -356,7 +347,6 @@ deleteSongs(ids: number[]): void {
   }
 
   showCancion(cancion: any) {
-    console.log('Ver detalles de canción:', cancion);
     this.ref = this.dialogService.open(ShowSongsComponent, {
       header: 'Ver Datos de la Canción',
       modal: true,
@@ -381,7 +371,5 @@ deleteSongs(ids: number[]): void {
     });
   }
 
-  showAlbum(album: any) {
-    console.log('Ver detalles de álbum:', album);
-  }
+  showAlbum(album: any) {  }
 }

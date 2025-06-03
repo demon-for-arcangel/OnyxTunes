@@ -2,7 +2,6 @@ const { Op } = require("sequelize");
 const models = require("../models");
 
 class ChatController {
-  // Obtener todos los mensajes entre dos usuarios
   static async obtenerMensajes(req, res) {
     try {
       const { emisorId, receptorId } = req.params;
@@ -50,7 +49,6 @@ class ChatController {
     }
   }
 
-  // Enviar un mensaje
   static async enviarMensaje(req, res) {
     try {
       const { emisorId, receptorId, texto } = req.body;
@@ -79,7 +77,6 @@ class ChatController {
     }
   }
 
-  // Marcar mensaje como leído
   static async marcarComoLeido(req, res) {
     try {
       const { mensajeId } = req.body;
@@ -101,7 +98,6 @@ class ChatController {
     }
   }
 
-  // Subir archivos relacionados con un mensaje
   static async subirArchivosMensaje(req, res) {
     try {
       const filesSubidos = await uploadFiles(req.files, {
@@ -135,18 +131,17 @@ class ChatController {
         include: [
           {
             model: models.Usuario,
-            as: "emisorUsuario", // Usa el alias correcto según tu modelo
+            as: "emisorUsuario", 
             attributes: ["id", "nombre", "foto_perfil"],
           },
           {
             model: models.Usuario,
-            as: "receptorUsuario", // Usa el alias correcto según tu modelo
+            as: "receptorUsuario", 
             attributes: ["id", "nombre", "foto_perfil"],
           },
         ],
       });
 
-      // Filtrar usuarios únicos con los que el usuario ha tenido interacción
       const uniqueChats = [];
       const seenUsers = new Set();
 

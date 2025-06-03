@@ -4,6 +4,18 @@
     <div>
       <input [(ngModel)]="query" placeholder="Buscar..." />
       <button (click)="search()">Buscar</button>
+
+      @if(successMessage) {
+        <p class="success">{{ successMessage }}</p>
+      }
+
+<!--       <select [(ngModel)]="selectedFilter">
+          <option value="all">Todo</option>
+          <option value="songs">Canciones</option>
+          <option value="playlists">Playlists</option>
+          <option value="artists">Artistas</option>
+          <option value="albums">Álbumes</option>
+      </select> -->
     </div>
 
     @if (results) {
@@ -15,13 +27,11 @@
               <li>
                 {{ song.titulo }}
                 <button (click)="playSong(song)">Reproducir</button>
-                @if (userLikes.includes(song.id)) {
-                  <button (click)="deleteLike(song)">Eliminar Like</button>
-                } @else {
-                  <button (click)="addToFavorites(song)">
-                    Agregar a Favoritos
-                  </button>
-                }
+               @if (hasLikedSong(song.id)) {
+                <button (click)="deleteLike(song.id, 'Cancion')">Eliminar Like</button>
+              } @else {
+                <button (click)="addToFavorites(song)">Agregar a Favoritos</button>
+              }
               </li>
             }
           </ul>

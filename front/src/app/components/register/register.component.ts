@@ -124,7 +124,6 @@ export class RegisterComponent {
     ) {
       this.authService.register(this.registerData).subscribe({
         next: (response) => {
-          console.log("Registro exitoso", response);
           this.router.navigate(["/gustosMusicales"]);
         },
         error: (error) => {
