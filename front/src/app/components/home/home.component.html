@@ -44,7 +44,6 @@
                 <div class="songs-container">
                     @for (cancion of cancionesNuevas; track cancion) {
                         <div class="song-card">
-                            <button>Opciones</button>
                             <img src="{{ cancion.portadaURL ? cancion.portadaURL : 'assets/images/songs_Default.png' }}" alt="Portada de {{ cancion.titulo }}" class="cover-image"/>
                             <p class="song-title">{{ cancion.titulo }}</p>
                             <p class="song-artist" (click)="goToArtistPage(cancion.artista.id)">{{ cancion.artista.nombre }}</p>
