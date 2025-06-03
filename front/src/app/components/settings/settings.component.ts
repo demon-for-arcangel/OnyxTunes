@@ -35,7 +35,6 @@ export class SettingsComponent {
   loadUserData() {
     this.authService.getUserByToken(localStorage.getItem('user')).subscribe(data => {
       this.user = data; 
-      console.log(this.user)
       if (this.user.fecha_nacimiento) {
         this.user.fecha_nacimiento = this.formatDate(this.user.fecha_nacimiento);
       }

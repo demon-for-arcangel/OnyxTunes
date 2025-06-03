@@ -259,7 +259,6 @@ class SongModel {
                         try {
                             const generoExistente = await models.Genero.findByPk(generoId);
                             if (!generoExistente) {
-                                console.log(`Género con ID ${generoId} no existe en la base de datos.`);
                                 continue;
                             }
                 
@@ -370,7 +369,6 @@ class SongModel {
                     try {
                         const generoExistente = await models.Genero.findByPk(generoId);
                         if (!generoExistente) {
-                            console.log(`Género con ID ${generoId} no existe en la base de datos.`);
                             continue;
                         }
     

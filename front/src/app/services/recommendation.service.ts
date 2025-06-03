@@ -49,7 +49,6 @@ export class RecommendationService {
     const token = userData?.token;
 
     if (!token) {
-      console.error("❌ No hay token disponible.");
       return throwError(() => new Error("No hay token en la petición."));
     }
 
@@ -72,8 +71,6 @@ export class RecommendationService {
     if (!userData?.token) {
       return throwError(() => new Error("No hay token en la petición."));
     }
-
-    console.log("Actualizando estado de recomendaciones:", { userId, status });
 
     return this.http.post(
       `${this.url}/recomendaciones/update-status/${userId}`,

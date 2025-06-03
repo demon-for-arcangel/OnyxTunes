@@ -142,10 +142,7 @@ loadUserId() {
                             this.isEnabled = false;
                         }
 
-                        console.log("Estado actualizado:", this.isEnabled);
-
                         if (this.isEnabled) {
-                          console.log('hola')
                             this.RecommendationOnLogin(this.userId);
                         }
                     },
@@ -191,19 +188,14 @@ loadUserRecommendationPlaylist() {
   RecommendationOnLogin(userId: number) {
 
     if (userId) {
-      console.log('hola')
       this.recommendationService.getRecommendationOnLogin(userId.toString()).subscribe({
         next: (response) => {
-          console.log("📌 Respuesta recibida:", response); // ✅ Verificar los datos
-
             if (!response.songRecommendation) {
               console.warn("⚠ No hay recomendaciones, no se abre el modal.");
               return;
             }
 
             this.recommendedSong = response;
-            console.log("🎶 Mostrando la canción recomendada:", this.recommendedSong);
-
             this.openRecommendedSongDialog();
         },
         error: (error) => {
@@ -222,8 +214,6 @@ loadUserRecommendationPlaylist() {
 
   this.recommendationService.getRecommendationStatus(this.userId.toString()).subscribe({
     next: (status: any) => { 
-      console.log("Estado recibido:", status);
-
       if (status && typeof status === 'object' && 'habilitada' in status) {
         this.isEnabled = status.habilitada;
       } else {
@@ -269,7 +259,6 @@ loadUserRecommendationPlaylist() {
   }
 
   openRecommendedSongDialog() {
-    console.log('abriendo modal')
     if (!this.recommendedSong) {
       return;
     }
