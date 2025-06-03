@@ -134,15 +134,18 @@ export class LandingComponent {
     this.router.navigate(["/register"]);
   }
 
-  scrollCarousel(direction: number): void {
-  const carousel = document.querySelector(".carousel") as HTMLElement | null;
-    if (carousel) {
-      carousel.scrollBy({
-        left: direction * 220,
-        behavior: "smooth"
-      });
-    }
+  scrollCarousel(direction: number, carouselClass: string): void {
+  const carousel = document.querySelector(`.${carouselClass}`); 
+  if (carousel instanceof HTMLElement) { 
+    carousel.scrollBy({
+      left: direction * 300,
+      behavior: "smooth"
+    });
+  } else {
+    console.error(`No se encontró el carrusel con clase: ${carouselClass}`);
   }
+}
+
 
 /*  isPlaying(songId: number): boolean {
   return this.isPlayingMap[songId] === true;

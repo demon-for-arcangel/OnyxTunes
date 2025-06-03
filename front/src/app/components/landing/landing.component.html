@@ -24,10 +24,10 @@
   <div class="section-right">
     <h2>Canciones populares</h2>
     <div class="carousel-container">
-      <button class="prev" (click)="scrollCarousel(-1)">
+      <button class="prev" (click)="scrollCarousel(-1, 'carousel-canciones')">
         <i class="pi pi-chevron-left"></i> 
       </button>
-      <div class="carousel">
+      <div class="carousel carousel-canciones">
         @for (cancion of topCanciones; track cancion) {
           <div class="song-card">
             <img src="{{ cancion.portadaURL ? cancion.portadaURL : 'assets/images/songs_Default.png' }}" alt="{{ cancion.titulo }}" class="song-image" />
@@ -35,15 +35,17 @@
           </div>
         }
       </div>
-      <button class="next" (click)="scrollCarousel(1)">
+      <button class="next" (click)="scrollCarousel(1, 'carousel-canciones')">
         <i class="pi pi-chevron-right"></i>
       </button>
     </div>
 
     <h2>Álbumes populares</h2>
     <div class="carousel-container">
-      <button class="prev" (click)="scrollCarousel(-1)">❮</button>
-      <div class="carousel">
+      <button class="prev" (click)="scrollCarousel(-1, 'carousel-albums')">
+        <i class="pi pi-chevron-left"></i> 
+      </button>
+      <div class="carousel carousel-albums">
         @for (album of topAlbums; track album) {
           <div class="song-card">
             <img src="{{ album.portadaURL ? album.portadaURL : 'assets/images/albums_Default.png' }}" alt="{{ album.titulo }}" class="song-image" />
@@ -51,7 +53,9 @@
           </div>
         }
       </div>
-      <button class="next" (click)="scrollCarousel(1)">❯</button> 
+      <button class="next" (click)="scrollCarousel(1, 'carousel-albums')">
+          <i class="pi pi-chevron-right"></i>
+      </button> 
     </div>
 
     <!-- <h2>Listas populares</h2>
