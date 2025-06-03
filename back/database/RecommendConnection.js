@@ -317,18 +317,32 @@ async getOrCreatePlaylist(userId) {
    * Activar o desactivar recomendaciones en la base de datos.
    */
   async updateRecommendationStatus(userId, habilitada) {
-    try {
-        await models.Recomendacion.update(
-            { habilitada },
-            { where: { usuario_id: userId } }
-        );
+  try {
+    const existingRecommendation = await models.Recomendacion.findOne({
+      where: { usuario_id: userId }
+    });
 
-        return { msg: `Recomendaciones ${habilitada ? "activadas" : "desactivadas"} correctamente.` };
-    } catch (error) {
-        console.error("Error al actualizar estado de recomendaciones:", error);
-        throw new Error("Error al actualizar estado de recomendaciones");
+    if (existingRecommendation) {
+      await models.Recomendacion.update(
+        { habilitada },
+        { where: { usuario_id: userId } }
+      );
+    } else {
+      await models.Recomendacion.create({
+        usuario_id: userId,
+        cancion_id: null, 
+        fecha_recomendacion: new Date(),
+        habilitada
+      });
     }
+
+    return { msg: `Recomendaciones ${habilitada ? "activadas" : "desactivadas"} correctamente.` };
+
+  } catch (error) {
+    throw new Error("Error al actualizar estado de recomendaciones");
   }
+}
+
 
   async getPlaylistByUserEmail(email) {
     try {

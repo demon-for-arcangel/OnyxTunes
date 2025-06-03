@@ -136,6 +136,7 @@ class ConexionSeguidores {
             model: models.Usuario,
             as: "artista",
             attributes: ["id", "nombre", "email", "foto_perfil"],
+            where: { rol: 2 }
           },
         ],
       });
@@ -157,6 +158,7 @@ class ConexionSeguidores {
       if (topArtists.length === 0) {
         topArtists = await models.Usuario.findAll({
           attributes: ["id", "nombre", "email", "foto_perfil"],
+          where: { rol: 2 },
           order: models.sequelize.random(),
           limit: Number(limit),
         });
