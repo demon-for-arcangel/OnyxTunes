@@ -224,11 +224,21 @@ async getOrCreatePlaylist(userId) {
 
         let songRecommendation;
 
-        if (!userHistory.length) {
-            songRecommendation = await models.Cancion.findOne({
-                order: Sequelize.literal("RAND()"),
-            });
-        } else {
+        let newRecommendation; 
+          if (!userHistory.length) {
+              songRecommendation = await models.Cancion.findOne({
+                  order: Sequelize.literal("RAND()"),
+              });
+
+              if (songRecommendation) {
+                  newRecommendation = await models.Recomendacion.create({
+                      usuario_id: userId,
+                      cancion_id: songRecommendation.id,
+                      fecha_recomendacion: new Date(),
+                      habilitada: true,
+                  });
+              }
+          } else {
             const genreCounts = userHistory.reduce((acc, entry) => {
                 const genreId = entry.Cancion?.generoId;
                 if (genreId) {
@@ -268,7 +278,7 @@ async getOrCreatePlaylist(userId) {
             };
         }
 
-        const newRecommendation = await models.Recomendacion.create({
+        newRecommendation = await models.Recomendacion.create({
             usuario_id: userId,
             cancion_id: songRecommendation.id,
             fecha_recomendacion: new Date(),
@@ -308,7 +318,6 @@ async getOrCreatePlaylist(userId) {
 
         return recommendation ? recommendation.habilitada : false;
     } catch (error) {
-        console.error("Error al obtener estado de recomendaciones:", error);
         throw new Error("Error al obtener estado de recomendaciones");
     }
   }

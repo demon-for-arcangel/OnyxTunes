@@ -34,7 +34,7 @@ class RecommendController {
   /**
    * Recomendar una canción en el inicio de sesión.
    */
-  static async getRecommendationOnLogin(req, res) {
+static async getRecommendationOnLogin(req, res) {
     try {
         const { userId } = req.params;
 
@@ -50,24 +50,22 @@ class RecommendController {
             include: [{ model: models.Cancion, as: "Cancion" }],
             order: [["fecha_recomendacion", "DESC"]],
         });
-
-        if (existingRecommendation && new Date(existingRecommendation.fecha_recomendacion).setHours(0, 0, 0, 0) === today.getTime()) {
-            return res.status(200).json({
-                ok: true,
-                songRecommendation: existingRecommendation.Cancion ? existingRecommendation.Cancion.dataValues : null,
-                msg: existingRecommendation.Cancion ? "Recomendación del día encontrada." : "No hay una canción recomendada disponible.",
-            });
+          if (existingRecommendation && new Date(existingRecommendation.fecha_recomendacion).setHours(0, 0, 0, 0) === today.getTime()) {
+            if (existingRecommendation.Cancion) {
+                return res.status(200).json({
+                    ok: true,
+                    songRecommendation: existingRecommendation.Cancion.dataValues,
+                    msg: "Recomendación del día encontrada.",
+                });
+            }
         }
 
         const recommendationResponse = await conx.recommendOnLogin(userId);
-
         return res.status(200).json(recommendationResponse);
     } catch (error) {
-        console.error("Error al obtener recomendación en inicio de sesión:", error);
         return res.status(500).json({ msg: "Error interno del servidor.", error: error.message });
     }
 }
-
 
   /**
    * Obtiene el estado de habilitación de recomendaciones para un usuario.

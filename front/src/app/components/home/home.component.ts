@@ -117,7 +117,7 @@ export class HomeComponent {
     //por hacer
   }
 
-  loadUserId() {
+loadUserId() {
     const tokenObject = localStorage.getItem("user");
     if (!tokenObject) {
         console.error("Token no encontrado, redirigiendo a login");
@@ -128,26 +128,42 @@ export class HomeComponent {
     this.authService.getUserByToken(tokenObject).subscribe({
         next: (usuario: Usuario | undefined) => {
             if (usuario?.id && usuario?.email) {
-              this.usuarioEmail = usuario.email;
+                this.usuarioEmail = usuario.email;
                 this.userId = usuario.id;
 
-              this.loadUserRecommendationPlaylist();
-              this.loadUserPlaylists();
+                this.loadUserRecommendationPlaylist();
+                this.loadUserPlaylists();
 
-                this.checkRecommendationStatus();
+                this.recommendationService.getRecommendationStatus(this.userId.toString()).subscribe({
+                    next: (status: any) => { 
+                        if (status && typeof status === 'object' && 'habilitada' in status) {
+                            this.isEnabled = status.habilitada;
+                        } else {
+                            this.isEnabled = false;
+                        }
 
-                  if (this.isEnabled) {
-                    this.RecommendationOnLogin(this.userId);
-                  }
+                        console.log("Estado actualizado:", this.isEnabled);
+
+                        if (this.isEnabled) {
+                          console.log('hola')
+                            this.RecommendationOnLogin(this.userId);
+                        }
+                    },
+                    error: (err) => {
+                        console.error("Error al obtener el estado de recomendaciones:", err);
+                    }
+                });
+
             } else {
-              this.router.navigate(["/login"]);
+                this.router.navigate(["/login"]);
             }
         },
         error: (err) => {
-          this.router.navigate(["/login"]);
+            this.router.navigate(["/login"]);
         }
     });
-  }
+}
+
 
   crearPlaylist() {
     //por hacer
@@ -173,16 +189,22 @@ loadUserRecommendationPlaylist() {
 }
 
   RecommendationOnLogin(userId: number) {
+
     if (userId) {
+      console.log('hola')
       this.recommendationService.getRecommendationOnLogin(userId.toString()).subscribe({
         next: (response) => {
+          console.log("📌 Respuesta recibida:", response); // ✅ Verificar los datos
 
-          if (!response.songRecommendation) {
-            return;
-          }
+            if (!response.songRecommendation) {
+              console.warn("⚠ No hay recomendaciones, no se abre el modal.");
+              return;
+            }
 
-          this.recommendedSong = response;
-          this.openRecommendedSongDialog();
+            this.recommendedSong = response;
+            console.log("🎶 Mostrando la canción recomendada:", this.recommendedSong);
+
+            this.openRecommendedSongDialog();
         },
         error: (error) => {
           console.error("Error al obtener recomendaciones:", error);
@@ -194,17 +216,25 @@ loadUserRecommendationPlaylist() {
   }
 
   checkRecommendationStatus(): void {
-    if (!this.userId) return;
-
-    this.recommendationService.getRecommendationStatus(this.userId.toString()).subscribe({
-      next: (status: boolean) => {
-        this.isEnabled = status;
-      },
-      error: (err) => {
-        console.error("Error al obtener el estado de recomendaciones:", err);
-      }
-    });
+  if (!this.userId) {
+    return;
   }
+
+  this.recommendationService.getRecommendationStatus(this.userId.toString()).subscribe({
+    next: (status: any) => { 
+      console.log("Estado recibido:", status);
+
+      if (status && typeof status === 'object' && 'habilitada' in status) {
+        this.isEnabled = status.habilitada;
+      } else {
+        this.isEnabled = false;
+      }
+    },
+    error: (err) => {
+      console.error("Error al obtener el estado de recomendaciones:", err);
+    }
+  });
+}
 
   createPlaylistsByGenres(): void {
     this.playlistService.createPlaylistsByGenres().subscribe({
@@ -239,6 +269,7 @@ loadUserRecommendationPlaylist() {
   }
 
   openRecommendedSongDialog() {
+    console.log('abriendo modal')
     if (!this.recommendedSong) {
       return;
     }
