@@ -16,6 +16,7 @@ export class ResetPasswordComponent {
   newPassword!: string;
   confirmPassword!: string;
   successMessage: string = "";
+  errorMessage: string = "";
 
   constructor(private route: ActivatedRoute, private mailService: MailService) {
     this.route.params.subscribe(params => {
@@ -35,17 +36,15 @@ export class ResetPasswordComponent {
           }, 3000);
         },
         error: (error: any) => {
-          this.successMessage = "Error al restablecer la contraseña.";
+          this.errorMessage = "Error al restablecer la contraseña.";
           setTimeout(() => {
-            this.successMessage = "";
-          }, 3000);
-          console.error("Error al restablecer la contraseña:", error);
-        },
+            this.errorMessage = "";
+          }, 3000);        },
       });
     } else {
-      this.successMessage = "Las contraseñas no coinciden.";
+      this.errorMessage = "Las contraseñas no coinciden.";
       setTimeout(() => {
-        this.successMessage = "";
+        this.errorMessage = "";
       }, 3000);
       console.error("Las contraseñas no coinciden");
     }

@@ -16,8 +16,6 @@ export class ChatBaseComponent implements OnInit {
   constructor(private chatService: ChatService) {}
 
   ngOnInit() {
-    this.chatService.listenForChats((chat) => {
-      console.log("Nuevo chat recibido:", chat);
-    });
+    this.chatService.listenForChats((chat) => {    });
   }
 }

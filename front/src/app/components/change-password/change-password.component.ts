@@ -46,11 +46,11 @@ export class ChangePasswordComponent {
       this.userService.updatePassword(userId, this.currentPassword, this.newPassword, this.confirmPassword)
         .subscribe({
           next: (response) => {
-            this.successMessage = response.message; 
+            this.successMessage = 'Contraseña actualizada correctamente'; 
             this.errorMessage = ''; 
           },
           error: (err) => {
-            this.errorMessage = err.error.message || 'Error al actualizar la contraseña'; 
+            this.errorMessage = 'Error al actualizar la contraseña'; 
             this.successMessage = ''; 
           }
         });

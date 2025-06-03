@@ -56,6 +56,7 @@ export class HomeComponent {
   targetPlaylistId: number | null = null;
   playlistsPorGenero: any[] = [];
   successMessage: string = "";
+  errorMessage: string = "";
 
   dialogRef!: DynamicDialogRef;
 
@@ -381,9 +382,9 @@ loadUserRecommendationPlaylist() {
         }, 3000);
       },
       error: (error) => {
-        this.successMessage = "Error al guardar la playlist.";
+        this.errorMessage = "Error al guardar la playlist.";
         setTimeout(() => {
-          this.successMessage = "";
+          this.errorMessage = "";
         }, 3000);
         console.error("Error al guardar la playlist:", error);
       }
