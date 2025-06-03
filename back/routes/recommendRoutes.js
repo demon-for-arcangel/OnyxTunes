@@ -4,7 +4,7 @@ const controlador = require("../controllers/recommendController");
 const { checkToken } = require('../middlewares/abilities');
 
 // Ruta para obtener recomendaciones diarias para un usuario
-router.get("/daily/:userId", controlador.getDailyRecommendations);
+router.get("/daily/:userId", checkToken, controlador.getDailyRecommendations);
 
 // Ruta para obtener una recomendación de canción al inicio de sesión
 router.get("/login/:userId", checkToken, controlador.getRecommendationOnLogin);
