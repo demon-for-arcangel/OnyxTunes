@@ -152,7 +152,19 @@ class ConexionSeguidores {
       });
 
       artistasOrdenados.sort((a, b) => b.count - a.count);
-      const topArtists = artistasOrdenados.slice(0, limit);
+      let topArtists = artistasOrdenados.slice(0, limit);
+
+      if (topArtists.length === 0) {
+        topArtists = await models.Usuario.findAll({
+          attributes: ["id", "nombre", "email", "foto_perfil"],
+          order: models.sequelize.random(),
+          limit: Number(limit),
+        });
+
+        return topArtists.map(artist => ({
+          ...artist.dataValues,
+        }))
+      }
 
       const artistIds = topArtists.map((artist) => artist.artistId);
       const artists = await models.Usuario.findAll({

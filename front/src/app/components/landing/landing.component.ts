@@ -40,7 +40,7 @@ export class LandingComponent {
 
   ngOnInit() {
     this.loadTopReproducciones(5);
-    this.loadTopArtists(10);
+    this.loadTopArtists(5);
   }
 
   loadTopReproducciones(limit: number) {
