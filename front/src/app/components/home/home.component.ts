@@ -386,7 +386,6 @@ loadUserRecommendationPlaylist() {
         setTimeout(() => {
           this.errorMessage = "";
         }, 3000);
-        console.error("Error al guardar la playlist:", error);
       }
     });
   }
@@ -421,6 +420,10 @@ getUserPlaylists(sourcePlaylistId: number): void {
         },
         error: (error) => {
             console.error("Error al añadir canciones:", error);
+            this.errorMessage = "Error al añadir canciones a la playlist.";
+            setTimeout(() => {
+              this.errorMessage = "";
+            }, 3000);
         }
     });
   }

@@ -8,6 +8,9 @@
       @if(successMessage) {
         <p class="success">{{ successMessage }}</p>
       }
+      @if(errorMessage) {
+        <p class="error">{{ errorMessage }}</p>
+      }
 
 <!--       <select [(ngModel)]="selectedFilter">
           <option value="all">Todo</option>

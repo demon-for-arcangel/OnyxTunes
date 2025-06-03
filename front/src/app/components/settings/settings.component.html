@@ -96,6 +96,9 @@
         </form>
         @if(successMessage) {
             <p class="success">{{ successMessage }}</p>
-        }    
+        } 
+        @if(errorMessage) {
+            <p class="error">{{ errorMessage }}</p>
+        }   
     </main>
 </div>
