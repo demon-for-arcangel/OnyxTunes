@@ -62,8 +62,6 @@ export class SidebarComponent {
                   this.playlists = response.data.filter((playlist: Playlist) =>
                     !playlist.nombre.includes("Recomendación Diaria")
                   );
-                } else {
-                  console.error('Error al obtener las playlists:', response.message);
                 }
               }, error => {
                 console.error('Error en la solicitud:', error);
