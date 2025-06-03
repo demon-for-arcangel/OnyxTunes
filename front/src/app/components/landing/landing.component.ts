@@ -50,9 +50,9 @@ export class LandingComponent {
         this.topAlbums = data.albums;
         this.topPlaylists = data.playlists;
 
-        this.getCancionesTitle(this.topCanciones);
-        this.getAlbumsTitle(this.topAlbums);
-        this.getPlaylistsTitle(this.topPlaylists);
+/*         this.getCancionesTitle(this.topCanciones);
+ */        /* this.getAlbumsTitle(this.topAlbums);
+        this.getPlaylistsTitle(this.topPlaylists); */
       },
       (error) => {
         console.error(
@@ -68,13 +68,13 @@ export class LandingComponent {
       (data) => {
         this.topArtists = data; 
       },
-      (error) => {
+/*       (error) => {
         console.error("Error al obtener los artistas más seguidos:", error);
-      },
+      }, */
     );
   }
 
-  getCancionesTitle(canciones: any[]) {
+/*   getCancionesTitle(canciones: any[]) {
     canciones.forEach((cancion, index) => {
       this.songService.getCancionById(cancion.entidad_id).subscribe(
         (data) => {
@@ -88,9 +88,9 @@ export class LandingComponent {
         },
       );
     });
-  }
+  } */
 
-  getAlbumsTitle(albums: any[]) {
+/*   getAlbumsTitle(albums: any[]) {
     albums.forEach((album, index) => {
       this.albumsService.getAlbumById(album.entidad_id).subscribe(
         (data) => {
@@ -120,7 +120,7 @@ export class LandingComponent {
         },
       );
     });
-  }
+  } */
 
   searchArtists() {
     this.router.navigate(["/search"]);
