@@ -101,7 +101,9 @@ export class PlaylistComponent {
 
       if (this.user) {
         this.reproduccionesService.createUpdateReproduccion(this.user.id, cancion.id, 'cancion').subscribe(
-          (response: any) => {},
+          (response: any) => {
+            this.addToHistory(cancion.id);
+          },
           (error: any) => {
             console.error('Error al crear la reproducción:', error);
           }
@@ -113,7 +115,7 @@ export class PlaylistComponent {
   addToHistory(cancionId: number): void {
     if (!this.user) return;
     this.songService.addToHistory(cancionId, this.user.id).subscribe(
-      (response: any) => {},
+      (response: any) => {      },
       (error: any) => {
         console.error('Error al añadir al historial:', error);
       }

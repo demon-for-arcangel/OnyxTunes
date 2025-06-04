@@ -1,7 +1,4 @@
 ### OnyxTunes
-
-![OnyxTunes Logo](./assets/logo.png)
-
 ## 🎵 Descripción
 OnyxTunes es una plataforma de streaming de música moderna y social, diseñada para ofrecer una experiencia personalizada y enriquecedora. Con una interfaz intuitiva y características avanzadas, conecta a los amantes de la música en un ambiente interactivo y personalizado.
 
