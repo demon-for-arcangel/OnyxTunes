@@ -91,3 +91,27 @@
     top: 10px;   
     z-index: 100;
 }
+
+.playlist-button {
+    background: none;  /* ✅ Sin fondo */
+    border: none;  /* ✅ Sin bordes */
+    padding: 0;  /* ✅ Sin relleno */
+    display: inline-block;  /* ✅ Mantiene la estructura de botón */
+    cursor: pointer;  /* ✅ Permite interacción */
+}
+
+.playlist-button img {
+    width: 160px; 
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.playlist-button img:hover {
+    transform: scale(1.05);  
+}
+
+.title {
+    color:gray;
+}

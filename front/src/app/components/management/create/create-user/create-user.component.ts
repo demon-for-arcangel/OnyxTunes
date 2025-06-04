@@ -28,7 +28,7 @@ export class CreateUserComponent implements OnInit {
   password: string = '';
   rol: Rol | null = null;
   roles: Rol[] = [];
-  
+  successMessage: string = "";
   errors: any = {};
   showPassword: boolean = false;
 
@@ -97,7 +97,6 @@ export class CreateUserComponent implements OnInit {
             next: (response) => {
               if (!this.crearOtro) {
                 this.ref.close({ created: true });
-
                 setTimeout(() => {
                   window.location.reload();
                 }, 1000)

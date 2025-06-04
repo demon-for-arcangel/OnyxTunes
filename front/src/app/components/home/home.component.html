@@ -49,8 +49,8 @@
                             <p class="song-artist" (click)="goToArtistPage(cancion.artista.id)">{{ cancion.artista.nombre }}</p>
                             <button (click)="navigateToSong(cancion)">Escuchar</button>
                             <!-- @if (cancion?.id) {
-                                @if (userLikes.includes(cancion.id)) {
-                                    <button (click)="deleteLike(cancion)">Eliminar Like</button>
+                                @if (hasLikedSong(cancion.id)) {
+                                    <button (click)="deleteLike(cancion.id)">Eliminar Like</button>
                                 } @else {
                                     <button (click)="addToFavorites(cancion)">
                                         Agregar a Favoritos

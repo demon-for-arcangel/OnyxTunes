@@ -131,7 +131,6 @@ addToFavorites(song: any) {
     return this.userLikes.some(like => like.entidad_id === songId && like.entidad_tipo === 'Cancion');
   }
 
-
 deleteLike(entidadId: number, tipo: string) {
   const likeToDelete = this.userLikes.find(
     (like) => like.entidad_id === entidadId && like.entidad_tipo === tipo

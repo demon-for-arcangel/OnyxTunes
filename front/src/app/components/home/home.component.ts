@@ -39,6 +39,7 @@ export class HomeComponent {
   userPlaylists: Playlist[] = []; 
   playlists: Playlist[] = [];
   userId: number = 0; 
+  userLikes: number[] = [];
   usuarioEmail !: string;
   recommendationPlaylist: any = null;
   menuOpen: boolean = false;
@@ -51,12 +52,12 @@ export class HomeComponent {
   genrePlaylists: Playlist[] = [];
   selectedSongId: number | null = null;
   selectedPlaylistId: number | null = null;
-  userLikes: number[] = [];
   showPlaylists = false;
   targetPlaylistId: number | null = null;
   playlistsPorGenero: any[] = [];
   successMessage: string = "";
   errorMessage: string = "";
+  likesLoaded: boolean = false;
 
   dialogRef!: DynamicDialogRef;
 
@@ -66,11 +67,11 @@ export class HomeComponent {
     private favoriteService: PlaylistfavoriteService
     ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadUserId();
     this.loadCancionesNuevas();
     this.createPlaylistsByGenres();
-    this.loadUserLikes();
+    this.getUserLikes();
   }
 
   goToArtistPage(artistId: string) {
@@ -368,17 +369,20 @@ loadUserRecommendationPlaylist() {
     }
   }
 
-  loadUserLikes() {
+getUserLikes() {
   this.likeService.getLikesByUserId(this.userId).subscribe({
     next: (response: any) => {
-      if (response && response.ok && Array.isArray(response.likes)) {
-        this.userLikes = response.likes.map((like: any) => like.cancion_id);  
+      if (Array.isArray(response.data)) {
+        this.userLikes = response.data.map((like: any) => like.id);
+        this.likesLoaded = true;  // ✅ Indica que los likes ya están listos
       } else {
         this.userLikes = [];
+        this.likesLoaded = true;  // ✅ Evita bloqueos si la respuesta es vacía
       }
     },
-    error: (err) => {
-      console.error("Error al obtener los likes:", err);
+    error: (error) => {
+      console.error("❌ Error al obtener los likes:", error);
+      this.likesLoaded = true;  // ✅ Evita que la interfaz se quede esperando
     }
   });
 }
@@ -387,32 +391,48 @@ addToFavorites(song: any) {
   const songId = song.id;
   this.playlistService.addToFavorites(songId, this.userId).subscribe({
     next: () => {
-      this.loadUserLikes();  // ✅ Recargar los likes para reflejar los cambios
+      this.userLikes.push(songId);  // ✅ Guarda solo el ID
+
+      this.successMessage = "Canción añadida a favoritos.";
+      setTimeout(() => {
+        this.successMessage = "";
+      }, 3000);
     },
     error: (error) => {
-      console.error("❌ Error al añadir la canción a favoritos:", error);
+      this.errorMessage = "Error al añadir la canción a favoritos.";
+      setTimeout(() => {
+        this.errorMessage = "";
+      }, 3000);
     }
   });
 }
 
-deleteLike(song: any) {
-  const songId = song.id;
-  const index = this.userLikes.indexOf(songId);
-
-  if (index !== -1) {
-    this.likeService.deleteLike(songId).subscribe({
-      next: () => {
-        this.loadUserLikes();  // ✅ Recargar los likes para reflejar los cambios
-      },
-      error: (error) => {
-        console.error("❌ Error al eliminar el like:", error);
-      }
-    });
-  } else {
-    console.error("⚠ No se encontró el like para la canción:", songId);
-  }
+hasLikedSong(songId: number): boolean {
+  return this.userLikes.includes(songId);  // ✅ Comparación directa con `number[]`
 }
 
+deleteLike(songId: number) {
+  if (this.hasLikedSong(songId)) {
+    this.likeService.deleteLike(songId).subscribe({
+      next: () => {
+        this.userLikes = this.userLikes.filter(id => id !== songId);  // ✅ Filtrar sin `indexOf()`
+
+        this.successMessage = `Eliminado de favoritos.`;
+        setTimeout(() => {
+          this.successMessage = "";
+        }, 3000);
+      },
+      error: (error) => {
+        this.errorMessage = "Error al eliminar el like.";
+        setTimeout(() => {
+          this.errorMessage = "";
+        }, 3000);
+      },
+    });
+  } else {
+    console.warn(`No se encontró un like para la canción con ID ${songId}`);
+  }
+}
 
 
   savePlaylist(playlistId: number): void {

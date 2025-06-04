@@ -34,9 +34,11 @@
             <ul>
                 @for (favoritePlaylist of favoritePlaylists; track favoritePlaylist) {
                     <li>
-                        <button (click)="navigateToPlaylist(favoritePlaylist)">
-                            <img [src]="favoritePlaylist.portadaURL ? favoritePlaylist.portadaURL : 'assets/images/playlist_Default.png'" alt="{{ favoritePlaylist.nombre }}" class="playlist-cover" />
-                            {{ favoritePlaylist.nombre }}
+                        <button (click)="navigateToPlaylist(favoritePlaylist)" class="playlist-button">
+                            <img [src]="favoritePlaylist.portadaURL ? favoritePlaylist.portadaURL : 'assets/images/playlist_Default.png'"
+                                alt="{{ favoritePlaylist.nombre }}"
+                                class="playlist-cover" />
+                                <p class="title">{{ favoritePlaylist.nombre }}</p>
                         </button>
                     </li>
                 }
