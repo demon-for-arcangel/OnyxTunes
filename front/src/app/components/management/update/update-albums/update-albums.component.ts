@@ -30,7 +30,6 @@ export class UpdateAlbumsComponent implements OnInit{
   ngOnInit(): void {
     if (this.config.data && this.config.data.albumId) {
       this.albumId = this.config.data.albumId;
-      console.log(this.albumId)
       this.loadAlbum();
     } else {
       console.error("No se encontró albumId en DynamicDialogConfig");
@@ -42,7 +41,6 @@ export class UpdateAlbumsComponent implements OnInit{
     this.albumService.getAlbumById(this.albumId).subscribe(
       (data) => {
         if (data.album) {
-          console.log(data.album);
           this.album = data.album;
           this.album.portadaURL = data.album.portadaURL || '';
           if (this.album.fecha_lanzamiento) {

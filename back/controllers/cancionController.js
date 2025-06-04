@@ -20,7 +20,6 @@ const index = async (req, res) => {
         const songs = await conx.indexSongs();
         res.status(200).json(songs);
     } catch (error) {
-        console.log('Error al obtener las canciones', error);
         res.status(500).json({})
     }
 }
@@ -36,7 +35,24 @@ const getSongById = async (req, res) => {
         }
         res.status(200).json(song);
     } catch (error) {
-        
+        console.error('Error al obtener la cancion:', error);
+        res.status(500).json({ msg: "Error al obtener la cancion" });
+    }
+}
+
+const getGenreBySong = async (req, res) => {
+    const songId = req.params.songId;
+
+    try {
+        const song = await conx.getGenreBySong(songId);
+
+        if (!song) {
+            return res.status(404).json({ msg: "Cancion no encontrada" });
+        }
+        res.status(200).json(song);
+    } catch (error) {
+        console.error('Error al obtener los géneros de la canción:', error);
+        res.status(500).json({ msg: "Error al obtener los géneros de la canción" });
     }
 }
 
@@ -108,9 +124,6 @@ const deleteSong = async (req, res) => {
 const addToHistory = async (req, res) => {
     const { songId, userId } = req.body; 
 
-    console.log('ID de la canción:', songId); 
-    console.log('ID del usuario:', userId); 
-
     if (!songId || !userId) {
         return res.status(400).json({ message: "Faltan datos necesarios" });
     }
@@ -145,5 +158,5 @@ const getHistoryByUser = async (req, res) => {
 
 module.exports = {
     index, getSongById, createSongs, updateSong, deleteSong, getSongByUser,
-    addToHistory, getHistoryByUser
+    addToHistory, getHistoryByUser, getGenreBySong
 }

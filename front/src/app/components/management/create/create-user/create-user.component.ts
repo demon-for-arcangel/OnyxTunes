@@ -28,7 +28,7 @@ export class CreateUserComponent implements OnInit {
   password: string = '';
   rol: Rol | null = null;
   roles: Rol[] = [];
-  
+  successMessage: string = "";
   errors: any = {};
   showPassword: boolean = false;
 
@@ -42,9 +42,7 @@ export class CreateUserComponent implements OnInit {
 
   loadRoles() {
     this.rolService.getRoles().subscribe((roles) => {
-      console.log(roles)
       this.roles = roles;
-      console.log(this.roles)
     });
   }
 
@@ -83,7 +81,6 @@ export class CreateUserComponent implements OnInit {
 
   onSubmit() {
     if (this.validateForm()) {
-        console.log(this.rol);
         const rolId = Number(this.rol);
         if (!this.rol) {
             console.error('El rol es requerido');
@@ -96,17 +93,10 @@ export class CreateUserComponent implements OnInit {
             rol: rolId 
         };
 
-        console.log(userData);
-
         this.userService.createUsuario(userData).subscribe({
             next: (response) => {
-              console.log(response);
-
               if (!this.crearOtro) {
-                console.log("Cerrando modal con respuesta { created: true }");
-
                 this.ref.close({ created: true });
-
                 setTimeout(() => {
                   window.location.reload();
                 }, 1000)
@@ -133,10 +123,8 @@ export class CreateUserComponent implements OnInit {
   }
 
   onCancel() {
-    console.log("Modal cerrado manualmente.");
-    
+   
     if (this.crearOtro) {
-      console.log("Checkbox activo: recargando página al cerrar manualmente.");
       setTimeout(() => {
         window.location.reload();
       }, 1000);

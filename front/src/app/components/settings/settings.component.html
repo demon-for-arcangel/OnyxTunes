@@ -4,15 +4,12 @@
         <h2>Configuración</h2>
         <form (ngSubmit)="saveChanges()">
             <div class="profile-photo-container">
-                @if(user.foto_perfil) {
-                    <img [src]="user.foto_perfil" alt="Foto de perfil" />
+                    <img src="{{ user.foto_perfil ? user.foto_perfil : 'assets/images/perfil-de-usuario.jpg' }}" alt="Foto de perfil" />
                     @if(errorMessages) {
                         @if(errorMessages.foto_perfil) {
                             <p class="error">{{ errorMessages.foto_perfil }}</p>
                         }
-                    }
-                }
-                
+                    }               
                 <div>
                     <label for="fileInput" class="upload-label">Cambiar la foto de perfil</label>
                     <input
@@ -85,7 +82,7 @@
 
                     <div class="recommendations-section">
                         <label for="recommendations">Recibir recomendaciones:</label>
-                        <input type="checkbox" id="recommendations" name="recommendations" [(ngModel)]="user.recommendationsEnabled" (change)="toggleRecommendations()" />
+                        <input type="checkbox" id="recommendations" name="recommendations" [(ngModel)]="recommendationsEnabled" (change)="toggleRecommendations()" />                        
                         <p class="recommendations-description">Recibe recomendaciones personalizadas basadas en tus gustos musicales</p>
                     </div>
                 </div>
@@ -96,6 +93,9 @@
         </form>
         @if(successMessage) {
             <p class="success">{{ successMessage }}</p>
-        }    
+        } 
+        @if(errorMessage) {
+            <p class="error">{{ errorMessage }}</p>
+        }   
     </main>
 </div>

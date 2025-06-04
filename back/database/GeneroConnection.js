@@ -60,7 +60,6 @@ class GeneroModel {
     }
 
     async deleteGeneros(generosIds) {
-        console.log(generosIds);
         try {
             const result = await models.Genero.destroy({
                 where: {

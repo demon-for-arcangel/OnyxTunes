@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable, throwError } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -17,25 +17,57 @@ export class SeguidoresService {
   }
 
   getFollowing(userId: number): Observable<any> {
-    return this.http.get(`${this.url}${this.seguidoresUrl}/user/${userId}`);
+    const userRawData = localStorage.getItem("user");
+    const userData = userRawData ? JSON.parse(userRawData) : null;
+    const token = userData?.token;
+
+    if (!token) {
+      return throwError(() => new Error("No hay token en la petición."));
+    }
+
+    const headers = new HttpHeaders({
+      "x-token": token,
+    });
+
+    return this.http.get(`${this.url}${this.seguidoresUrl}/user/${userId}`, { headers });
   }
 
   addFollower(artistaId: number, followerId: number): Observable<any> {
-    console.log("URL:", this.url + this.seguidoresUrl);
-    console.log("Body:", { artistaId, followerId });
-    return this.http.post(this.url + this.seguidoresUrl, {
-      artistaId,
-      followerId,
+    const userls = localStorage.getItem("user");
+    const userData = userls ? JSON.parse(userls) : null;
+    const token = userData?.token;
+
+    if (!token) {
+      return throwError(() => new Error("No hay token en la petición."));
+    }
+
+    const headers = new HttpHeaders({
+      "x-token": token,
     });
+
+    return this.http.post(`${this.url}${this.seguidoresUrl}`, { artistaId, followerId }, { headers });
   }
 
   removeFollower(artistaId: number, followerId: number): Observable<any> {
+    const userls = localStorage.getItem("user");
+    const userData = userls ? JSON.parse(userls) : null;
+    const token = userData?.token;
+
+    if (!token) {
+      return throwError(() => new Error("No hay token en la petición."));
+    }
+
+    const headers = new HttpHeaders({
+      "x-token": token,
+    });
+
     return this.http.delete(this.url + this.seguidoresUrl, {
       body: { artistaId, followerId },
+      headers, 
     });
   }
 
-  getTopArtists(limit: number = 10): Observable<any> {
+  getTopArtists(limit: number = 5): Observable<any> {
     return this.http.get(`${this.url}${this.seguidoresUrl}/top?limit=${limit}`);
   }
 }

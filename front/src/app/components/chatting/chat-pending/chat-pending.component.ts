@@ -25,7 +25,6 @@ export class ChatPendingComponent implements OnInit {
   ngOnInit() {
     this.loadPendingChats();
 
-    // Escuchar nuevos mensajes
     this.chatService.listenNewMessages((args: NewMessageArgs) => {
       const pendingUser = this.pending.get(args.from);
       const notPendingUser = this.notPending.get(args.from);

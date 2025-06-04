@@ -15,6 +15,8 @@ export class ResetPasswordComponent {
   token!: string;
   newPassword!: string;
   confirmPassword!: string;
+  successMessage: string = "";
+  errorMessage: string = "";
 
   constructor(private route: ActivatedRoute, private mailService: MailService) {
     this.route.params.subscribe(params => {
@@ -25,18 +27,26 @@ export class ResetPasswordComponent {
   ngOnInit(): void{}
 
   onSubmit(): void {
-    console.log(this.token)
     if (this.newPassword === this.confirmPassword) {
-        this.mailService.resetPassword(this.token, { newPassword: this.newPassword, confirmPassword: this.confirmPassword }).subscribe(
-            (response: any) => {
-                console.log('Contraseña restablecida con éxito:', response);
-            },
-            (error: any) => {
-                console.error('Error al restablecer la contraseña:', error);
-            }
-        );
+      this.mailService.resetPassword(this.token, { newPassword: this.newPassword, confirmPassword: this.confirmPassword }).subscribe({
+        next: () => {
+          this.successMessage = "Contraseña restablecida con éxito.";
+          setTimeout(() => {
+            this.successMessage = "";
+          }, 3000);
+        },
+        error: (error: any) => {
+          this.errorMessage = "Error al restablecer la contraseña.";
+          setTimeout(() => {
+            this.errorMessage = "";
+          }, 3000);        },
+      });
     } else {
-        console.error('Las contraseñas no coinciden');
+      this.errorMessage = "Las contraseñas no coinciden.";
+      setTimeout(() => {
+        this.errorMessage = "";
+      }, 3000);
+      console.error("Las contraseñas no coinciden");
     }
   }
 }

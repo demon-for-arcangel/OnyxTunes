@@ -9,11 +9,12 @@ import { SongService } from "../../services/song.service";
 import { AlbumsService } from "../../services/albums.service";
 import { PlaylistService } from "../../services/playlist.service";
 import { SeguidoresService } from "../../services/seguidores.service";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-home",
   standalone: true,
-  imports: [FormsModule, SidebarComponent],
+  imports: [FormsModule, SidebarComponent, CommonModule],
   templateUrl: "./landing.component.html",
   styleUrl: "./landing.component.css",
 })
@@ -23,6 +24,10 @@ export class LandingComponent {
   topAlbums: any[] = [];
   topPlaylists: any[] = [];
   topArtists: any[] = [];
+  isPlayingMap: { [key: number]: boolean } = {};
+  audio: HTMLAudioElement | null = null;
+  audioPlayer: HTMLAudioElement | null = null;
+
 
   constructor(
     private router: Router,
@@ -35,7 +40,7 @@ export class LandingComponent {
 
   ngOnInit() {
     this.loadTopReproducciones(5);
-    this.loadTopArtists(10);
+    this.loadTopArtists(5);
   }
 
   loadTopReproducciones(limit: number) {
@@ -45,17 +50,9 @@ export class LandingComponent {
         this.topAlbums = data.albums;
         this.topPlaylists = data.playlists;
 
-        this.getCancionesTitle(this.topCanciones);
-        this.getAlbumsTitle(this.topAlbums);
-        this.getPlaylistsTitle(this.topPlaylists);
-        console.log(
-          "Top canciones:",
-          this.topCanciones,
-          "Top albums:",
-          this.topAlbums,
-          "Top playlists:",
-          this.topPlaylists,
-        );
+/*         this.getCancionesTitle(this.topCanciones);
+ */        /* this.getAlbumsTitle(this.topAlbums);
+        this.getPlaylistsTitle(this.topPlaylists); */
       },
       (error) => {
         console.error(
@@ -69,16 +66,15 @@ export class LandingComponent {
   loadTopArtists(limit: number) {
     this.seguidoresService.getTopArtists(limit).subscribe(
       (data) => {
-        this.topArtists = data; // Asignar los artistas más seguidos
-        console.log("Top artistas:", this.topArtists);
+        this.topArtists = data; 
       },
-      (error) => {
+/*       (error) => {
         console.error("Error al obtener los artistas más seguidos:", error);
-      },
+      }, */
     );
   }
 
-  getCancionesTitle(canciones: any[]) {
+/*   getCancionesTitle(canciones: any[]) {
     canciones.forEach((cancion, index) => {
       this.songService.getCancionById(cancion.entidad_id).subscribe(
         (data) => {
@@ -92,9 +88,9 @@ export class LandingComponent {
         },
       );
     });
-  }
+  } */
 
-  getAlbumsTitle(albums: any[]) {
+/*   getAlbumsTitle(albums: any[]) {
     albums.forEach((album, index) => {
       this.albumsService.getAlbumById(album.entidad_id).subscribe(
         (data) => {
@@ -124,7 +120,7 @@ export class LandingComponent {
         },
       );
     });
-  }
+  } */
 
   searchArtists() {
     this.router.navigate(["/search"]);
@@ -137,4 +133,100 @@ export class LandingComponent {
   goToRegister() {
     this.router.navigate(["/register"]);
   }
+
+  scrollCarousel(direction: number, carouselClass: string): void {
+  const carousel = document.querySelector(`.${carouselClass}`); 
+  if (carousel instanceof HTMLElement) { 
+    carousel.scrollBy({
+      left: direction * 300,
+      behavior: "smooth"
+    });
+  } else {
+    console.error(`No se encontró el carrusel con clase: ${carouselClass}`);
+  }
+}
+
+
+/*  isPlaying(songId: number): boolean {
+  return this.isPlayingMap[songId] === true;
+  }
+
+playSong(songId: number, duration: number) {
+  if (this.audioPlayer) {
+    this.audioPlayer.pause();
+    this.audioPlayer.src = ""; 
+    this.audioPlayer.load(); 
+    this.audioPlayer = null;
+  }
+
+  this.songService.getCancionById(songId).subscribe((data) => {
+    if (!data.asset || !data.asset.path) {
+      console.error(`La canción con ID ${songId} no tiene URL válida`);
+      return;
+    }
+
+    this.audioPlayer = new Audio(data.asset.path);
+    this.audioPlayer.play().then(() => {
+      this.isPlayingMap[songId] = true;
+    }).catch((error) => {
+      console.error(`Error al reproducir canción con ID ${songId}`, error);
+    });
+
+    this.audioPlayer.onended = () => {
+      this.resetAudioPlayer();
+    };
+
+    setTimeout(() => {
+      this.resetAudioPlayer();
+    }, duration * 1000);
+  });
+} */
+
+/* resetAudioPlayer() {
+  if (this.audioPlayer) {
+    this.audioPlayer.pause();
+    this.audioPlayer.src = "";
+    this.audioPlayer.load();
+    this.audioPlayer = null;
+  }
+  Object.keys(this.isPlayingMap).forEach(id => this.isPlayingMap[+id] = false);
+} */
+
+/* handleAudioEnd(event: Event) {
+  const target = event.target as HTMLAudioElement;
+  if (target) {
+    target.pause();
+    target.currentTime = 0;
+    target.src = "";
+  }
+
+  this.audioPlayer = null;
+} */
+
+/* stopSong(songId: number) {
+  this.resetAudioPlayer();
+}
+
+  getPreviewForPlaylistOrAlbum(id: number) {
+    this.playlistsService.getPlaylistById(id).subscribe((data) => {
+      if (!data.canciones || data.canciones.length === 0) {
+        console.error(`Error: No hay canciones en la playlist/álbum con ID ${id}`);
+        return;
+      }
+
+      const songs = data.canciones.slice(0, 3);
+
+      songs.forEach((song: any) => {
+        if (!song.url) {
+          console.error(`Error: La canción ${song.titulo} no tiene URL válida`);
+          return;
+        }
+
+        const audio = new Audio(song.url);
+        audio.play().catch((error) => {
+          console.error(`Error al reproducir la canción ${song.titulo}:`, error);
+        });
+      });
+    });
+  } */
 }

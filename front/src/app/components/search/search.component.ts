@@ -9,6 +9,7 @@ import { PlaylistService } from "../../services/playlist.service";
 import { LikesService } from "../../services/likes.service";
 import { PlayerService } from "../../services/player.service";
 import { Subscription } from "rxjs";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-search",
@@ -27,11 +28,15 @@ export class SearchComponent {
   };
   songHovered: any = null;
   userId: number = 0;
-  userLikes: number[] = [];
+  userLikes: { id: number; entidad_id: number; entidad_tipo: string }[] = [];
+  selectedFilter: string = "all";
+  successMessage: string = "";
+  errorMessage: string = "";
 
   @ViewChild(PlayerComponent) playerComponent!: PlayerComponent;
 
   constructor(
+    private router: Router,
     private searchService: SearchService,
     private authService: AuthService,
     private playlistService: PlaylistService,
@@ -41,18 +46,20 @@ export class SearchComponent {
     this.getUserId();
   }
 
-  viewArtist(id: number) {
+/*   viewArtist(id: number) {
     window.location.href = `/artist/${id}`;
-  }
+  } */
+
+    goToArtistPage(artistId: string) {
+      this.router.navigate(['/information-artist'], { queryParams: { artistId } });
+    }
 
   getUserId() {
     const token = localStorage.getItem("user");
     this.authService.getUserByToken(token).subscribe(
       (user) => {
-        console.log(user);
         if (user && user.id) {
           this.userId = user.id;
-          console.log(this.userId);
           this.getUserLikes();
         }
       },
@@ -63,70 +70,98 @@ export class SearchComponent {
   }
 
   getUserLikes() {
-    this.likeService.getLikesByUserId(this.userId).subscribe(
-      (response) => {
-        console.log("Likes obtenidos:", response);
-        if (Array.isArray(response.data)) {
-          this.userLikes = response.data.map((like) => like.entidad_id);
-        } else {
-          console.error("La respuesta no contiene un array en data:", response);
-        }
-      },
-      (error) => {
-        console.error("Error al obtener los likes del usuario:", error);
-      },
-    );
-  }
+  this.likeService.getLikesByUserId(this.userId).subscribe({
+    next: (response) => {
+      if (Array.isArray(response.data)) {
+        this.userLikes = response.data.map((like) => ({
+          id: like.id, 
+          entidad_id: like.entidad_id, 
+          entidad_tipo: like.entidad_tipo,
+        }));
 
-  search() {
-    if (this.query.trim()) {
-      this.searchService.search(this.query).subscribe(
-        (response) => {
-          this.results = response;
-          console.log(this.results);
-        },
-        (error) => {
-          console.error("Error en la búsqueda:", error);
-        },
-      );
-    }
+      }
+    },
+    error: (error) => {
+      console.error("Error al obtener los likes del usuario:", error);
+    },
+  });
+}
+
+search() {
+  if (this.query.trim()) {
+    this.searchService.search(this.query).subscribe({
+      next: (response) => {
+        if (response?.artists && Array.isArray(response.artists)) {
+          this.results.artists = response.artists;
+        } else {
+          this.results.artists = [];
+        }
+
+        this.results.songs = response.songs ?? [];
+        this.results.playlists = response.playlists ?? [];
+        this.results.albums = response.albums ?? [];
+
+      },
+      error: (error) => {
+        console.error("Error en la búsqueda:", error);
+      }
+    });
   }
+}
 
   playSong(cancion: any) {
     this.playerService.playSong(cancion);
   }
 
-  addToFavorites(song: any) {
-    const songId = song.id;
-    console.log(songId);
-    console.log(this.userId);
-    this.playlistService.addToFavorites(songId, this.userId).subscribe(
-      (response) => {
-        console.log("Canción añadida a favoritos:", response);
-        this.userLikes.push(songId);
-      },
-      (error) => {
-        console.error("Error al añadir la canción a favoritos:", error);
-      },
-    );
+addToFavorites(song: any) {
+  const songId = song.id;
+  this.playlistService.addToFavorites(songId, this.userId).subscribe({
+    next: () => {
+      this.userLikes.push({ id: songId, entidad_id: songId, entidad_tipo: "Cancion" });
+
+      this.successMessage = "Canción añadida a favoritos.";
+      setTimeout(() => {
+        this.successMessage = "";
+      }, 3000);
+    },
+    error: (error) => {
+      this.errorMessage = "Error al añadir la canción a favoritos.";
+      setTimeout(() => {
+        this.errorMessage = "";
+      }, 3000);
+    },
+  });
+}
+
+  hasLikedSong(songId: number): boolean {
+    return this.userLikes.some(like => like.entidad_id === songId && like.entidad_tipo === 'Cancion');
   }
 
-  deleteLike(song: any) {
-    const songId = song.id;
-    const likeId = this.userLikes[songId];
+deleteLike(entidadId: number, tipo: string) {
+  const likeToDelete = this.userLikes.find(
+    (like) => like.entidad_id === entidadId && like.entidad_tipo === tipo
+  );
 
-    if (likeId) {
-      this.likeService.deleteLike(likeId).subscribe(
-        (response) => {
-          console.log("Like eliminado:", response);
-          delete this.userLikes[songId];
-        },
-        (error) => {
-          console.error("Error al eliminar el like:", error);
-        },
-      );
-    } else {
-      console.error("No se encontró el like para la canción:", songId);
-    }
+  if (likeToDelete) {
+    this.likeService.deleteLike(likeToDelete.id).subscribe({
+      next: () => {
+        this.successMessage = `${tipo} eliminado de favoritos.`;
+        this.getUserLikes();
+        setTimeout(() => {
+          this.successMessage = "";
+        }, 3000);
+      },
+      error: (error) => {
+        this.errorMessage = "Error al eliminar el like.";
+        setTimeout(() => {
+          this.errorMessage = "";
+        }, 3000);
+      },
+    });
+  } else {
+    console.warn(`No se encontró un like para ${tipo} con ID ${entidadId}`);
   }
+}
+
+
 }

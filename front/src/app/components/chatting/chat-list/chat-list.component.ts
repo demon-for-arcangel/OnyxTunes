@@ -55,7 +55,6 @@ export class ChatListComponent implements OnInit {
       (response) => {
         if (response.success) {
           this.chats = response.chats;
-          console.log("Chats cargados:", this.chats);
         } else {
           console.error("Error en la respuesta del servidor:", response);
           this.chats = [];
@@ -69,8 +68,7 @@ export class ChatListComponent implements OnInit {
   }
 
   goToChat(chat: UserChat) {
-    // Aquí accedemos al partnerId desde el chat y lo pasamos en la URL
-    const partnerId = chat.id; // O cualquier campo que sea el ID del partner en el objeto chat
+    const partnerId = chat.id;
     this.router.navigate(["chat", { id: partnerId }]);
   }
 }

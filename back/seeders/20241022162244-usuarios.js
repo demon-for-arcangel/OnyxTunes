@@ -56,6 +56,22 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        nombre: 'Onyxtunes',
+        email: 'onyxtunes@gmail.com',
+        password: await bcrypt.hash('1234', 10),
+        nickname: 'User Default',
+        fecha_nacimiento: null,
+        foto_perfil: '',
+        telefono: '111111111',
+        genero: 'Femenino',
+        activo: 1,
+        last_login: new Date(),
+        connected: 1,
+        rol: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ], {});
 
     let factoryUser = await userFactory(20)

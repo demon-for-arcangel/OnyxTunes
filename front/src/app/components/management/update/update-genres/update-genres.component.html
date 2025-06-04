@@ -8,5 +8,11 @@
             <input type="text" id="nombre" [(ngModel)]="genero.nombre" name="nombre" required />
         </div>
         <button type="submit">Actualizar Género</button>
+        @if(successMessage) {
+            <p class="success">{{ successMessage }}</p>
+        }
+        @if(errorMessage) {
+            <p class="error">{{ errorMessage }}</p>
+        }
     </form>
 </div>

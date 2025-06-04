@@ -116,14 +116,9 @@ export class UsersComponent {
       closeOnEscape: true
     });
 
-    this.ref.onClose.subscribe((response) => {
-      console.log("Respuesta recibida al cerrar el modal:", response);
-      
+    this.ref.onClose.subscribe((response) => {      
       if (response?.created === true) {
-        console.log("Usuario creado, recargando tabla...");
         this.loadUsuarios();
-      } else {
-        console.log("No hay usuarios nuevos, no se recarga la página.");
       }
     });
   

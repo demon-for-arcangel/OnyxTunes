@@ -2,22 +2,41 @@
     <app-sidebar></app-sidebar>
     <main>
         <app-account-button></app-account-button>
-        <h1>Escuchado recientemente</h1> <!-- canciones sueltas y playlist que han sido escuchadas por ultima vez -->
-        <h2>Especialmente para ti</h2> <!-- lista de reproduccion con canciones recomendadas y canciones que te gustan -->
-        <!-- añadir canciones sueltas para meter mas recomendaciones (no importa si estas canciones ya fueron recomendadas en la playlist)-->
-        @if (playlists) {
-            <div class="playlists-container">
-                @for (playlist of playlists; track playlist) {
+<!--         <h2>Escuchado recientemente</h2>
+ -->        <h2>Especialmente para ti</h2>
+        @if (recommendationPlaylist?.length > 0) {
+            <div class="playlist-container">
+                @for (playlist of recommendationPlaylist; track playlist) {
                     <div class="playlist-card">
-<!--                         <img [src]="playlist.portadaURL" [alt]="playlist.nombre" class="playlist-cover"/>
- -->                        <h3>{{ playlist.nombre }}</h3>
-                        <!-- <p>{{ playlist.creador.nombre }}</p> -->
+                        @if (playlist?.id) {
+                            <button (click)="togglePlaylistMenu(playlist.id)">Opciones</button>
+                            @if (menuOpen && selectedPlaylistId === playlist.id) {
+                                <div class="menu">
+                                    <button (click)="toggleShowPlaylists()">Añadir Canciones</button>
+                                    @if (showPlaylists) {
+                                        <h3>Selecciona una playlist</h3>
+                                        <ul>
+                                            @for (playlist of userPlaylists; track playlist) {
+                                                <li>
+                                                    <input type="radio" name="playlistSeleccionada" [value]="playlist.id" (change)="selectTargetPlaylist(playlist.id)">
+                                                    {{ playlist.nombre }}
+                                                </li>
+                                            }
+                                        </ul>
+                                        <button (click)="confirmAddSongs()">Añadir</button>
+                                    }
+                                    <button (click)="savePlaylist(playlist.id)">Guardar en Biblioteca</button>
+                                </div>
+                            }
+                        }
+                        <img [src]="playlist.portadaURL ? playlist.portadaURL : 'assets/images/playlist_Default.png'" [alt]="playlist.nombre" class="playlist-cover"/>
+                        <h3>{{ playlist.nombre }}</h3>
                         <button (click)="navigateToPlaylist(playlist)">Ver Playlist</button>
+
                     </div>
                 }
             </div>
         }
-
         <h2>Nueva Música</h2>
         <div class="carousel-container">
             <button class="prev" (click)="scrollLeft()">&#9664;</button>
@@ -25,10 +44,20 @@
                 <div class="songs-container">
                     @for (cancion of cancionesNuevas; track cancion) {
                         <div class="song-card">
-                            <img [src]="cancion.portadaURL" alt="Portada de {{ cancion.titulo }}" class="cover-image"/>
+                            <img src="{{ cancion.portadaURL ? cancion.portadaURL : 'assets/images/songs_Default.png' }}" alt="Portada de {{ cancion.titulo }}" class="cover-image"/>
                             <p class="song-title">{{ cancion.titulo }}</p>
-                            <p class="song-artist">{{ cancion.artista.nombre }}</p>
+                            <p class="song-artist" (click)="goToArtistPage(cancion.artista.id)">{{ cancion.artista.nombre }}</p>
                             <button (click)="navigateToSong(cancion)">Escuchar</button>
+                            <!-- @if (cancion?.id) {
+                                @if (hasLikedSong(cancion.id)) {
+                                    <button (click)="deleteLike(cancion.id)">Eliminar Like</button>
+                                } @else {
+                                    <button (click)="addToFavorites(cancion)">
+                                        Agregar a Favoritos
+                                    </button>
+                                }
+                            } -->
+
                         </div>
                     }
                 </div>
@@ -36,9 +65,30 @@
             <button class="next" (click)="scrollRight()">&#9654;</button>
         </div>
 
-        <h2>Descubra nueva música</h2>
+        <h2>Descubre música por géneros</h2>
+        @if (playlistsPorGenero.length) {
+            <div class="playlists-container">
+                @for (playlist of playlistsPorGenero; track playlist) {
+                    <div class="playlist-card">
+                        <img [src]="playlist.portadaURL ? playlist.portadaURL : 'assets/images/playlist_Default.png'" [alt]="playlist.nombre" class="playlist-cover"/>
+                        <h3>{{ playlist.nombre }}</h3>
+                        <p>{{ playlist.descripcion }}</p>
+                        <button (click)="navigateToPlaylist(playlist)">Ver Playlist</button>
+                    </div>
+                }
+            </div>
+        } @else {
+            <p>No hay playlists disponibles por género.</p>
+        }
 
-                
+        @if(successMessage) {
+            <p class="success">{{ successMessage }}</p>
+        }
+
+        @if (errorMessage) {
+            <p class="error">{{ errorMessage }}</p>
+        }
+
         <app-player></app-player>
     </main>
 </div>

@@ -28,7 +28,9 @@
                             <td>{{ formatDuration(cancion.duracion) }}</td>
                             <td>
                                 <button (click)="reproducirCancion(cancion)">Reproducir</button>
-                                <button (click)="eliminarCancion(cancion.id)">Quitar de la playlist</button>
+                                @if (!playlist.descripcion.includes('Playlist generada automáticamente')) {
+                                    <button (click)="eliminarCancion(cancion.id)">Quitar de la playlist</button>
+                                }
                             </td>
                         </tr>
                     }

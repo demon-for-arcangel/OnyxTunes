@@ -124,8 +124,9 @@ export class RegisterComponent {
     ) {
       this.authService.register(this.registerData).subscribe({
         next: (response) => {
-          console.log("Registro exitoso", response);
-          this.router.navigate(["/gustosMusicales"]);
+          if (response.token) {
+            this.router.navigate(["/home"]); 
+          }
         },
         error: (error) => {
           console.error("Error en el registro", error);

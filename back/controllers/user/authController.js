@@ -59,10 +59,8 @@ const register = async (req, res) => {
     }
 };
 
-/* revisar el atributo activo siempre lo coge como 0 */
 const registerByAdmin = async (req, res) => {
     const body = req.body;
-    console.log('cuerpo recibido por el admin:', body);
 
     try {
         const existingUser = await conx.getUserByEmail(body.email);

@@ -16,12 +16,13 @@ export class UpdateGenresComponent implements OnInit {
     nombre: '',
     descripcion: ''
   };
+  successMessage: string = "";
+  errorMessage: string = '';
 
   constructor(private generoService: GeneroService, private config: DynamicDialogConfig) {}
 
   ngOnInit(): void {
     this.generoId = this.config.data.generoId;
-    console.log(this.generoId);
     this.loadGenero();
   }
 
@@ -29,8 +30,6 @@ export class UpdateGenresComponent implements OnInit {
     this.generoService.getGeneroById(this.generoId).subscribe(
       (data) => {
         this.genero = data;
-
-        console.log(this.genero);
       },
       (error) => {
         console.error('Error al cargar el género:', error);
@@ -42,13 +41,19 @@ export class UpdateGenresComponent implements OnInit {
     const formData = new FormData();
     formData.append('nombre', this.genero.nombre);
 
-    this.generoService.updateGenero(formData, this.generoId).subscribe(
-      (data) => {
-        console.log('Género actualizado:', data);
+    this.generoService.updateGenero(formData, this.generoId).subscribe({
+      next: () => {
+        this.successMessage = "Género actualizado correctamente.";
+        setTimeout(() => {
+          this.successMessage = "";
+        }, 3000);
       },
-      (error) => {
-        console.error('Error al actualizar el género:', error);
+      error: (error) => {
+        this.errorMessage = "Error al actualizar el género.";
+        setTimeout(() => {
+          this.errorMessage = "";
+        }, 3000);
       }
-    );
+    });
   }
 }

@@ -17,7 +17,9 @@ export class SettingsComponent {
   user: any = {}; 
   errorMessages: Errors = {};
   successMessage: string = '';
+  errorMessage: string = '';
   selectedFile: File | null = null;
+  recommendationsEnabled: boolean = false;
 
   constructor(
     private authService: AuthService, 
@@ -33,7 +35,6 @@ export class SettingsComponent {
   loadUserData() {
     this.authService.getUserByToken(localStorage.getItem('user')).subscribe(data => {
       this.user = data; 
-      console.log(this.user)
       if (this.user.fecha_nacimiento) {
         this.user.fecha_nacimiento = this.formatDate(this.user.fecha_nacimiento);
       }
@@ -43,64 +44,69 @@ export class SettingsComponent {
   }
 
   checkRecommendationStatus() {
-    const tokenObject = localStorage.getItem("user");
-    if (!tokenObject) {
-      console.error("Token no encontrado");
-      return;
-    }
-
-    this.authService.getUserByToken(tokenObject).subscribe({
-      next: (usuario) => {
-        if (usuario?.id) {
-          const userId = usuario.id.toString();
-          this.recommendationService.getRecommendationStatus(userId).subscribe({
-            next: (status: boolean) => {
-              this.user.recommendationsEnabled = status;
-            },
-            error: (err) => {
-              console.error("Error al obtener el estado de recomendaciones:", err);
-            }
-          });
-        }
-      },
-      error: (err) => {
-        console.error("Error al obtener usuario desde el token:", err);
-      }
-    });
+  const tokenObject = localStorage.getItem("user");
+  if (!tokenObject) {
+    console.error("Token no encontrado");
+    return;
   }
 
-  toggleRecommendations() {
-    const tokenObject = localStorage.getItem("user");
-    if (!tokenObject) {
-      console.error("Token no encontrado");
-      return;
-    }
-
-    this.authService.getUserByToken(tokenObject).subscribe({
-      next: (usuario) => {
-        if (usuario?.id) {
-          const userId = usuario.id.toString();
-          this.recommendationService.updateRecommendationStatus(userId, this.user.recommendationsEnabled).subscribe({
-            next: (response) => {
-              console.log("Estado de recomendaciones actualizado correctamente:", response);
-            },
-            error: (err) => {
-              console.error("Error al actualizar estado de recomendaciones:", err);
+  this.authService.getUserByToken(tokenObject).subscribe({
+    next: (usuario) => {
+      if (usuario?.id) {
+        const userId = usuario.id.toString();
+        this.recommendationService.getRecommendationStatus(userId).subscribe({
+          next: (status: any) => { 
+            if (status && typeof status === 'object' && 'habilitada' in status) {
+              this.recommendationsEnabled = status.habilitada;
+            } else {
+              this.recommendationsEnabled = false;
             }
-          });
-        }
-      },
-      error: (err) => {
-        console.error("Error al obtener usuario desde el token:", err);
-      }
-    });
+          },
+          error: (err) => {
+            console.error("Error al obtener el estado de recomendaciones:", err);
+          }
+        });
+      } 
+    },
+    error: (err) => {
+      console.error("Error al obtener usuario desde el token:", err);
+    }
+  });
+}
+
+toggleRecommendations() {
+  const tokenObject = localStorage.getItem("user");
+  if (!tokenObject) {
+    return;
   }
+
+  this.authService.getUserByToken(tokenObject).subscribe({
+    next: (usuario) => {
+      if (usuario?.id) {
+        const userId = usuario.id.toString();
+        this.recommendationService.updateRecommendationStatus(userId, this.recommendationsEnabled).subscribe({
+          next: () => {
+            this.successMessage = "Estado de recomendaciones actualizado.";
+            setTimeout(() => {
+              this.successMessage = "";
+            }, 3000);
+          },
+          error: (err) => {
+            this.errorMessage = "Error al actualizar el estado de recomendaciones.";
+            setTimeout(() => {
+              this.errorMessage = "";
+            }, 3000);
+          }
+        });
+      }
+    },
+  });
+}
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
   
     if (file) {
-      console.log("Archivo seleccionado:", file);
       this.selectedFile = file;
       this.user.foto_perfil = URL.createObjectURL(file); 
     } else {
@@ -176,14 +182,16 @@ export class SettingsComponent {
 
     this.userService.updateUser(this.user.id, formData).subscribe(
       (response) => {
-        console.log('Usuario actualizado:', response);
         this.successMessage = 'Actualizado correctamente.';
         setTimeout(() => {
           this.successMessage = '';
         }, 3000);
       },
       (error) => {
-        console.error('Error al actualizar el usuario:', error);
+        this.errorMessage = "Error al actualizar el usuario.";
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 3000);
       }
     );
   }

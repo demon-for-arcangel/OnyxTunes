@@ -365,21 +365,6 @@ button[type="submit"]:hover {
     background-color: #ff4d6d;
 }
 
-.error {
-    color: #ff4d6d;
-    font-size: 14px;
-    margin-top: 5px;
-}
-
-.success {
-    color: #4caf50;
-    font-size: 14px;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: rgba(76, 175, 80, 0.1);
-    border-radius: 4px;
-}
-
 @media (max-width: 768px) {
     main {
         padding: 10px;

@@ -14,8 +14,8 @@ module.exports = {
     */
     await queryInterface.bulkInsert(process.env.TABLA_MENSAJE, [
       {
-        emisor: 1, // ID del usuario emisor
-        receptor: 2, // ID del usuario receptor
+        emisor: 1, 
+        receptor: 2, 
         texto: 'Hola, ¿cómo estás?',
         leido: true,
         createdAt: new Date(),

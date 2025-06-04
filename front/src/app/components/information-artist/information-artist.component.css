@@ -1,0 +1,121 @@
+.artist-info-container {
+    display: flex;
+    height: 100vh; 
+    overflow: hidden; 
+}
+
+app-sidebar {
+    width: 450px; 
+    background-color: var(--color-sidebar);
+    color: #ecf0f1; 
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; 
+    gap: 15px;
+    font-size: 16px;
+    position: sticky; 
+    top: 0;
+    height: 100%;
+}
+
+main {
+    flex: 1; 
+    padding: 20px;
+    overflow-y: auto; 
+}
+
+.artist-info-content {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+h2, h3 {
+    margin-bottom: 15px;
+}
+
+.artist-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+    margin-bottom: 20px;
+}
+
+.album-list, .song-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.album-cover, .song-cover {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0px 2px 6px rgba(255, 255, 255, 0.2);
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li:last-child {
+    border-bottom: none;
+}
+
+
+.album-list, .song-list {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 15px;
+    justify-content: center;
+}
+
+li {
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.album-cover, .song-cover {
+    width: 160px; 
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0px 2px 6px rgba(255, 255, 255, 0.2);
+}
+
+.follow-button {
+    background-color: #1DB954;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.follow-button:hover {
+    background-color: #1ed760;
+}
+
+.follow-button.unfollow {
+    background-color: #FF4C4C;
+}
+
+.follow-button.unfollow:hover {
+    background-color: #E63939;
+}

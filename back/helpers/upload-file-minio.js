@@ -25,12 +25,10 @@ async function uploadAudioToS3(key, bucket, fileData) {
                     console.error("Error al generar la URL presignada:", err);
                     return reject(new Error("No se pudo generar la URL"));
                 }
-                console.log("URL presignada generada:", url);
                 resolve(url); 
             }); */
 
             const url = `http://${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${bucket}/${key}`;
-            console.log("URL generada:", url);
             resolve(url);
         });
     });
@@ -42,10 +40,6 @@ async function uploadAudioToS3(key, bucket, fileData) {
 */
 async function uploadImageToS3(bucketName, fileName, fileData) {
     return new Promise((resolve, reject) => {
-        console.log("Subiendo imagen a MinIO...");
-        console.log("Bucket:", bucketName);
-        console.log("Archivo:", fileName); 
-
         if (!fileData) {
             console.error("Error: El archivo no tiene un buffer válido.");
             return reject(new Error("El archivo no tiene datos válidos."));
@@ -57,18 +51,13 @@ async function uploadImageToS3(bucketName, fileName, fileData) {
             return reject(new Error("No se pudo determinar el tipo de contenido del archivo."));
         }
 
-        console.log("Content-Type detectado:", contentType);
-
         minioClient.putObject(bucketName, fileName, fileData, { 'Content-Type': contentType }, (err, etag) => {
             if (err) {
                 console.error("Error al subir la imagen a MinIO:", err);
                 return reject(new Error("Error al subir la imagen."));
             }
 
-            console.log("Imagen subida con éxito. ETag:", etag);
-
             const url = `http://${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${bucketName}/${fileName}`;
-            console.log("URL generada:", url);
             resolve(url);
         });
     });

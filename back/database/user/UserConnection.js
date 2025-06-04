@@ -53,8 +53,6 @@ class UserModel {
         ],
       });
 
-      console.log(artists);
-
       return artists;
     } catch (error) {
       console.error("Error al mostrar la lista de artistas:", error);
@@ -113,6 +111,7 @@ class UserModel {
       }
 
       const newUser = await models.Usuario.create(userData);
+      this.createRecommendation(newUser.id);
 
       if (!newUser) {
         throw new Error("No se pudo crear el usuario");
@@ -134,6 +133,8 @@ class UserModel {
         rol,
       });
 
+      this.createRecommendation(newUser.id);
+
       return newUser;
     } catch (error) {
       console.error("Error al crear el usuario:", error);
@@ -141,13 +142,28 @@ class UserModel {
     }
   }
 
+  async createRecommendation(usuario_id, cancion_id = null) {
+    try {
+      const nuevaRecomendacion = await models.Recomendacion.create({
+        usuario_id,
+        cancion_id,
+        fecha_recomendacion: new Date(),
+        habilitada: true, 
+      });
+
+      return nuevaRecomendacion;
+    } catch (error) {
+      throw new Error("Error al crear la recomendación.");
+    }
+  }
+
+
   async updateUser(userId, updatedData, files) {
     try {
         const user = await models.Usuario.findByPk(userId);
         if (!user) {
             throw new Error("Usuario no encontrado.");
         }
-        console.log("archivo", files);
 
         let assetPath = user.foto_perfil;
 
@@ -156,8 +172,6 @@ class UserModel {
             if (!file.mimetype.startsWith("image/")) {
                 throw new Error("Archivo inválido: debe ser una imagen.");
             }
-
-            console.log("data", file.data);
 
             if (!file.data || file.data.length === 0) {
               const tempFilePath = file.tempFilePath;
@@ -191,7 +205,6 @@ class UserModel {
 
 
   async deleteUsers(userIds) {
-    //revisar, no elimina las playlist que son exclusivas del usuario
     if (!userIds) {
       throw new Error("No se proporcionaron IDs de usuario para eliminar.");
     }
@@ -224,19 +237,12 @@ class UserModel {
         },
       });
 
-      console.log(
-        `Usuarios restantes en la playlist ${playlistId}: ${otherUsersCount}`,
-      );
-
       if (otherUsersCount === 0) {
         await models.Playlist.destroy({
           where: { id: playlistId },
         });
-        console.log(`Playlist con id ${playlistId} eliminada.`);
       } else {
-        console.log(
-          `La playlist con id ${playlistId} no se elimina porque está asociada a otros usuarios.`,
-        );
+        throw new Error("No se elimina porque está asociada a otros usuarios.");
       }
     }
 
@@ -291,10 +297,8 @@ class UserModel {
           nombre: "Favoritos",
         });
         playlistId = newPlaylist.id;
-        console.log('Lista de reproducción "Favoritos" creada.');
       } else {
         playlistId = existingPlaylist.id;
-        console.log('La lista de reproducción "Favoritos" ya existe.');
       }
 
       await models.UsuarioPlaylist.create({
@@ -302,12 +306,7 @@ class UserModel {
         playlist_id: playlistId,
       });
 
-      console.log('Lista de reproducción "Favoritos" asociada al usuario.');
     } catch (error) {
-      console.error(
-        'Error al crear o asociar la lista de reproducción "Favoritos":',
-        error,
-      );
       throw new Error("Error al crear o asociar la lista de reproducción");
     }
   }

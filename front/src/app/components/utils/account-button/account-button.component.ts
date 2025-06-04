@@ -12,6 +12,28 @@ export class AccountButtonComponent {
   menuOpen = false;
 
   constructor(private router: Router) {}
+  ngOnInit() {
+    document.addEventListener("click", this.closeMenuOnClickOutside.bind(this));
+  }
+
+  ngOnDestroy() {
+    document.removeEventListener("click", this.closeMenuOnClickOutside.bind(this));
+  }
+
+  closeMenuOnClickOutside(event: Event) {
+    const menuElement = document.querySelector(".menu");
+    const buttonElement = document.querySelector(".account-button");
+
+    if (
+      this.menuOpen &&
+      menuElement &&
+      buttonElement &&
+      !menuElement.contains(event.target as Node) &&
+      !buttonElement.contains(event.target as Node)
+    ) {
+      this.menuOpen = false;
+    }
+  }
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;

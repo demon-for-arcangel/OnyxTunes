@@ -29,7 +29,6 @@ class LikeConnection {
     }
 
     async deleteLike(likeId) {
-        console.log("Intentando eliminar el like con ID:", likeId);
         try {
             const like = await models.Like.findOne({
                 where: { 
@@ -54,10 +53,7 @@ class LikeConnection {
                         nombre: 'Favoritos'
                     }
                 });
-                console.log('Playlist', favoritesPlaylist);
-
                 if (favoritesPlaylist) {
-                    console.log(like.usuario_id);
                     const userPlaylist = await models.UsuarioPlaylist.findOne({
                         attributes: { exclude: ['album_id'] }, 
                         where: {
@@ -65,7 +61,6 @@ class LikeConnection {
                             playlist_id: favoritesPlaylist.id
                         }
                     });
-                    console.log('usuarioPlaylist', userPlaylist);
 
                     if (userPlaylist) {
                         await models.CancionPlaylist.destroy({

@@ -64,7 +64,6 @@ class PlaylistConnection {
     }
 
     async createPlaylist(data, canciones) {
-        console.log(data);
         try {
             const existingPlaylist = await models.Playlist.findOne({
                 attributes: { exclude: ['usuario_id'] },
@@ -159,7 +158,6 @@ class PlaylistConnection {
         }
     }
     
-
     async deletePlaylists(playlistIds) {
         try {
             const playlistsToDelete = await models.Playlist.findAll({
@@ -286,7 +284,6 @@ class PlaylistConnection {
     }
 
     async deleteSongPlaylist(songId, playlistId){
-        console.log(songId, playlistId);
         try {
             const playlist = await models.Playlist.findByPk(playlistId, {
                 attributes: { exclude: ['usuario_id'] },
@@ -317,6 +314,119 @@ class PlaylistConnection {
         } catch (error) {
             console.error("Error al eliminar la canción de la playlist:", error);
             throw new Error("Error al eliminar la canción de la playlist.");
+        }
+    }
+
+    async createPlaylistsByGenres() {
+    try {
+        let usuarioDefecto = await models.Usuario.findOne({
+            where: { email: "onyxtunes@gmail.com" }
+        });
+
+        if (!usuarioDefecto || !usuarioDefecto.id) {
+            throw new Error("No se encontró un usuario válido con ese email.");
+        }
+
+        const generos = await models.Genero.findAll({ attributes: ["id", "nombre"] });
+
+        if (!generos.length) {
+            throw new Error("No se encontraron géneros en la base de datos.");
+        }
+
+        const playlistsCreadas = [];
+
+        for (const genero of generos) {
+            const nombrePlaylist = `Top ${genero.nombre}`;
+
+            let playlist = await models.Playlist.findOne({
+                where: { nombre: nombrePlaylist }
+            });
+
+            const cancionesPopulares = await models.Cancion.findAll({
+                include: [{
+                    model: models.Genero,
+                    as: "generos",
+                    required: true,
+                    through: {
+                        model: models.GeneroCancion
+                    },
+                    where: { id: genero.id }
+                }],
+                attributes: ["id", "titulo", "artista_id", "reproducciones"],
+                order: [["reproducciones", "DESC"]],
+                limit: 20
+            });
+
+            if (!cancionesPopulares.length) {
+                continue;
+            }
+
+            if (!playlist) {
+                playlist = await models.Playlist.create({ 
+                    nombre: nombrePlaylist,
+                    descripcion: "Playlist generada automáticamente por género",
+                    publico: false,
+                });
+
+                await models.UsuarioPlaylist.create({
+                    usuario_id: usuarioDefecto.id,
+                    playlist_id: playlist.id
+                });
+            } else {
+                await models.CancionPlaylist.destroy({
+                    where: { playlist_id: playlist.id }
+                });
+            }
+
+            playlistsCreadas.push(playlist);
+
+            const cancionesData = cancionesPopulares.map(cancion => ({
+                playlist_id: playlist.id,
+                cancion_id: cancion.id
+            }));
+
+            await models.CancionPlaylist.bulkCreate(cancionesData);
+        }
+
+        return { msg: "Playlists generadas/actualizadas con éxito.", playlistsCreadas };
+
+    } catch (error) {
+        console.error("Error en la generación automática de playlists:", error);
+        throw new Error("Error en la generación automática de playlists.");
+    }
+}
+
+    
+    async addSongsToPlaylist(userId, sourcePlaylistId, targetPlaylistId) {
+        try {
+            const usuarioPropietario = await models.UsuarioPlaylist.findOne({
+                where: { usuario_id: userId, playlist_id: targetPlaylistId }
+            });
+
+            if (!usuarioPropietario) {
+                throw new Error("No puedes añadir canciones a una playlist que no te pertenece.");
+            }
+
+            const canciones = await models.CancionPlaylist.findAll({
+                where: { playlist_id: sourcePlaylistId },
+                attributes: ["cancion_id"]
+            });
+
+            if (!canciones.length) {
+                throw new Error("La playlist origen no tiene canciones.");
+            }
+
+            const cancionesData = canciones.map(cancion => ({
+                playlist_id: targetPlaylistId,
+                cancion_id: cancion.cancion_id
+            }));
+
+            await models.CancionPlaylist.bulkCreate(cancionesData);
+
+            return { msg: "Canciones añadidas correctamente.", data: canciones };
+
+        } catch (error) {
+            throw new Error("Error al añadir canciones.");
         }
     }
 }

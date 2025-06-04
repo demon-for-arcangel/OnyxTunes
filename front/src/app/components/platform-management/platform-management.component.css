@@ -1,12 +1,20 @@
 header {
-    background-color: #2c3e50; 
+    background: linear-gradient(90deg, #1e1e1e, #e51d36);
+    background-size: 200% 200%;
+    animation: gradientAnimation 30s infinite;    
     color: #ecf0f1;
     padding: 15px 20px;
     display: flex;
     height: 65px;
-    justify-content: space-between; 
-    align-items: center; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); 
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .header-content {
@@ -17,13 +25,13 @@ header {
 }
 
 .logo {
-    height: 70px; 
-
+    height: 70px;
     position: absolute;
     left: 10px;  
     top: 10px;   
     z-index: 100;
-  }
+    border-radius: 90px;
+}
 
 .login-container {
     max-width: 400px; 
@@ -50,6 +58,7 @@ header {
     gap: 20px;
     justify-content: center;
     flex-wrap: wrap; 
+    margin-top: 40px;
 }
 
 .section {

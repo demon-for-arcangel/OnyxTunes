@@ -14,20 +14,16 @@ const { Op } = require("sequelize");
  */
 class Message {
     static findRecentChatMessages = async (emisor, receptor) => {
-        try {
-            console.log(emisor, receptor);
-            
+        try {          
             const emisorUser = await models.Usuario.findOne({
                 where: { id: emisor },
                 attributes: ['id', 'email', 'nickname', 'foto_perfil', 'connected']
             });
-            console.log(emisorUser);
 
             const receptorUser = await models.Usuario.findOne({
                 where: { id: receptor },
                 attributes: ['id', 'email', 'nickname', 'foto_perfil', 'connected']
             });
-            console.log(receptorUser);
 
             const messages = await models.Mensaje.findAll({
                 where: {
@@ -43,8 +39,6 @@ class Message {
                 },
             });
          
-            console.log('Mensajes recuperados:', messages);  
-
             return {
                 success: true,
                 message: 'Se han obtenido los mensajes correctamente.',
@@ -60,9 +54,7 @@ class Message {
         }
     };
 
-    static getReceptoresPorEmisor = async (emisorId) => {
-        console.log(emisorId);
-    
+    static getReceptoresPorEmisor = async (emisorId) => {    
         if (!emisorId) {
             return res.status(400).json({ success: false, message: 'Emisor ID no proporcionado.' });
         }
@@ -75,8 +67,6 @@ class Message {
                 attributes: ['receptor'], 
                 group: ['receptor'] 
             });
-
-            console.log(receptores);
     
             const receptoresConInfo = await Promise.all(receptores.map(async (mensaje) => {
                 const usuario = await models.Usuario.findByPk(mensaje.receptor);
@@ -252,7 +242,6 @@ class Message {
                 }
             };
         } catch (e) {
-            console.log(e);
             throw new Error('Error al obtener los chats.');
         }
     };
@@ -303,7 +292,6 @@ class Message {
                 data: result 
             };
         } catch (e) {
-            console.log(e);
             throw new Error('Error al obtener los chats agrupados.');
         }
     };
