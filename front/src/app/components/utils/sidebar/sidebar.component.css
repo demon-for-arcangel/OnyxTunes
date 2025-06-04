@@ -93,16 +93,16 @@
 }
 
 .playlist-button {
-    background: none;  /* ✅ Sin fondo */
-    border: none;  /* ✅ Sin bordes */
-    padding: 0;  /* ✅ Sin relleno */
-    display: inline-block;  /* ✅ Mantiene la estructura de botón */
-    cursor: pointer;  /* ✅ Permite interacción */
+    background: none;  
+    border: none;  
+    padding: 0;  
+    display: inline-block;  
+    cursor: pointer;  
 }
 
 .playlist-button img {
-    width: 160px; 
-    height: 180px;
+    width: 110px; 
+    height: 130px;
     object-fit: cover;
     border-radius: 8px;
     transition: transform 0.3s ease;
