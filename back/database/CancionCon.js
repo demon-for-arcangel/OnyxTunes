@@ -474,31 +474,45 @@ class SongModel {
             throw new Error("Error al agregar al historial");
         }
     }
+async getHistoryByUser(userId) {
+    try {
+        const startOfWeek = new Date();
+        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); 
+        startOfWeek.setHours(0, 0, 0, 0);
 
-    async getHistoryByUser(userId) {
-        try {
-            const history = await models.Historial.findAll({
-                where: { usuario_id: userId },
-                include: [
-                    {
-                        model: models.Cancion,
-                        as: 'cancion',
-                        attributes: ['id', 'titulo'] 
-                    },
-                    {
-                        model: models.Usuario,
-                        as: 'usuario',
-                        attributes: ['id', 'nombre'] 
-                    }
-                ],
-                order: [['fecha_reproduccion', 'DESC']] 
-            });
-            return history;
-        } catch (error) {
-            console.error("Error al obtener el historial:", error);
-            throw new Error("Error al obtener el historial");
-        }
+        const endOfWeek = new Date();
+        endOfWeek.setDate(startOfWeek.getDate() + 6); 
+        endOfWeek.setHours(23, 59, 59, 999);
+
+        const history = await models.Historial.findAll({
+            where: {
+                usuario_id: userId,
+                fecha_reproduccion: {
+                    [Op.gte]: startOfWeek,  
+                    [Op.lte]: endOfWeek   
+                }
+            },
+            include: [
+                {
+                    model: models.Cancion,
+                    as: 'cancion',
+                    attributes: ['id', 'titulo']
+                },
+                {
+                    model: models.Usuario,
+                    as: 'usuario',
+                    attributes: ['id', 'nombre']
+                }
+            ],
+            order: [['fecha_reproduccion', 'DESC']]
+        });
+
+        return history;
+    } catch (error) {
+        throw new Error("Error al obtener el historial");
     }
+}
+
 }
 
 module.exports = SongModel;
