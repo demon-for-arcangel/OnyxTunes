@@ -56,7 +56,7 @@
           <ul>
             @for (artist of results.artists; track artist) {
               <li>
-                <a (click)="viewArtist(artist.id)">{{ artist.nombre }}</a>
+                <a (click)="goToArtistPage(artist.id)">{{ artist.nombre }}</a>
               </li>
             }
           </ul>

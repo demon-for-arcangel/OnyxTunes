@@ -374,15 +374,14 @@ getUserLikes() {
     next: (response: any) => {
       if (Array.isArray(response.data)) {
         this.userLikes = response.data.map((like: any) => like.id);
-        this.likesLoaded = true;  // ✅ Indica que los likes ya están listos
+        this.likesLoaded = true;  
       } else {
         this.userLikes = [];
-        this.likesLoaded = true;  // ✅ Evita bloqueos si la respuesta es vacía
+        this.likesLoaded = true;  
       }
     },
     error: (error) => {
-      console.error("❌ Error al obtener los likes:", error);
-      this.likesLoaded = true;  // ✅ Evita que la interfaz se quede esperando
+      this.likesLoaded = true;  
     }
   });
 }
@@ -391,7 +390,7 @@ addToFavorites(song: any) {
   const songId = song.id;
   this.playlistService.addToFavorites(songId, this.userId).subscribe({
     next: () => {
-      this.userLikes.push(songId);  // ✅ Guarda solo el ID
+      this.userLikes.push(songId);  
 
       this.successMessage = "Canción añadida a favoritos.";
       setTimeout(() => {
@@ -408,14 +407,14 @@ addToFavorites(song: any) {
 }
 
 hasLikedSong(songId: number): boolean {
-  return this.userLikes.includes(songId);  // ✅ Comparación directa con `number[]`
+  return this.userLikes.includes(songId);  
 }
 
 deleteLike(songId: number) {
   if (this.hasLikedSong(songId)) {
     this.likeService.deleteLike(songId).subscribe({
       next: () => {
-        this.userLikes = this.userLikes.filter(id => id !== songId);  // ✅ Filtrar sin `indexOf()`
+        this.userLikes = this.userLikes.filter(id => id !== songId);
 
         this.successMessage = `Eliminado de favoritos.`;
         setTimeout(() => {
