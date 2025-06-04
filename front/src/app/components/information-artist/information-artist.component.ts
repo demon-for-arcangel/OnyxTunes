@@ -36,8 +36,6 @@ export class InformationArtistComponent {
     this.route.queryParams.subscribe(params => {
         if (params['artistId']) {
             this.artistId = Number(params['artistId']);
-        } else {
-            console.error("Error: No se recibió el ID del artista en los parámetros.");
         }
         this.getUser();
         this.getSongs();
@@ -54,20 +52,37 @@ getUser(): void {
 
                 this.userId = response?.id !== undefined ? response.id : null;
 
+                if (this.userId) {
+                    this.checkFollowingStatus(); 
+                }
             },
             error: (error) => {
-                console.error("Error al obtener el usuario:", error);
                 this.user = null;
                 this.userId = null; 
             },
         });
     } else {
-        console.error("No se encontró un token en el almacenamiento local.");
         this.user = null;
         this.userId = null;
     }
 }
 
+checkFollowingStatus(): void {
+    if (!this.userId || !this.artistId) {
+        return;
+    }
+
+    this.seguidoresService.getFollowing(this.userId).subscribe({
+        next: (response: any) => {
+           if (Array.isArray(response)) { 
+                this.isFollowing = response.some((follow: any) => follow.artista?.id === this.artistId); // ✅ Comprueba correctamente si el usuario sigue al artista
+            }
+        },
+        error: (error) => {
+            console.error("Error al verificar seguimiento:", error);
+        }
+    });
+}
 
   toggleFollowArtist(artistId: number | null): void {
     if (!artistId || !this.userId) {

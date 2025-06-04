@@ -6,5 +6,6 @@ export interface Like {
 }
 
 export interface LikeResponse {
-    data: Like[];
+    data?: Like[];
+    likes: { cancion_id: number}[];
 }

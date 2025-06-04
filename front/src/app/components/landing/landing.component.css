@@ -98,7 +98,7 @@ main {
 
 .section-left {
   flex: 0.4; 
-  min-width: 300px; 
+  min-width: 320px; 
 }
 
 .section-right {
@@ -165,25 +165,24 @@ footer button:hover {
   position: relative;
   overflow: hidden;
   width: 100%;
+  max-width: 800px;
 }
 
 .carousel {
   display: flex;
   gap: 15px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding: 10px;
-  max-width: 100%;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  width: 100%;
 }
 
 .song-card {
-  min-width: 200px;
-  max-width: 200px;
+  flex: 0 0 calc(33.33% - 15px);
+  max-width: 260px;
   text-align: center;
   border-radius: 10px;
   padding: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  scroll-snap-align: start;
   background-color: var(--color-surface-light);
 }
 
@@ -209,17 +208,20 @@ footer button:hover {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  font-size: 20px;
-  padding: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.4);
   cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
+
+.prev:hover, .next:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
 
 .prev { left: 0; }
 .next { right: 0; }
-
-.prev:hover, .next:hover {
-  background: rgba(0, 0, 0, 0.8);
-}

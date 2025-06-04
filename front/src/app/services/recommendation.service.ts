@@ -49,7 +49,6 @@ export class RecommendationService {
     const token = userData?.token;
 
     if (!token) {
-      console.error("❌ No hay token disponible.");
       return throwError(() => new Error("No hay token en la petición."));
     }
 
@@ -69,12 +68,15 @@ export class RecommendationService {
       return throwError(() => new Error("No hay token en la petición."));
     }
 
-    const headers = new HttpHeaders({
-      "x-token": token, 
-    });
+    if (!userData?.token) {
+      return throwError(() => new Error("No hay token en la petición."));
+    }
 
-    return this.http.post(`${this.url}/recomendaciones/update-status/${userId}`, 
-      { habilitada: status }, { headers });
+    return this.http.post(
+      `${this.url}/recomendaciones/update-status/${userId}`,
+      { habilitada: Boolean(status) }, 
+      { headers: new HttpHeaders({ "Content-Type": "application/json", "x-token": token }) }
+    );
   }
 
   getDailyRecommendations(userId: string): Observable<any> {

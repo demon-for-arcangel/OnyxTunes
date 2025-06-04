@@ -9,6 +9,7 @@ import { PlaylistService } from "../../services/playlist.service";
 import { LikesService } from "../../services/likes.service";
 import { PlayerService } from "../../services/player.service";
 import { Subscription } from "rxjs";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-search",
@@ -35,6 +36,7 @@ export class SearchComponent {
   @ViewChild(PlayerComponent) playerComponent!: PlayerComponent;
 
   constructor(
+    private router: Router,
     private searchService: SearchService,
     private authService: AuthService,
     private playlistService: PlaylistService,
@@ -44,9 +46,13 @@ export class SearchComponent {
     this.getUserId();
   }
 
-  viewArtist(id: number) {
+/*   viewArtist(id: number) {
     window.location.href = `/artist/${id}`;
-  }
+  } */
+
+    goToArtistPage(artistId: string) {
+      this.router.navigate(['/information-artist'], { queryParams: { artistId } });
+    }
 
   getUserId() {
     const token = localStorage.getItem("user");
@@ -130,7 +136,6 @@ addToFavorites(song: any) {
   hasLikedSong(songId: number): boolean {
     return this.userLikes.some(like => like.entidad_id === songId && like.entidad_tipo === 'Cancion');
   }
-
 
 deleteLike(entidadId: number, tipo: string) {
   const likeToDelete = this.userLikes.find(

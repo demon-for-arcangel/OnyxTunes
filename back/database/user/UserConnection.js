@@ -111,6 +111,7 @@ class UserModel {
       }
 
       const newUser = await models.Usuario.create(userData);
+      this.createRecommendation(newUser.id);
 
       if (!newUser) {
         throw new Error("No se pudo crear el usuario");
@@ -132,12 +133,30 @@ class UserModel {
         rol,
       });
 
+      this.createRecommendation(newUser.id);
+
       return newUser;
     } catch (error) {
       console.error("Error al crear el usuario:", error);
       throw new Error("Error al crear usuario");
     }
   }
+
+  async createRecommendation(usuario_id, cancion_id = null) {
+    try {
+      const nuevaRecomendacion = await models.Recomendacion.create({
+        usuario_id,
+        cancion_id,
+        fecha_recomendacion: new Date(),
+        habilitada: true, 
+      });
+
+      return nuevaRecomendacion;
+    } catch (error) {
+      throw new Error("Error al crear la recomendación.");
+    }
+  }
+
 
   async updateUser(userId, updatedData, files) {
     try {

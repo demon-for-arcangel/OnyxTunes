@@ -40,7 +40,7 @@ export class LandingComponent {
 
   ngOnInit() {
     this.loadTopReproducciones(5);
-    this.loadTopArtists(10);
+    this.loadTopArtists(5);
   }
 
   loadTopReproducciones(limit: number) {
@@ -50,9 +50,9 @@ export class LandingComponent {
         this.topAlbums = data.albums;
         this.topPlaylists = data.playlists;
 
-        this.getCancionesTitle(this.topCanciones);
-        this.getAlbumsTitle(this.topAlbums);
-        this.getPlaylistsTitle(this.topPlaylists);
+/*         this.getCancionesTitle(this.topCanciones);
+ */        /* this.getAlbumsTitle(this.topAlbums);
+        this.getPlaylistsTitle(this.topPlaylists); */
       },
       (error) => {
         console.error(
@@ -68,13 +68,13 @@ export class LandingComponent {
       (data) => {
         this.topArtists = data; 
       },
-      (error) => {
+/*       (error) => {
         console.error("Error al obtener los artistas más seguidos:", error);
-      },
+      }, */
     );
   }
 
-  getCancionesTitle(canciones: any[]) {
+/*   getCancionesTitle(canciones: any[]) {
     canciones.forEach((cancion, index) => {
       this.songService.getCancionById(cancion.entidad_id).subscribe(
         (data) => {
@@ -88,9 +88,9 @@ export class LandingComponent {
         },
       );
     });
-  }
+  } */
 
-  getAlbumsTitle(albums: any[]) {
+/*   getAlbumsTitle(albums: any[]) {
     albums.forEach((album, index) => {
       this.albumsService.getAlbumById(album.entidad_id).subscribe(
         (data) => {
@@ -120,7 +120,7 @@ export class LandingComponent {
         },
       );
     });
-  }
+  } */
 
   searchArtists() {
     this.router.navigate(["/search"]);
@@ -134,15 +134,18 @@ export class LandingComponent {
     this.router.navigate(["/register"]);
   }
 
-  scrollCarousel(direction: number): void {
-  const carousel = document.querySelector(".carousel") as HTMLElement | null;
-    if (carousel) {
-      carousel.scrollBy({
-        left: direction * 220,
-        behavior: "smooth"
-      });
-    }
+  scrollCarousel(direction: number, carouselClass: string): void {
+  const carousel = document.querySelector(`.${carouselClass}`); 
+  if (carousel instanceof HTMLElement) { 
+    carousel.scrollBy({
+      left: direction * 300,
+      behavior: "smooth"
+    });
+  } else {
+    console.error(`No se encontró el carrusel con clase: ${carouselClass}`);
   }
+}
+
 
 /*  isPlaying(songId: number): boolean {
   return this.isPlayingMap[songId] === true;

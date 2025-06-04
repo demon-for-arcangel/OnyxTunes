@@ -105,9 +105,7 @@ const getTopArtists = async (req, res) => {
     const topArtists = await conx.getTopArtists(limit || 10);
 
     if (!topArtists || topArtists.length === 0) {
-      return res
-        .status(404)
-        .json({ msg: "No se encontraron artistas con seguidores." });
+      return res.status(204)
     }
 
     res.status(200).json(topArtists);

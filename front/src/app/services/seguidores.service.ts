@@ -67,7 +67,7 @@ export class SeguidoresService {
     });
   }
 
-  getTopArtists(limit: number = 10): Observable<any> {
+  getTopArtists(limit: number = 5): Observable<any> {
     return this.http.get(`${this.url}${this.seguidoresUrl}/top?limit=${limit}`);
   }
 }

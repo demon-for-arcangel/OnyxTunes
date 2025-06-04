@@ -33,7 +33,7 @@
 }
 
 .add-button {
-    background-color: #28a745; 
+    background-color: var(--color-btn-green);
     color: white; 
     border: none; 
     border-radius: 50%; 
@@ -70,8 +70,6 @@
 }
 
 .sidebar button {
-    background-color: #007BFF; 
-    color: white; 
     border: none; 
     padding: 10px 15px; 
     text-align: center; 
@@ -83,10 +81,6 @@
     transition: background-color 0.3s;
 }
 
-.sidebar button:hover {
-    background-color: #0056b3; 
-}
-
 .biblioteca button {
     margin-bottom: 15px;
 }
@@ -96,4 +90,28 @@
     left: 10px;  
     top: 10px;   
     z-index: 100;
+}
+
+.playlist-button {
+    background: none;  
+    border: none;  
+    padding: 0;  
+    display: inline-block;  
+    cursor: pointer;  
+}
+
+.playlist-button img {
+    width: 110px; 
+    height: 130px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.playlist-button img:hover {
+    transform: scale(1.05);  
+}
+
+.title {
+    color:gray;
 }
