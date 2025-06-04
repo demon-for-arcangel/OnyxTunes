@@ -2,8 +2,24 @@
     <app-sidebar></app-sidebar>
     <main>
         <app-account-button></app-account-button>
-<!--         <h2>Escuchado recientemente</h2>
- -->        <h2>Especialmente para ti</h2>
+        <h2>Escuchado recientemente</h2>
+
+        @if (recentSongs.length > 0) {
+            <div class="songs-container">
+                @for (cancion of recentSongs; track cancion) {
+                    <div class="song-card">
+                        <img [src]="cancion?.portadaURL ? cancion.portadaURL : 'assets/images/songs_Default.png'" alt="Portada de {{ cancion?.titulo }}" class="cover-image"/>
+                        <p class="song-title">{{ cancion?.titulo }}</p>
+                        <p class="song-artist" (click)="goToArtistPage(cancion?.artista?.id)">{{ cancion?.artista?.nombre }}</p>
+                        <button (click)="navigateToSong(cancion)">Escuchar</button>
+                    </div>
+                }
+            </div>
+        } @else {
+            <p>Aún no has escuchado canciones recientemente.</p>
+        }
+
+        <h2>Especialmente para ti</h2>
         @if (recommendationPlaylist?.length > 0) {
             <div class="playlist-container">
                 @for (playlist of recommendationPlaylist; track playlist) {

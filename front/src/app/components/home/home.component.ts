@@ -58,6 +58,7 @@ export class HomeComponent {
   successMessage: string = "";
   errorMessage: string = "";
   likesLoaded: boolean = false;
+  recentSongs: any[] = [];
 
   dialogRef!: DynamicDialogRef;
 
@@ -73,6 +74,22 @@ export class HomeComponent {
     this.createPlaylistsByGenres();
     this.getUserLikes();
   }
+
+getRecentSongs(): void {
+    if (!this.userId) {
+        return;
+    }
+
+    this.songService.getHistoryByUser(this.userId).subscribe({
+        next: (response: any) => {
+            this.recentSongs = Array.isArray(response) ? response.map(item => item.cancion) : [];  // ✅ Extrae el objeto `cancion`
+        },
+        error: (error) => {
+            console.error("Error al obtener el historial:", error);
+        }
+    });
+}
+
 
   goToArtistPage(artistId: string) {
     this.router.navigate(['/information-artist'], { queryParams: { artistId } });
@@ -135,6 +152,7 @@ loadUserId() {
 
                 this.loadUserRecommendationPlaylist();
                 this.loadUserPlaylists();
+                this.getRecentSongs();
 
                 this.recommendationService.getRecommendationStatus(this.userId.toString()).subscribe({
                     next: (status: any) => { 
